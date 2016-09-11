@@ -1,0 +1,17 @@
+{
+  "name": "serverless-api",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "passport": "^0.3.2",
+    "passport-steam": "^1.0.5"
+  },
+  "devDependencies": {
+    "export-api-url": "file:local_modules/export-api-url",
+    "serverless": "^1.0.0-rc.1",
+    "serverless-mocha-plugin": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

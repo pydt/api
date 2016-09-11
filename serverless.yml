@@ -13,6 +13,10 @@
 
 service: civ-serverless-api
 
+plugins:
+  - serverless-mocha-plugin
+  - export-api-url
+
 provider:
   name: aws
   runtime: nodejs4.3
@@ -54,6 +58,12 @@ functions:
           path: game/{gameID}/currentSave
           method: get
           authorizer: authUserKey
+  authSteamAuthenticate:
+    handler: functions/auth/steam.authenticate
+    events:
+      - http:
+          path: auth/steam
+          method: get
 
 #    you can add any of the following events
 #    events:
