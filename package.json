@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "jsonwebtoken": "^7.1.9",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.5"
   },
   "devDependencies": {
     "export-api-url": "file:local_modules/export-api-url",
     "serverless": "^1.0.0-rc.1",
-    "serverless-mocha-plugin": "^1.0.0"
+    "serverless-mocha-plugin": "https://github.com/mrosack/serverless-mocha-plugin.git#10cf6fd"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

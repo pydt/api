@@ -64,6 +64,14 @@ functions:
       - http:
           path: auth/steam
           method: get
+          cors: true
+  authSteamValidate:
+    handler: functions/auth/steam.validate
+    events:
+      - http:
+          path: auth/steam/validate
+          method: get
+          cors: true
 
 #    you can add any of the following events
 #    events:

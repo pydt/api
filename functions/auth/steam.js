@@ -2,6 +2,8 @@
 
 const SteamStrategy = require('passport-steam').Strategy;
 const passport = require('passport');
+const querystring = require('querystring');
+const auth = require('../../lib/auth.js');
 
 passport.use(new SteamStrategy({
     returnURL: 'http://localhost:8080/steamreturn',
@@ -40,5 +42,27 @@ module.exports.authenticate = (event, context, cb) => {
 };
 
 module.exports.validate = (event, context, cb) => {
-  cb(null, { message: 'You called validate.' });
+  let req = {
+    query: event.query,
+    url: '/blah?' + querystring.stringify(event.query)
+  };
+  let res = {
+    setHeader: (key, value) => {
+      if (key === 'Location') {
+        cb(null, { message: 'failed...' + value });
+      }
+    }
+  };
+  let next = () => {};
+
+  passport.authenticate('steam', { failureRedirect: '/fail' }, (err, user, info) => {
+    if (err) {
+      cb(err);
+    } else {
+      cb(null, {
+        token: auth.sign(user.profile.id),
+        user: user
+      });
+    }
+  })(req, res, next);
 };
