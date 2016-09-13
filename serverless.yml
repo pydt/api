@@ -15,11 +15,23 @@ service: civ-serverless-api
 
 plugins:
   - serverless-mocha-plugin
+  - serverless-plugin-write-env-vars
   - export-api-url
 
 provider:
   name: aws
   runtime: nodejs4.3
+  stage: dev
+  iamRoleStatements:
+    - Effect: Allow
+      Action: "*"
+      Resource: "*"
+custom:
+  activeStage: ${opt:stage, self:provider.stage}
+  writeEnvVars:
+    SERVERLESS_STAGE: ${self:custom.activeStage}
+
+
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -85,10 +97,23 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-    NewResource:
+    Civ5SavesBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: civ5-saves
+        BucketName: ${self:custom.activeStage}-civ5-saves
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: SteamID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: SteamID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: ${self:custom.activeStage}-civx-user
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"

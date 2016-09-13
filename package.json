@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "aws-sdk": "^2.6.1",
+    "dotenv": "^2.0.0",
     "jsonwebtoken": "^7.1.9",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.5"
@@ -10,7 +12,8 @@
   "devDependencies": {
     "export-api-url": "file:local_modules/export-api-url",
     "serverless": "^1.0.0-rc.1",
-    "serverless-mocha-plugin": "https://github.com/mrosack/serverless-mocha-plugin.git#10cf6fd"
+    "serverless-mocha-plugin": "https://github.com/mrosack/serverless-mocha-plugin.git#10cf6fd",
+    "serverless-plugin-write-env-vars": "^1.0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

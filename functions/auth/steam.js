@@ -4,6 +4,7 @@ const SteamStrategy = require('passport-steam').Strategy;
 const passport = require('passport');
 const querystring = require('querystring');
 const auth = require('../../lib/auth.js');
+const db = require('../../lib/dynamodb.js');
 
 passport.use(new SteamStrategy({
     returnURL: 'http://localhost:8080/steamreturn',
@@ -59,9 +60,15 @@ module.exports.validate = (event, context, cb) => {
     if (err) {
       cb(err);
     } else {
-      cb(null, {
-        token: auth.sign(user.profile.id),
-        user: user
+      db.saveUser(user, (err, res) => {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, {
+            token: auth.sign(user.profile.id),
+            user: user
+          });
+        }
       });
     }
   })(req, res, next);
