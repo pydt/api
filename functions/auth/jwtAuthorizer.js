@@ -1,20 +1,18 @@
 'use strict';
 
-module.exports.authUserKey = (event, context, cb) => {
+const auth = require('../../lib/auth.js');
+
+module.exports.handler = (event, context, cb) => {
     var token = event.authorizationToken;
 
-    switch (token) {
-        case 'allow':
-            cb(null, generatePolicy('SackGT', 'Allow', event.methodArn));
-            break;
-        case 'deny':
-            cb(null, generatePolicy('SackGT', 'Deny', event.methodArn));
-            break;
-        case 'unauthorized':
-            cb(new Error("[401] Unauthorized"));
-            break;
-        default:
-            cb(new Error("[500] WTF"));
+    if (!token) {
+      cb(new Error('No Token Present'));
+    }
+
+    try {
+      cb(null, generatePolicy(auth.getSteamIDFromToken(token), 'Allow', event.methodArn));
+    } catch (err) {
+      cb(err);
     }
 };
 

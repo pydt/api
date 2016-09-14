@@ -61,28 +61,29 @@ custom:
 #  artifact: my-service-code.zip
 
 functions:
-  authUserKey:
-    handler: authHandler.authUserKey
-  currentSave:
-    handler: fileHandler.currentSave
-    events:
-      - http:
-          path: game/{gameID}/currentSave
-          method: get
-          authorizer: authUserKey
+  authJwtAuthorizer:
+    handler: functions/auth/jwtAuthorizer.handler
   authSteamAuthenticate:
-    handler: functions/auth/steam.authenticate
+    handler: functions/auth/steamAuthenticate.handler
     events:
       - http:
           path: auth/steam
           method: get
           cors: true
   authSteamValidate:
-    handler: functions/auth/steam.validate
+    handler: functions/auth/steamValidate.handler
     events:
       - http:
           path: auth/steam/validate
           method: get
+          cors: true
+  userGames:
+    handler: functions/user/games.handler
+    events:
+      - http:
+          path: user/games
+          method: get
+          authorizer: authJwtAuthorizer
           cors: true
 
 #    you can add any of the following events
