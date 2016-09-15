@@ -3,7 +3,7 @@
 const querystring = require('querystring');
 const auth = require('../../lib/auth.js');
 const steamPassport = require('../../lib/steamPassport.js');
-const db = require('../../lib/dynamodb.js');
+const User = require('../../lib/dynamoose/User.js');
 
 module.exports.handler = (event, context, cb) => {
   let req = {
@@ -19,19 +19,24 @@ module.exports.handler = (event, context, cb) => {
   };
   let next = () => {};
 
-  steamPassport.authenticate('steam', { failureRedirect: '/fail' }, (err, user, info) => {
+  steamPassport.authenticate('steam', { failureRedirect: '/fail' }, (err, resp, info) => {
     if (err) {
       cb(err);
     } else {
-      db.saveUser(user, (err, res) => {
-        if (err) {
-          cb(err);
-        } else {
-          cb(null, {
-            token: auth.sign(user.profile.id),
-            user: user
-          });
+      User.get(resp.profile.id).then(dbUser => {
+        if (!dbUser) {
+          dbUser = new User({steamId: resp.profile.id});
         }
+
+        dbUser.displayName = resp.profile.displayName;
+        return dbUser.save();
+      }).then(() => {
+        cb(null, {
+          token: auth.sign(resp.profile.id),
+          steamProfile: resp.profile
+        });
+      }).catch(err => {
+        cb(err);
       });
     }
   })(req, res, next);

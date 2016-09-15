@@ -28,8 +28,10 @@ provider:
       Resource: "*"
 custom:
   activeStage: ${opt:stage, self:provider.stage}
+  tablePrefix: ${self:custom.activeStage}-civx-
   writeEnvVars:
     SERVERLESS_STAGE: ${self:custom.activeStage}
+    TABLE_PREFIX: ${self:custom.tablePrefix}
 
 
 # you can add statements to the Lambda function's IAM Role here
@@ -106,15 +108,15 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: SteamID
+          - AttributeName: steamId
             AttributeType: S
         KeySchema:
-          - AttributeName: SteamID
+          - AttributeName: steamId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-        TableName: ${self:custom.activeStage}-civx-user
+        TableName: ${self:custom.tablePrefix}user
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
