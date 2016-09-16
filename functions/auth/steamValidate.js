@@ -29,7 +29,7 @@ module.exports.handler = (event, context, cb) => {
         }
 
         dbUser.displayName = resp.profile.displayName;
-        return dbUser.save();
+        return User.saveVersioned(dbUser);
       }).then(() => {
         cb(null, {
           token: auth.sign(resp.profile.id),

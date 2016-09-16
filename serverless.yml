@@ -28,10 +28,10 @@ provider:
       Resource: "*"
 custom:
   activeStage: ${opt:stage, self:provider.stage}
-  tablePrefix: ${self:custom.activeStage}-civx-
+  resourcePrefix: ${self:custom.activeStage}-civx-
   writeEnvVars:
     SERVERLESS_STAGE: ${self:custom.activeStage}
-    TABLE_PREFIX: ${self:custom.tablePrefix}
+    RESOURCE_PREFIX: ${self:custom.resourcePrefix}
 
 
 # you can add statements to the Lambda function's IAM Role here
@@ -100,10 +100,10 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-    Civ5SavesBucket:
+    GameSavesBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.activeStage}-civ5-saves
+        BucketName: ${self:custom.resourcePrefix}saves
     UserTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -116,7 +116,20 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-        TableName: ${self:custom.tablePrefix}user
+        TableName: ${self:custom.resourcePrefix}user
+    GameTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: ${self:custom.resourcePrefix}game
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
