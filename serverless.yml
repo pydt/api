@@ -122,7 +122,7 @@ resources:
       Properties:
         AttributeDefinitions:
           - AttributeName: gameId
-            AttributeType: S
+            AttributeType: B
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH
@@ -130,6 +130,23 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
         TableName: ${self:custom.resourcePrefix}game
+    GameTurnTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: B
+          - AttributeName: turnId
+            AttributeType: B
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+          - AttributeName: turnId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        TableName: ${self:custom.resourcePrefix}game-turn
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
