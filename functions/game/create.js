@@ -5,16 +5,12 @@ const User = require('../../lib/dynamoose/User.js');
 
 module.exports.handler = (event, context, cb) => {
   try {
-    console.log(event);
-
     const newGame = new Game({
       createdBySteamId: event.principalId,
       currentPlayerSteamId: event.principalId,
       playerSteamIds: [event.principalId],
       displayName: event.body.displayName
     });
-
-    console.log(newGame);
 
     Game.saveVersioned(newGame).then(() => {
       return User.get(event.principalId);

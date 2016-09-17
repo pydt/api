@@ -44,14 +44,15 @@ describe('authJwtAuthorizer', () => {
   });
 
   it('returns valid policy with valid token', (done) => {
-    const token = auth.sign('blah');
+    var steamId = 'blah';
+    const token = auth.sign(steamId);
 
     wrapper.run({
       authorizationToken: token,
       methodArn: 'arn:aws:execute-api:us-east-1:583172113704:j6vxshd7e8/null/GET/'
     }, (err, response) => {
       assert(!err);
-      assert.equal(response.principalId, 'blah');
+      assert.equal(response.principalId, steamId);
 
       const statement = response.policyDocument.Statement[0];
       assert.equal(statement.Action, 'execute-api:Invoke');

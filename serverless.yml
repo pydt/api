@@ -79,11 +79,27 @@ functions:
           path: auth/steam/validate
           method: get
           cors: true
+  game:
+    handler: functions/game/get.handler
+    events:
+      - http:
+          path: game/{gameId}
+          method: get
+          authorizer: authJwtAuthorizer
+          cors: true
   gameCreate:
     handler: functions/game/create.handler
     events:
       - http:
           path: game/create
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
+  gameJoin:
+    handler: functions/game/join.handler
+    events:
+      - http:
+          path: game/{gameId}/join
           method: post
           authorizer: authJwtAuthorizer
           cors: true
@@ -138,7 +154,7 @@ resources:
       Properties:
         AttributeDefinitions:
           - AttributeName: gameId
-            AttributeType: B
+            AttributeType: S
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH
@@ -151,9 +167,9 @@ resources:
       Properties:
         AttributeDefinitions:
           - AttributeName: gameId
-            AttributeType: B
+            AttributeType: S
           - AttributeName: turnId
-            AttributeType: B
+            AttributeType: S
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH

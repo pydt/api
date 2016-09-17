@@ -6,7 +6,6 @@ const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
   User.get(event.principalId).then(user => {
-    console.log(user);
     let gameKeys = _.chain(user.activeGameIds || [])
       .map(gameId => {
         return { gameId: gameId }
