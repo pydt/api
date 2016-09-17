@@ -95,6 +95,14 @@ functions:
           method: get
           authorizer: authJwtAuthorizer
           cors: true
+  userSteamProfiles:
+    handler: functions/user/steamProfiles.handler
+    events:
+      - http:
+          path: user/steamProfiles
+          method: get
+          authorizer: authJwtAuthorizer
+          cors: true
 
 #    you can add any of the following events
 #    events:

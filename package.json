@@ -9,7 +9,9 @@
     "lodash": "^4.15.0",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
-    "passport-steam": "^1.0.5"
+    "passport-steam": "^1.0.5",
+    "request": "^2.74.0",
+    "request-promise": "^4.1.1"
   },
   "devDependencies": {
     "export-api-url": "file:local_modules/export-api-url",

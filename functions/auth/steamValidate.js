@@ -33,7 +33,7 @@ module.exports.handler = (event, context, cb) => {
       }).then(() => {
         cb(null, {
           token: auth.sign(resp.profile.id),
-          steamProfile: resp.profile
+          steamProfile: resp.profile._json
         });
       }).catch(err => {
         cb(err);
