@@ -7,10 +7,12 @@ module.exports.handler = (event, context, cb) => {
 
     if (!token) {
       cb(new Error('No Token Present'));
+      return;
     }
 
     try {
-      cb(null, generatePolicy(auth.getSteamIDFromToken(token), 'Allow', event.methodArn));
+      let resourceArn = event.methodArn.substring(0, event.methodArn.indexOf('/')) + '/*';
+      cb(null, generatePolicy(auth.getSteamIDFromToken(token), 'Allow', resourceArn));
     } catch (err) {
       cb(err);
     }

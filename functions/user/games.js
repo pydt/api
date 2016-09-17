@@ -5,16 +5,11 @@ const Game = require('../../lib/dynamoose/Game.js');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
-  console.log(event.principalId);
-
   User.get(event.principalId).then(user => {
     console.log(user);
-    let gameKeys = _.chain(user.games || [])
-      .filter(game => {
-        return !game.endDate;
-      })
-      .map(game => {
-        return { gameId: game.gameId }
+    let gameKeys = _.chain(user.activeGameIds || [])
+      .map(gameId => {
+        return { gameId: gameId }
       })
       .value();
 

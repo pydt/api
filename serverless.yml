@@ -79,6 +79,14 @@ functions:
           path: auth/steam/validate
           method: get
           cors: true
+  gameCreate:
+    handler: functions/game/create.handler
+    events:
+      - http:
+          path: game/create
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
   userGames:
     handler: functions/user/games.handler
     events:
