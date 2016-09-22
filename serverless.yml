@@ -103,6 +103,14 @@ functions:
           method: post
           authorizer: authJwtAuthorizer
           cors: true
+  gameStart:
+    handler: functions/game/start.handler
+    events:
+      - http:
+          path: game/{gameId}/start
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
   userGames:
     handler: functions/user/games.handler
     events:
