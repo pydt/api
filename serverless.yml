@@ -22,7 +22,7 @@ provider:
   name: aws
   runtime: nodejs4.3
   stage: dev
-  iamRoleStatements:
+  iamRoleStatements: # We should tighten this up...
     - Effect: Allow
       Action: "*"
       Resource: "*"
@@ -111,6 +111,14 @@ functions:
           method: post
           authorizer: authJwtAuthorizer
           cors: true
+  gameTurnStartSubmit:
+    handler: functions/game/turn/startSubmit.handler
+    events:
+      - http:
+          path: game/{gameId}/turn/startSubmit
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
   userGames:
     handler: functions/user/games.handler
     events:
@@ -128,15 +136,6 @@ functions:
           authorizer: authJwtAuthorizer
           cors: true
 
-#    you can add any of the following events
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
-#      - s3: ${env.BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-
 # you can add CloudFormation resource templates here
 resources:
   Resources:
@@ -144,6 +143,15 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.resourcePrefix}saves
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+              AllowedOrigins:
+                - "*" # We should change this when we know what our domain is...
     UserTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -176,18 +184,14 @@ resources:
         AttributeDefinitions:
           - AttributeName: gameId
             AttributeType: S
-          - AttributeName: turnId
-            AttributeType: S
+          - AttributeName: turn
+            AttributeType: N
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH
-          - AttributeName: turnId
+          - AttributeName: turn
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
         TableName: ${self:custom.resourcePrefix}game-turn
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"

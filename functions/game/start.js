@@ -1,7 +1,7 @@
 'use strict';
 
 const Game = require('../../lib/dynamoose/Game.js');
-const User = require('../../lib/dynamoose/User.js');
+const GameTurn = require('../../lib/dynamoose/GameTurn.js');
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
@@ -19,6 +19,15 @@ module.exports.handler = (event, context, cb) => {
 
     game.inProgress = true;
     return Game.saveVersioned(game);
+  })
+  .then(() => {
+    const firstTurn = new GameTurn({
+      gameId: game.gameId,
+      turn: 0,
+      playerSteamId: game.createdBySteamId
+    });
+
+    return GameTurn.saveVersioned(firstTurn);
   })
   .then(() => {
     return cb(null, game);

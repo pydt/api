@@ -8,7 +8,9 @@ module.exports.handler = (event, context, cb) => {
     const newGame = new Game({
       createdBySteamId: event.principalId,
       currentPlayerSteamId: event.principalId,
-      playerSteamIds: [event.principalId],
+      players: [{
+        steamId: event.principalId
+      }],
       displayName: event.body.displayName
     });
 

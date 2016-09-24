@@ -2,6 +2,7 @@
 
 const Game = require('../../lib/dynamoose/Game.js');
 const User = require('../../lib/dynamoose/User.js');
+const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
@@ -13,11 +14,13 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('Game in Progress');
     }
 
-    if (game.playerSteamIds.indexOf(event.principalId) >= 0) {
+    if (_.map(game.players, 'steamId').indexOf(event.principalId) >= 0) {
       throw new Error('Player already in Game');
     }
 
-    game.playerSteamIds.push(event.principalId);
+    game.players.push({
+      steamId: event.principalId
+    });
     return Game.saveVersioned(game);
   })
   .then(() => {
