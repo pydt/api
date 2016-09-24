@@ -23,7 +23,7 @@ module.exports.handler = (event, context, cb) => {
   .then(() => {
     const firstTurn = new GameTurn({
       gameId: game.gameId,
-      turn: 0,
+      turn: 1,
       playerSteamId: game.createdBySteamId
     });
 

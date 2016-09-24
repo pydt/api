@@ -119,6 +119,14 @@ functions:
           method: post
           authorizer: authJwtAuthorizer
           cors: true
+  gameTurnFinishSubmit:
+    handler: functions/game/turn/finishSubmit.handler
+    events:
+      - http:
+          path: game/{gameId}/turn/finishSubmit
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
   userGames:
     handler: functions/user/games.handler
     events:
