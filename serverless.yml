@@ -65,8 +65,10 @@ custom:
 functions:
   authJwtAuthorizer:
     handler: functions/auth/jwtAuthorizer.handler
+    memorySize: 128
   authSteamAuthenticate:
     handler: functions/auth/steamAuthenticate.handler
+    memorySize: 128
     events:
       - http:
           path: auth/steam
@@ -74,6 +76,7 @@ functions:
           cors: true
   authSteamValidate:
     handler: functions/auth/steamValidate.handler
+    memorySize: 128
     events:
       - http:
           path: auth/steam/validate
@@ -81,6 +84,7 @@ functions:
           cors: true
   game:
     handler: functions/game/get.handler
+    memorySize: 128
     events:
       - http:
           path: game/{gameId}
@@ -89,6 +93,7 @@ functions:
           cors: true
   gameCreate:
     handler: functions/game/create.handler
+    memorySize: 128
     events:
       - http:
           path: game/create
@@ -97,6 +102,7 @@ functions:
           cors: true
   gameJoin:
     handler: functions/game/join.handler
+    memorySize: 128
     events:
       - http:
           path: game/{gameId}/join
@@ -105,6 +111,7 @@ functions:
           cors: true
   gameStart:
     handler: functions/game/start.handler
+    memorySize: 128
     events:
       - http:
           path: game/{gameId}/start
@@ -113,6 +120,7 @@ functions:
           cors: true
   gameTurnStartSubmit:
     handler: functions/game/turn/startSubmit.handler
+    memorySize: 128
     events:
       - http:
           path: game/{gameId}/turn/startSubmit
@@ -121,6 +129,7 @@ functions:
           cors: true
   gameTurnFinishSubmit:
     handler: functions/game/turn/finishSubmit.handler
+    memorySize: 128
     events:
       - http:
           path: game/{gameId}/turn/finishSubmit
@@ -129,6 +138,7 @@ functions:
           cors: true
   userGames:
     handler: functions/user/games.handler
+    memorySize: 128
     events:
       - http:
           path: user/games
@@ -137,6 +147,7 @@ functions:
           cors: true
   userSteamProfiles:
     handler: functions/user/steamProfiles.handler
+    memorySize: 128
     events:
       - http:
           path: user/steamProfiles
