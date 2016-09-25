@@ -145,6 +145,15 @@ functions:
           method: get
           authorizer: authJwtAuthorizer
           cors: true
+  userProfile:
+    handler: functions/user/profile.handler
+    memorySize: 128
+    events:
+      - http:
+          path: user/profile
+          method: get
+          authorizer: authJwtAuthorizer
+          cors: true
   userSteamProfiles:
     handler: functions/user/steamProfiles.handler
     memorySize: 128
