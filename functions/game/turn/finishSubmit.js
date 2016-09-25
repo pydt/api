@@ -79,7 +79,7 @@ function getNextPlayerSteamId(game) {
     return player.steamId === game.currentPlayerSteamId;
   })) + 1;
 
-  if (playerIndex > game.players.length) {
+  if (playerIndex >= game.players.length) {
     playerIndex = 0;
   }
 
