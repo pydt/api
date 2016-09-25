@@ -118,6 +118,15 @@ functions:
           method: post
           authorizer: authJwtAuthorizer
           cors: true
+  gameTurnGet:
+    handler: functions/game/turn/get.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/turn
+          method: get
+          authorizer: authJwtAuthorizer
+          cors: true
   gameTurnStartSubmit:
     handler: functions/game/turn/startSubmit.handler
     memorySize: 128
