@@ -29,9 +29,11 @@ provider:
 custom:
   activeStage: ${opt:stage, self:provider.stage}
   resourcePrefix: ${self:custom.activeStage}-civx-
+  DEV_WEB_URL: "http://localhost:8080"
   writeEnvVars:
     SERVERLESS_STAGE: ${self:custom.activeStage}
     RESOURCE_PREFIX: ${self:custom.resourcePrefix}
+    WEB_URL: ${env:WEB_URL, self:custom.DEV_WEB_URL}
 
 
 # you can add statements to the Lambda function's IAM Role here

@@ -20,6 +20,7 @@
     "serverless-plugin-write-env-vars": "^1.0.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy-prod": "bash -c \"WEB_URL=http://giant-multiplayer-ripoff.s3-website-us-east-1.amazonaws.com sls deploy -v --stage prod\""
   }
 }
