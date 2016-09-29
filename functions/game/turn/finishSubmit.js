@@ -50,8 +50,8 @@ module.exports.handler = (event, context, cb) => {
   })
   .then(() => {
     // Send an sns message that a turn has been completed.
-    return sns.sendMessage(config.RESOURCE_PREFIX + turn-submitted, 'turn-submitted', game.gameId);
-  }
+    return sns.sendMessage(config.RESOURCE_PREFIX + 'turn-submitted', 'turn-submitted', game.gameId);
+  })
   .then(() => {
     cb(null, game);
   })
