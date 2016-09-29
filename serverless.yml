@@ -84,6 +84,11 @@ functions:
           path: auth/steam/validate
           method: get
           cors: true
+  emailTurnNotification:
+    handler: functions/email/turnNotification.handler
+    memorySize: 128
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
   game:
     handler: functions/game/get.handler
     memorySize: 128
@@ -147,6 +152,15 @@ functions:
           method: post
           authorizer: authJwtAuthorizer
           cors: true
+  user:
+    handler: functions/user/get.handler
+    memorySize: 128
+    events:
+      - http:
+          path: user
+          method: get
+          authorizer: authJwtAuthorizer
+          cors: true
   userGames:
     handler: functions/user/games.handler
     memorySize: 128
@@ -156,12 +170,21 @@ functions:
           method: get
           authorizer: authJwtAuthorizer
           cors: true
-  userProfile:
-    handler: functions/user/profile.handler
+  userSetNotificationEmail:
+    handler: functions/user/setNotificationEmail.handler
     memorySize: 128
     events:
       - http:
-          path: user/profile
+          path: user/setNotificationEmail
+          method: post
+          authorizer: authJwtAuthorizer
+          cors: true
+  userSteamProfile:
+    handler: functions/user/steamProfile.handler
+    memorySize: 128
+    events:
+      - http:
+          path: user/steamProfile
           method: get
           authorizer: authJwtAuthorizer
           cors: true

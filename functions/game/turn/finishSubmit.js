@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('../../../lib/config.js');
+const sns = require('../../../lib/sns.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const GameTurn = require('../../../lib/dynamoose/GameTurn.js');
 const AWS = require('aws-sdk');
@@ -47,6 +48,10 @@ module.exports.handler = (event, context, cb) => {
     game.gameTurnRangeKey++;
     return Game.saveVersioned(game);
   })
+  .then(() => {
+    // Send an sns message that a turn has been completed.
+    return sns.sendMessage(config.RESOURCE_PREFIX + turn-submitted, 'turn-submitted', game.gameId);
+  }
   .then(() => {
     cb(null, game);
   })
