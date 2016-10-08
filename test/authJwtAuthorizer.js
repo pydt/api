@@ -6,7 +6,6 @@ const mod         = require('../functions/auth/jwtAuthorizer.js');
 const mochaPlugin = require('serverless-mocha-plugin');
 const wrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
-const assert      = require('assert');
 const auth        = require('../lib/auth.js');
 
 const liveFunction = {
@@ -26,8 +25,8 @@ describe('authJwtAuthorizer', () => {
 
   it('throws error with no token', (done) => {
     wrapper.run({}, (err, response) => {
-      assert(err);
-      assert.equal(err.message, 'No Token Present');
+      expect(err).is.not.null;
+      expect(err.message).to.equal('No Token Present');
       done();
     });
   });
@@ -37,8 +36,8 @@ describe('authJwtAuthorizer', () => {
       authorizationToken: 'iamnotarealtoken',
       methodArn: 'arn:aws:execute-api:us-east-1:583172113704:j6vxshd7e8/null/GET/'
     }, (err, response) => {
-      assert(err);
-      assert.equal(err.message, 'jwt malformed');
+      expect(err).is.not.null;
+      expect(err.message).to.equal('jwt malformed');
       done();
     });
   });
@@ -51,13 +50,13 @@ describe('authJwtAuthorizer', () => {
       authorizationToken: token,
       methodArn: 'arn:aws:execute-api:us-east-1:583172113704:j6vxshd7e8/null/GET/'
     }, (err, response) => {
-      assert(!err);
-      assert.equal(response.principalId, steamId);
+      expect(err).is.null;
+      expect(response.principalId).to.equal(steamId);
 
       const statement = response.policyDocument.Statement[0];
-      assert.equal(statement.Action, 'execute-api:Invoke');
-      assert.equal(statement.Effect, 'Allow');
-      assert.equal(statement.Resource, 'arn:aws:execute-api:us-east-1:583172113704:j6vxshd7e8/*');
+      expect(statement.Action).to.equal('execute-api:Invoke');
+      expect(statement.Effect).to.equal(statement.Effect, 'Allow');
+      expect(statement.Resource).to.equal('arn:aws:execute-api:us-east-1:583172113704:j6vxshd7e8/*');
       done();
     });
   });

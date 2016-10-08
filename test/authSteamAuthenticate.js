@@ -6,7 +6,6 @@ const mod         = require('../functions/auth/steamAuthenticate.js');
 const mochaPlugin = require('serverless-mocha-plugin');
 const wrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
-const assert      = require('assert');
 
 const liveFunction = {
   region: process.env.SERVERLESS_REGION,
@@ -25,8 +24,8 @@ describe('authSteamAuthenticate', () => {
 
   it('should return a redirect URL', (done) => {
     wrapper.run({}, (err, response) => {
-      assert(response.redirectURL != null);
-      assert(response.redirectURL.indexOf('https://steamcommunity.com/openid/login') == 0);
+      expect(response.redirectURL).is.not.null;
+      expect(response.redirectURL.indexOf('https://steamcommunity.com/openid/login')).to.equal(0);
       done();
     });
   });

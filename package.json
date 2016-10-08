@@ -6,16 +6,16 @@
     "dotenv": "^2.0.0",
     "dynamoose": "^0.6.0",
     "jsonwebtoken": "^7.1.9",
-    "lodash": "^4.15.0",
+    "lodash": "^4.16.4",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
-    "passport-steam": "^1.0.5",
-    "request": "^2.74.0",
+    "passport-steam": "^1.0.6",
+    "request": "^2.75.0",
     "request-promise": "^4.1.1"
   },
   "devDependencies": {
     "export-api-url": "file:local_modules/export-api-url",
-    "serverless": "^1.0.0-rc.1",
+    "serverless": "^1.0.0-rc.2",
     "serverless-mocha-plugin": "^1.0.2",
     "serverless-plugin-write-env-vars": "^1.0.1"
   },

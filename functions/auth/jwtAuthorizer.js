@@ -6,16 +6,19 @@ module.exports.handler = (event, context, cb) => {
     var token = event.authorizationToken;
 
     if (!token) {
-      cb(new Error('No Token Present'));
-      return;
+      return cb(new Error('No Token Present'));
     }
+
+    let policy;
 
     try {
       let resourceArn = event.methodArn.substring(0, event.methodArn.indexOf('/')) + '/*';
-      cb(null, generatePolicy(auth.getSteamIDFromToken(token), 'Allow', resourceArn));
+      policy = generatePolicy(auth.getSteamIDFromToken(token), 'Allow', resourceArn);
     } catch (err) {
-      cb(err);
+      return cb(err);
     }
+
+    cb(null, policy);
 };
 
 ////////
