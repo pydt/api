@@ -30,6 +30,9 @@ custom:
   activeStage: ${opt:stage, self:provider.stage}
   resourcePrefix: ${self:custom.activeStage}-civx-
   DEV_WEB_URL: "http://localhost:8080"
+  dev_DYNAMO_CAPACITY: 1
+  prod_DYNAMO_CAPACITY: 5
+  DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
   writeEnvVars:
     SERVERLESS_STAGE: ${self:custom.activeStage}
     RESOURCE_PREFIX: ${self:custom.resourcePrefix}
@@ -224,8 +227,8 @@ resources:
           - AttributeName: steamId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
         TableName: ${self:custom.resourcePrefix}user
     GameTable:
       Type: AWS::DynamoDB::Table
@@ -237,8 +240,8 @@ resources:
           - AttributeName: gameId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
         TableName: ${self:custom.resourcePrefix}game
     GameTurnTable:
       Type: AWS::DynamoDB::Table
@@ -254,6 +257,6 @@ resources:
           - AttributeName: turn
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
         TableName: ${self:custom.resourcePrefix}game-turn
