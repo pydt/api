@@ -13,27 +13,33 @@ module.exports.handler = (event, context, cb) => {
   let res = {
     setHeader: (key, value) => {
       if (key === 'Location') {
-        cb(null, { message: 'failed...' + value });
+        // We shouldn't get here in validate...
+        cb(new Error('[400] Bad Request'));
       }
     }
   };
-  let next = () => {};
+  let next = () => {
+    // We shouldn't get here in validate...
+    cb(new Error('[400] Bad Request'));
+  };
 
-  steamPassport.authenticate('steam', { failureRedirect: '/fail' }, (err, resp, info) => {
+  steamPassport.authenticate('steam', (err, user, info) => {
+    console.log('Auth complete...');
+
     if (err) {
       cb(err);
     } else {
-      User.get(resp.profile.id).then(dbUser => {
+      User.get(user.profile.id).then(dbUser => {
         if (!dbUser) {
-          dbUser = new User({steamId: resp.profile.id});
+          dbUser = new User({steamId: user.profile.id});
         }
 
-        dbUser.displayName = resp.profile.displayName;
+        dbUser.displayName = user.profile.displayName;
         return User.saveVersioned(dbUser);
       }).then(() => {
         cb(null, {
-          token: auth.sign(resp.profile.id),
-          steamProfile: resp.profile._json
+          token: auth.sign(user.profile.id),
+          steamProfile: user.profile._json
         });
       }).catch(err => {
         cb(err);

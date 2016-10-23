@@ -22,5 +22,11 @@ module.exports.handler = (event, context, cb) => {
   };
   let next = () => {};
 
-  steamPassport.authenticate('steam')(req, res, next);
+  steamPassport.authenticate('steam', (err, user, info) => {
+    if (err) {
+      return cb(err);
+    } else {
+      console.log('Callback called without error?', user, info);
+    }
+  })(req, res, next);
 };
