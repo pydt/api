@@ -1,5 +1,6 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const steamPassport = require('../../lib/steamPassport.js');
 
 module.exports.handler = (event, context, cb) => {
@@ -24,7 +25,7 @@ module.exports.handler = (event, context, cb) => {
 
   steamPassport.authenticate('steam', (err, user, info) => {
     if (err) {
-      return cb(err);
+      common.generalError(cb, err);
     } else {
       console.log('Callback called without error?', user, info);
     }

@@ -1,5 +1,6 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const querystring = require('querystring');
 const auth = require('../../lib/auth.js');
 const steamPassport = require('../../lib/steamPassport.js');
@@ -27,7 +28,7 @@ module.exports.handler = (event, context, cb) => {
     console.log('Auth complete...');
 
     if (err) {
-      cb(err);
+      common.generalError(cb, err);
     } else {
       User.get(user.profile.id).then(dbUser => {
         if (!dbUser) {
@@ -42,7 +43,7 @@ module.exports.handler = (event, context, cb) => {
           steamProfile: user.profile._json
         });
       }).catch(err => {
-        cb(err);
+        common.generalError(cb, err);
       });
     }
   })(req, res, next);

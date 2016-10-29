@@ -1,5 +1,6 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const auth = require('../../lib/auth.js');
 
 module.exports.handler = (event, context, cb) => {

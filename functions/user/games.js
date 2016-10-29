@@ -1,5 +1,6 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const User = require('../../lib/dynamoose/User.js');
 const Game = require('../../lib/dynamoose/Game.js');
 const _ = require('lodash');
@@ -20,6 +21,6 @@ module.exports.handler = (event, context, cb) => {
   }).then(games => {
     cb(null, games);
   }).catch(err => {
-    cb(err);
+    common.generalError(cb, err);
   });
 };

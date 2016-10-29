@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../../lib/config.js');
+const common = require('../../../lib/common.js');
 const sns = require('../../../lib/sns.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const GameTurn = require('../../../lib/dynamoose/GameTurn.js');
@@ -20,7 +20,7 @@ module.exports.handler = (event, context, cb) => {
 
     return new Promise((resolve, reject) => {
       s3.getObject({
-        Bucket: config.RESOURCE_PREFIX + 'saves',
+        Bucket: common.config.RESOURCE_PREFIX + 'saves',
         Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
       }, (err, data) => {
         if (err) {
@@ -50,13 +50,13 @@ module.exports.handler = (event, context, cb) => {
   })
   .then(() => {
     // Send an sns message that a turn has been completed.
-    return sns.sendMessage(config.RESOURCE_PREFIX + 'turn-submitted', 'turn-submitted', game.gameId);
+    return sns.sendMessage(common.config.RESOURCE_PREFIX + 'turn-submitted', 'turn-submitted', game.gameId);
   })
   .then(() => {
     cb(null, game);
   })
   .catch(err => {
-    cb(err.message ? err.message : err);
+    common.generalError(cb, err);
   });
 };
 

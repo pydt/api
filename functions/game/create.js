@@ -1,7 +1,9 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const Game = require('../../lib/dynamoose/Game.js');
 const User = require('../../lib/dynamoose/User.js');
+
 
 module.exports.handler = (event, context, cb) => {
   try {
@@ -23,9 +25,9 @@ module.exports.handler = (event, context, cb) => {
     }).then(() => {
       cb(null, newGame);
     }).catch(err => {
-      cb(err);
+      common.generalError(cb, err);
     });
   } catch (err) {
-    cb(err);
+    common.generalError(cb, err);
   }
 };

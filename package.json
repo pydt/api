@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "bluebird": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz",
     "dotenv": "^2.0.0",
     "dynamoose": "^0.6.0",
     "jsonwebtoken": "^7.1.9",
@@ -11,7 +12,8 @@
     "passport": "^0.3.2",
     "passport-steam": "^1.0.6",
     "request": "^2.75.0",
-    "request-promise": "^4.1.1"
+    "request-promise": "^4.1.1",
+    "rollbar": "^0.6.2"
   },
   "devDependencies": {
     "export-api-url": "file:local_modules/export-api-url",

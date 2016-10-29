@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../../lib/config.js');
+const common = require('../../../lib/common.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const GameTurn = require('../../../lib/dynamoose/GameTurn.js');
 const AWS = require('aws-sdk');
@@ -16,7 +16,7 @@ module.exports.handler = (event, context, cb) => {
 
   	cb(null, {
       putUrl: s3.getSignedUrl('putObject', {
-        Bucket: config.RESOURCE_PREFIX + 'saves',
+        Bucket: common.config.RESOURCE_PREFIX + 'saves',
         Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
         Expires: 60,
         ContentType: 'application/octet-stream'
@@ -24,6 +24,6 @@ module.exports.handler = (event, context, cb) => {
     });
   })
   .catch(err => {
-    cb(err);
+    common.generalError(cb, err);
   });
 };

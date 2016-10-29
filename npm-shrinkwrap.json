@@ -27,6 +27,11 @@
       "from": "assertion-error@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/assertion-error/-/assertion-error-1.0.2.tgz"
     },
+    "async": {
+      "version": "1.2.1",
+      "from": "async@>=1.2.1 <1.3.0",
+      "resolved": "https://registry.npmjs.org/async/-/async-1.2.1.tgz"
+    },
     "asynckit": {
       "version": "0.4.0",
       "from": "asynckit@>=0.4.0 <0.5.0",
@@ -81,7 +86,7 @@
     },
     "bluebird": {
       "version": "3.4.6",
-      "from": "bluebird@>=3.4.1 <4.0.0",
+      "from": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz",
       "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz"
     },
     "boom": {
@@ -176,6 +181,11 @@
       "from": "debug@*",
       "resolved": "https://registry.npmjs.org/debug/-/debug-2.2.0.tgz"
     },
+    "decache": {
+      "version": "3.1.0",
+      "from": "decache@>=3.0.5 <4.0.0",
+      "resolved": "https://registry.npmjs.org/decache/-/decache-3.1.0.tgz"
+    },
     "deep-eql": {
       "version": "0.1.3",
       "from": "deep-eql@>=0.1.3 <0.2.0",
@@ -242,6 +252,11 @@
       "version": "1.0.2",
       "from": "extsprintf@1.0.2",
       "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.0.2.tgz"
+    },
+    "find": {
+      "version": "0.2.7",
+      "from": "find@>=0.2.4 <0.3.0",
+      "resolved": "https://registry.npmjs.org/find/-/find-0.2.7.tgz"
     },
     "forever-agent": {
       "version": "0.6.1",
@@ -677,6 +692,18 @@
       "version": "1.1.1",
       "from": "request-promise-core@1.1.1",
       "resolved": "https://registry.npmjs.org/request-promise-core/-/request-promise-core-1.1.1.tgz"
+    },
+    "rollbar": {
+      "version": "0.6.2",
+      "from": "rollbar@latest",
+      "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.6.2.tgz",
+      "dependencies": {
+        "lru-cache": {
+          "version": "2.2.4",
+          "from": "lru-cache@>=2.2.1 <2.3.0",
+          "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-2.2.4.tgz"
+        }
+      }
     },
     "sax": {
       "version": "1.1.5",
@@ -1564,6 +1591,11 @@
       "version": "2.3.1",
       "from": "tough-cookie@>=2.3.0 <2.4.0",
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.3.1.tgz"
+    },
+    "traverse-chain": {
+      "version": "0.1.0",
+      "from": "traverse-chain@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/traverse-chain/-/traverse-chain-0.1.0.tgz"
     },
     "tunnel-agent": {
       "version": "0.4.3",

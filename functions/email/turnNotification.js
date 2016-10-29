@@ -1,5 +1,6 @@
 'use strict';
 
+const common = require('../../lib/common.js');
 const AWS = require('aws-sdk');
 const Game = require('../../lib/dynamoose/Game.js');
 const User = require('../../lib/dynamoose/User.js');
