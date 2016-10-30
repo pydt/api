@@ -23,6 +23,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy-prod": "bash -c \"WEB_URL=http://giant-multiplayer-ripoff.s3-website-us-east-1.amazonaws.com node_modules/serverless/bin/serverless deploy -v --stage prod\""
+    "deploy-prod": "bash -c \"WEB_URL=http://giant-multiplayer-ripoff.azurewebsites.net node_modules/serverless/bin/serverless deploy -v --stage prod\""
   }
 }
