@@ -83,6 +83,7 @@ functions:
   authSteamValidate:
     handler: functions/auth/steamValidate.handler
     memorySize: 128
+    timeout: 30
     events:
       - http:
           path: auth/steam/validate
