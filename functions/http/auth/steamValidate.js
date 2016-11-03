@@ -1,10 +1,10 @@
 'use strict';
 
-const common = require('../../lib/common.js');
+const common = require('../../../lib/common.js');
 const querystring = require('querystring');
-const auth = require('../../lib/auth.js');
-const steamPassport = require('../../lib/steamPassport.js');
-const User = require('../../lib/dynamoose/User.js');
+const auth = require('../../../lib/auth.js');
+const steamPassport = require('../../../lib/steamPassport.js');
+const User = require('../../../lib/dynamoose/User.js');
 
 module.exports.handler = (event, context, cb) => {
   let req = {

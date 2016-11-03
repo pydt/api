@@ -1,9 +1,9 @@
 'use strict';
 
-const common = require('../../../lib/common.js');
-const sns = require('../../../lib/sns.js');
-const Game = require('../../../lib/dynamoose/Game.js');
-const GameTurn = require('../../../lib/dynamoose/GameTurn.js');
+const common = require('../../../../lib/common.js');
+const sns = require('../../../../lib/sns.js');
+const Game = require('../../../../lib/dynamoose/Game.js');
+const GameTurn = require('../../../../lib/dynamoose/GameTurn.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const _ = require('lodash');

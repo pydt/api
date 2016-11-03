@@ -68,11 +68,16 @@ custom:
 #  artifact: my-service-code.zip
 
 functions:
-  authJwtAuthorizer:
-    handler: functions/auth/jwtAuthorizer.handler
+  jwtAuthorizer:
+    handler: functions/auth/jwt.handler
     memorySize: 128
+  snsEmailTurnNotification:
+    handler: functions/sns/emailTurnNotification.handler
+    memorySize: 128
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
   authSteamAuthenticate:
-    handler: functions/auth/steamAuthenticate.handler
+    handler: functions/http/auth/steamAuthenticate.handler
     memorySize: 128
     events:
       - http:
@@ -81,7 +86,7 @@ functions:
           integration: lambda
           cors: true
   authSteamValidate:
-    handler: functions/auth/steamValidate.handler
+    handler: functions/http/auth/steamValidate.handler
     memorySize: 128
     timeout: 30
     events:
@@ -90,130 +95,125 @@ functions:
           method: get
           integration: lambda
           cors: true
-  emailTurnNotification:
-    handler: functions/email/turnNotification.handler
-    memorySize: 128
-    events:
-      - sns: ${self:custom.resourcePrefix}turn-submitted
   game:
-    handler: functions/game/get.handler
+    handler: functions/http/game/get.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameCreate:
-    handler: functions/game/create.handler
+    handler: functions/http/game/create.handler
     memorySize: 128
     events:
       - http:
           path: game/create
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameJoin:
-    handler: functions/game/join.handler
+    handler: functions/http/game/join.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}/join
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameStart:
-    handler: functions/game/start.handler
+    handler: functions/http/game/start.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}/start
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameTurnGet:
-    handler: functions/game/turn/get.handler
+    handler: functions/http/game/turn/get.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}/turn
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameTurnStartSubmit:
-    handler: functions/game/turn/startSubmit.handler
+    handler: functions/http/game/turn/startSubmit.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}/turn/startSubmit
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   gameTurnFinishSubmit:
-    handler: functions/game/turn/finishSubmit.handler
+    handler: functions/http/game/turn/finishSubmit.handler
     memorySize: 128
     events:
       - http:
           path: game/{gameId}/turn/finishSubmit
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   user:
-    handler: functions/user/get.handler
+    handler: functions/http/user/get.handler
     memorySize: 128
     events:
       - http:
           path: user
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   userGames:
-    handler: functions/user/games.handler
+    handler: functions/http/user/games.handler
     memorySize: 128
     events:
       - http:
           path: user/games
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   userSetNotificationEmail:
-    handler: functions/user/setNotificationEmail.handler
+    handler: functions/http/user/setNotificationEmail.handler
     memorySize: 128
     events:
       - http:
           path: user/setNotificationEmail
           method: post
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   userSteamProfile:
-    handler: functions/user/steamProfile.handler
+    handler: functions/http/user/steamProfile.handler
     memorySize: 128
     events:
       - http:
           path: user/steamProfile
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
   userSteamProfiles:
-    handler: functions/user/steamProfiles.handler
+    handler: functions/http/user/steamProfiles.handler
     memorySize: 128
     events:
       - http:
           path: user/steamProfiles
           method: get
           integration: lambda
-          authorizer: authJwtAuthorizer
+          authorizer: jwtAuthorizer
           cors: true
 
 # you can add CloudFormation resource templates here

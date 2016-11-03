@@ -1,8 +1,8 @@
 'use strict';
 
-const common = require('../../lib/common.js');
-const Game = require('../../lib/dynamoose/Game.js');
-const User = require('../../lib/dynamoose/User.js');
+const common = require('../../../lib/common.js');
+const Game = require('../../../lib/dynamoose/Game.js');
+const User = require('../../../lib/dynamoose/User.js');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {

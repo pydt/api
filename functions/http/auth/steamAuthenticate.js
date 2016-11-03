@@ -1,7 +1,7 @@
 'use strict';
 
-const common = require('../../lib/common.js');
-const steamPassport = require('../../lib/steamPassport.js');
+const common = require('../../../lib/common.js');
+const steamPassport = require('../../../lib/steamPassport.js');
 
 module.exports.handler = (event, context, cb) => {
   let location = null;
