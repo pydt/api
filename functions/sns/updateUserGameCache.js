@@ -54,6 +54,7 @@ function updateUser(user, games) {
       Bucket: common.config.RESOURCE_PREFIX + 'saves',
       Key: User.createS3GameCacheKey(user.steamId),
       ACL: 'public-read',
+      CacheControl: 'no-cache',
       Body: JSON.stringify(result)
     }, err => {
       if (err) {
