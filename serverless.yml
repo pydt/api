@@ -76,6 +76,11 @@ functions:
     memorySize: 128
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsUpdateUserGameCache:
+    handler: functions/sns/updateUserGameCache.handler
+    memorySize: 128
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
   authSteamAuthenticate:
     handler: functions/http/auth/steamAuthenticate.handler
     memorySize: 128

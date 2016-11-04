@@ -11,12 +11,16 @@ module.exports.handler = (event, context, cb) => {
   let game;
 
   Game.get(gameId).then(_game => {
-    game = _game;
+    game = _game
+
+    if (!game || !game.inProgress) {
+      return null;
+    }
 
     return User.get(game.currentPlayerSteamId);
   })
   .then(user => {
-    if (!user.emailAddress) {
+    if (!user || !user.emailAddress) {
       return cb(null);
     }
 
