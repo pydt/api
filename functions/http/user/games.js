@@ -19,6 +19,13 @@ module.exports.handler = (event, context, cb) => {
       return [];
     }
   }).then(games => {
+    if (event.headers.includepollurl) {
+      games = {
+        data: games,
+        pollUrl: 'https://' + common.config.RESOURCE_PREFIX + 'saves.s3.amazonaws.com/' + User.createS3GameCacheKey(event.principalId)
+      };
+    }
+
     cb(null, games);
   }).catch(err => {
     common.generalError(cb, err);
