@@ -24,7 +24,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy-prod": "bash -c \"WEB_URL=http://giant-multiplayer-ripoff.azurewebsites.net node_modules/serverless/bin/serverless deploy -v --stage prod\"",
-    "backup-prod": "python _python/dynamodump/dynamodump.py -m backup -s prod* -r us-east-1",
-    "copy-prod-to-dev": "npm run backup-prod && python _python/dynamodump/dynamodump.py -m restore -s prod* -d dev* -r us-east-1 --dataOnly"
+    "backup-prod": "python _scripts/dynamodump/dynamodump.py -m backup -s prod* -r us-east-1",
+    "copy-prod-to-dev": "npm run backup-prod && python _scripts/dynamodump/dynamodump.py -m restore -s prod* -d dev* -r us-east-1 --dataOnly && bash _scripts/reset-dev-emails.sh"
   }
 }
