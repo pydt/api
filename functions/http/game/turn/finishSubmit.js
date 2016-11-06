@@ -7,6 +7,7 @@ const GameTurn = require('../../../../lib/dynamoose/GameTurn.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const _ = require('lodash');
+const civ6 = require('civ6-save-parser');
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
@@ -32,16 +33,38 @@ module.exports.handler = (event, context, cb) => {
     });
   })
   .then(data => {
-    if (!data) {
+    if (!data && !data.Body) {
       throw new Error('File doesn\'t exist?');
     }
 
-    // TODO: Validate / update save file?
-    return Promise.all([
-      closeGameTurn(game),
-      createNextGameTurn(game)
-    ]);
+    const parsed = civ6.parse(data.Body, { simple: true });
+
+    if (parsed.CIVS.length !== game.players.length) {
+      return cb(new Error('[500] Invalid number of civs in save file!'));
+    }
+
+    if (Math.floor((game.gameTurnRangeKey + 1) / game.players.length) != parsed.GAME_TURN) {
+      return cb(new Error('[500] Incorrect game turn in save file!'));
+    }
+
+    if (!parsed.CIVS[(game.gameTurnRangeKey + 1) % game.players.length].IS_CURRENT_TURN) {
+      return cb(new Error('[500] Incorrect player turn in save file!'));
+    }
+
+    return moveToNextTurn(game, cb);
   })
+  .catch(err => {
+    common.generalError(cb, err);
+  });
+};
+
+////////
+
+function moveToNextTurn(game, cb) {
+  return Promise.all([
+    closeGameTurn(game),
+    createNextGameTurn(game)
+  ])
   .then(() => {
     // Finally, update the game itself!
     game.currentPlayerSteamId = getNextPlayerSteamId(game);
@@ -54,13 +77,8 @@ module.exports.handler = (event, context, cb) => {
   })
   .then(() => {
     cb(null, game);
-  })
-  .catch(err => {
-    common.generalError(cb, err);
   });
-};
-
-////////
+}
 
 function closeGameTurn(game) {
   return GameTurn.get({ gameId: game.gameId, turn: game.gameTurnRangeKey }).then(gameTurn => {
