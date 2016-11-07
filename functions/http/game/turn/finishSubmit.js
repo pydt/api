@@ -44,7 +44,7 @@ module.exports.handler = (event, context, cb) => {
     }
 
     const newGameTurnRangeKey = game.gameTurnRangeKey + 1;
-    const expectedGameTurn = Math.floor(newGameTurnRangeKey / game.players.length);
+    const expectedGameTurn = Math.floor(newGameTurnRangeKey / game.players.length) + 1;
 
     if (expectedGameTurn != parsed.GAME_TURN) {
       return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + parsed.GAME_TURN + ', expected: ' + expectedGameTurn + ')'));
