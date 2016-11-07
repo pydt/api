@@ -40,14 +40,17 @@ module.exports.handler = (event, context, cb) => {
     const parsed = civ6.parse(data.Body, { simple: true });
 
     if (parsed.CIVS.length !== game.players.length) {
-      return cb(new Error('[500] Invalid number of civs in save file!'));
+      return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + parsed.CIVS.length + ', expected: ' + game.players.length + ')'));
     }
 
-    if (Math.floor((game.gameTurnRangeKey + 1) / game.players.length) != parsed.GAME_TURN) {
-      return cb(new Error('[500] Incorrect game turn in save file!'));
+    const newGameTurnRangeKey = game.gameTurnRangeKey + 1;
+    const expectedGameTurn = Math.floor(newGameTurnRangeKey / game.players.length);
+
+    if (expectedGameTurn != parsed.GAME_TURN) {
+      return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + parsed.GAME_TURN + ', expected: ' + expectedGameTurn + ')'));
     }
 
-    if (!parsed.CIVS[(game.gameTurnRangeKey + 1) % game.players.length].IS_CURRENT_TURN) {
+    if (!parsed.CIVS[newGameTurnRangeKey % game.players.length].IS_CURRENT_TURN) {
       return cb(new Error('[500] Incorrect player turn in save file!'));
     }
 
