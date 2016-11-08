@@ -68,7 +68,7 @@ module.exports.handler = (event, context, cb) => {
       }
     }
 
-    let savePromise = Promise.defer();
+    let savePromise = Promise.resolve();
 
     if (needSave) {
       savePromise = s3.putObject({
