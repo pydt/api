@@ -43,14 +43,13 @@ module.exports.handler = (event, context, cb) => {
       return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + parsed.CIVS.length + ', expected: ' + game.players.length + ')'));
     }
 
-    const newGameTurnRangeKey = game.gameTurnRangeKey + 1;
-    const expectedGameTurn = Math.floor((newGameTurnRangeKey - 1) / game.players.length) + 1;
+    const expectedGameTurn = Math.floor(game.gameTurnRangeKey / game.players.length) + 1;
 
     if (expectedGameTurn != parsed.GAME_TURN) {
       return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + parsed.GAME_TURN + ', expected: ' + expectedGameTurn + ')'));
     }
 
-    if (!parsed.CIVS[newGameTurnRangeKey % game.players.length].IS_CURRENT_TURN) {
+    if (!parsed.CIVS[game.gameTurnRangeKey % game.players.length].IS_CURRENT_TURN) {
       return cb(new Error('[500] Incorrect player turn in save file!'));
     }
 
