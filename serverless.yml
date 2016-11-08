@@ -71,6 +71,16 @@ functions:
   jwtAuthorizer:
     handler: functions/auth/jwt.handler
     memorySize: 128
+  cronCheckTurnTimerJobs:
+    handler: functions/cron/checkTurnTimerJobs.handler
+    memorySize: 128
+    events:
+      - schedule: rate(2 minutes)
+  snsAddTurnTimer:
+    handler: functions/sns/addTurnTimerJob.handler
+    memorySize: 128
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
   snsEmailTurnNotification:
     handler: functions/sns/emailTurnNotification.handler
     memorySize: 128
@@ -280,3 +290,20 @@ resources:
           ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
           WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
         TableName: ${self:custom.resourcePrefix}game-turn
+    ScheduledJobTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: jobType
+            AttributeType: S
+          - AttributeName: scheduledTime
+            AttributeType: N
+        KeySchema:
+          - AttributeName: jobType
+            KeyType: HASH
+          - AttributeName: scheduledTime
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.resourcePrefix}scheduled-job

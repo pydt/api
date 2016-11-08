@@ -37,23 +37,50 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('File doesn\'t exist?');
     }
 
-    const parsed = civ6.parse(data.Body, { simple: true });
+    let buffer = data.Body;
+    const parsed = civ6.parse(buffer);
+    const numCivs = parsed.CIVS.length;
+    const gameTurn = parsed.GAME_TURN.data;
 
-    if (parsed.CIVS.length !== game.players.length) {
-      return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + parsed.CIVS.length + ', expected: ' + game.players.length + ')'));
+    if (numCivs !== game.players.length) {
+      return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + numCivs + ', expected: ' + game.players.length + ')'));
     }
 
     const expectedGameTurn = Math.floor(game.gameTurnRangeKey / game.players.length) + 1;
 
-    if (expectedGameTurn != parsed.GAME_TURN) {
-      return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + parsed.GAME_TURN + ', expected: ' + expectedGameTurn + ')'));
+    if (expectedGameTurn != gameTurn) {
+      return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + gameTurn + ', expected: ' + expectedGameTurn + ')'));
     }
 
-    if (!parsed.CIVS[game.gameTurnRangeKey % game.players.length].IS_CURRENT_TURN) {
+    const isCurrentTurn = parsed.CIVS[game.gameTurnRangeKey % game.players.length].data.IS_CURRENT_TURN;
+
+    if (!isCurrentTurn || !isCurrentTurn.data) {
       return cb(new Error('[500] Incorrect player turn in save file!'));
     }
 
-    return moveToNextTurn(game, cb);
+    // Reset all players to human...
+    let needSave = false;
+
+    for (let civ of parsed.CIVS) {
+      if (civ.data.ACTOR_AI_HUMAN.data === 1) {
+        needSave = true;
+        buffer = civ6.modifyCiv(buffer, civ, { ACTOR_AI_HUMAN: 3 });
+      }
+    }
+
+    let savePromise = Promise.defer();
+
+    if (needSave) {
+      savePromise = s3.putObject({
+        Bucket: common.config.RESOURCE_PREFIX + 'saves',
+        Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
+        Body: buffer
+      }).promise();
+    }
+
+    return savePromise.then(() => {
+      return module.exports.moveToNextTurn(game, cb);
+    });
   })
   .catch(err => {
     common.generalError(cb, err);
@@ -62,7 +89,7 @@ module.exports.handler = (event, context, cb) => {
 
 ////////
 
-function moveToNextTurn(game, cb) {
+module.exports.moveToNextTurn = (game, cb) => {
   return Promise.all([
     closeGameTurn(game),
     createNextGameTurn(game)
