@@ -160,6 +160,16 @@ functions:
           integration: lambda
           authorizer: jwtAuthorizer
           cors: true
+  gameTurnRevert:
+    handler: functions/http/game/turn/revert.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/turn/revert
+          method: post
+          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
   gameTurnStartSubmit:
     handler: functions/http/game/turn/startSubmit.handler
     memorySize: 128
@@ -173,7 +183,7 @@ functions:
   gameTurnFinishSubmit:
     handler: functions/http/game/turn/finishSubmit.handler
     memorySize: 128
-    timeout: 30
+    timeout: 15
     events:
       - http:
           path: game/{gameId}/turn/finishSubmit
