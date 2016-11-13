@@ -173,6 +173,7 @@ functions:
   gameTurnFinishSubmit:
     handler: functions/http/game/turn/finishSubmit.handler
     memorySize: 128
+    timeout: 30
     events:
       - http:
           path: game/{gameId}/turn/finishSubmit

@@ -38,7 +38,14 @@ module.exports.handler = (event, context, cb) => {
     }
 
     let buffer = data.Body;
-    const parsed = civ6.parse(buffer);
+    let parsed;
+
+    try {
+      parsed = civ6.parse(buffer);
+    } catch (e) {
+      return common.generalError(cb, e, '[500] Could not parse uploaded file.');
+    }
+    
     const numCivs = parsed.CIVS.length;
     const gameTurn = parsed.GAME_TURN.data;
 
