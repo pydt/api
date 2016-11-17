@@ -36,10 +36,10 @@ module.exports.handler = (event, context, cb) => {
             Data: '<h1>PLAY YOUR DAMN TURN</h1>'
           }
         }, Subject: {
-          Data: '[Ripoff] It\'s your turn in ' + game.displayName + '!'
+          Data: 'PLAY YOUR DAMN TURN in ' + game.displayName + '!'
         }
       },
-      Source: 'noreply@sacknet.org'
+      Source: 'noreply@playyourdamnturn.com'
     };
 
     ses.sendEmail(email, (err, data) => {
