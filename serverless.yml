@@ -118,7 +118,6 @@ functions:
           path: game/{gameId}
           method: get
           integration: lambda
-          authorizer: jwtAuthorizer
           cors: true
   gameCreate:
     handler: functions/http/game/create.handler
