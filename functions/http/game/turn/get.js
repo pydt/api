@@ -18,6 +18,7 @@ module.exports.handler = (event, context, cb) => {
       downloadUrl: s3.getSignedUrl('getObject', {
         Bucket: common.config.RESOURCE_PREFIX + 'saves',
         Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey),
+        ResponseContentDisposition: 'attachment; filename="(PYDT) Play This One!.Civ6Save"',
         Expires: 60
       })
     });

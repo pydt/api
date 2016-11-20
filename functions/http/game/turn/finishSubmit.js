@@ -19,18 +19,10 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('It\'s not your turn!');
     }
 
-    return new Promise((resolve, reject) => {
-      s3.getObject({
-        Bucket: common.config.RESOURCE_PREFIX + 'saves',
-        Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
-      }, (err, data) => {
-        if (err) {
-          reject(err);
-        }
-
-        resolve(data);
-      });
-    });
+    return s3.getObject({
+      Bucket: common.config.RESOURCE_PREFIX + 'saves',
+      Key: GameTurn.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
+    }).promise();
   })
   .then(data => {
     if (!data && !data.Body) {
