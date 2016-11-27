@@ -8,14 +8,18 @@ module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
   let game;
 
-  Game.get({ gameId: gameId }).then(_game => {
+  Game.get(gameId).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new Error('Game in Progress');
+      throw new Error('[500] Game in progress!');
     }
 
     if (game.createdBySteamId !== event.principalId) {
-      throw new Error('You didn\'t create this Game!');
+      throw new Error('[500] You didn\'t create this game!');
+    }
+
+    if (game.players.length < 2) {
+      throw new Error('[500] Not enough players to start the game!');
     }
 
     game.inProgress = true;

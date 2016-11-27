@@ -23,6 +23,10 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('[500] Civ already in Game');
     }
 
+    if (game.players.length >= game.humans) {
+      throw new Error('[500] Too many humans already in game.');
+    }
+
     game.players.push({
       steamId: event.principalId,
       civType: event.body.playerCiv
