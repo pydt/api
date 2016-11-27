@@ -4,6 +4,7 @@ const common = require('../../../../lib/common.js');
 const sns = require('../../../../lib/sns.js');
 const Game = require('../../../../lib/dynamoose/Game.js');
 const GameTurn = require('../../../../lib/dynamoose/GameTurn.js');
+const User = require('../../../../lib/dynamoose/User.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const _ = require('lodash');
@@ -12,12 +13,18 @@ const civ6 = require('civ6-save-parser');
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
   let game;
+  let users;
 
   Game.get(gameId).then(_game => {
     game = _game;
     if (game.currentPlayerSteamId !== event.principalId) {
       throw new Error('It\'s not your turn!');
     }
+
+    return User.getUsersForGame(game);
+  })
+  .then(_users => {
+    users = _users;
 
     return s3.getObject({
       Bucket: common.config.RESOURCE_PREFIX + 'saves',
@@ -40,15 +47,43 @@ module.exports.handler = (event, context, cb) => {
     
     const numCivs = parsed.CIVS.length;
     const gameTurn = parsed.GAME_TURN.data;
+    let needSave = false;
 
-    if (numCivs !== game.players.length) {
-      return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + numCivs + ', expected: ' + game.players.length + ')'));
+    if (numCivs !== game.slots) {
+      return cb(new Error('[500] Invalid number of civs in save file! (actual: ' + numCivs + ', expected: ' + game.slots + ')'));
+    }
+
+    for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
+      const parsedCiv = parsed.CIVS[i].data;
+
+      if (game.players[i]) {
+        const actualCiv = parsedCiv.LEADER_NAME.data;
+        const expectedCiv = game.players[i].civType; 
+        if (actualCiv !== expectedCiv) {
+          return cb(new Error(`[500] Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`));
+        }
+
+        if (parsedCiv.ACTOR_AI_HUMAN === 1) {
+          return cb(new Error(`[500] Expected civ ${i} to be human!`));
+        }
+
+        if (parsedCiv.PLAYER_NAME.data != users[i].displayName) {
+          needSave = true;
+          buffer = civ6.modifyCiv(buffer, parsed.CIVS[i], { PLAYER_NAME: users[i].displayName });
+          // Inefficent, but until we get a better way to do multiple edits in one session it's necessary. :(
+          parsed = civ6.parse(buffer);
+        }
+      } else {
+        if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+          return cb(new Error(`[500] Expected civ ${i} to be AI!`));
+        }
+      }
     }
 
     const expectedGameTurn = Math.floor(game.gameTurnRangeKey / game.players.length) + 1;
 
     if (expectedGameTurn != gameTurn) {
-      return cb(new Error('[500] Incorrect game turn in save file! (actual: ' + gameTurn + ', expected: ' + expectedGameTurn + ')'));
+      return cb(new Error(`[500] Incorrect game turn in save file! (actual: ${gameTurn}, expected: ${expectedGameTurn})`));
     }
 
     const isCurrentTurn = parsed.CIVS[game.gameTurnRangeKey % game.players.length].data.IS_CURRENT_TURN;
@@ -57,15 +92,14 @@ module.exports.handler = (event, context, cb) => {
       return cb(new Error('[500] Incorrect player turn in save file!'));
     }
 
-    // Reset all players to human...
-    let needSave = false;
-
+    // TODO: Revisit this code when human->ai->human works
+    /*// Reset all players to human...
     for (let civ of parsed.CIVS) {
       if (civ.data.ACTOR_AI_HUMAN.data === 1) {
         needSave = true;
         buffer = civ6.modifyCiv(buffer, civ, { ACTOR_AI_HUMAN: 3 });
       }
-    }
+    }*/
 
     let savePromise = Promise.resolve();
 
