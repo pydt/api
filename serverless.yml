@@ -238,7 +238,6 @@ functions:
           path: user/steamProfiles
           method: get
           integration: lambda
-          authorizer: jwtAuthorizer
           cors: true
 
 # you can add CloudFormation resource templates here

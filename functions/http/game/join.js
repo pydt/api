@@ -12,16 +12,22 @@ module.exports.handler = (event, context, cb) => {
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new Error('Game in Progress');
+      throw new Error('[500] Game in Progress');
     }
 
     if (_.map(game.players, 'steamId').indexOf(event.principalId) >= 0) {
-      throw new Error('Player already in Game');
+      throw new Error('[500] Player already in Game');
+    }
+
+    if (_.map(game.players, 'civType').indexOf(event.body.playerCiv) >= 0) {
+      throw new Error('[500] Civ already in Game');
     }
 
     game.players.push({
-      steamId: event.principalId
+      steamId: event.principalId,
+      civType: event.body.playerCiv
     });
+
     return Game.saveVersioned(game);
   })
   .then(() => {
