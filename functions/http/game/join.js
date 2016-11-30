@@ -4,10 +4,13 @@ const common = require('../../../lib/common.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const User = require('../../../lib/dynamoose/User.js');
 const _ = require('lodash');
+const AWS = require('aws-sdk');
+const ses = new AWS.SES();
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
   let game;
+  let joinedUser;
 
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
@@ -39,7 +42,35 @@ module.exports.handler = (event, context, cb) => {
   }).then(user => {
     user.activeGameIds = user.activeGameIds || [];
     user.activeGameIds.push(game.gameId);
+    joinedUser = user;
     return User.saveVersioned(user);
+  }).then(() => {
+    return User.get(game.createdBySteamId);
+  }).then(createdByUser => {
+    if (createdByUser.emailAddress) {
+      const email = {
+        Destination: {
+          ToAddresses: [
+            createdByUser.emailAddress
+          ]
+        },
+        Message: {
+          Body: {
+            Html: {
+              Data: `<p>The user <b>${joinedUser.displayName}</b> has joined your game <b>${game.displayName}</b>!  There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.</p>`
+            }
+          }, Subject: {
+            Data: 'A new user has joined your game!'
+          }
+        },
+        Source: 'noreply@playyourdamnturn.com'
+      };
+
+      return ses.sendEmail(email).promise();
+    } else {
+      return Promise.resolve();
+    }
+    
   }).then(() => {
     return cb(null, game);
   })
