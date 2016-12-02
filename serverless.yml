@@ -129,6 +129,15 @@ functions:
           integration: lambda
           authorizer: jwtAuthorizer
           cors: true
+  gameChangeCiv:
+    handler: functions/http/game/changeCiv.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/changeCiv
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
   gameJoin:
     handler: functions/http/game/join.handler
     memorySize: 128
