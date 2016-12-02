@@ -138,6 +138,15 @@ functions:
           method: post
           authorizer: jwtAuthorizer
           cors: true
+  gameEdit:
+    handler: functions/http/game/edit.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/edit
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
   gameJoin:
     handler: functions/http/game/join.handler
     memorySize: 128

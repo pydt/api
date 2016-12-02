@@ -30,7 +30,8 @@ module.exports.handler = (event, context, cb) => {
     player.civType = body.playerCiv;
 
     return Game.saveVersioned(game);
-  }).then(() => {
+  })
+  .then(() => {
     common.lp.success(event, cb, game);
   })
   .catch(err => {
