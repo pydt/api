@@ -39,7 +39,7 @@ module.exports.handler = (event, context, cb) => {
           Data: 'PLAY YOUR DAMN TURN in ' + game.displayName + '!'
         }
       },
-      Source: 'noreply@playyourdamnturn.com'
+      Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
     };
 
     ses.sendEmail(email, (err, data) => {

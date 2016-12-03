@@ -63,7 +63,7 @@ module.exports.handler = (event, context, cb) => {
             Data: 'A new user has joined your game!'
           }
         },
-        Source: 'noreply@playyourdamnturn.com'
+        Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
       };
 
       return ses.sendEmail(email).promise();

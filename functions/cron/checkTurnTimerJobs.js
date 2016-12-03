@@ -101,13 +101,13 @@ function skipTurn(game, turn) {
       Message: {
         Body: {
           Html: {
-            Data: '<h1>YOU ARE THE WORST</h1><h1>YOU HAVE BEEN SKIPPED</h1><h1>I HOPE YOU DIE</h1><h1>GO EAT SOME SHIT</h1>'
+            Data: `<p>You've been skipped!  Try harder next time!`
           }
         }, Subject: {
           Data: 'You have been skipped in ' + game.displayName + '!'
         }
       },
-      Source: 'noreply@playyourdamnturn.com'
+      Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
     };
 
     return ses.sendEmail(email).promise();
