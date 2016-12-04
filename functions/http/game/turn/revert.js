@@ -43,9 +43,7 @@ module.exports.handler = (event, context, cb) => {
 
     game.currentPlayerSteamId = game.players[prevPlayerIndex].steamId;
     game.gameTurnRangeKey = lastTurn.turn;
-
-    console.log('lastTurn', lastTurn);
-    console.log('game', game);
+    
     promises.push(GameTurn.saveVersioned(lastTurn));
     promises.push(Game.saveVersioned(game));
     promises.push(GameTurn.getAndUpdateSaveFileForGameState(game));
@@ -67,8 +65,6 @@ module.exports.handler = (event, context, cb) => {
 //////
 
 function findGameTurnToRevertTo(game, turn) {
-  console.log(`trying ${game.gameId}/${turn}`);
-
   return GameTurn.get({gameId: game.gameId, turn: turn}).then(gameTurn => {
     const player = _.find(game.players, player => {
       return player.steamId === gameTurn.playerSteamId;

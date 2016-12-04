@@ -25,8 +25,6 @@ module.exports.handler = (event, context, cb) => {
   };
 
   steamPassport.authenticate('steam', (err, user, info) => {
-    console.log('Auth complete...');
-
     if (err) {
       common.generalError(cb, err);
     } else {
