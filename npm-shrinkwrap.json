@@ -742,9 +742,9 @@
       "resolved": "https://registry.npmjs.org/request-promise-core/-/request-promise-core-1.1.1.tgz"
     },
     "rollbar": {
-      "version": "0.6.2",
-      "from": "rollbar@latest",
-      "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.6.2.tgz",
+      "version": "0.6.3",
+      "from": "rollbar@0.6.3",
+      "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.6.3.tgz",
       "dependencies": {
         "lru-cache": {
           "version": "2.2.4",

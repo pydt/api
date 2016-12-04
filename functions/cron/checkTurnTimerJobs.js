@@ -84,9 +84,7 @@ function skipTurn(game, turn) {
     }).promise();
   })
   .then(() => {
-    return finishSubmit.moveToNextTurn(game, () => {
-      // Empty serverless callback, don't want any real code in here...
-    });
+    return finishSubmit.moveToNextTurn(game);
   })
   .then(() => {
     return User.get(currentPlayerSteamId);

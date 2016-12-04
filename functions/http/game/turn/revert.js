@@ -14,10 +14,10 @@ module.exports.handler = (event, context, cb) => {
     game = _game;
 
     if (game.currentPlayerSteamId !== event.principalId && game.createdBySteamId !== event.principalId) {
-      throw new Error('You can\'t revert this game!');
+      throw new Error(`You can't revert this game!`);
     }
 
-    return GameTurn.get({gameId: gameId, turn: game.gameTurnRangeKey - 1});
+    return findGameTurnToRevertTo(game, game.gameTurnRangeKey - 1);
   })
   .then(lastTurn => {
     // Update previous turn data
@@ -25,15 +25,32 @@ module.exports.handler = (event, context, cb) => {
     delete lastTurn.endDate;
     lastTurn.startDate = new Date();
 
-    // Update game record
-    game.currentPlayerSteamId = getPreviousPlayerSteamId(game);
-    game.gameTurnRangeKey--;
+    const promises = [];
 
-    return Promise.all([
-      GameTurn.delete({gameId: gameId, turn: game.gameTurnRangeKey + 1}),
-      GameTurn.saveVersioned(lastTurn),
-      Game.saveVersioned(game)
-    ]);
+    // Delete turns between the old turn and the turn to revert to
+    for (let i = lastTurn.turn + 1; i <= game.gameTurnRangeKey; i++) {
+      console.log(`deleting ${gameId}/${i}`);
+      promises.push(GameTurn.delete({gameId: gameId, turn: i}));
+    }
+
+    // Update game record
+    const curPlayerIndex = Game.getCurrentPlayerIndex(game);
+    const prevPlayerIndex = Game.getPreviousPlayerIndex(game);
+
+    if (prevPlayerIndex >= curPlayerIndex) {
+      game.round--;
+    }
+
+    game.currentPlayerSteamId = game.players[prevPlayerIndex].steamId;
+    game.gameTurnRangeKey = lastTurn.turn;
+
+    console.log('lastTurn', lastTurn);
+    console.log('game', game);
+    promises.push(GameTurn.saveVersioned(lastTurn));
+    promises.push(Game.saveVersioned(game));
+    promises.push(GameTurn.getAndUpdateSaveFileForGameState(game));
+
+    return Promise.all(promises);
   })
   .then(() => {
     // Send an sns message that a turn has been completed.
@@ -47,16 +64,20 @@ module.exports.handler = (event, context, cb) => {
   });
 };
 
-////////
+//////
 
-function getPreviousPlayerSteamId(game) {
-  let playerIndex = _.indexOf(game.players, _.find(game.players, player => {
-    return player.steamId === game.currentPlayerSteamId;
-  })) - 1;
+function findGameTurnToRevertTo(game, turn) {
+  console.log(`trying ${game.gameId}/${turn}`);
 
-  if (playerIndex < 0) {
-    playerIndex = game.players.length - 1;
-  }
-
-  return game.players[playerIndex].steamId;
+  return GameTurn.get({gameId: game.gameId, turn: turn}).then(gameTurn => {
+    const player = _.find(game.players, player => {
+      return player.steamId === gameTurn.playerSteamId;
+    });
+    
+    if (player.hasSurrendered) {
+      return findGameTurnToRevertTo(game, turn - 1);
+    } else {
+      return gameTurn;
+    }
+  }); 
 }

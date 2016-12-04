@@ -13,7 +13,7 @@ module.exports.handler = (event, context, cb) => {
   Game.get(gameId).then(_game => {
     game = _game
 
-    if (!game || !game.inProgress) {
+    if (!game || !game.inProgress || game.completed) {
       return null;
     }
 
