@@ -8,45 +8,48 @@ const uuid = require('node-uuid');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
+  const body = JSON.parse(event.body);
+  const userId = event.requestContext.authorizer.principalId;
+
   let user;
 
-  try {
-    User.get(event.principalId).then(_user => {
-      user = _user;
-      return Game.getGamesForUser(user);
-    }).then(games => {
-      let hasCreatedGame = _.some(games, game => {
-        return game.createdBySteamId === event.principalId;
-      });
-
-      if (hasCreatedGame) {
-        cb(new Error('[500] User has already created a game.'));
-      } else {
-        return createTheGame(user, event.body, cb);
-      }
-    }).catch(err => {
-      common.generalError(cb, err);
+  User.get(userId).then(_user => {
+    user = _user;
+    return Game.getGamesForUser(user);
+  }).then(games => {
+    let hasCreatedGame = _.some(games, game => {
+      return game.createdBySteamId === userId;
     });
-  } catch (err) {
-    common.generalError(cb, err);
-  }
+
+    if (hasCreatedGame) {
+      throw new common.CivxError('User has already created a game.');
+    } else {
+      return createTheGame(user, body, cb);
+    }
+  }) 
+  .then(game => {
+    common.lp.success(event, cb, game);
+  })
+  .catch(err => {
+    common.lp.error(event, cb, err);
+  });
 };
 
 //////
 
-function createTheGame(user, eventBody, cb) {
+function createTheGame(user, body) {
   const newGame = new Game({
     gameId: uuid.v4(),
     createdBySteamId: user.steamId,
     currentPlayerSteamId: user.steamId,
     players: [{
       steamId: user.steamId,
-      civType: eventBody.player1Civ
+      civType: body.player1Civ
     }],
-    displayName: eventBody.displayName,
-    description: eventBody.description,
-    slots: eventBody.slots,
-    humans: eventBody.humans
+    displayName: body.displayName,
+    description: body.description,
+    slots: body.slots,
+    humans: body.humans
   });
 
   return discourse.addGameTopic(newGame).then(topic => {
@@ -55,11 +58,13 @@ function createTheGame(user, eventBody, cb) {
     }
 
     return Game.saveVersioned(newGame);
-  }).then(() => {
+  })
+  .then(() => {
     user.activeGameIds = user.activeGameIds || [];
     user.activeGameIds.push(newGame.gameId);
     return User.saveVersioned(user);
-  }).then(() => {
-    cb(null, newGame);
+  })
+  .then(() => {
+    return newGame;
   });
 }

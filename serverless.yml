@@ -126,7 +126,15 @@ functions:
       - http:
           path: game/create
           method: post
-          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
+  gameDelete:
+    handler: functions/http/game/delete.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/delete
+          method: post
           authorizer: jwtAuthorizer
           cors: true
   gameChangeCiv:
