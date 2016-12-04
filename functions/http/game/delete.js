@@ -58,7 +58,7 @@ module.exports.handler = (event, context, cb) => {
     promises.push(Game.delete(gameId));
 
     return Promise.all(promises);
-  }) 
+  })
   .then(() => {
     common.lp.success(event, cb, {});
   })

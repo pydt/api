@@ -8,42 +8,31 @@ const AWS = require('aws-sdk');
 const ses = new AWS.SES();
 
 module.exports.handler = (event, context, cb) => {
-  const body = JSON.parse(event.body);
   const gameId = event.pathParameters.gameId;
   const userId = event.requestContext.authorizer.principalId;
 
   let game;
-  let joinedUser;
+  let leftUser;
 
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new common.CivxError('Game in Progress');
+      throw new common.CivxError('You can only leave a game before it starts.');
     }
 
-    if (_.map(game.players, 'steamId').indexOf(userId) >= 0) {
-      throw new common.CivxError('Player already in Game');
+    if (_.map(game.players, 'steamId').indexOf(userId) < 0) {
+      throw new common.CivxError('Player not in Game');
     }
 
-    if (_.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
-      throw new common.CivxError('Civ already in Game');
-    }
-
-    if (game.players.length >= game.humans) {
-      throw new common.CivxError('Too many humans already in game.');
-    }
-
-    game.players.push({
-      steamId: userId,
-      civType: body.playerCiv
+    _.remove(game.players, player => {
+      return player.steamId === userId;
     });
 
     return User.get(userId);
   })
   .then(user => {
-    user.activeGameIds = user.activeGameIds || [];
-    user.activeGameIds.push(game.gameId);
-    joinedUser = user;
+    _.pull(user.activeGameIds, game.gameId);
+    leftUser = user;
 
     return Promise.all([
       Game.saveVersioned(game),
@@ -64,10 +53,10 @@ module.exports.handler = (event, context, cb) => {
         Message: {
           Body: {
             Html: {
-              Data: `<p>The user <b>${joinedUser.displayName}</b> has joined your game <b>${game.displayName}</b>!  There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.</p>`
+              Data: `<p>The user <b>${leftUser.displayName}</b> has left your game <b>${game.displayName}</b>.  There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.</p>`
             }
           }, Subject: {
-            Data: 'A new user has joined your game!'
+            Data: 'A user has left your game.'
           }
         },
         Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'

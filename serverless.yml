@@ -162,7 +162,15 @@ functions:
       - http:
           path: game/{gameId}/join
           method: post
-          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
+  gameLeave:
+    handler: functions/http/game/leave.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/{gameId}/leave
+          method: post
           authorizer: jwtAuthorizer
           cors: true
   gameStart:
