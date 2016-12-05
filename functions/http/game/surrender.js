@@ -34,6 +34,10 @@ module.exports.handler = (event, context, cb) => {
       throw new common.CivxError('Player has already surrendered!');
     }
 
+    if (game.gameTurnRangeKey <= 1) {
+      throw new common.CivxError(`You can't surrender yet!  Create the game!`);
+    }
+
     player.hasSurrendered = true;
 
     return User.getUsersForGame(game);
@@ -70,7 +74,7 @@ module.exports.handler = (event, context, cb) => {
 
       return GameTurn.getAndUpdateSaveFileForGameState(game);
     } else {
-      // Game is over, all players have resigned...
+      // Game is over, all players have surrendered...
       game.completed = true;
       return Promise.resolve();
     }
@@ -106,10 +110,10 @@ module.exports.handler = (event, context, cb) => {
             Message: {
               Body: {
                 Html: {
-                  Data: `<p><b>${user.displayName}</b> has resigned from <b>${game.displayName}</b>. :(</p>`
+                  Data: `<p><b>${user.displayName}</b> has surrendered from <b>${game.displayName}</b>. :(</p>`
                 }
               }, Subject: {
-                Data: `A player has resigned from ${game.displayName}!`
+                Data: `A player has surrendered from ${game.displayName}!`
               }
             },
             Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'

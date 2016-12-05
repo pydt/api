@@ -49,6 +49,18 @@ module.exports.handler = (event, context, cb) => {
     
     const numCivs = parsed.CIVS.length;
     const parsedRound = parsed.GAME_TURN.data;
+    const gameDlc = game.dlc || [];
+    const parsedDlc = [];
+
+    if (parsed.MOD_BLOCK_1) {
+      for (let mod of parsed.MOD_BLOCK_1.data) {
+        parsedDlc.push(mod.MOD_ID.data);
+      }
+    }
+
+    if (gameDlc.length !== parsedDlc.length || _.difference(gameDlc, parsedDlc).length) {
+      throw new common.CivxError(`DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
+    }
 
     if (numCivs !== game.slots) {
       throw new common.CivxError(`Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);

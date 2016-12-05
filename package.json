@@ -4,7 +4,7 @@
   "description": "",
   "dependencies": {
     "bluebird": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz",
-    "civ6-save-parser": "0.0.10",
+    "civ6-save-parser": "0.0.11",
     "dotenv": "^2.0.0",
     "dynamoose": "^0.6.0",
     "jsonwebtoken": "^7.1.9",
