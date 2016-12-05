@@ -232,6 +232,14 @@ functions:
           method: post
           authorizer: jwtAuthorizer
           cors: true
+  openGameList:
+    handler: functions/http/game/listOpen.handler
+    memorySize: 128
+    events:
+      - http:
+          path: game/listOpen
+          method: get
+          cors: true
   user:
     handler: functions/http/user/get.handler
     memorySize: 128
