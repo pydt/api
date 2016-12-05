@@ -31,6 +31,7 @@ module.exports.handler = (event, context, cb) => {
     game.displayName = body.displayName;
     game.description = body.description;
     game.slots = body.slots;
+    game.dlc = body.dlc;
     game.humans = body.humans;
 
     return Game.saveVersioned(game);

@@ -42,6 +42,7 @@ function createTheGame(user, body) {
     gameId: uuid.v4(),
     createdBySteamId: user.steamId,
     currentPlayerSteamId: user.steamId,
+    dlc: body.dlc,
     players: [{
       steamId: user.steamId,
       civType: body.player1Civ
