@@ -5,6 +5,7 @@ const discourse = require('../../../lib/discourse.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const User = require('../../../lib/dynamoose/User.js');
 const uuid = require('node-uuid');
+const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
@@ -58,6 +59,17 @@ function createTheGame(user, body) {
       newGame.discourseTopicId = topic.topic_id;
     }
 
+    if (body.password) {
+      return bcrypt.genSalt(10)
+        .then(function(salt) {
+          return bcrypt.hash(body.password, salt);
+        })
+        .then(hashed => {
+          newGame.hashedPassword = hashed;
+        });
+    }
+  })
+  .then(() => {
     return Game.saveVersioned(newGame);
   })
   .then(() => {

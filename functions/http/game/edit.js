@@ -2,6 +2,7 @@
 
 const common = require('../../../lib/common.js');
 const Game = require('../../../lib/dynamoose/Game.js');
+const bcrypt = require('bcryptjs');
 
 module.exports.handler = (event, context, cb) => {
   const body = JSON.parse(event.body);
@@ -34,6 +35,21 @@ module.exports.handler = (event, context, cb) => {
     game.dlc = body.dlc;
     game.humans = body.humans;
 
+    if (body.password) {
+      if (body.password !== game.hashedPassword) {
+        return bcrypt.genSalt(10)
+          .then(function(salt) {
+            return bcrypt.hash(body.password, salt);
+          })
+          .then(hashed => {
+            game.hashedPassword = hashed;
+          });
+      }
+    } else {
+      game.hashedPassword = null;
+    }
+  })
+  .then(() => {
     return Game.saveVersioned(game);
   })
   .then(() => {

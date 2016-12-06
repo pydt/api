@@ -6,6 +6,7 @@ const User = require('../../../lib/dynamoose/User.js');
 const _ = require('lodash');
 const AWS = require('aws-sdk');
 const ses = new AWS.SES();
+const bcrypt = require('bcryptjs');
 
 module.exports.handler = (event, context, cb) => {
   const body = JSON.parse(event.body);
@@ -33,6 +34,15 @@ module.exports.handler = (event, context, cb) => {
       throw new common.CivxError('Too many humans already in game.');
     }
 
+    if (game.hashedPassword) {
+      return bcrypt.compare(body.password || '', game.hashedPassword).then(res => {
+        if (!res) {
+          throw new common.CivxError('Supplied password does not match game password!');
+        }
+      });
+    }
+  })
+  .then(() => {
     game.players.push({
       steamId: userId,
       civType: body.playerCiv

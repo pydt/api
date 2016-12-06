@@ -74,6 +74,11 @@
       "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.0.tgz",
       "optional": true
     },
+    "bcryptjs": {
+      "version": "2.4.0",
+      "from": "git+https://github.com/dcodeIO/bcrypt.js.git#21b79128929f3392e7f43cf7251c8d9eef78f0a6",
+      "resolved": "git+https://github.com/dcodeIO/bcrypt.js.git#21b79128929f3392e7f43cf7251c8d9eef78f0a6"
+    },
     "bl": {
       "version": "1.1.2",
       "from": "bl@>=1.1.2 <1.2.0",
