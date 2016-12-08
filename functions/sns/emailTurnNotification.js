@@ -36,7 +36,7 @@ module.exports.handler = (event, context, cb) => {
             Data: '<h1>PLAY YOUR DAMN TURN</h1>'
           }
         }, Subject: {
-          Data: 'PLAY YOUR DAMN TURN in ' + game.displayName + '!'
+          Data: `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`
         }
       },
       Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
