@@ -40,6 +40,11 @@ module.exports.handler = (event, context, cb) => {
 
     player.hasSurrendered = true;
 
+    // The game is completed if every player has surrendered
+    game.completed = _.every(game.players, player => {
+      return player.hasSurrendered;
+    });
+
     return User.getUsersForGame(game);
   })
   .then(_users => {
@@ -68,15 +73,11 @@ module.exports.handler = (event, context, cb) => {
         game.currentPlayerSteamId = gameTurn.playerSteamId = game.players[nextIndex].steamId;
         
         if (nextIndex <= curIndex) {
-          gameTurn.round++;
+          game.round = gameTurn.round++;
         }
       }
 
       return GameTurn.getAndUpdateSaveFileForGameState(game);
-    } else {
-      // Game is over, all players have surrendered...
-      game.completed = true;
-      return Promise.resolve();
     }
   })
   .then(() => {

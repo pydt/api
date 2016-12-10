@@ -8,7 +8,6 @@ const User = require('../../../../lib/dynamoose/User.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const _ = require('lodash');
-const civ6 = require('civ6-save-parser');
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.pathParameters.gameId;
@@ -45,7 +44,8 @@ module.exports.handler = (event, context, cb) => {
     }
 
     let buffer = data.Body;
-    let parsed = GameTurn.parseSaveFile(buffer);
+    let wrapper = GameTurn.parseSaveFile(buffer);
+    const parsed = wrapper.parsed;
     
     const numCivs = parsed.CIVS.length;
     const parsedRound = parsed.GAME_TURN.data;
@@ -67,7 +67,7 @@ module.exports.handler = (event, context, cb) => {
     }
 
     for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
-      const parsedCiv = parsed.CIVS[i].data;
+      const parsedCiv = parsed.CIVS[i];
 
       if (game.players[i]) {
         const actualCiv = parsedCiv.LEADER_NAME.data;
@@ -101,14 +101,17 @@ module.exports.handler = (event, context, cb) => {
       throw new common.CivxError(`Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
     }
 
-    const isCurrentTurn = parsed.CIVS[nextPlayerIndex].data.IS_CURRENT_TURN;
+    const isCurrentTurn = parsed.CIVS[nextPlayerIndex].IS_CURRENT_TURN;
 
     if (!isCurrentTurn || !isCurrentTurn.data) {
       throw new common.CivxError('Incorrect player turn in save file!');
     }
+    
+    game.currentPlayerSteamId = game.players[Game.getNextPlayerIndex(game)].steamId;
+    game.round = expectedRound;
 
-    return GameTurn.updateSaveFileForGameState(game, users, buffer, parsed).then(() => {
-      return module.exports.moveToNextTurn(game, gameTurn, expectedRound);  
+    return GameTurn.updateSaveFileForGameState(game, users, wrapper).then(() => {
+      return module.exports.moveToNextTurn(game, gameTurn);  
     }).then(() => {
       common.lp.success(event, cb, game);
     });
@@ -120,15 +123,13 @@ module.exports.handler = (event, context, cb) => {
 
 ////////
 
-module.exports.moveToNextTurn = (game, gameTurn, nextRound) => {
+module.exports.moveToNextTurn = (game, gameTurn) => {
   return Promise.all([
     closeGameTurn(gameTurn),
-    createNextGameTurn(game, nextRound)
+    createNextGameTurn(game)
   ])
   .then(() => {
     // Finally, update the game itself!
-    game.currentPlayerSteamId = game.players[Game.getNextPlayerIndex(game)].steamId;
-    game.round = nextRound;
     return Game.saveVersioned(game);
   })
   .then(() => {
@@ -142,12 +143,12 @@ function closeGameTurn(gameTurn) {
   return GameTurn.saveVersioned(gameTurn);
 }
 
-function createNextGameTurn(game, nextRound) {
+function createNextGameTurn(game) {
   const nextTurn = new GameTurn({
     gameId: game.gameId,
     turn: game.gameTurnRangeKey,
-    round: nextRound,
-    playerSteamId: game.players[Game.getNextPlayerIndex(game)].steamId
+    round: game.round,
+    playerSteamId: game.currentPlayerSteamId
   });
 
   return GameTurn.saveVersioned(nextTurn);

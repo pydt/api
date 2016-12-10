@@ -74,13 +74,13 @@ function skipTurn(game, turn) {
     }
 
     const civIndex = (game.gameTurnRangeKey - 1) % game.players.length;
-    const parsed = civ6.parse(data.Body);
-    const modifiedBuffer = civ6.modifyCiv(data.Body, parsed.CIVS[civIndex], { ACTOR_AI_HUMAN: 1 });
+    const wrapper = civ6.parse(data.Body);
+    civ6.modifyChunk(wrapper.chunks, parsed.CIVS[civIndex].ACTOR_AI_HUMAN, 1);
 
     return s3.putObject({
       Bucket: common.config.RESOURCE_PREFIX + 'saves',
       Key: GameTurn.createS3SaveKey(game.gameId, game.gameTurnRangeKey + 1),
-      Body: modifiedBuffer
+      Body: Buffer.concat(wrapper.chunks)
     }).promise();
   })
   .then(() => {
