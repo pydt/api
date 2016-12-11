@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pydt/api.svg?branch=master)](https://travis-ci.org/pydt/api)
+
 # PYDT Serverless API
 
 Currently there's no local dev story for the API, so you'll need an AWS account.
