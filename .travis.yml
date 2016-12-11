@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "6"
+script:
+  - npm install --silent
+  - npm run deploy-prod
+branches:
+  only:
+  - master
