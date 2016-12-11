@@ -16,11 +16,11 @@ module.exports.handler = (event, context, cb) => {
     game = _game;
 
     if (game.createdBySteamId !== userId) {
-      throw new common.CivxError('Only the creator of the game can delete the game!');
+      throw new common.PydtError('Only the creator of the game can delete the game!');
     }
 
     if (game.inProgress) {
-      throw new common.CivxError(`Can't delete an in progress game!`);
+      throw new common.PydtError(`Can't delete an in progress game!`);
     }
 
     return User.getUsersForGame(game);

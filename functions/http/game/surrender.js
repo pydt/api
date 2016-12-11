@@ -27,15 +27,15 @@ module.exports.handler = (event, context, cb) => {
     });
 
     if (!player) {
-      throw new common.CivxError('Player not in Game.');
+      throw new common.PydtError('Player not in Game.');
     }
 
     if (player.hasSurrendered) {
-      throw new common.CivxError('Player has already surrendered!');
+      throw new common.PydtError('Player has already surrendered!');
     }
 
     if (game.gameTurnRangeKey <= 1) {
-      throw new common.CivxError(`You can't surrender yet!  Create the game!`);
+      throw new common.PydtError(`You can't surrender yet!  Create the game!`);
     }
 
     player.hasSurrendered = true;

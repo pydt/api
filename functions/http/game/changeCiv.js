@@ -12,11 +12,11 @@ module.exports.handler = (event, context, cb) => {
   Game.get(gameId).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new common.CivxError('Game in Progress');
+      throw new common.PydtError('Game in Progress');
     }
     
     if (_.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
-      throw new common.CivxError('Civ already in Game');
+      throw new common.PydtError('Civ already in Game');
     }
 
     const player = _.find(game.players, player => {
@@ -24,7 +24,7 @@ module.exports.handler = (event, context, cb) => {
     });
 
     if (!player) {
-      throw new common.CivxError('Player not in Game');
+      throw new common.PydtError('Player not in Game');
     }
 
     player.civType = body.playerCiv;

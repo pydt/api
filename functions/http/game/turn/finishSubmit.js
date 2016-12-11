@@ -59,11 +59,11 @@ module.exports.handler = (event, context, cb) => {
     }
 
     if (gameDlc.length !== parsedDlc.length || _.difference(gameDlc, parsedDlc).length) {
-      throw new common.CivxError(`DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
+      throw new common.PydtError(`DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
     }
 
     if (numCivs !== game.slots) {
-      throw new common.CivxError(`Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
+      throw new common.PydtError(`Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
     }
 
     for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
@@ -73,19 +73,19 @@ module.exports.handler = (event, context, cb) => {
         const actualCiv = parsedCiv.LEADER_NAME.data;
         const expectedCiv = game.players[i].civType; 
         if (actualCiv !== expectedCiv) {
-          throw new common.CivxError(`Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
+          throw new common.PydtError(`Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
         }
 
         if (!game.players[i].hasSurrendered && parsedCiv.ACTOR_AI_HUMAN === 1) {
-          throw new common.CivxError(`Expected civ ${i} to be human!`);
+          throw new common.PydtError(`Expected civ ${i} to be human!`);
         }
 
         if (game.players[i].hasSurrendered && parsedCiv.ACTOR_AI_HUMAN === 3) {
-          throw new common.CivxError(`Expected civ ${i} to be AI!`);
+          throw new common.PydtError(`Expected civ ${i} to be AI!`);
         }
       } else {
         if (parsedCiv.ACTOR_AI_HUMAN === 3) {
-          throw new common.CivxError(`Expected civ ${i} to be AI!`);
+          throw new common.PydtError(`Expected civ ${i} to be AI!`);
         }
       }
     }
@@ -98,13 +98,13 @@ module.exports.handler = (event, context, cb) => {
     }
 
     if (expectedRound != parsedRound) {
-      throw new common.CivxError(`Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
+      throw new common.PydtError(`Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
     }
 
     const isCurrentTurn = parsed.CIVS[nextPlayerIndex].IS_CURRENT_TURN;
 
     if (!isCurrentTurn || !isCurrentTurn.data) {
-      throw new common.CivxError('Incorrect player turn in save file!');
+      throw new common.PydtError('Incorrect player turn in save file!');
     }
     
     game.currentPlayerSteamId = game.players[Game.getNextPlayerIndex(game)].steamId;

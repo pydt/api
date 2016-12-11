@@ -1,4 +1,4 @@
-# CIVX Serverless API
+# PYDT Serverless API
 
 Currently there's no local dev story for the API, so you'll need an AWS account.
 Even so, the cost for deploying this should be free to pennies a month in a dev scenario.
@@ -7,7 +7,7 @@ Even so, the cost for deploying this should be free to pennies a month in a dev 
 
 * `npm install`
 * Make sure you have the aws cli installed and configured, and then `./sls.sh deploy -v` to have serverless use cloudformation to set things up in AWS.
-* As a part of the deployment, `api-url.txt` will be written to the parent directory. Assuming that your other civx projects are on the same level, they'll use that file to configure their dev API endpoint.
+* As a part of the deployment, `api-url.txt` will be written to the parent directory. Assuming that your other pydt projects are on the same level, they'll use that file to configure their dev API endpoint.
 
 ## Prod Deployment
 

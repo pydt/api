@@ -19,25 +19,25 @@ module.exports.handler = (event, context, cb) => {
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new common.CivxError('Game in Progress');
+      throw new common.PydtError('Game in Progress');
     }
 
     if (_.map(game.players, 'steamId').indexOf(userId) >= 0) {
-      throw new common.CivxError('Player already in Game');
+      throw new common.PydtError('Player already in Game');
     }
 
     if (_.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
-      throw new common.CivxError('Civ already in Game');
+      throw new common.PydtError('Civ already in Game');
     }
 
     if (game.players.length >= game.humans) {
-      throw new common.CivxError('Too many humans already in game.');
+      throw new common.PydtError('Too many humans already in game.');
     }
 
     if (game.hashedPassword) {
       return bcrypt.compare(body.password || '', game.hashedPassword).then(res => {
         if (!res) {
-          throw new common.CivxError('Supplied password does not match game password!');
+          throw new common.PydtError('Supplied password does not match game password!');
         }
       });
     }

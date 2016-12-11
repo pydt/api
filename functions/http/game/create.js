@@ -23,7 +23,7 @@ module.exports.handler = (event, context, cb) => {
     });
 
     if (hasCreatedGame) {
-      throw new common.CivxError('User has already created a game.');
+      throw new common.PydtError('User has already created a game.');
     } else {
       return createTheGame(user, body, cb);
     }

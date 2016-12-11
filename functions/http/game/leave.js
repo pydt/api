@@ -17,11 +17,11 @@ module.exports.handler = (event, context, cb) => {
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
     if (game.inProgress) {
-      throw new common.CivxError('You can only leave a game before it starts.');
+      throw new common.PydtError('You can only leave a game before it starts.');
     }
 
     if (_.map(game.players, 'steamId').indexOf(userId) < 0) {
-      throw new common.CivxError('Player not in Game');
+      throw new common.PydtError('Player not in Game');
     }
 
     _.remove(game.players, player => {

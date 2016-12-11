@@ -14,19 +14,19 @@ module.exports.handler = (event, context, cb) => {
     game = _game;
 
     if (game.inProgress) {
-      throw new common.CivxError(`Game in Progress`);
+      throw new common.PydtError(`Game in Progress`);
     }
 
     if (game.createdBySteamId !== userId) {
-      throw new common.CivxError(`You didn't create this game!`);
+      throw new common.PydtError(`You didn't create this game!`);
     }
 
     if (game.slots < game.players.length) {
-      throw new common.CivxError(`You can't change the number of slots to less than the current number of players!`);
+      throw new common.PydtError(`You can't change the number of slots to less than the current number of players!`);
     }
 
     if (game.humans < game.players.length) {
-      throw new common.CivxError(`You can't change the number of humans to less than the current number of players!`);
+      throw new common.PydtError(`You can't change the number of humans to less than the current number of players!`);
     }
 
     game.displayName = body.displayName;
