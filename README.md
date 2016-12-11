@@ -6,8 +6,7 @@ Even so, the cost for deploying this should be free to pennies a month in a dev 
 ## Dev Setup / Deployment
 
 * `npm install`
-* `npm install -g serverless`
-* Make sure you have the aws cli installed and conigured, and then `sls deploy -v` to have serverless use cloudformation to set things up in AWS.
+* Make sure you have the aws cli installed and configured, and then `./sls.sh deploy -v` to have serverless use cloudformation to set things up in AWS.
 * As a part of the deployment, `api-url.txt` will be written to the parent directory. Assuming that your other civx projects are on the same level, they'll use that file to configure their dev API endpoint.
 
 ## Prod Deployment

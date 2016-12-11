@@ -13,19 +13,26 @@
 
 service: civ-serverless-api
 
+frameworkVersion: "1.3.0"
+
 plugins:
   - serverless-mocha-plugin
-  - serverless-plugin-write-env-vars
   - export-api-url
 
 provider:
   name: aws
   runtime: nodejs4.3
   stage: dev
+  cfLogs: true
   iamRoleStatements: # We should tighten this up...
     - Effect: Allow
       Action: "*"
       Resource: "*"
+  environment:
+    SERVERLESS_STAGE: ${self:custom.activeStage}
+    RESOURCE_PREFIX: ${self:custom.resourcePrefix}
+    WEB_URL: ${env:WEB_URL, self:custom.DEV_WEB_URL}
+
 custom:
   activeStage: ${opt:stage, self:provider.stage}
   resourcePrefix: ${self:custom.activeStage}-civx-
@@ -33,11 +40,6 @@ custom:
   dev_DYNAMO_CAPACITY: 1
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
-  writeEnvVars:
-    SERVERLESS_STAGE: ${self:custom.activeStage}
-    RESOURCE_PREFIX: ${self:custom.resourcePrefix}
-    WEB_URL: ${env:WEB_URL, self:custom.DEV_WEB_URL}
-
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -110,7 +112,7 @@ functions:
           method: get
           integration: lambda
           cors: true
-  game:
+  gameGet:
     handler: functions/http/game/get.handler
     memorySize: 128
     events:
@@ -240,7 +242,7 @@ functions:
           path: game/listOpen
           method: get
           cors: true
-  user:
+  userGet:
     handler: functions/http/user/get.handler
     memorySize: 128
     events:
@@ -270,7 +272,7 @@ functions:
           integration: lambda
           authorizer: jwtAuthorizer
           cors: true
-  userSteamProfile:
+  userSteamProfileGet:
     handler: functions/http/user/steamProfile.handler
     memorySize: 128
     events:
