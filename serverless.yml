@@ -32,6 +32,8 @@ provider:
     SERVERLESS_STAGE: ${self:custom.activeStage}
     RESOURCE_PREFIX: ${self:custom.resourcePrefix}
     WEB_URL: ${env:WEB_URL, self:custom.DEV_WEB_URL}
+    JWT_SECRET: ${file(./config.yml):JWT_SECRET}
+    ROLLBAR_API_KEY: ${file(./config.yml):ROLLBAR_API_KEY}
 
 custom:
   activeStage: ${opt:stage, self:provider.stage}
