@@ -1,2 +1,4 @@
 ROLLBAR_API_KEY: null
 JWT_SECRET: pydtdevsecret
+DISCOURSE_API_KEY: null
+STEAM_API_KEY: null
