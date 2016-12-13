@@ -44,6 +44,7 @@ custom:
   dev_DYNAMO_CAPACITY: 1
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
+  DEFAULT_LAMBDA_MEMORY: 512
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -76,30 +77,30 @@ custom:
 functions:
   jwtAuthorizer:
     handler: functions/auth/jwt.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
   cronCheckTurnTimerJobs:
     handler: functions/cron/checkTurnTimerJobs.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: rate(2 minutes)
   snsAddTurnTimer:
     handler: functions/sns/addTurnTimerJob.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
   snsEmailTurnNotification:
     handler: functions/sns/emailTurnNotification.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
   snsUpdateUserGameCache:
     handler: functions/sns/updateUserGameCache.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
   authSteamAuthenticate:
     handler: functions/http/auth/steamAuthenticate.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: auth/steam
@@ -108,7 +109,7 @@ functions:
           cors: true
   authSteamValidate:
     handler: functions/http/auth/steamValidate.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     timeout: 30
     events:
       - http:
@@ -118,7 +119,7 @@ functions:
           cors: true
   gameGet:
     handler: functions/http/game/get.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}
@@ -127,7 +128,7 @@ functions:
           cors: true
   gameCreate:
     handler: functions/http/game/create.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/create
@@ -136,7 +137,7 @@ functions:
           cors: true
   gameDelete:
     handler: functions/http/game/delete.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/delete
@@ -145,7 +146,7 @@ functions:
           cors: true
   gameChangeCiv:
     handler: functions/http/game/changeCiv.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/changeCiv
@@ -154,7 +155,7 @@ functions:
           cors: true
   gameEdit:
     handler: functions/http/game/edit.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/edit
@@ -163,7 +164,7 @@ functions:
           cors: true
   gameJoin:
     handler: functions/http/game/join.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/join
@@ -172,7 +173,7 @@ functions:
           cors: true
   gameLeave:
     handler: functions/http/game/leave.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/leave
@@ -181,7 +182,7 @@ functions:
           cors: true
   gameStart:
     handler: functions/http/game/start.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/start
@@ -191,7 +192,7 @@ functions:
           cors: true
   gameTurnGet:
     handler: functions/http/game/turn/get.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/turn
@@ -201,7 +202,7 @@ functions:
           cors: true
   gameTurnRevert:
     handler: functions/http/game/turn/revert.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/turn/revert
@@ -211,7 +212,7 @@ functions:
           cors: true
   gameSurrender:
     handler: functions/http/game/surrender.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/surrender
@@ -220,7 +221,7 @@ functions:
           cors: true
   gameTurnStartSubmit:
     handler: functions/http/game/turn/startSubmit.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/{gameId}/turn/startSubmit
@@ -230,7 +231,7 @@ functions:
           cors: true
   gameTurnFinishSubmit:
     handler: functions/http/game/turn/finishSubmit.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     timeout: 15
     events:
       - http:
@@ -240,7 +241,7 @@ functions:
           cors: true
   openGameList:
     handler: functions/http/game/listOpen.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: game/listOpen
@@ -248,7 +249,7 @@ functions:
           cors: true
   userGet:
     handler: functions/http/user/get.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user
@@ -258,7 +259,7 @@ functions:
           cors: true
   userGames:
     handler: functions/http/user/games.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user/games
@@ -268,7 +269,7 @@ functions:
           cors: true
   userSetNotificationEmail:
     handler: functions/http/user/setNotificationEmail.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user/setNotificationEmail
@@ -278,7 +279,7 @@ functions:
           cors: true
   userSteamProfileGet:
     handler: functions/http/user/steamProfile.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user/steamProfile
@@ -288,7 +289,7 @@ functions:
           cors: true
   userSteamProfiles:
     handler: functions/http/user/steamProfiles.handler
-    memorySize: 128
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user/steamProfiles
