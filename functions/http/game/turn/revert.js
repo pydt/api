@@ -2,13 +2,14 @@
 
 const common = require('../../../../lib/common.js');
 const sns = require('../../../../lib/sns.js');
+const User = require('../../../../lib/dynamoose/User.js');
 const Game = require('../../../../lib/dynamoose/Game.js');
 const GameTurn = require('../../../../lib/dynamoose/GameTurn.js');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.path.gameId;
-  let game;
+  let game, lastTurn;
 
   Game.get(gameId).then(_game => {
     game = _game;
@@ -19,7 +20,13 @@ module.exports.handler = (event, context, cb) => {
 
     return findGameTurnToRevertTo(game, game.gameTurnRangeKey - 1);
   })
-  .then(lastTurn => {
+  .then(_lastTurn => {
+    lastTurn = _lastTurn;
+    return User.get(lastTurn.playerSteamId);
+  })
+  .then(user => {
+    GameTurn.updateTurnStatistics(game, lastTurn, user, true);
+
     // Update previous turn data
     delete lastTurn.skipped;
     delete lastTurn.endDate;
@@ -46,6 +53,7 @@ module.exports.handler = (event, context, cb) => {
     
     promises.push(GameTurn.saveVersioned(lastTurn));
     promises.push(Game.saveVersioned(game));
+    promises.push(User.saveVersioned(user));
     promises.push(GameTurn.getAndUpdateSaveFileForGameState(game));
 
     return Promise.all(promises);

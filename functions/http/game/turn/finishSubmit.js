@@ -13,9 +13,7 @@ module.exports.handler = (event, context, cb) => {
   const gameId = event.pathParameters.gameId;
   const userId = event.requestContext.authorizer.principalId;
   
-  let game;
-  let gameTurn;
-  let users;
+  let game, gameTurn, users, user;
 
   Game.get(gameId).then(_game => {
     game = _game;
@@ -32,6 +30,10 @@ module.exports.handler = (event, context, cb) => {
   })
   .then(_users => {
     users = _users;
+
+    user = _.find(users, user => {
+      return user.steamId === userId;
+    });
 
     return s3.getObject({
       Bucket: common.config.RESOURCE_PREFIX + 'saves',
@@ -111,7 +113,7 @@ module.exports.handler = (event, context, cb) => {
     game.round = expectedRound;
 
     return GameTurn.updateSaveFileForGameState(game, users, wrapper).then(() => {
-      return module.exports.moveToNextTurn(game, gameTurn);  
+      return module.exports.moveToNextTurn(game, gameTurn, user);  
     }).then(() => {
       common.lp.success(event, cb, game);
     });
@@ -123,14 +125,17 @@ module.exports.handler = (event, context, cb) => {
 
 ////////
 
-module.exports.moveToNextTurn = (game, gameTurn) => {
+module.exports.moveToNextTurn = (game, gameTurn, user) => {
   return Promise.all([
-    closeGameTurn(gameTurn),
+    closeGameTurn(game, gameTurn, user),
     createNextGameTurn(game)
   ])
   .then(() => {
-    // Finally, update the game itself!
-    return Game.saveVersioned(game);
+    // Finally, update the game and user!
+    return Promise.all([
+      User.saveVersioned(user),
+      Game.saveVersioned(game)
+    ]); 
   })
   .then(() => {
     // Send an sns message that a turn has been completed.
@@ -138,8 +143,11 @@ module.exports.moveToNextTurn = (game, gameTurn) => {
   });
 }
 
-function closeGameTurn(gameTurn) {
+function closeGameTurn(game, gameTurn, user) {
   gameTurn.endDate = new Date();
+
+  GameTurn.updateTurnStatistics(game, gameTurn, user);
+
   return GameTurn.saveVersioned(gameTurn);
 }
 

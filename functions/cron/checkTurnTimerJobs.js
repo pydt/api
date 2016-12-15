@@ -59,6 +59,7 @@ function checkTurnTimer(game) {
 }
 
 function skipTurn(game, turn) {
+  let user;
   const currentPlayerSteamId = game.currentPlayerSteamId;
   turn.skipped = true;
 
@@ -84,12 +85,13 @@ function skipTurn(game, turn) {
     }).promise();
   })
   .then(() => {
-    return finishSubmit.moveToNextTurn(game);
-  })
-  .then(() => {
     return User.get(currentPlayerSteamId);
   })
-  .then(user => {
+  .then(_user => {
+    user = _user;
+    return finishSubmit.moveToNextTurn(game, turn, user);
+  })
+  .then(() => {
     const email = {
       Destination: {
         ToAddresses: [

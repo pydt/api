@@ -98,6 +98,12 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsRecalculateUserStats:
+    handler: functions/sns/recalculateUserStats.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 300
+    events:
+      - sns: ${self:custom.resourcePrefix}recalculate-user    
   authSteamAuthenticate:
     handler: functions/http/auth/steamAuthenticate.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
