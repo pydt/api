@@ -8,6 +8,7 @@ Even so, the cost for deploying this should be free to pennies a month in a dev 
 ## Dev Setup / Deployment
 
 * `npm install`
+* `npm install -g serverless@1.3.0`
 * Copy config.yml.template to config.yml and set the appropriate values.
 * Make sure you have the aws cli installed and configured, and then `./sls.sh deploy -v` to have serverless use cloudformation to set things up in AWS.
 * As a part of the deployment, `api-url.txt` will be written to the parent directory. Assuming that your other pydt projects are on the same level, they'll use that file to configure their dev API endpoint.

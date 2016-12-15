@@ -1,17 +1,25 @@
 'use strict';
 
-const AwsInfo = require('../serverless/lib/plugins/aws/info');
 const fs = require('fs');
+const _ = require('lodash');
 
 class ExportApiUrl {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
-    this.awsInfo = new AwsInfo(serverless, options);
+    var self = this;
 
     this.hooks = {
       'after:deploy:deploy': this.exportApiUrl.bind(this)
     }
+
+    _.forEach(this.serverless.pluginManager.plugins, function(plugin){
+      if (plugin.constructor.name == 'AwsInfo') {
+        // got the info plugin, hijack it
+        self.awsInfo = plugin;
+        self.SDK = plugin.provider.sdk;
+      }
+    })
   }
 
 
