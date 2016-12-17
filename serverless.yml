@@ -253,15 +253,22 @@ functions:
           path: game/listOpen
           method: get
           cors: true
-  userGet:
-    handler: functions/http/user/get.handler
+  userGetCurrent:
+    handler: functions/http/user/getCurrent.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
           path: user
           method: get
-          integration: lambda
           authorizer: jwtAuthorizer
+          cors: true
+  userGetById:
+    handler: functions/http/user/getById.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: user/{userId}
+          method: get
           cors: true
   userGames:
     handler: functions/http/user/games.handler

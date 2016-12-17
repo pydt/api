@@ -88,5 +88,7 @@ module.exports.handler = (event, context, cb) => {
     host.turnsPlayed = 0;
     host.turnsSkipped = 0;
     host.timeTaken = 0;
+    host.fastTurns = 0;
+    host.slowTurns = 0;
   }
 };
