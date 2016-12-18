@@ -16,6 +16,11 @@ module.exports.handler = (event, context, cb) => {
 
   User.get(userId).then(_user => {
     user = _user;
+
+    if (!user.emailAddress) {
+      throw new common.PydtError('You need to set a notification email address before you can create a game.');
+    }
+
     return Game.getGamesForUser(user);
   }).then(games => {
     let hasCreatedGame = _.some(games, game => {
