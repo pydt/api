@@ -23,7 +23,7 @@ provider:
   name: aws
   runtime: nodejs4.3
   stage: dev
-  cfLogs: true
+  #cfLogs: true # temporarily disabling logging to get room for more endpoints, this blows :(
   iamRoleStatements: # We should tighten this up...
     - Effect: Allow
       Action: "*"
@@ -251,6 +251,14 @@ functions:
     events:
       - http:
           path: game/listOpen
+          method: get
+          cors: true
+  userGetAll:
+    handler: functions/http/user/getAll.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: users
           method: get
           cors: true
   userGetCurrent:
