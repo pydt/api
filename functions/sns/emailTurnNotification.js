@@ -33,7 +33,7 @@ module.exports.handler = (event, context, cb) => {
       Message: {
         Body: {
           Html: {
-            Data: '<h1>PLAY YOUR DAMN TURN</h1>'
+            Data: `<h1>PLAY YOUR DAMN TURN</h1><p>Game URL: ${common.config.WEB_URL}/game/${gameId}</p>`
           }
         }, Subject: {
           Data: `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`
