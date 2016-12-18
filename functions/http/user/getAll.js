@@ -23,6 +23,10 @@ function getAllUsers(lastKey) {
   }
 
   return scan.exec().then(users => {
+    for (let user of users) {
+      delete user.emailAddress; // make sure email address isn't returned!
+    }
+    
     if (users.lastKey) {
       return getAllUsers(users.lastKey).then(moreUsers => {
         return users.concat(moreUsers);

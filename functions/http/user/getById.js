@@ -7,6 +7,7 @@ module.exports.handler = (event, context, cb) => {
   const userId = event.pathParameters.userId;
 
   User.get(userId).then(user => {
+    delete user.emailAddress; // make sure email address isn't returned!
     common.lp.success(event, cb, user);
   })
   .catch(err => {
