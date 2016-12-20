@@ -35,7 +35,7 @@ module.exports.handler = (event, context, cb) => {
 };
 
 function updateUsers(users) {
-  const gameIds = _.uniq(_.concat(_.flatMap(users, 'activeGameIds')));
+  const gameIds = _.compact(_.uniq(_.concat(_.flatMap(users, 'activeGameIds'))));
 
   return Game.batchGet(gameIds).then(games => {
     return Promise.all(_.map(users, user => {
