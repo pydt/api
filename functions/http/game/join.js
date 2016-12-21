@@ -51,6 +51,10 @@ module.exports.handler = (event, context, cb) => {
     return User.get(userId);
   })
   .then(user => {
+    if (!user.emailAddress) {
+      throw new common.PydtError('You need to set an email address for notifications before joining a game.');
+    }
+
     user.activeGameIds = user.activeGameIds || [];
     user.activeGameIds.push(game.gameId);
     joinedUser = user;
