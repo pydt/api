@@ -13,7 +13,8 @@ const _ = require('lodash');
 module.exports.handler = (event, context, cb) => {
   const body = JSON.parse(event.body);
   const gameId = event.pathParameters.gameId;
-  const userId = event.requestContext.authorizer.principalId;
+  const kickUserId = body.kickUserId;
+  let userId = event.requestContext.authorizer.principalId;
   let game;
   let user;
   let users;
@@ -22,8 +23,23 @@ module.exports.handler = (event, context, cb) => {
 
   Game.get(gameId).then(_game => {
     game = _game;
+
+    if (kickUserId) {
+      if (game.createdBySteamId !== userId) {
+        throw new common.PydtError('You must be the game creator to kick a user!');
+      }
+
+      const diffTime = new Date().getTime() - game.updatedAt.getTime();
+
+      if (diffTime < 1000 * 60 * 60 * 24) {
+        throw new common.PydtError(`You cannot kick a user if they haven't had 24 hours to play their turn.`);
+      }
+
+      userId = kickUserId;
+    }
+
     const player = _.find(game.players, player => {
-      return player.steamId === event.requestContext.authorizer.principalId;
+      return player.steamId === userId;
     });
 
     if (!player) {
@@ -96,12 +112,18 @@ module.exports.handler = (event, context, cb) => {
     const emailPromises = [];
 
     for (let player of game.players) {
-      if (!player.hasSurrendered) {
-        const curUser = _.find(users, user => {
-          return user.steamId === player.steamId;
-        });
+      const curUser = _.find(users, user => {
+        return user.steamId === player.steamId;
+      });
 
-        if (curUser.emailAddress) {
+      if (curUser.emailAddress) {
+        let desc = 'surrendered';
+
+        if (kickUserId) {
+          desc = 'been kicked';
+        }
+
+        if (!player.hasSurrendered) {
           const email = {
             Destination: {
               ToAddresses: [
@@ -111,10 +133,32 @@ module.exports.handler = (event, context, cb) => {
             Message: {
               Body: {
                 Html: {
-                  Data: `<p><b>${user.displayName}</b> has surrendered from <b>${game.displayName}</b>. :(</p>`
+                  Data: `<p><b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(</p>`
                 }
               }, Subject: {
-                Data: `A player has surrendered from ${game.displayName}!`
+                Data: `A player has ${desc} from ${game.displayName}!`
+              }
+            },
+            Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
+          };
+
+          emailPromises.push(ses.sendEmail(email).promise());
+        }
+
+        if (player.steamId === kickUserId) {
+          const email = {
+            Destination: {
+              ToAddresses: [
+                curUser.emailAddress
+              ]
+            },
+            Message: {
+              Body: {
+                Html: {
+                  Data: `<p>You have been kicked from <b>${game.displayName}</b>. If you feel this was unwarranted, please contact mike@playyourdamnturn.com and we can try to mediate the situation.</p>`
+                }
+              }, Subject: {
+                Data: `You have been kicked from ${game.displayName}!`
               }
             },
             Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
