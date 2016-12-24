@@ -25,6 +25,6 @@ module.exports.handler = (event, context, cb) => {
     return User.get(game.currentPlayerSteamId);
   })
   .catch(err => {
-    cb(err);
+    common.generalError(cb, err);
   });
 };

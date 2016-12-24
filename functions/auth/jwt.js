@@ -16,7 +16,7 @@ module.exports.handler = (event, context, cb) => {
       let resourceArn = event.methodArn.substring(0, event.methodArn.indexOf('/')) + '/*';
       policy = generatePolicy(auth.getSteamIDFromToken(token), 'Allow', resourceArn);
     } catch (err) {
-      return cb(err);
+      return common.generalError(cb, err);
     }
 
     cb(null, policy);

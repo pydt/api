@@ -30,7 +30,7 @@ module.exports.handler = (event, context, cb) => {
     });
   })
   .catch(err => {
-    cb(err);
+    common.generalError(cb, err);
   });
 };
 

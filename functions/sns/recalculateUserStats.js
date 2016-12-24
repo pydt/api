@@ -25,7 +25,7 @@ module.exports.handler = (event, context, cb) => {
     cb(null);
   })
   .catch(err => {
-    cb(err);
+    common.generalError(cb, err);
   });
 
   ////////
