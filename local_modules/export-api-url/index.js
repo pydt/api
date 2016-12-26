@@ -37,10 +37,7 @@ class ExportApiUrl {
 
   exportApiUrl() {
     const stage = this.serverless.processedInput.options.stage;
-
-    return this.awsInfo.gather().then(res => {
-      fs.writeFile('../api-' + stage + '-url.txt', res.info.endpoint);
-    });
+    fs.writeFile('../api-' + stage + '-url.txt', this.awsInfo.gatheredData.info.endpoint);
   }
 }
 
