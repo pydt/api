@@ -1,6 +1,7 @@
 'use strict';
 
 const common = require('../../../lib/common.js');
+const discourse = require('../../../lib/discourse.js');
 const Game = require('../../../lib/dynamoose/Game.js');
 const User = require('../../../lib/dynamoose/User.js');
 const AWS = require('aws-sdk');
@@ -27,6 +28,8 @@ module.exports.handler = (event, context, cb) => {
   })
   .then(users => {
     const promises = [];
+
+    promises.push(Game.delete(gameId));
 
     for (let curUser of users) {
       _.pull(curUser.activeGameIds, game.gameId);
@@ -55,7 +58,7 @@ module.exports.handler = (event, context, cb) => {
       }
     }
 
-    promises.push(Game.delete(gameId));
+    promises.push(discourse.deleteGameTopic(game));
 
     return Promise.all(promises);
   })
