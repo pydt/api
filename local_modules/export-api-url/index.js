@@ -10,6 +10,7 @@ class ExportApiUrl {
     var self = this;
 
     this.hooks = {
+      'before:deploy:deploy': this.removeOutputs.bind(this),
       'after:deploy:deploy': this.exportApiUrl.bind(this)
     }
 
@@ -22,6 +23,17 @@ class ExportApiUrl {
     })
   }
 
+  removeOutputs() {
+    // Need to get under 60 outputs :(
+    const outputs = this.serverless.service.provider.compiledCloudFormationTemplate.Outputs;
+    if (outputs) {
+      for (let key in outputs) {
+        if (key.indexOf('GetLambdaFunctionQualifiedArn') >= 0) {
+          delete outputs[key];
+        }
+      }
+    }
+  }
 
   exportApiUrl() {
     const stage = this.serverless.processedInput.options.stage;

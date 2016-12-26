@@ -104,6 +104,11 @@ functions:
     timeout: 300
     events:
       - sns: ${self:custom.resourcePrefix}recalculate-user    
+  snsDeleteOldSaves:
+    handler: functions/sns/deleteOldSaves.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted   
   authSteamAuthenticate:
     handler: functions/http/auth/steamAuthenticate.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
