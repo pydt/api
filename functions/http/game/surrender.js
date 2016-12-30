@@ -93,6 +93,8 @@ module.exports.handler = (event, context, cb) => {
         }
       }
 
+      game.startDate = new Date();
+
       return GameTurn.getAndUpdateSaveFileForGameState(game);
     }
   })
