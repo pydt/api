@@ -2,6 +2,7 @@
 
 const common = require('../../lib/common.js');
 const auth = require('../../lib/auth.js');
+const jwt = require('jsonwebtoken');
 
 module.exports.handler = (event, context, cb) => {
     var token = event.authorizationToken;
@@ -16,6 +17,11 @@ module.exports.handler = (event, context, cb) => {
       let resourceArn = event.methodArn.substring(0, event.methodArn.indexOf('/')) + '/*';
       policy = generatePolicy(auth.getSteamIDFromToken(token), 'Allow', resourceArn);
     } catch (err) {
+      if (err instanceof jwt.JsonWebTokenError) {
+        // Don't log auth errors
+        return cb(err);
+      }
+
       return common.generalError(cb, err);
     }
 
