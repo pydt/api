@@ -23,12 +23,12 @@ module.exports.handler = (event, context, cb) => {
 
     return Game.getGamesForUser(user);
   }).then(games => {
-    let hasCreatedGame = _.some(games, game => {
-      return game.createdBySteamId === userId;
+    let hasFormingGame = _.some(games, game => {
+      return game.createdBySteamId === userId && !game.inProgress;
     });
 
-    if (hasCreatedGame) {
-      throw new common.PydtError('User has already created a game.');
+    if (hasFormingGame) {
+      throw new common.PydtError(`You cannot create a new game at the moment because you already have one game that hasn't been started yet!`);
     } else {
       return createTheGame(user, body, cb);
     }
