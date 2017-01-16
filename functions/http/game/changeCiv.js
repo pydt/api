@@ -15,7 +15,7 @@ module.exports.handler = (event, context, cb) => {
       throw new common.PydtError('Game in Progress');
     }
     
-    if (_.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
+    if (body.playerCiv != 'LEADER_RANDOM' && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
       throw new common.PydtError('Civ already in Game');
     }
 

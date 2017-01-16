@@ -77,7 +77,10 @@ module.exports.handler = (event, context, cb) => {
       if (game.players[i]) {
         const actualCiv = parsedCiv.LEADER_NAME.data;
         const expectedCiv = game.players[i].civType; 
-        if (actualCiv !== expectedCiv) {
+
+        if (expectedCiv === 'LEADER_RANDOM') {
+          game.players[i].civType = actualCiv;
+        } else if (actualCiv !== expectedCiv) {
           throw new common.PydtError(`Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
         }
 
