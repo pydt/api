@@ -5,17 +5,21 @@
   "dependencies": {
     "bcryptjs": "https://github.com/dcodeIO/bcrypt.js.git#21b79128929f3392e7f43cf7251c8d9eef78f0a6",
     "bluebird": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz",
+    "buffer-v6-polyfill": "https://registry.npmjs.org/buffer-v6-polyfill/-/buffer-v6-polyfill-1.0.3.tgz",
     "civ6-save-parser": "^1.0.0",
     "dynamoose": "^0.7.0",
     "generate-password": "^1.2.0",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.16.4",
+    "moment": "https://registry.npmjs.org/moment/-/moment-2.17.1.tgz",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.6",
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
-    "rollbar": "^0.6.3"
+    "rollbar": "^0.6.3",
+    "treehash": "0.0.5",
+    "zip-stream": "^1.1.1"
   },
   "devDependencies": {
     "co": "^4.6.0",

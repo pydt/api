@@ -83,6 +83,12 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: rate(2 minutes)
+  cronBackupS3ToGlacier:
+    handler: functions/cron/backupS3ToGlacier.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 300
+    events:
+      - schedule: cron(0 3 * * ? *)
   snsAddTurnTimer:
     handler: functions/sns/addTurnTimerJob.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
