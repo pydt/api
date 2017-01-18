@@ -54,30 +54,37 @@ module.exports.handler = (event, context, cb) => {
           reject(err);
         })
         .on('end', () => {
+          let digest;
+
           if (zippedData.length > 0) {
             glacierChain = glacierChain.then(() => {
               return uploadGlacierPart(mp.uploadId, glacierPart, zippedData);
-            }).then(() => {
-              return glacier.completeMultipartUpload({
-                vaultName: VAULT_NAME,
-                uploadId: mp.uploadId,
-                archiveSize: (glacierPart * PART_SIZE + zippedData.length).toString(),
-                checksum: thStream.digest()
-              }).promise();
-            }).then(data => {
-              console.log('upload completed, archive id: ' + data.archiveId + ', checksum: ' + data.checksum);
-              resolve();
-            })
-            .catch(err => {
-              reject(err);
             });
           }
+          
+          glacierChain.then(() => {
+            digest = thStream.digest();
+
+            return glacier.completeMultipartUpload({
+              vaultName: VAULT_NAME,
+              uploadId: mp.uploadId,
+              archiveSize: (glacierPart * PART_SIZE + zippedData.length).toString(),
+              checksum: digest
+            }).promise();
+          }).then(data => {
+            console.log('expected digest: ', digest);
+            console.log('upload completed, archive id: ' + data.archiveId + ', checksum: ' + data.checksum);
+            resolve();
+          })
+          .catch(err => {
+            reject(err);
+          });
         });
     });
 
     return getAllObjects().then(keys => {
       return Promise.each(keys, key => {
-        console.log(key);
+        console.log(key, process.memoryUsage());
         return s3.getObject({
           Bucket: common.config.RESOURCE_PREFIX + 'saves',
           Key: key

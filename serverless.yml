@@ -85,7 +85,7 @@ functions:
       - schedule: rate(2 minutes)
   cronBackupS3ToGlacier:
     handler: functions/cron/backupS3ToGlacier.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    memorySize: 1024
     timeout: 300
     events:
       - schedule: cron(0 3 * * ? *)
