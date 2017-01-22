@@ -15,6 +15,19 @@ tar -zcf ${WORKING_DIR}/${DYNAMODB_ARCHIVE} ${WORKING_DIR}/${DATE}
 
 /usr/local/bin/aws s3 cp ${WORKING_DIR}/${DYNAMODB_ARCHIVE} s3://pydt-backup/${DATE}/${DYNAMODB_ARCHIVE} --storage-class STANDARD_IA --quiet
 
-/usr/local/bin/aws s3 sync s3://prod-civx-saves s3://pydt-backup/${DATE} --storage-class STANDARD_IA --quiet
+/usr/local/bin/aws s3 ls s3://prod-civx-saves --recursive | while read -r line;
+  do
+    createDate=`echo $line|awk {'print $1" "$2'}`
+    createDate=`date -d"$createDate" +%s`
+    newerThan=`date -d "-1 days" +%s`
+    if [[ $createDate -gt $newerThan ]]
+      then 
+        filename=`echo $line|awk {'print $4'}`
+        if [[ $filename != "" ]]
+          then
+            /usr/local/bin/aws s3 cp s3://prod-civx-saves/$filename s3://pydt-backup/$DATE/$filename --storage-class STANDARD_IA --quiet
+        fi
+    fi
+  done;
 
 #rm -rf ${WORKING_DIR}
