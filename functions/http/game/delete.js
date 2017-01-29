@@ -42,7 +42,7 @@ module.exports.deleteGame = function(game, userId) {
         _.pull(curUser.activeGameIds, game.gameId);
         promises.push(User.saveVersioned(curUser));
 
-        if (!userId || curUser.steamId !== userId) {
+        if (curUser.emailAddress && (!userId || curUser.steamId !== userId)) {
           let message = `<p>A game that you have recently joined (<b>${game.displayName}</b>) has been deleted`;
 
           if (!userId) {
