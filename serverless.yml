@@ -18,6 +18,7 @@ frameworkVersion: "1.4.0"
 plugins:
   - serverless-mocha-plugin
   - export-api-url
+  - serverless-offline
 
 provider:
   name: aws
