@@ -10,6 +10,7 @@
     "generate-password": "^1.2.0",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.16.4",
+    "moment": "https://registry.npmjs.org/moment/-/moment-2.17.1.tgz",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.6",

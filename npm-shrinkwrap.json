@@ -121,7 +121,7 @@
     },
     "buffer-v6-polyfill": {
       "version": "1.0.3",
-      "from": "buffer-v6-polyfill@>=1.0.3 <2.0.0",
+      "from": "https://registry.npmjs.org/buffer-v6-polyfill/-/buffer-v6-polyfill-1.0.3.tgz",
       "resolved": "https://registry.npmjs.org/buffer-v6-polyfill/-/buffer-v6-polyfill-1.0.3.tgz"
     },
     "caseless": {
@@ -652,7 +652,7 @@
     },
     "moment": {
       "version": "2.17.1",
-      "from": "moment@>=2.0.0 <3.0.0",
+      "from": "https://registry.npmjs.org/moment/-/moment-2.17.1.tgz",
       "resolved": "https://registry.npmjs.org/moment/-/moment-2.17.1.tgz"
     },
     "ms": {

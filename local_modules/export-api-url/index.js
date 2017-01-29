@@ -28,7 +28,7 @@ class ExportApiUrl {
     const outputs = this.serverless.service.provider.compiledCloudFormationTemplate.Outputs;
     if (outputs) {
       for (let key in outputs) {
-        if (key.indexOf('GetLambdaFunctionQualifiedArn') >= 0) {
+        if (key.indexOf('LambdaFunctionQualifiedArn') >= 0) {
           delete outputs[key];
         }
       }
