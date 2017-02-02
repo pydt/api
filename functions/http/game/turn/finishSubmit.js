@@ -71,6 +71,18 @@ module.exports.handler = (event, context, cb) => {
       throw new common.PydtError(`Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
     }
 
+    if (game.gameSpeed && game.gameSpeed !== parsed.GAME_SPEED.data) {
+      throw new common.PydtError(`Invalid game speed in save file!  (actual: ${parsed.GAME_SPEED.data}, expected: ${game.gameSpeed})`);
+    }
+
+    if (game.mapFile && parsed.MAP_FILE.data.indexOf(game.mapFile) < 0) {
+      throw new common.PydtError(`Invalid map file in save file! (actual: ${parsed.MAP_FILE.data}, expected: ${game.mapFile})`);
+    }
+
+    if (game.mapSize && game.mapSize !== parsed.MAP_SIZE.data) {
+      throw new common.PydtError(`Invalid map size in save file! (actual: ${parsed.MAP_SIZE.data}, expected: ${game.mapSize})`);
+    }
+
     for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
       const parsedCiv = parsed.CIVS[i];
 

@@ -56,7 +56,10 @@ function createTheGame(user, body) {
     displayName: body.displayName,
     description: body.description,
     slots: body.slots,
-    humans: body.humans
+    humans: body.humans,
+    gameSpeed: body.gameSpeed,
+    mapFile: body.mapFile,
+    mapSize: body.mapSize
   });
 
   return discourse.addGameTopic(newGame).then(topic => {

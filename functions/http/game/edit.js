@@ -34,6 +34,9 @@ module.exports.handler = (event, context, cb) => {
     game.slots = body.slots;
     game.dlc = body.dlc;
     game.humans = body.humans;
+    game.gameSpeed = body.gameSpeed;
+    game.mapFile = body.mapFile;
+    game.mapSize = body.mapSize;
 
     if (body.password) {
       if (body.password !== game.hashedPassword) {
