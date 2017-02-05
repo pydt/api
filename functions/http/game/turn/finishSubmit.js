@@ -96,17 +96,21 @@ module.exports.handler = (event, context, cb) => {
           throw new common.PydtError(`Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
         }
 
-        if (!game.players[i].hasSurrendered && parsedCiv.ACTOR_AI_HUMAN === 1) {
+        if (Game.playerIsHuman(game.players[i]) && parsedCiv.ACTOR_AI_HUMAN === 1) {
           throw new common.PydtError(`Expected civ ${i} to be human!`);
         }
 
-        if (game.players[i].hasSurrendered && parsedCiv.ACTOR_AI_HUMAN === 3) {
+        if (!Game.playerIsHuman(game.players[i]) && parsedCiv.ACTOR_AI_HUMAN === 3) {
           throw new common.PydtError(`Expected civ ${i} to be AI!`);
         }
       } else {
         if (parsedCiv.ACTOR_AI_HUMAN === 3) {
           throw new common.PydtError(`Expected civ ${i} to be AI!`);
         }
+
+        game.players[i] = {
+          civType: parsedCiv.LEADER_NAME.data
+        };
       }
     }
 

@@ -56,9 +56,9 @@ module.exports.handler = (event, context, cb) => {
 
     player.hasSurrendered = true;
 
-    // The game is completed if every player has surrendered
+    // The game is completed if every player is AI
     game.completed = _.every(game.players, player => {
-      return player.hasSurrendered;
+      return !Game.playerIsHuman(player);
     });
 
     return User.getUsersForGame(game);
@@ -125,7 +125,7 @@ module.exports.handler = (event, context, cb) => {
           desc = 'been kicked';
         }
 
-        if (!player.hasSurrendered) {
+        if (Game.playerIsHuman(player)) {
           const email = {
             Destination: {
               ToAddresses: [

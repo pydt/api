@@ -18,7 +18,7 @@ module.exports.handler = (event, context, cb) => {
       return null;
     }
 
-    return User.batchGet(_.map(game.players, 'steamId'));
+    return User.getUsersForGame(game);
   })
   .then(users => {
     if (!users || !users.length) {

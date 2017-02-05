@@ -78,7 +78,7 @@ function findGameTurnToRevertTo(game, turn) {
       return player.steamId === gameTurn.playerSteamId;
     });
     
-    if (player.hasSurrendered) {
+    if (!Game.playerIsHuman(player)) {
       return findGameTurnToRevertTo(game, turn - 1);
     } else {
       return gameTurn;
