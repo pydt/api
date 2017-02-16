@@ -27,7 +27,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "run-offline": "bash -c \"AWS_REGION=us-east-1 sls offline\"",
-    "debug-offline": "bash -c \"AWS_REGION=us-east-1 node-debug --web-port=8081 sls offline\"",
+    "debug-offline": "bash -c \"AWS_REGION=us-east-1 ./debug-sls.sh offline",
     "clean-lambda": "bash -c \"AWS_REGION=us-east-1 node -e \\\"require('./_scripts/cleanLambda').clean();\\\"",
     "deploy-dev": "bash -c \"sls deploy -v\"",
     "deploy-prod": "bash -c \"WEB_URL=https://www.playyourdamnturn.com sls deploy -v --stage prod\"",
