@@ -7,6 +7,7 @@ const GameTurn = require('../../../../lib/dynamoose/GameTurn.js');
 const User = require('../../../../lib/dynamoose/User.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
+const ses = new AWS.SES();
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
@@ -83,6 +84,8 @@ module.exports.handler = (event, context, cb) => {
       throw new common.PydtError(`Invalid map size in save file! (actual: ${parsed.MAP_SIZE.data}, expected: ${game.mapSize})`);
     }
 
+    const newDefeatedPlayers = [];
+
     for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
       const parsedCiv = parsed.CIVS[i];
 
@@ -96,12 +99,20 @@ module.exports.handler = (event, context, cb) => {
           throw new common.PydtError(`Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
         }
 
-        if (Game.playerIsHuman(game.players[i]) && parsedCiv.ACTOR_AI_HUMAN === 1) {
-          throw new common.PydtError(`Expected civ ${i} to be human!`);
-        }
+        if (Game.playerIsHuman(game.players[i])) {
+          if (parsedCiv.ACTOR_AI_HUMAN === 1) {
+            throw new common.PydtError(`Expected civ ${i} to be human!`);
+          }
 
-        if (!Game.playerIsHuman(game.players[i]) && parsedCiv.ACTOR_AI_HUMAN === 3) {
-          throw new common.PydtError(`Expected civ ${i} to be AI!`);
+          if (parsedCiv.PLAYER_ALIVE && !parsedCiv.PLAYER_ALIVE.data) {
+            // Player has been defeated!
+            game.players[i].hasSurrendered = true;
+            newDefeatedPlayers.push(game.players[i]);
+          }
+        } else {
+          if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+            throw new common.PydtError(`Expected civ ${i} to be AI!`);
+          }
         }
       } else {
         if (parsedCiv.ACTOR_AI_HUMAN === 3) {
@@ -135,7 +146,11 @@ module.exports.handler = (event, context, cb) => {
     game.round = expectedRound;
 
     return GameTurn.updateSaveFileForGameState(game, users, wrapper).then(() => {
-      return module.exports.moveToNextTurn(game, gameTurn, user);  
+      return module.exports.moveToNextTurn(game, gameTurn, user);
+    }).then(() => {
+      if (newDefeatedPlayers.length) {
+        return defeatPlayers(game, users, newDefeatedPlayers);
+      }
     }).then(() => {
       common.lp.success(event, cb, game);
     });
@@ -182,4 +197,59 @@ function createNextGameTurn(game) {
   });
 
   return GameTurn.saveVersioned(nextTurn);
+}
+
+function defeatPlayers(game, users, newDefeatedPlayers) {
+  const promises = [];
+
+  for (let defeatedPlayer of newDefeatedPlayers) {
+    const defeatedUser = _.find(users, user => {
+      return user.steamId === defeatedPlayer.steamId;
+    });
+
+    _.pull(defeatedUser.activeGameIds, game.gameId);
+
+    defeatedUser.inactiveGameIds = defeatedUser.inactiveGameIds || [];
+    defeatedUser.inactiveGameIds.push(game.gameId);
+    
+    promises.push(User.saveVersioned(defeatedUser));
+
+    for (let player of game.players) {
+      const curUser = _.find(users, user => {
+        return user.steamId === player.steamId;
+      });
+
+      if (curUser.emailAddress) {
+        let desc = defeatedUser.displayName + ' has';
+
+        if (player === defeatedPlayer) {
+          desc = 'You have';
+        }
+
+        if (Game.playerIsHuman(player) || player === defeatedPlayer) {
+          const email = {
+            Destination: {
+              ToAddresses: [
+                curUser.emailAddress
+              ]
+            },
+            Message: {
+              Body: {
+                Html: {
+                  Data: `<p><b>${desc}</b> been defeated in <b>${game.displayName}</b>!</p>`
+                }
+              }, Subject: {
+                Data: `${desc} been defeated in ${game.displayName}!`
+              }
+            },
+            Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
+          };
+
+          promises.push(ses.sendEmail(email).promise());
+        }
+      }
+    }
+  }
+
+  return Promise.all(promises);
 }
