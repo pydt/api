@@ -118,7 +118,7 @@ module.exports.handler = (event, context, cb) => {
         return user.steamId === player.steamId;
       });
 
-      if (curUser.emailAddress) {
+      if (curUser && curUser.emailAddress) {
         let desc = 'surrendered';
 
         if (kickUserId) {

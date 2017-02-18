@@ -219,7 +219,7 @@ function defeatPlayers(game, users, newDefeatedPlayers) {
         return user.steamId === player.steamId;
       });
 
-      if (curUser.emailAddress) {
+      if (curUser && curUser.emailAddress) {
         let desc = defeatedUser.displayName + ' has';
 
         if (player === defeatedPlayer) {
