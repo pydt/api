@@ -89,6 +89,11 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: cron(0 8 * * ? *)
+  cronUpdateUserInfo:
+    handler: functions/cron/updateUserInfo.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(23 */6 * * ? *)
   snsAddTurnTimer:
     handler: functions/sns/addTurnTimerJob.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}

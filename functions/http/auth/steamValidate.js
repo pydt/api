@@ -34,6 +34,9 @@ module.exports.handler = (event, context, cb) => {
         }
 
         dbUser.displayName = user.profile.displayName;
+        dbUser.avatarSmall = user.profile._json.avatar;
+        dbUser.avatarMedium = user.profile._json.avatarmedium;
+        dbUser.avatarFull = user.profile._json.avatarfull;
         return User.saveVersioned(dbUser);
       }).then(() => {
         cb(null, {
