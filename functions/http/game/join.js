@@ -21,6 +21,10 @@ module.exports.handler = (event, context, cb) => {
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
     if (game.inProgress) {
+      if (!game.allowJoinAfterStart) {
+        throw new common.PydtError('Game does not allow joining after start!');
+      }
+      
       targetPlayer = _.find(game.players, player => {
         return player.civType === body.playerCiv;
       });

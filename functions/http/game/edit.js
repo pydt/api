@@ -13,10 +13,6 @@ module.exports.handler = (event, context, cb) => {
   Game.get(gameId).then(_game => {
     game = _game;
 
-    if (game.inProgress) {
-      throw new common.PydtError(`Game in Progress`);
-    }
-
     if (game.createdBySteamId !== userId) {
       throw new common.PydtError(`You didn't create this game!`);
     }
@@ -29,14 +25,18 @@ module.exports.handler = (event, context, cb) => {
       throw new common.PydtError(`You can't change the number of humans to less than the current number of players!`);
     }
 
-    game.displayName = body.displayName;
-    game.description = body.description;
-    game.slots = body.slots;
-    game.dlc = body.dlc;
-    game.humans = body.humans;
-    game.gameSpeed = body.gameSpeed;
-    game.mapFile = body.mapFile;
-    game.mapSize = body.mapSize;
+    if (!game.inProgress) {
+      game.displayName = body.displayName;
+      game.description = body.description;
+      game.slots = body.slots;
+      game.dlc = body.dlc;
+      game.humans = body.humans;
+      game.gameSpeed = body.gameSpeed;
+      game.mapFile = body.mapFile;
+      game.mapSize = body.mapSize;
+    }
+
+    game.allowJoinAfterStart = body.allowJoinAfterStart;
 
     if (body.password) {
       if (body.password !== game.hashedPassword) {

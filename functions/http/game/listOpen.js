@@ -18,7 +18,11 @@ module.exports.handler = (event, context, cb) => {
           return player.steamId;
         }).length;
 
-        return game.inProgress && !game.completed && numHumans < game.players.length && numHumans < game.humans;
+        return game.inProgress &&
+          game.allowJoinAfterStart &&
+          !game.completed &&
+          numHumans < game.players.length &&
+          numHumans < game.humans;
       })
     });
   })
