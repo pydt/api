@@ -16,7 +16,11 @@ module.exports.handler = (event, context, cb) => {
 
   Game.get({ gameId: gameId }).then(_game => {
     game = _game;
-    if (game.inProgress) {
+    if (game.createdBySteamId === userId) {
+      throw new common.PydtError(`You can't leave, you created the game!`);
+    }
+
+    if (game.inProgress && game.gameTurnRangeKey > 1) {
       throw new common.PydtError('You can only leave a game before it starts.');
     }
 
