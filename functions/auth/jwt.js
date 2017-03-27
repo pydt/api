@@ -28,6 +28,32 @@ module.exports.handler = (event, context, cb) => {
     cb(null, policy);
 };
 
+module.exports.manualValidation = (event, context, cb) => {
+  var token = event.authorizationToken;
+
+  if (!token) {
+    common.lp.success(event, cb, {message: 'Unauthorized'}, 401);
+    return false;
+  }
+
+  let policy;
+
+  try {
+    event.principalId = auth.getSteamIDFromToken(token);
+  } catch (err) {
+    if (err instanceof jwt.JsonWebTokenError) {
+      // Don't log auth errors
+      common.lp.success(event, cb, {message: 'Unauthorized'}, 401);
+      return false;
+    }
+
+    common.lp.error(event, cb, err);
+    return false;
+  }
+
+  return true;
+};
+
 ////////
 
 function generatePolicy(principalId, effect, resource) {

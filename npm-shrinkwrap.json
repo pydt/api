@@ -464,6 +464,11 @@
       "resolved": "https://registry.npmjs.org/diff/-/diff-1.4.0.tgz",
       "dev": true
     },
+    "director": {
+      "version": "1.2.8",
+      "from": "director@latest",
+      "resolved": "https://registry.npmjs.org/director/-/director-1.2.8.tgz"
+    },
     "dynamoose": {
       "version": "0.7.0",
       "from": "dynamoose@>=0.7.0 <0.8.0",

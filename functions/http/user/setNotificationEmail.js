@@ -9,9 +9,9 @@ module.exports.handler = (event, context, cb) => {
     return User.saveVersioned(user);
   })
   .then(user => {
-    cb(null, user);
+    common.lp.success(event, cb, user);
   })
   .catch(err => {
-    common.generalError(cb, err);
+    common.lp.error(event, cb, err);
   });
 };

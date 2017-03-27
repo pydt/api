@@ -21,9 +21,9 @@ module.exports.handler = (event, context, cb) => {
     return steam.getPlayerSummaries(event.query.steamIds);
   })
   .then(response => {
-    cb(null, response.response.players);
+    common.lp.success(event, cb, response.response.players);
   })
   .catch(err => {
-    common.generalError(cb, err);
+    common.lp.error(event, cb, err);
   });
 };

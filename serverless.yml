@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.4.0"
+frameworkVersion: "1.9.0"
 
 plugins:
   - serverless-mocha-plugin
@@ -24,7 +24,6 @@ provider:
   name: aws
   runtime: nodejs4.3
   stage: dev
-  #cfLogs: true # temporarily disabling logging to get room for more endpoints, this blows :(
   iamRoleStatements: # We should tighten this up...
     - Effect: Allow
       Action: "*"
@@ -277,61 +276,13 @@ functions:
           path: users
           method: get
           cors: true
-  userGetCurrent:
-    handler: functions/http/user/getCurrent.handler
+  userRouter:
+    handler: functions/http/user/router.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - http:
-          path: user
-          method: get
-          authorizer: jwtAuthorizer
-          cors: true
-  userGetById:
-    handler: functions/http/user/getById.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    events:
-      - http:
-          path: user/{userId}
-          method: get
-          cors: true
-  userGames:
-    handler: functions/http/user/games.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    events:
-      - http:
-          path: user/games
-          method: get
-          integration: lambda
-          authorizer: jwtAuthorizer
-          cors: true
-  userSetNotificationEmail:
-    handler: functions/http/user/setNotificationEmail.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    events:
-      - http:
-          path: user/setNotificationEmail
-          method: post
-          integration: lambda
-          authorizer: jwtAuthorizer
-          cors: true
-  userSteamProfileGet:
-    handler: functions/http/user/steamProfile.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    events:
-      - http:
-          path: user/steamProfile
-          method: get
-          integration: lambda
-          authorizer: jwtAuthorizer
-          cors: true
-  userSteamProfiles:
-    handler: functions/http/user/steamProfiles.handler
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    events:
-      - http:
-          path: user/steamProfiles
-          method: get
-          integration: lambda
+          path: user/{proxy+}
+          method: any
           cors: true
 
 # you can add CloudFormation resource templates here

@@ -8,11 +8,11 @@ module.exports.handler = (event, context, cb) => {
   User.get(event.principalId).then(user => {
     return Game.getGamesForUser(user);
   }).then(games => {
-    cb(null, {
+    common.lp.success(event, cb, {
       data: games,
       pollUrl: 'https://' + common.config.RESOURCE_PREFIX + 'saves.s3.amazonaws.com/' + User.createS3GameCacheKey(event.principalId)
     });
   }).catch(err => {
-    common.generalError(cb, err);
+    common.lp.error(event, cb, err);
   });
 };
