@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.9.0"
+frameworkVersion: "1.10.1"
 
 plugins:
   - serverless-mocha-plugin

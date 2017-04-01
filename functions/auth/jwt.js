@@ -29,7 +29,7 @@ module.exports.handler = (event, context, cb) => {
 };
 
 module.exports.manualValidation = (event, context, cb) => {
-  var token = event.authorizationToken;
+  var token = event.headers.Authorization;
 
   if (!token) {
     common.lp.success(event, cb, {message: 'Unauthorized'}, 401);
@@ -40,6 +40,7 @@ module.exports.manualValidation = (event, context, cb) => {
 
   try {
     event.principalId = auth.getSteamIDFromToken(token);
+    event.requestContext.authorizer.principalId = event.principalId;
   } catch (err) {
     if (err instanceof jwt.JsonWebTokenError) {
       // Don't log auth errors

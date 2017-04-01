@@ -6,7 +6,7 @@ const steam = require('../../../lib/steam.js');
 const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
-  let steamIds = _.chain(event.query.steamIds.split(',') || [])
+  let steamIds = _.chain(event.queryStringParameters.steamIds.split(',') || [])
     .map(steamId => {
       return { steamId: steamId }
     })
@@ -18,7 +18,7 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('Invalid users');
     }
 
-    return steam.getPlayerSummaries(event.query.steamIds);
+    return steam.getPlayerSummaries(event.queryStringParameters.steamIds);
   })
   .then(response => {
     common.lp.success(event, cb, response.response.players);

@@ -16,9 +16,7 @@ module.exports.handler = (event, context, callback) => {
     });
 
     router.on('get', '/user/steamProfiles', function() {
-      if (jwt.manualValidation(event, context, callback)) {
-        require('./steamProfiles').handler(event, context, callback);
-      }
+      require('./steamProfiles').handler(event, context, callback);
     });
 
     router.on('get', '/user/games', function() {
@@ -50,6 +48,10 @@ module.exports.handler = (event, context, callback) => {
       },
       strict: false
     });
+  }
+
+  if (typeof event.body === 'string' && event.body.length) {
+    event.body = JSON.parse(event.body);
   }
 
   router.dispatch(event.httpMethod.toLowerCase(), event.path, () => {
