@@ -6,20 +6,6 @@
   "configurations": [
     {
       "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run", "debug-offline"
-      ],
-      "port": 5858,
-      "windows": {
-        "runtimeExecutable": "npm.cmd"
-      },
-      "cwd": "${workspaceRoot}"
-    },
-    {
-      "type": "node",
       "request": "attach",
       "name": "Attach to Process",
       "port": 5858

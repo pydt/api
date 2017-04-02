@@ -13,9 +13,9 @@ module.exports.handler = (event, context, cb) => {
       throw new Error('Couldn\'t get user profile');
     }
 
-    cb(null, players[0]);
+    common.lp.success(event, cb, players[0]);
   })
   .catch(err => {
-    common.generalError(cb, err);
+    common.lp.error(event, cb, err);
   });
 };

@@ -3,6 +3,7 @@
 const common = require('../../lib/common.js');
 const auth = require('../../lib/auth.js');
 const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 
 module.exports.handler = (event, context, cb) => {
     var token = event.authorizationToken;
@@ -26,6 +27,37 @@ module.exports.handler = (event, context, cb) => {
     }
 
     cb(null, policy);
+};
+
+module.exports.manualValidation = (event, context, cb) => {
+  var token = event.headers.Authorization;
+
+  if (!token) {
+    common.lp.success(event, cb, {message: 'Unauthorized'}, 401);
+    return false;
+  }
+
+  let policy;
+
+  try {
+    event.principalId = auth.getSteamIDFromToken(token);
+    _.merge(event.requestContext, {
+      authorizer: {
+        principalId: event.principalId
+      }
+    });
+  } catch (err) {
+    if (err instanceof jwt.JsonWebTokenError) {
+      // Don't log auth errors
+      common.lp.success(event, cb, {message: 'Unauthorized'}, 401);
+      return false;
+    }
+
+    common.lp.error(event, cb, err);
+    return false;
+  }
+
+  return true;
 };
 
 ////////
