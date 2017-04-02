@@ -1,9 +1,0 @@
-image: node:4.6.1
-
-deploy:
-  environment: production
-  script:
-    - npm install --silent
-    - npm run deploy-prod
-  only:
-    - master
