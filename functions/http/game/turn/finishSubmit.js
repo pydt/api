@@ -126,6 +126,12 @@ module.exports.handler = (event, context, cb) => {
     }
 
     let expectedRound = gameTurn.round;
+
+    if (gameTurn.turn === 1) {
+      // When starting a game, take whatever round is in the file.  This allows starting in different eras.
+      expectedRound = parsedRound;
+    }
+    
     let nextPlayerIndex = Game.getNextPlayerIndex(game);
 
     if (nextPlayerIndex <= Game.getCurrentPlayerIndex(game)) {
