@@ -9,6 +9,7 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const ses = new AWS.SES();
 const _ = require('lodash');
+const zlib = require("zlib");
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.pathParameters.gameId;
@@ -47,6 +48,15 @@ module.exports.handler = (event, context, cb) => {
     }
 
     let buffer = data.Body;
+
+    // Attempt to gunzip...
+    try {
+      buffer = zlib.unzipSync(data.Body);
+    } catch (e) {
+      // If unzip fails, assume raw save file was uploaded...
+      console.log('unzip failed', e);
+    }
+
     let wrapper = GameTurn.parseSaveFile(buffer);
     const parsed = wrapper.parsed;
     

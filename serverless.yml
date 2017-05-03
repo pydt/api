@@ -218,7 +218,6 @@ functions:
       - http:
           path: game/{gameId}/turn
           method: get
-          integration: lambda
           authorizer: jwtAuthorizer
           cors: true
   gameTurnRevert:
