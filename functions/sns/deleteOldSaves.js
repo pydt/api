@@ -5,7 +5,7 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const _ = require('lodash');
 
-const TURNS_TO_SAVE = 20;
+const TURNS_TO_SAVE = 40;
 
 module.exports.handler = (event, context, cb) => {
   const gameId = event.Records[0].Sns.Message;
