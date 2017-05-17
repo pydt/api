@@ -52,12 +52,13 @@ module.exports.handler = (event, context, cb) => {
     // Attempt to gunzip...
     try {
       buffer = zlib.unzipSync(data.Body);
+      console.log('unzip succeeded!');
     } catch (e) {
       // If unzip fails, assume raw save file was uploaded...
-      console.log('unzip failed', e);
+      console.log('unzip failed :(', e);
     }
 
-    let wrapper = GameTurn.parseSaveFile(buffer);
+    let wrapper = GameTurn.parseSaveFile(buffer, game);
     const parsed = wrapper.parsed;
     
     const numCivs = parsed.CIVS.length;
