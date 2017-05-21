@@ -17,7 +17,7 @@ module.exports.handler = (event, context, cb) => {
       throw new common.PydtError('Only the creator of the game can delete the game!');
     }
 
-    if (game.inProgress) {
+    if (game.inProgress && game.gameTurnRangeKey > 1) {
       throw new common.PydtError(`Can't delete an in progress game!`);
     }
 
