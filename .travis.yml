@@ -3,7 +3,7 @@ node_js:
   - "6"
 script:
   - npm install --silent
-  - npm install -g serverless@1.10.1
+  - npm install -g serverless@1.14.0
   - npm run deploy-prod
 branches:
   only:

@@ -213,7 +213,16 @@ function createNextGameTurn(game) {
     playerSteamId: game.currentPlayerSteamId
   });
 
-  return GameTurn.saveVersioned(nextTurn);
+  return GameTurn.saveVersioned(nextTurn)
+    .catch(err => {
+      // If error saving, delete the game turn and retry.  This is probably because
+      // a previous save failed and the game turn already exists.
+      common.rollbarMessage("Error saving game turn, deleting and trying again!", "warning", nextTurn);
+
+      return GameTurn.delete(nextTurn).then(() => {
+        return GameTurn.saveVersioned(nextTurn);
+      });
+    });
 }
 
 function defeatPlayers(game, users, newDefeatedPlayers) {
