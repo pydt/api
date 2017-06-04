@@ -69,7 +69,10 @@ module.exports.handler = (event, context, cb) => {
     if (parsed.MOD_BLOCK_1) {
       for (let mod of parsed.MOD_BLOCK_1.data) {
         // Official DLC starts with a localization string, assuming non-official doesn't?
-        if (mod.MOD_TITLE.data.indexOf('{"LOC_') === 0) {
+        const modTitle = mod.MOD_TITLE.data;
+
+        // Ignore scenarios so we don't have to open that can of worms...
+        if (modTitle.indexOf('{"LOC_') === 0 && modTitle.indexOf('_SCENARIO_') < 0) {
           parsedDlc.push(mod.MOD_ID.data);
         }
       }
