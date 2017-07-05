@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const common = require('../../lib/common.js');
+const sns = require('../../lib/sns.js');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const Game = require('../../lib/dynamoose/Game.js');
@@ -25,9 +26,14 @@ module.exports.handler = (event, context, cb) => {
       return cb(null);
     }
 
-    return updateUsers(users).then(() => {
-      cb(null);
-    });
+    return updateUsers(users);
+  })
+  .then(() => {
+    // Send an sns message that the cache has been updated
+    return sns.sendMessage(common.config.RESOURCE_PREFIX + 'user-game-cache-updated', 'user-game-cache-updated', game.gameId);
+  })
+  .then(() => {
+    cb(null);
   })
   .catch(err => {
     common.generalError(cb, err);

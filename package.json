@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "aws-iot-device-sdk": "^2.0.0",
     "bcryptjs": "https://github.com/dcodeIO/bcrypt.js.git#21b79128929f3392e7f43cf7251c8d9eef78f0a6",
     "bluebird": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.6.tgz",
     "civ6-save-parser": "^1.1.10",

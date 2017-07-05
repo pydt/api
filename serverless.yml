@@ -102,7 +102,7 @@ functions:
     handler: functions/sns/userTurnNotification.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
-      - sns: ${self:custom.resourcePrefix}turn-submitted
+      - sns: ${self:custom.resourcePrefix}user-game-cache-updated
   snsUpdateUserGameCache:
     handler: functions/sns/updateUserGameCache.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
