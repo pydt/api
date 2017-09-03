@@ -1,0 +1,75 @@
+{
+	"basePath": "/api",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"AuthResponse": {
+			"properties": {
+				"redirectURL": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"redirectURL"
+			],
+			"type": "object"
+		},
+		"ErrorResponse": {
+			"properties": {
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"message"
+			],
+			"type": "object"
+		}
+	},
+	"info": {
+		"title": "serverless-api",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/auth/steam": {
+			"get": {
+				"operationId": "AuthAuthenticate",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/AuthResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {
+		"api_key": {
+			"type": "apiKey",
+			"name": "api-key",
+			"in": "header"
+		},
+		"basic_auth_internal": {
+			"type": "basic"
+		}
+	},
+	"host": "localhost:3000"
+}

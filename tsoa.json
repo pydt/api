@@ -1,0 +1,25 @@
+{
+  "swagger": {
+    "outputDirectory": "./api/_gen/swagger",
+    "entryFile": "./api/genroot.ts",
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api-key",
+        "in": "header"
+      },
+      "basic_auth_internal": {
+        "type": "basic"
+      }
+    }
+  },
+  "routes": {
+    "basePath": "/api",
+    "entryFile": "./api/genroot.ts",
+    "routesDir": "./api/_gen/routes",
+    "iocModule": "./lib/ioc",
+    "authenticationModule": "./lib/auth/expressAuthentication"
+  }
+}

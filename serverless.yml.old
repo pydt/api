@@ -1,0 +1,362 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: civ-serverless-api
+
+frameworkVersion: "1.14.0"
+
+plugins:
+  - serverless-mocha-plugin
+  - export-api-url
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: dev
+  iamRoleStatements: # We should tighten this up...
+    - Effect: Allow
+      Action: "*"
+      Resource: "*"
+  environment:
+    SERVERLESS_STAGE: ${self:custom.activeStage}
+    RESOURCE_PREFIX: ${self:custom.resourcePrefix}
+    WEB_URL: ${env:WEB_URL, self:custom.DEV_WEB_URL}
+    JWT_SECRET: ${env:JWT_SECRET, file(./config.yml):JWT_SECRET}
+    ROLLBAR_API_KEY: ${env:ROLLBAR_API_KEY, file(./config.yml):ROLLBAR_API_KEY}
+    DISCOURSE_API_KEY: ${env:DISCOURSE_API_KEY, file(./config.yml):DISCOURSE_API_KEY}
+    STEAM_API_KEY: ${env:STEAM_API_KEY, file(./config.yml):STEAM_API_KEY}
+
+custom:
+  activeStage: ${opt:stage, self:provider.stage}
+  resourcePrefix: ${self:custom.activeStage}-civx-
+  DEV_WEB_URL: "http://localhost:8080"
+  dev_DYNAMO_CAPACITY: 1
+  prod_DYNAMO_CAPACITY: 5
+  DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
+  DEFAULT_LAMBDA_MEMORY: 512
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+
+# you can overwrite defaults here
+#defaults:
+#  stage: dev
+#  region: us-east-1
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.js
+#  exclude:
+#    - exclude-me.js
+#  artifact: my-service-code.zip
+
+functions:
+  jwtAuthorizer:
+    handler: functions/auth/jwt.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+  cronCheckTurnTimerJobs:
+    handler: functions/cron/checkTurnTimerJobs.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: rate(2 minutes)
+  cronDeleteOldUnstartedGames:
+    handler: functions/cron/deleteOldUnstartedGames.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(0 8 * * ? *)
+  cronUpdateUserInfo:
+    handler: functions/cron/updateUserInfo.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(23 */6 * * ? *)
+  snsAddTurnTimer:
+    handler: functions/sns/addTurnTimerJob.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsUserTurnNotification:
+    handler: functions/sns/userTurnNotification.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}user-game-cache-updated
+  snsUpdateUserGameCache:
+    handler: functions/sns/updateUserGameCache.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsRecalculateUserStats:
+    handler: functions/sns/recalculateUserStats.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 300
+    events:
+      - sns: ${self:custom.resourcePrefix}recalculate-user    
+  snsDeleteOldSaves:
+    handler: functions/sns/deleteOldSaves.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted   
+  authSteamAuthenticate:
+    handler: functions/http/auth/steamAuthenticate.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: auth/steam
+          method: get
+          integration: lambda
+          cors: true
+  authSteamValidate:
+    handler: functions/http/auth/steamValidate.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 30
+    events:
+      - http:
+          path: auth/steam/validate
+          method: get
+          integration: lambda
+          cors: true
+  gameGet:
+    handler: functions/http/game/get.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}
+          method: get
+          integration: lambda
+          cors: true
+  gameCreate:
+    handler: functions/http/game/create.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/create
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameDelete:
+    handler: functions/http/game/delete.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/delete
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameChangeCiv:
+    handler: functions/http/game/changeCiv.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/changeCiv
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameEdit:
+    handler: functions/http/game/edit.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/edit
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameJoin:
+    handler: functions/http/game/join.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/join
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameLeave:
+    handler: functions/http/game/leave.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/leave
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameStart:
+    handler: functions/http/game/start.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/start
+          method: post
+          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
+  gameTurnGet:
+    handler: functions/http/game/turn/get.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/turn
+          method: get
+          authorizer: jwtAuthorizer
+          cors: true
+  gameTurnRevert:
+    handler: functions/http/game/turn/revert.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/turn/revert
+          method: post
+          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
+  gameSurrender:
+    handler: functions/http/game/surrender.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/surrender
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  gameTurnStartSubmit:
+    handler: functions/http/game/turn/startSubmit.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/{gameId}/turn/startSubmit
+          method: post
+          integration: lambda
+          authorizer: jwtAuthorizer
+          cors: true
+  gameTurnFinishSubmit:
+    handler: functions/http/game/turn/finishSubmit.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 15
+    events:
+      - http:
+          path: game/{gameId}/turn/finishSubmit
+          method: post
+          authorizer: jwtAuthorizer
+          cors: true
+  openGameList:
+    handler: functions/http/game/listOpen.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: game/listOpen
+          method: get
+          cors: true
+  userGetAll:
+    handler: functions/http/user/getAll.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: users
+          method: get
+          cors: true
+  userRouter:
+    handler: functions/http/user/router.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - http:
+          path: user/{proxy+}
+          method: any
+          cors: true
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    GameSavesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.resourcePrefix}saves
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+              AllowedOrigins:
+                - "*" # We should change this when we know what our domain is...
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: steamId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: steamId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+        TableName: ${self:custom.resourcePrefix}user
+    GameTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+        TableName: ${self:custom.resourcePrefix}game
+    GameTurnTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: S
+          - AttributeName: turn
+            AttributeType: N
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+          - AttributeName: turn
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+        TableName: ${self:custom.resourcePrefix}game-turn
+    ScheduledJobTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: jobType
+            AttributeType: S
+          - AttributeName: scheduledTime
+            AttributeType: N
+        KeySchema:
+          - AttributeName: jobType
+            KeyType: HASH
+          - AttributeName: scheduledTime
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.resourcePrefix}scheduled-job
