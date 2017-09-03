@@ -1,3 +1,6 @@
+import * as AWS from 'aws-sdk';
+AWS.config.update({ region: 'us-east-1' });
+
 export class Config {
   public static activeStage() {
     return process.env.SERVERLESS_STAGE as string;

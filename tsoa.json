@@ -7,7 +7,7 @@
     "securityDefinitions": {
       "api_key": {
         "type": "apiKey",
-        "name": "api-key",
+        "name": "Authorization",
         "in": "header"
       },
       "basic_auth_internal": {

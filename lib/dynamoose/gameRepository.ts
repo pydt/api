@@ -1,14 +1,23 @@
-'use strict';
 
-const common = require('../common.js');
-const dynamoose = require('./common.js');
-const _ = require('lodash');
+import { IRepository, dynamoose } from './common';
+import { Game, User, GamePlayer } from '../models';
+import { Config } from '../config';
+import * as _ from 'lodash';
 
+export interface IGameRepository extends IRepository<string, Game> {
+  getGamesForUser(user: User): Promise<Game[]>;
+  getCurrentPlayerIndex(game: Game): number;
+  getNextPlayerIndex(game: Game): number;
+  getPreviousPlayerIndex(game: Game): number;
+  getHumans(game: Game, includeSurrendered: boolean): GamePlayer;
+  playerIsHuman(player: GamePlayer): boolean;
+}
 
+export interface InternalGameRepository extends IGameRepository {
+  origBatchGet(ids: string[]): Promise<Game[]>;
+}
 
-
-
-const Game = dynamoose.createVersionedModel(common.config.RESOURCE_PREFIX + 'game', {
+const internalGameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game', {
   gameId: {
     type: String,
     hashKey: true,
@@ -76,43 +85,45 @@ const Game = dynamoose.createVersionedModel(common.config.RESOURCE_PREFIX + 'gam
   gameSpeed: String,
   mapFile: String,
   mapSize: String
-});
+}) as InternalGameRepository;
 
-if (!Game._origBatchGet) {
-  Game._origBatchGet = Game.batchGet;
+export const gameRepository: IGameRepository = internalGameRepository;
+
+if (!internalGameRepository.origBatchGet) {
+  internalGameRepository.origBatchGet = internalGameRepository.batchGet;
 }
 
-Game.batchGet = gameKeys => {
-  return Game._origBatchGet(gameKeys).then(games => {
+gameRepository.batchGet = gameKeys => {
+  return internalGameRepository.origBatchGet(gameKeys).then(games => {
     return _.orderBy(games, ['createdAt'], ['desc']);
   });
 };
 
-Game.getGamesForUser = user => {
+gameRepository.getGamesForUser = user => {
   const gameKeys = _.map(user.activeGameIds || [], gameId => {
     return { gameId: gameId }
   });
 
   if (gameKeys.length > 0) {
-    return Game.batchGet(gameKeys);
+    return gameRepository.batchGet(gameKeys);
   } else {
     return Promise.resolve([]);
   }
 };
 
-Game.getCurrentPlayerIndex = game => {
+gameRepository.getCurrentPlayerIndex = game => {
   return _.indexOf(game.players, _.find(game.players, player => {
     return player.steamId === game.currentPlayerSteamId;
   }));
 };
 
-Game.getNextPlayerIndex = game => {
-  let playerIndex = Game.getCurrentPlayerIndex(game);
+gameRepository.getNextPlayerIndex = game => {
+  let playerIndex = gameRepository.getCurrentPlayerIndex(game);
   let looped = false;
 
   do {
     playerIndex++;
-    
+
     if (playerIndex >= game.players.length) {
       if (!looped) {
         playerIndex = 0;
@@ -121,13 +132,13 @@ Game.getNextPlayerIndex = game => {
         return -1;
       }
     }
-  } while (!Game.playerIsHuman(game.players[playerIndex]));
-  
+  } while (!gameRepository.playerIsHuman(game.players[playerIndex]));
+
   return playerIndex;
 };
 
-Game.getPreviousPlayerIndex = game => {
-  let playerIndex = Game.getCurrentPlayerIndex(game);
+gameRepository.getPreviousPlayerIndex = game => {
+  let playerIndex = gameRepository.getCurrentPlayerIndex(game);
   let looped = false;
 
   do {
@@ -141,19 +152,19 @@ Game.getPreviousPlayerIndex = game => {
         return -1;
       }
     }
-  } while (!Game.playerIsHuman(game.players[playerIndex]));
+  } while (!gameRepository.playerIsHuman(game.players[playerIndex]));
 
   return playerIndex;
 };
 
-Game.getHumans = (game, includeSurrendered) => {
+gameRepository.getHumans = (game, includeSurrendered) => {
   return _.filter(game.players, player => {
     return player.steamId && (includeSurrendered || !player.hasSurrendered);
   });
 };
 
-Game.playerIsHuman = player => {
+gameRepository.playerIsHuman = player => {
   return player.steamId && !player.hasSurrendered;
 };
 
-module.exports = Game;
+module.exports = gameRepository;

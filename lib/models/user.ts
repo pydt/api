@@ -4,6 +4,7 @@ export interface User {
   avatarSmall: string;
   avatarMedium: string;
   avatarFull: string;
+  emailAddress: string;
   activeGameIds: string[];
   inactiveGameIds: string[];
   turnsPlayed: number;

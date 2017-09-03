@@ -2,6 +2,8 @@
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { iocContainer } from './../../../lib/ioc';
 import { AuthController } from './../../controllers/authController';
+import { UserController } from './../../controllers/userController';
+import { UsersController } from './../../controllers/usersController';
 import { expressAuthentication } from './../../../lib/auth/expressAuthentication';
 
 const models: TsoaRoute.Models = {
@@ -24,6 +26,75 @@ const models: TsoaRoute.Models = {
         "properties": {
             "token": { "dataType": "string", "required": true },
             "steamProfile": { "ref": "SteamProfile", "required": true },
+        },
+    },
+    "GamePlayer": {
+        "properties": {
+            "steamId": { "dataType": "string", "required": true },
+            "civType": { "dataType": "string", "required": true },
+            "hasSurrendered": { "dataType": "boolean", "required": true },
+            "turnsPlayed": { "dataType": "double", "required": true },
+            "turnsSkipped": { "dataType": "double", "required": true },
+            "timeTaken": { "dataType": "double", "required": true },
+            "fastTurns": { "dataType": "double", "required": true },
+            "slowTurns": { "dataType": "double", "required": true },
+        },
+    },
+    "Game": {
+        "properties": {
+            "gameId": { "dataType": "string", "required": true },
+            "createdBySteamId": { "dataType": "string", "required": true },
+            "dlc": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "inProgress": { "dataType": "boolean", "required": true },
+            "completed": { "dataType": "boolean", "required": true },
+            "hashedPassword": { "dataType": "string", "required": true },
+            "displayName": { "dataType": "string", "required": true },
+            "allowJoinAfterStart": { "dataType": "boolean", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "slots": { "dataType": "double", "required": true },
+            "humans": { "dataType": "double", "required": true },
+            "players": { "dataType": "array", "array": { "ref": "GamePlayer" }, "required": true },
+            "discourseTopicId": { "dataType": "double", "required": true },
+            "currentPlayerSteamId": { "dataType": "string", "required": true },
+            "turnTimerMinutes": { "dataType": "double", "required": true },
+            "round": { "dataType": "double", "required": true },
+            "gameTurnRangeKey": { "dataType": "double", "required": true },
+            "gameSpeed": { "dataType": "string", "required": true },
+            "mapFile": { "dataType": "string", "required": true },
+            "mapSize": { "dataType": "string", "required": true },
+        },
+    },
+    "GamesByUserResponse": {
+        "properties": {
+            "data": { "dataType": "array", "array": { "ref": "Game" }, "required": true },
+            "pollUrl": { "dataType": "string", "required": true },
+        },
+    },
+    "ErrorResponse": {
+        "properties": {
+            "message": { "dataType": "string", "required": true },
+        },
+    },
+    "User": {
+        "properties": {
+            "steamId": { "dataType": "string", "required": true },
+            "displayName": { "dataType": "string", "required": true },
+            "avatarSmall": { "dataType": "string", "required": true },
+            "avatarMedium": { "dataType": "string", "required": true },
+            "avatarFull": { "dataType": "string", "required": true },
+            "emailAddress": { "dataType": "string", "required": true },
+            "activeGameIds": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "inactiveGameIds": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "turnsPlayed": { "dataType": "double", "required": true },
+            "turnsSkipped": { "dataType": "double", "required": true },
+            "timeTaken": { "dataType": "double", "required": true },
+            "fastTurns": { "dataType": "double", "required": true },
+            "slowTurns": { "dataType": "double", "required": true },
+        },
+    },
+    "SetNotificationEmailBody": {
+        "properties": {
+            "emailAddress": { "dataType": "string", "required": true },
         },
     },
 };
@@ -66,7 +137,190 @@ export function RegisterRoutes(app: any) {
             const promise = controller.validate.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, next);
         });
+    app.get('/user/games',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
 
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.games.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/user/',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.all.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/user/getCurrent',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.getCurrent.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/user/setNotificationEmail',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "SetNotificationEmailBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.setNotificationEmail.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/user/steamProfile',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.steamProfile.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/user/steamProfiles',
+        function(request: any, response: any, next: any) {
+            const args = {
+                rawSteamIds: { "in": "query", "name": "steamIds", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.steamProfiles.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/user/:steamId',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                steamId: { "in": "path", "name": "steamId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+
+
+            const promise = controller.byId.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/users/',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UsersController>(UsersController);
+
+
+            const promise = controller.all.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return (request: any, response: any, next: any) => {
+            let responded = 0;
+            let success = false;
+            for (const secMethod of security) {
+                expressAuthentication(request, secMethod.name, secMethod.scopes).then((user: any) => {
+                    // only need to respond once
+                    if (!success) {
+                        success = true;
+                        responded++;
+                        request['user'] = user;
+                        next();
+                    }
+                })
+                    .catch((error: any) => {
+                        responded++;
+                        if (responded == security.length && !success) {
+                            response.status(401);
+                            next(error)
+                        }
+                    })
+            }
+        }
+    }
 
     function promiseHandler(controllerObj: any, promise: any, response: any, next: any) {
         return Promise.resolve(promise)

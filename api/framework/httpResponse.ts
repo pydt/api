@@ -4,8 +4,8 @@ export class HttpResponse {
   private data: any;
   private statusCode: number;
   private headers = {
-    'Access-Control-Allow-Headers': 'Content-Type,api-key',
-    'Access-Control-Expose-Headers': 'api-key',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+    'Access-Control-Expose-Headers': 'Authorization',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH'
   };

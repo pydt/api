@@ -60,6 +60,259 @@
 				"steamProfile"
 			],
 			"type": "object"
+		},
+		"GamePlayer": {
+			"properties": {
+				"steamId": {
+					"type": "string"
+				},
+				"civType": {
+					"type": "string"
+				},
+				"hasSurrendered": {
+					"type": "boolean"
+				},
+				"turnsPlayed": {
+					"type": "number",
+					"format": "double"
+				},
+				"turnsSkipped": {
+					"type": "number",
+					"format": "double"
+				},
+				"timeTaken": {
+					"type": "number",
+					"format": "double"
+				},
+				"fastTurns": {
+					"type": "number",
+					"format": "double"
+				},
+				"slowTurns": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"steamId",
+				"civType",
+				"hasSurrendered",
+				"turnsPlayed",
+				"turnsSkipped",
+				"timeTaken",
+				"fastTurns",
+				"slowTurns"
+			],
+			"type": "object"
+		},
+		"Game": {
+			"properties": {
+				"gameId": {
+					"type": "string"
+				},
+				"createdBySteamId": {
+					"type": "string"
+				},
+				"dlc": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"inProgress": {
+					"type": "boolean"
+				},
+				"completed": {
+					"type": "boolean"
+				},
+				"hashedPassword": {
+					"type": "string"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"allowJoinAfterStart": {
+					"type": "boolean"
+				},
+				"description": {
+					"type": "string"
+				},
+				"slots": {
+					"type": "number",
+					"format": "double"
+				},
+				"humans": {
+					"type": "number",
+					"format": "double"
+				},
+				"players": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/GamePlayer"
+					}
+				},
+				"discourseTopicId": {
+					"type": "number",
+					"format": "double"
+				},
+				"currentPlayerSteamId": {
+					"type": "string"
+				},
+				"turnTimerMinutes": {
+					"type": "number",
+					"format": "double"
+				},
+				"round": {
+					"type": "number",
+					"format": "double"
+				},
+				"gameTurnRangeKey": {
+					"type": "number",
+					"format": "double"
+				},
+				"gameSpeed": {
+					"type": "string"
+				},
+				"mapFile": {
+					"type": "string"
+				},
+				"mapSize": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"gameId",
+				"createdBySteamId",
+				"dlc",
+				"inProgress",
+				"completed",
+				"hashedPassword",
+				"displayName",
+				"allowJoinAfterStart",
+				"description",
+				"slots",
+				"humans",
+				"players",
+				"discourseTopicId",
+				"currentPlayerSteamId",
+				"turnTimerMinutes",
+				"round",
+				"gameTurnRangeKey",
+				"gameSpeed",
+				"mapFile",
+				"mapSize"
+			],
+			"type": "object"
+		},
+		"GamesByUserResponse": {
+			"properties": {
+				"data": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Game"
+					}
+				},
+				"pollUrl": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"data",
+				"pollUrl"
+			],
+			"type": "object"
+		},
+		"ErrorResponse": {
+			"properties": {
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"message"
+			],
+			"type": "object"
+		},
+		"User": {
+			"properties": {
+				"steamId": {
+					"type": "string"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"avatarSmall": {
+					"type": "string"
+				},
+				"avatarMedium": {
+					"type": "string"
+				},
+				"avatarFull": {
+					"type": "string"
+				},
+				"emailAddress": {
+					"type": "string"
+				},
+				"activeGameIds": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"inactiveGameIds": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"turnsPlayed": {
+					"type": "number",
+					"format": "double"
+				},
+				"turnsSkipped": {
+					"type": "number",
+					"format": "double"
+				},
+				"timeTaken": {
+					"type": "number",
+					"format": "double"
+				},
+				"fastTurns": {
+					"type": "number",
+					"format": "double"
+				},
+				"slowTurns": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"steamId",
+				"displayName",
+				"avatarSmall",
+				"avatarMedium",
+				"avatarFull",
+				"emailAddress",
+				"activeGameIds",
+				"inactiveGameIds",
+				"turnsPlayed",
+				"turnsSkipped",
+				"timeTaken",
+				"fastTurns",
+				"slowTurns"
+			],
+			"type": "object"
+		},
+		"SetNotificationEmailBody": {
+			"properties": {
+				"emailAddress": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"emailAddress"
+			],
+			"type": "object"
 		}
 	},
 	"info": {
@@ -102,6 +355,244 @@
 				"security": [],
 				"parameters": []
 			}
+		},
+		"/user/games": {
+			"get": {
+				"operationId": "UserGames",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/GamesByUserResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/": {
+			"get": {
+				"operationId": "UserAll",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/User"
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/getCurrent": {
+			"get": {
+				"operationId": "UserGetCurrent",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/setNotificationEmail": {
+			"post": {
+				"operationId": "UserSetNotificationEmail",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/SetNotificationEmailBody"
+						}
+					}
+				]
+			}
+		},
+		"/user/steamProfile": {
+			"get": {
+				"operationId": "UserSteamProfile",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/SteamProfile"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/steamProfiles": {
+			"get": {
+				"operationId": "UserSteamProfiles",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/SteamProfile"
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "steamIds",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/user/{steamId}": {
+			"get": {
+				"operationId": "UserById",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "steamId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/users/": {
+			"get": {
+				"operationId": "UsersAll",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/User"
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"produces": [
@@ -111,7 +602,7 @@
 	"securityDefinitions": {
 		"api_key": {
 			"type": "apiKey",
-			"name": "api-key",
+			"name": "Authorization",
 			"in": "header"
 		},
 		"basic_auth_internal": {
