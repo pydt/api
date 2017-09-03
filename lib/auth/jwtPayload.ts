@@ -1,9 +1,7 @@
-export interface FerriteJwtPayload {
-  userId: string;
-  accountId: string;
-  refreshToken: string;
+export interface PydtJwtPayload {
+  steamId: string;
 }
 
-export interface FullJwtPayload extends FerriteJwtPayload {
+export interface FullJwtPayload extends PydtJwtPayload {
   iat: number;
 }

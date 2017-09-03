@@ -1,9 +1,9 @@
 import * as jwt from 'jsonwebtoken';
-import { FerriteJwtPayload, FullJwtPayload } from './jwtPayload';
+import { PydtJwtPayload, FullJwtPayload } from './jwtPayload';
 import { Config } from '../config';
 
 export namespace JwtUtil {
-  export function createToken(payload: FerriteJwtPayload): string {
+  export function createToken(payload: PydtJwtPayload): string {
     return jwt.sign(payload, Config.jwtSecret());
   }
 

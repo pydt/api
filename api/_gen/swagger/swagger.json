@@ -1,10 +1,10 @@
 {
-	"basePath": "/api",
+	"basePath": "/",
 	"consumes": [
 		"application/json"
 	],
 	"definitions": {
-		"AuthResponse": {
+		"AuthenticateResponse": {
 			"properties": {
 				"redirectURL": {
 					"type": "string"
@@ -15,14 +15,49 @@
 			],
 			"type": "object"
 		},
-		"ErrorResponse": {
+		"SteamProfile": {
 			"properties": {
-				"message": {
+				"steamid": {
+					"type": "string"
+				},
+				"personaname": {
+					"type": "string"
+				},
+				"profileurl": {
+					"type": "string"
+				},
+				"avatar": {
+					"type": "string"
+				},
+				"avatarmedium": {
+					"type": "string"
+				},
+				"avatarfull": {
 					"type": "string"
 				}
 			},
 			"required": [
-				"message"
+				"steamid",
+				"personaname",
+				"profileurl",
+				"avatar",
+				"avatarmedium",
+				"avatarfull"
+			],
+			"type": "object"
+		},
+		"ValidateResponse": {
+			"properties": {
+				"token": {
+					"type": "string"
+				},
+				"steamProfile": {
+					"$ref": "#/definitions/SteamProfile"
+				}
+			},
+			"required": [
+				"token",
+				"steamProfile"
 			],
 			"type": "object"
 		}
@@ -42,13 +77,25 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"$ref": "#/definitions/AuthResponse"
+							"$ref": "#/definitions/AuthenticateResponse"
 						}
-					},
-					"401": {
-						"description": "Unauthorized",
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/steam/validate": {
+			"get": {
+				"operationId": "AuthValidate",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
 						"schema": {
-							"$ref": "#/definitions/ErrorResponse"
+							"$ref": "#/definitions/ValidateResponse"
 						}
 					}
 				},

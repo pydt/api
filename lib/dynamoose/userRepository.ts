@@ -1,10 +1,15 @@
-'use strict';
+import { dynamoose, IRepository } from './common';
+import { Config } from '../config';
+import { User } from '../models/user';
+import { Game } from '../models/game';
+import * as _ from 'lodash';
 
-const common = require('../common.js');
-const dynamoose = require('./common.js');
-const _ = require('lodash');
+export interface IUserRepository extends IRepository<string, User> {
+  createS3GameCacheKey(steamId: string): string;
+  getUsersForGame(game: Game): Promise<User[]>;
+}
 
-const User = dynamoose.createVersionedModel(common.config.RESOURCE_PREFIX + 'user', {
+export const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'user', {
   steamId: {
     type: String,
     hashKey: true
@@ -39,15 +44,15 @@ const User = dynamoose.createVersionedModel(common.config.RESOURCE_PREFIX + 'use
     type: Number,
     default: 0
   }
-});
+}) as IUserRepository;
 
-User.createS3GameCacheKey = (steamId) => {
+userRepository.createS3GameCacheKey = (steamId) => {
   return steamId + '/' + 'gameCache.json';
 };
 
-User.getUsersForGame = game => {
+userRepository.getUsersForGame = game => {
   const steamIds = _.compact(_.map(game.players, 'steamId'));
-  return User.batchGet(steamIds).then(users => {
+  return userRepository.batchGet(steamIds).then(users => {
     // make sure they're sorted correctly...
     const playersWithSteamIds = _.filter(game.players, player => {
       return !!player.steamId;
@@ -60,5 +65,3 @@ User.getUsersForGame = game => {
     });
   });
 };
-
-module.exports = User;

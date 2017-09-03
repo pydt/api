@@ -15,7 +15,8 @@
     ]
   },
   "include": [
-    "api/**/*.ts"
+    "api/**/*.ts",
+    "lib/**/*.ts"
   ],
   "exclude": [
     "node_modules"

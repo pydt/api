@@ -3,7 +3,7 @@
     "outputDirectory": "./api/_gen/swagger",
     "entryFile": "./api/genroot.ts",
     "host": "localhost:3000",
-    "basePath": "/api",
+    "basePath": "/",
     "securityDefinitions": {
       "api_key": {
         "type": "apiKey",
@@ -16,7 +16,7 @@
     }
   },
   "routes": {
-    "basePath": "/api",
+    "basePath": "/",
     "entryFile": "./api/genroot.ts",
     "routesDir": "./api/_gen/routes",
     "iocModule": "./lib/ioc",

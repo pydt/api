@@ -62,53 +62,11 @@ require("reflect-metadata");
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-module.exports = require("winston");
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = require("tsoa");
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var inversify_1 = __webpack_require__(7);
-exports.inject = inversify_1.inject;
-var inversify_binding_decorators_1 = __webpack_require__(8);
-exports.autoProvide = inversify_binding_decorators_1.autoProvide;
-var iocContainer = new inversify_1.Container();
-exports.iocContainer = iocContainer;
-var provide = inversify_binding_decorators_1.makeProvideDecorator(iocContainer);
-exports.provide = provide;
-var fluentProvider = inversify_binding_decorators_1.makeFluentProvideDecorator(iocContainer);
-var provideNamed = function (identifier, name) {
-    return fluentProvider(identifier)
-        .whenTargetNamed(name)
-        .done();
-};
-exports.provideNamed = provideNamed;
-var provideSingleton = function (identifier) {
-    return fluentProvider(identifier)
-        .inSingletonScope()
-        .done();
-};
-exports.provideSingleton = provideSingleton;
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -141,21 +99,85 @@ exports.Config = Config;
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = require("lodash");
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("winston");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("tsoa");
+
+/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __webpack_require__(5);
-var routes_1 = __webpack_require__(6);
-var framework_1 = __webpack_require__(13);
-var logging_1 = __webpack_require__(19);
-var winston = __webpack_require__(0);
+var inversify_1 = __webpack_require__(9);
+exports.inject = inversify_1.inject;
+var inversify_binding_decorators_1 = __webpack_require__(10);
+exports.autoProvide = inversify_binding_decorators_1.autoProvide;
+var iocContainer = new inversify_1.Container();
+exports.iocContainer = iocContainer;
+var provide = inversify_binding_decorators_1.makeProvideDecorator(iocContainer);
+exports.provide = provide;
+var fluentProvider = inversify_binding_decorators_1.makeFluentProvideDecorator(iocContainer);
+var provideNamed = function (identifier, name) {
+    return fluentProvider(identifier)
+        .whenTargetNamed(name)
+        .done();
+};
+exports.provideNamed = provideNamed;
+var provideSingleton = function (identifier) {
+    return fluentProvider(identifier)
+        .inSingletonScope()
+        .done();
+};
+exports.provideSingleton = provideSingleton;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(12));
+__export(__webpack_require__(13));
+__export(__webpack_require__(14));
+__export(__webpack_require__(15));
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __webpack_require__(7);
+var routes_1 = __webpack_require__(8);
+var framework_1 = __webpack_require__(5);
+var logging_1 = __webpack_require__(25);
+var winston = __webpack_require__(2);
 logging_1.configureLogging();
 var router = express_1.Router();
-router.get('/api/swagger.json', function (req, res) {
-    res.status(200).json(__webpack_require__(21));
+router.get('/swagger.json', function (req, res) {
+    res.status(200).json(__webpack_require__(27));
 });
 function methodHandler(method) {
     return function (route) {
@@ -226,36 +248,47 @@ exports.handler = handler;
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("express");
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable */
-var tsoa_1 = __webpack_require__(1);
-var ioc_1 = __webpack_require__(2);
-var authController_1 = __webpack_require__(9);
+var tsoa_1 = __webpack_require__(3);
+var ioc_1 = __webpack_require__(4);
+var authController_1 = __webpack_require__(11);
 var models = {
-    "AuthResponse": {
+    "AuthenticateResponse": {
         "properties": {
             "redirectURL": { "dataType": "string", "required": true },
         },
     },
-    "ErrorResponse": {
+    "SteamProfile": {
         "properties": {
-            "message": { "dataType": "string", "required": true },
+            "steamid": { "dataType": "string", "required": true },
+            "personaname": { "dataType": "string", "required": true },
+            "profileurl": { "dataType": "string", "required": true },
+            "avatar": { "dataType": "string", "required": true },
+            "avatarmedium": { "dataType": "string", "required": true },
+            "avatarfull": { "dataType": "string", "required": true },
+        },
+    },
+    "ValidateResponse": {
+        "properties": {
+            "token": { "dataType": "string", "required": true },
+            "steamProfile": { "ref": "SteamProfile", "required": true },
         },
     },
 };
 function RegisterRoutes(app) {
-    app.get('/api/auth/steam', function (request, response, next) {
+    app.get('/auth/steam', function (request, response, next) {
         var args = {};
         var validatedArgs = [];
         try {
@@ -266,6 +299,21 @@ function RegisterRoutes(app) {
         }
         var controller = ioc_1.iocContainer.get(authController_1.AuthController);
         var promise = controller.authenticate.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.get('/auth/steam/validate', function (request, response, next) {
+        var args = {
+            request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+        };
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = ioc_1.iocContainer.get(authController_1.AuthController);
+        var promise = controller.validate.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
     function promiseHandler(controllerObj, promise, response, next) {
@@ -318,19 +366,19 @@ exports.RegisterRoutes = RegisterRoutes;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("inversify");
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = require("inversify-binding-decorators");
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -344,11 +392,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var tsoa_1 = __webpack_require__(1);
-var ioc_1 = __webpack_require__(2);
-var steamUtil_1 = __webpack_require__(10);
-var winston = __webpack_require__(0);
+var framework_1 = __webpack_require__(5);
+var tsoa_1 = __webpack_require__(3);
+var ioc_1 = __webpack_require__(4);
+var steamUtil_1 = __webpack_require__(16);
+var userRepository_1 = __webpack_require__(19);
+var jwtUtil_1 = __webpack_require__(22);
+var winston = __webpack_require__(2);
+var querystring = __webpack_require__(24);
 var AuthController = /** @class */ (function () {
     function AuthController() {
     }
@@ -384,13 +439,66 @@ var AuthController = /** @class */ (function () {
             })(req, res, next);
         });
     };
+    AuthController.prototype.validate = function (request) {
+        return new Promise(function (resolve, reject) {
+            var req = {
+                query: request.query,
+                url: '/blah?' + querystring.stringify(request.query)
+            };
+            var res = {
+                setHeader: function (key, value) {
+                    if (key === 'Location') {
+                        // We shouldn't get here in validate...
+                        reject(new framework_1.HttpResponseError(400, 'Bad Request'));
+                    }
+                }
+            };
+            var next = function () {
+                // We shouldn't get here in validate...
+                reject(new framework_1.HttpResponseError(400, 'Bad Request'));
+            };
+            steamUtil_1.steamPassport.authenticate('steam', function (err, user, info) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    userRepository_1.userRepository.get(user.profile.id).then(function (dbUser) {
+                        if (!dbUser) {
+                            dbUser = {
+                                steamId: user.profile.id
+                            };
+                        }
+                        var steamProfile = user.profile._json;
+                        dbUser.displayName = user.profile.displayName;
+                        dbUser.avatarSmall = steamProfile.avatar;
+                        dbUser.avatarMedium = steamProfile.avatarmedium;
+                        dbUser.avatarFull = steamProfile.avatarfull;
+                        return userRepository_1.userRepository.saveVersioned(dbUser);
+                    }).then(function () {
+                        resolve({
+                            token: jwtUtil_1.JwtUtil.createToken({ steamId: user.profile.id }),
+                            steamProfile: user.profile._json
+                        });
+                    }).catch(function (perr) {
+                        reject(perr);
+                    });
+                }
+            })(req, res, next);
+        });
+    };
     __decorate([
-        tsoa_1.Response(401, 'Unauthorized'),
         tsoa_1.Get('steam'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", Promise)
     ], AuthController.prototype, "authenticate", null);
+    __decorate([
+        tsoa_1.Get('steam/validate'),
+        __param(0, tsoa_1.Request()),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [framework_1.HttpRequest]),
+        __metadata("design:returntype", Promise)
+    ], AuthController.prototype, "validate", null);
     AuthController = AuthController_1 = __decorate([
         tsoa_1.Route('auth'),
         ioc_1.provideSingleton(AuthController_1)
@@ -402,58 +510,7 @@ exports.AuthController = AuthController;
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var config_1 = __webpack_require__(3);
-var passport = __webpack_require__(11);
-var passportSteam = __webpack_require__(12);
-passport.use(new passportSteam.Strategy({
-    returnURL: config_1.Config.webUrl() + '/steamreturn',
-    realm: config_1.Config.webUrl(),
-    apiKey: config_1.Config.steamApiKey()
-}, function (identifier, profile, done) {
-    done(null, {
-        identifier: identifier,
-        profile: profile
-    });
-}));
-exports.steamPassport = passport;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-module.exports = require("passport");
-
-/***/ }),
 /* 12 */
-/***/ (function(module, exports) {
-
-module.exports = require("passport-steam");
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(14));
-__export(__webpack_require__(15));
-__export(__webpack_require__(17));
-__export(__webpack_require__(18));
-
-
-/***/ }),
-/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -469,13 +526,13 @@ exports.ErrorResponse = ErrorResponse;
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var _ = __webpack_require__(16);
+var _ = __webpack_require__(1);
 var HttpRequest = /** @class */ (function () {
     // HACK: We pass in response here to work around limitations in the TSOA framework,
     // when they make it easier to create your own templates for authentication we can
@@ -500,13 +557,7 @@ exports.HttpRequest = HttpRequest;
 
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports) {
-
-module.exports = require("lodash");
-
-/***/ }),
-/* 17 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -549,7 +600,7 @@ exports.HttpResponse = HttpResponse;
 
 
 /***/ }),
-/* 18 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -585,15 +636,188 @@ exports.HttpResponseError = HttpResponseError;
 
 
 /***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var config_1 = __webpack_require__(0);
+var passport = __webpack_require__(17);
+var passportSteam = __webpack_require__(18);
+passport.use(new passportSteam.Strategy({
+    returnURL: config_1.Config.webUrl() + '/steamreturn',
+    realm: config_1.Config.webUrl(),
+    apiKey: config_1.Config.steamApiKey()
+}, function (identifier, profile, done) {
+    done(null, {
+        identifier: identifier,
+        profile: profile
+    });
+}));
+exports.steamPassport = passport;
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = require("passport");
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+module.exports = require("passport-steam");
+
+/***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var winston = __webpack_require__(0);
-var winston_transport_rollbar_1 = __webpack_require__(20);
-var config_1 = __webpack_require__(3);
+var common_1 = __webpack_require__(20);
+var config_1 = __webpack_require__(0);
+var _ = __webpack_require__(1);
+exports.userRepository = common_1.dynamoose.createVersionedModel(config_1.Config.resourcePrefix() + 'user', {
+    steamId: {
+        type: String,
+        hashKey: true
+    },
+    displayName: {
+        type: String,
+        required: true
+    },
+    avatarSmall: String,
+    avatarMedium: String,
+    avatarFull: String,
+    emailAddress: String,
+    activeGameIds: [String],
+    inactiveGameIds: [String],
+    turnsPlayed: {
+        type: Number,
+        default: 0
+    },
+    turnsSkipped: {
+        type: Number,
+        default: 0
+    },
+    timeTaken: {
+        type: Number,
+        default: 0
+    },
+    fastTurns: {
+        type: Number,
+        default: 0
+    },
+    slowTurns: {
+        type: Number,
+        default: 0
+    }
+});
+exports.userRepository.createS3GameCacheKey = function (steamId) {
+    return steamId + '/' + 'gameCache.json';
+};
+exports.userRepository.getUsersForGame = function (game) {
+    var steamIds = _.compact(_.map(game.players, 'steamId'));
+    return exports.userRepository.batchGet(steamIds).then(function (users) {
+        // make sure they're sorted correctly...
+        var playersWithSteamIds = _.filter(game.players, function (player) {
+            return !!player.steamId;
+        });
+        return _.map(playersWithSteamIds, function (player) {
+            return _.find(users, function (user) {
+                return user.steamId === player.steamId;
+            });
+        });
+    });
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseDynamoose = __webpack_require__(21);
+var _ = __webpack_require__(1);
+baseDynamoose.setDefaults({
+    create: false
+});
+exports.dynamoose = _.merge(baseDynamoose, {
+    createVersionedModel: function (name, schema) {
+        schema.version = {
+            type: Number,
+            default: 0,
+            set: function (value) {
+                return value + 1;
+            }
+        };
+        var model = exports.dynamoose.model(name, new exports.dynamoose.Schema(schema, { timestamps: true }));
+        model.saveVersioned = function (m) {
+            return m.save({
+                condition: 'attribute_not_exists(version) OR version = :version',
+                conditionValues: { version: (model.version || 0) - 1 }
+            });
+        };
+        return model;
+    }
+});
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+module.exports = require("dynamoose");
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var jwt = __webpack_require__(23);
+var config_1 = __webpack_require__(0);
+var JwtUtil;
+(function (JwtUtil) {
+    function createToken(payload) {
+        return jwt.sign(payload, config_1.Config.jwtSecret());
+    }
+    JwtUtil.createToken = createToken;
+    function parseToken(token) {
+        return jwt.verify(token, config_1.Config.jwtSecret());
+    }
+    JwtUtil.parseToken = parseToken;
+})(JwtUtil = exports.JwtUtil || (exports.JwtUtil = {}));
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = require("jsonwebtoken");
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+module.exports = require("querystring");
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var winston = __webpack_require__(2);
+var winston_transport_rollbar_1 = __webpack_require__(26);
+var config_1 = __webpack_require__(0);
 function configureLogging() {
     winston.configure({
         exitOnError: false,
@@ -618,16 +842,16 @@ exports.configureLogging = configureLogging;
 
 
 /***/ }),
-/* 20 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("winston-transport-rollbar");
 
 /***/ }),
-/* 21 */
+/* 27 */
 /***/ (function(module, exports) {
 
-module.exports = {"basePath":"/api","consumes":["application/json"],"definitions":{"AuthResponse":{"properties":{"redirectURL":{"type":"string"}},"required":["redirectURL"],"type":"object"},"ErrorResponse":{"properties":{"message":{"type":"string"}},"required":["message"],"type":"object"}},"info":{"title":"serverless-api","version":"1.0.0"},"paths":{"/auth/steam":{"get":{"operationId":"AuthAuthenticate","produces":["application/json"],"responses":{"200":{"description":"Ok","schema":{"$ref":"#/definitions/AuthResponse"}},"401":{"description":"Unauthorized","schema":{"$ref":"#/definitions/ErrorResponse"}}},"security":[],"parameters":[]}}},"produces":["application/json"],"swagger":"2.0","securityDefinitions":{"api_key":{"type":"apiKey","name":"api-key","in":"header"},"basic_auth_internal":{"type":"basic"}},"host":"localhost:3000"}
+module.exports = {"basePath":"/","consumes":["application/json"],"definitions":{"AuthenticateResponse":{"properties":{"redirectURL":{"type":"string"}},"required":["redirectURL"],"type":"object"},"SteamProfile":{"properties":{"steamid":{"type":"string"},"personaname":{"type":"string"},"profileurl":{"type":"string"},"avatar":{"type":"string"},"avatarmedium":{"type":"string"},"avatarfull":{"type":"string"}},"required":["steamid","personaname","profileurl","avatar","avatarmedium","avatarfull"],"type":"object"},"ValidateResponse":{"properties":{"token":{"type":"string"},"steamProfile":{"$ref":"#/definitions/SteamProfile"}},"required":["token","steamProfile"],"type":"object"}},"info":{"title":"serverless-api","version":"1.0.0"},"paths":{"/auth/steam":{"get":{"operationId":"AuthAuthenticate","produces":["application/json"],"responses":{"200":{"description":"Ok","schema":{"$ref":"#/definitions/AuthenticateResponse"}}},"security":[],"parameters":[]}},"/auth/steam/validate":{"get":{"operationId":"AuthValidate","produces":["application/json"],"responses":{"200":{"description":"Ok","schema":{"$ref":"#/definitions/ValidateResponse"}}},"security":[],"parameters":[]}}},"produces":["application/json"],"swagger":"2.0","securityDefinitions":{"api_key":{"type":"apiKey","name":"api-key","in":"header"},"basic_auth_internal":{"type":"basic"}},"host":"localhost:3000"}
 
 /***/ })
 /******/ ])));

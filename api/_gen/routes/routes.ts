@@ -5,20 +5,31 @@ import { AuthController } from './../../controllers/authController';
 import { expressAuthentication } from './../../../lib/auth/expressAuthentication';
 
 const models: TsoaRoute.Models = {
-    "AuthResponse": {
+    "AuthenticateResponse": {
         "properties": {
             "redirectURL": { "dataType": "string", "required": true },
         },
     },
-    "ErrorResponse": {
+    "SteamProfile": {
         "properties": {
-            "message": { "dataType": "string", "required": true },
+            "steamid": { "dataType": "string", "required": true },
+            "personaname": { "dataType": "string", "required": true },
+            "profileurl": { "dataType": "string", "required": true },
+            "avatar": { "dataType": "string", "required": true },
+            "avatarmedium": { "dataType": "string", "required": true },
+            "avatarfull": { "dataType": "string", "required": true },
+        },
+    },
+    "ValidateResponse": {
+        "properties": {
+            "token": { "dataType": "string", "required": true },
+            "steamProfile": { "ref": "SteamProfile", "required": true },
         },
     },
 };
 
 export function RegisterRoutes(app: any) {
-    app.get('/api/auth/steam',
+    app.get('/auth/steam',
         function(request: any, response: any, next: any) {
             const args = {
             };
@@ -34,6 +45,25 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.authenticate.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/auth/steam/validate',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.validate.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, next);
         });
 
