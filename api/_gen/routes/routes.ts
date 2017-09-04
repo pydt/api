@@ -2,6 +2,7 @@
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { iocContainer } from './../../../lib/ioc';
 import { AuthController } from './../../controllers/authController';
+import { GameController } from './../../controllers/gameController';
 import { UserController } from './../../controllers/userController';
 import { UsersController } from './../../controllers/usersController';
 import { expressAuthentication } from './../../../lib/auth/expressAuthentication';
@@ -32,47 +33,101 @@ const models: TsoaRoute.Models = {
         "properties": {
             "steamId": { "dataType": "string", "required": true },
             "civType": { "dataType": "string", "required": true },
-            "hasSurrendered": { "dataType": "boolean", "required": true },
-            "turnsPlayed": { "dataType": "double", "required": true },
-            "turnsSkipped": { "dataType": "double", "required": true },
-            "timeTaken": { "dataType": "double", "required": true },
-            "fastTurns": { "dataType": "double", "required": true },
-            "slowTurns": { "dataType": "double", "required": true },
+            "hasSurrendered": { "dataType": "boolean" },
+            "turnsPlayed": { "dataType": "double" },
+            "turnsSkipped": { "dataType": "double" },
+            "timeTaken": { "dataType": "double" },
+            "fastTurns": { "dataType": "double" },
+            "slowTurns": { "dataType": "double" },
         },
     },
     "Game": {
         "properties": {
             "gameId": { "dataType": "string", "required": true },
             "createdBySteamId": { "dataType": "string", "required": true },
-            "dlc": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
-            "inProgress": { "dataType": "boolean", "required": true },
-            "completed": { "dataType": "boolean", "required": true },
-            "hashedPassword": { "dataType": "string", "required": true },
+            "inProgress": { "dataType": "boolean" },
+            "hashedPassword": { "dataType": "string" },
+            "players": { "dataType": "array", "array": { "ref": "GamePlayer" }, "required": true },
+            "discourseTopicId": { "dataType": "double" },
+            "currentPlayerSteamId": { "dataType": "string", "required": true },
+            "turnTimerMinutes": { "dataType": "double" },
+            "round": { "dataType": "double" },
+            "gameTurnRangeKey": { "dataType": "double" },
+            "completed": { "dataType": "boolean" },
+            "createdAt": { "dataType": "datetime" },
+            "updatedAt": { "dataType": "datetime" },
+            "version": { "dataType": "double" },
             "displayName": { "dataType": "string", "required": true },
-            "allowJoinAfterStart": { "dataType": "boolean", "required": true },
             "description": { "dataType": "string", "required": true },
+            "dlc": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
             "slots": { "dataType": "double", "required": true },
             "humans": { "dataType": "double", "required": true },
-            "players": { "dataType": "array", "array": { "ref": "GamePlayer" }, "required": true },
-            "discourseTopicId": { "dataType": "double", "required": true },
-            "currentPlayerSteamId": { "dataType": "string", "required": true },
-            "turnTimerMinutes": { "dataType": "double", "required": true },
-            "round": { "dataType": "double", "required": true },
-            "gameTurnRangeKey": { "dataType": "double", "required": true },
             "gameSpeed": { "dataType": "string", "required": true },
             "mapFile": { "dataType": "string", "required": true },
             "mapSize": { "dataType": "string", "required": true },
+            "allowJoinAfterStart": { "dataType": "boolean" },
+        },
+    },
+    "ErrorResponse": {
+        "properties": {
+            "message": { "dataType": "string", "required": true },
+        },
+    },
+    "ChangeCivRequestBody": {
+        "properties": {
+            "playerCiv": { "dataType": "string", "required": true },
+        },
+    },
+    "CreateGameRequestBody": {
+        "properties": {
+            "player1Civ": { "dataType": "string", "required": true },
+            "password": { "dataType": "string", "required": true },
+            "displayName": { "dataType": "string", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "dlc": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "slots": { "dataType": "double", "required": true },
+            "humans": { "dataType": "double", "required": true },
+            "gameSpeed": { "dataType": "string", "required": true },
+            "mapFile": { "dataType": "string", "required": true },
+            "mapSize": { "dataType": "string", "required": true },
+            "allowJoinAfterStart": { "dataType": "boolean" },
+        },
+    },
+    "GameRequestBody": {
+        "properties": {
+            "password": { "dataType": "string", "required": true },
+            "displayName": { "dataType": "string", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "dlc": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "slots": { "dataType": "double", "required": true },
+            "humans": { "dataType": "double", "required": true },
+            "gameSpeed": { "dataType": "string", "required": true },
+            "mapFile": { "dataType": "string", "required": true },
+            "mapSize": { "dataType": "string", "required": true },
+            "allowJoinAfterStart": { "dataType": "boolean" },
+        },
+    },
+    "JoinGameRequestBody": {
+        "properties": {
+            "password": { "dataType": "string", "required": true },
+            "playerCiv": { "dataType": "string", "required": true },
+        },
+    },
+    "OpenGamesResponse": {
+        "properties": {
+            "notStarted": { "dataType": "array", "array": { "ref": "Game" }, "required": true },
+            "openSlots": { "dataType": "array", "array": { "ref": "Game" }, "required": true },
+        },
+    },
+    "SurrenderBody": {
+        "properties": {
+            "kickUserId": { "dataType": "string", "required": true },
         },
     },
     "GamesByUserResponse": {
         "properties": {
             "data": { "dataType": "array", "array": { "ref": "Game" }, "required": true },
             "pollUrl": { "dataType": "string", "required": true },
-        },
-    },
-    "ErrorResponse": {
-        "properties": {
-            "message": { "dataType": "string", "required": true },
         },
     },
     "User": {
@@ -135,6 +190,217 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.validate.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/changeCiv',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "ChangeCivRequestBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.changeCiv.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/create',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "CreateGameRequestBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.create.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/delete',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.delete.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/edit',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "GameRequestBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.edit.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/join',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "JoinGameRequestBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.join.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/leave',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.leave.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/game/listOpen',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.listOpen.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/start',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.start.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/game/:gameId/surrender',
+        authenticateMiddleware([{ "name": "api_key" }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "SurrenderBody" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.surrender.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/game/:gameId',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                gameId: { "in": "path", "name": "gameId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<GameController>(GameController);
+
+
+            const promise = controller.get.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, next);
         });
     app.get('/user/games',

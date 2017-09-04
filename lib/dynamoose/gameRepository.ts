@@ -1,16 +1,11 @@
 
 import { IRepository, dynamoose } from './common';
-import { Game, User, GamePlayer } from '../models';
+import { Game, User } from '../models';
 import { Config } from '../config';
 import * as _ from 'lodash';
 
 export interface IGameRepository extends IRepository<string, Game> {
   getGamesForUser(user: User): Promise<Game[]>;
-  getCurrentPlayerIndex(game: Game): number;
-  getNextPlayerIndex(game: Game): number;
-  getPreviousPlayerIndex(game: Game): number;
-  getHumans(game: Game, includeSurrendered: boolean): GamePlayer;
-  playerIsHuman(player: GamePlayer): boolean;
 }
 
 export interface InternalGameRepository extends IGameRepository {
@@ -100,9 +95,7 @@ gameRepository.batchGet = gameKeys => {
 };
 
 gameRepository.getGamesForUser = user => {
-  const gameKeys = _.map(user.activeGameIds || [], gameId => {
-    return { gameId: gameId }
-  });
+  const gameKeys = user.activeGameIds || [];
 
   if (gameKeys.length > 0) {
     return gameRepository.batchGet(gameKeys);
@@ -110,61 +103,3 @@ gameRepository.getGamesForUser = user => {
     return Promise.resolve([]);
   }
 };
-
-gameRepository.getCurrentPlayerIndex = game => {
-  return _.indexOf(game.players, _.find(game.players, player => {
-    return player.steamId === game.currentPlayerSteamId;
-  }));
-};
-
-gameRepository.getNextPlayerIndex = game => {
-  let playerIndex = gameRepository.getCurrentPlayerIndex(game);
-  let looped = false;
-
-  do {
-    playerIndex++;
-
-    if (playerIndex >= game.players.length) {
-      if (!looped) {
-        playerIndex = 0;
-        looped = true;
-      } else {
-        return -1;
-      }
-    }
-  } while (!gameRepository.playerIsHuman(game.players[playerIndex]));
-
-  return playerIndex;
-};
-
-gameRepository.getPreviousPlayerIndex = game => {
-  let playerIndex = gameRepository.getCurrentPlayerIndex(game);
-  let looped = false;
-
-  do {
-    playerIndex--;
-
-    if (playerIndex < 0) {
-      if (!looped) {
-        playerIndex = game.players.length - 1;
-        looped = true;
-      } else {
-        return -1;
-      }
-    }
-  } while (!gameRepository.playerIsHuman(game.players[playerIndex]));
-
-  return playerIndex;
-};
-
-gameRepository.getHumans = (game, includeSurrendered) => {
-  return _.filter(game.players, player => {
-    return player.steamId && (includeSurrendered || !player.hasSurrendered);
-  });
-};
-
-gameRepository.playerIsHuman = player => {
-  return player.steamId && !player.hasSurrendered;
-};
-
-module.exports = gameRepository;

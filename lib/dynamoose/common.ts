@@ -7,12 +7,13 @@ baseDynamoose.setDefaults({
 
 export interface IRepository<TKey, TEntity> {
   get(id: TKey): Promise<TEntity>;
+  delete(id: TKey): Promise<void>;
   batchGet(ids: TKey[]): Promise<TEntity[]>;
   saveVersioned(model: TEntity): Promise<TEntity>;
-  scan(): any;
+  scan(column?: string): any;
 }
 
-export const dynamoose = _.merge(baseDynamoose, {
+export const dynamoose: any = _.merge(baseDynamoose, {
   createVersionedModel: (name, schema) => {
     schema.version = {
       type: Number,
@@ -25,6 +26,10 @@ export const dynamoose = _.merge(baseDynamoose, {
     const model = baseDynamoose.model(name, new baseDynamoose.Schema(schema, { timestamps: true }));
 
     model.saveVersioned = (m) => {
+      if (!(m instanceof model)) {
+        m = new model(m);
+      }
+
       return m.save({
         condition: 'attribute_not_exists(version) OR version = :version',
         conditionValues: { version: (m.version || 0) - 1 }

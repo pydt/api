@@ -95,13 +95,7 @@
 			},
 			"required": [
 				"steamId",
-				"civType",
-				"hasSurrendered",
-				"turnsPlayed",
-				"turnsSkipped",
-				"timeTaken",
-				"fastTurns",
-				"slowTurns"
+				"civType"
 			],
 			"type": "object"
 		},
@@ -113,37 +107,11 @@
 				"createdBySteamId": {
 					"type": "string"
 				},
-				"dlc": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
 				"inProgress": {
-					"type": "boolean"
-				},
-				"completed": {
 					"type": "boolean"
 				},
 				"hashedPassword": {
 					"type": "string"
-				},
-				"displayName": {
-					"type": "string"
-				},
-				"allowJoinAfterStart": {
-					"type": "boolean"
-				},
-				"description": {
-					"type": "string"
-				},
-				"slots": {
-					"type": "number",
-					"format": "double"
-				},
-				"humans": {
-					"type": "number",
-					"format": "double"
 				},
 				"players": {
 					"type": "array",
@@ -170,6 +138,41 @@
 					"type": "number",
 					"format": "double"
 				},
+				"completed": {
+					"type": "boolean"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"updatedAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"version": {
+					"type": "number",
+					"format": "double"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"dlc": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"slots": {
+					"type": "number",
+					"format": "double"
+				},
+				"humans": {
+					"type": "number",
+					"format": "double"
+				},
 				"gameSpeed": {
 					"type": "string"
 				},
@@ -178,29 +181,199 @@
 				},
 				"mapSize": {
 					"type": "string"
+				},
+				"allowJoinAfterStart": {
+					"type": "boolean"
 				}
 			},
 			"required": [
 				"gameId",
 				"createdBySteamId",
-				"dlc",
-				"inProgress",
-				"completed",
-				"hashedPassword",
+				"players",
+				"currentPlayerSteamId",
 				"displayName",
-				"allowJoinAfterStart",
 				"description",
+				"dlc",
 				"slots",
 				"humans",
-				"players",
-				"discourseTopicId",
-				"currentPlayerSteamId",
-				"turnTimerMinutes",
-				"round",
-				"gameTurnRangeKey",
 				"gameSpeed",
 				"mapFile",
 				"mapSize"
+			],
+			"type": "object"
+		},
+		"ErrorResponse": {
+			"properties": {
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"message"
+			],
+			"type": "object"
+		},
+		"ChangeCivRequestBody": {
+			"properties": {
+				"playerCiv": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"playerCiv"
+			],
+			"type": "object"
+		},
+		"CreateGameRequestBody": {
+			"properties": {
+				"player1Civ": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"dlc": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"slots": {
+					"type": "number",
+					"format": "double"
+				},
+				"humans": {
+					"type": "number",
+					"format": "double"
+				},
+				"gameSpeed": {
+					"type": "string"
+				},
+				"mapFile": {
+					"type": "string"
+				},
+				"mapSize": {
+					"type": "string"
+				},
+				"allowJoinAfterStart": {
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"player1Civ",
+				"password",
+				"displayName",
+				"description",
+				"dlc",
+				"slots",
+				"humans",
+				"gameSpeed",
+				"mapFile",
+				"mapSize"
+			],
+			"type": "object"
+		},
+		"GameRequestBody": {
+			"properties": {
+				"password": {
+					"type": "string"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"dlc": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"slots": {
+					"type": "number",
+					"format": "double"
+				},
+				"humans": {
+					"type": "number",
+					"format": "double"
+				},
+				"gameSpeed": {
+					"type": "string"
+				},
+				"mapFile": {
+					"type": "string"
+				},
+				"mapSize": {
+					"type": "string"
+				},
+				"allowJoinAfterStart": {
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"password",
+				"displayName",
+				"description",
+				"dlc",
+				"slots",
+				"humans",
+				"gameSpeed",
+				"mapFile",
+				"mapSize"
+			],
+			"type": "object"
+		},
+		"JoinGameRequestBody": {
+			"properties": {
+				"password": {
+					"type": "string"
+				},
+				"playerCiv": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"password",
+				"playerCiv"
+			],
+			"type": "object"
+		},
+		"OpenGamesResponse": {
+			"properties": {
+				"notStarted": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Game"
+					}
+				},
+				"openSlots": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Game"
+					}
+				}
+			},
+			"required": [
+				"notStarted",
+				"openSlots"
+			],
+			"type": "object"
+		},
+		"SurrenderBody": {
+			"properties": {
+				"kickUserId": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"kickUserId"
 			],
 			"type": "object"
 		},
@@ -219,17 +392,6 @@
 			"required": [
 				"data",
 				"pollUrl"
-			],
-			"type": "object"
-		},
-		"ErrorResponse": {
-			"properties": {
-				"message": {
-					"type": "string"
-				}
-			},
-			"required": [
-				"message"
 			],
 			"type": "object"
 		},
@@ -354,6 +516,366 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/game/{gameId}/changeCiv": {
+			"post": {
+				"operationId": "GameChangeCiv",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/ChangeCivRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/game/create": {
+			"post": {
+				"operationId": "GameCreate",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CreateGameRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/game/{gameId}/delete": {
+			"post": {
+				"operationId": "GameDelete",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/game/{gameId}/edit": {
+			"post": {
+				"operationId": "GameEdit",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/GameRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/game/{gameId}/join": {
+			"post": {
+				"operationId": "GameJoin",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/JoinGameRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/game/{gameId}/leave": {
+			"post": {
+				"operationId": "GameLeave",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/game/listOpen": {
+			"get": {
+				"operationId": "GameListOpen",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/OpenGamesResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/game/{gameId}/start": {
+			"post": {
+				"operationId": "GameStart",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/game/{gameId}/surrender": {
+			"post": {
+				"operationId": "GameSurrender",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/SurrenderBody"
+						}
+					}
+				]
+			}
+		},
+		"/game/{gameId}": {
+			"get": {
+				"operationId": "GameGet",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Game"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "gameId",
+						"required": true,
+						"type": "string"
+					}
+				]
 			}
 		},
 		"/user/games": {
