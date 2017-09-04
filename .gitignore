@@ -2,3 +2,5 @@
 /node_modules
 /dump
 /config.yml
+/api/_gen
+/.webpack
