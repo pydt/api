@@ -1,7 +1,7 @@
 import { Route, Get, Response, Request, Post, Body, Security } from 'tsoa';
 import { provideSingleton } from '../../lib/ioc';
 import {
-  Game, BaseGame, GamePlayer, GameTurn, getHumans, playerIsHuman, getNextPlayerIndex, getCurrentPlayerIndex
+  Game, BaseGame, GamePlayer, GameTurn, getHumans, playerIsHuman, getNextPlayerIndex, getCurrentPlayerIndex, getPreviousPlayerIndex
 } from '../../lib/models';
 import { userRepository } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
@@ -15,6 +15,10 @@ import * as _ from 'lodash';
 import * as uuid from 'node-uuid';
 import * as bcrypt from 'bcryptjs';
 import * as AWS from 'aws-sdk';
+import * as zlib from 'zlib';
+import * as winston from 'winston';
+import { moveToNextTurn, defeatPlayers } from '../../lib/services/gameTurnService';
+const s3 = new AWS.S3();
 const ses = new AWS.SES();
 
 @Route('game')
@@ -544,6 +548,283 @@ export class GameController {
     return game;
   }
 
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Get('{gameId}/turn')
+  public async getTurn(@Request() request: HttpRequest, gameId: string): Promise<GameTurnResponse> {
+    const game = await gameRepository.get(gameId);
+
+    if (game.currentPlayerSteamId !== request.user.steamId) {
+      throw new HttpResponseError(400, `It's not your turn!`);
+    }
+
+    const file = gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey);
+
+    const fileParams = {
+      Bucket: Config.resourcePrefix() + 'saves',
+      Key: file
+    };
+
+    if (request.query && request.query.compressed) {
+      fileParams.Key += '.gz';
+
+      try {
+        await s3.headObject(fileParams).promise();
+      } catch (err) {
+        fileParams.Key = file;
+      }
+    }
+
+    return {
+      downloadUrl: s3.getSignedUrl('getObject', _.merge(fileParams, {
+        ResponseContentDisposition: `attachment; filename='(PYDT) Play This One!.Civ6Save'`,
+        Expires: 60
+      }))
+    };
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('{gameId}/turn/finishSubmit')
+  public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
+    const game = await gameRepository.get(gameId);
+
+    if (game.currentPlayerSteamId !== request.user.steamId) {
+      throw new HttpResponseError(400, `It's not your turn!`);
+    }
+
+    const gameTurn = await gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+    game.gameTurnRangeKey++;
+
+    const users = await userRepository.getUsersForGame(game);
+    const user = _.find(users, u => {
+      return u.steamId === request.user.steamId;
+    });
+
+    const data = await s3.getObject({
+      Bucket: Config.resourcePrefix() + 'saves',
+      Key: gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey)
+    }).promise();
+
+    if (!data && !data.Body) {
+      throw new Error('File doesn\'t exist?');
+    }
+
+    let buffer = data.Body;
+
+    // Attempt to gunzip...
+    try {
+      buffer = zlib.unzipSync(data.Body as any);
+      winston.info('unzip succeeded!');
+    } catch (e) {
+      // If unzip fails, assume raw save file was uploaded...
+      winston.info('unzip failed :(', e);
+    }
+
+    const wrapper = gameTurnRepository.parseSaveFile(buffer, game);
+    const parsed = wrapper.parsed;
+
+    const numCivs = parsed.CIVS.length;
+    const parsedRound = parsed.GAME_TURN.data;
+    const gameDlc = game.dlc || [];
+    const parsedDlc = [];
+
+    if (parsed.MOD_BLOCK_1) {
+      for (const mod of parsed.MOD_BLOCK_1.data) {
+        // Official DLC starts with a localization string, assuming non-official doesn't?
+        const modTitle = mod.MOD_TITLE.data;
+
+        // Ignore scenarios so we don't have to open that can of worms...
+        if (modTitle.indexOf(`{'LOC_`) === 0 && modTitle.indexOf('_SCENARIO_') < 0) {
+          parsedDlc.push(mod.MOD_ID.data);
+        }
+      }
+    }
+
+    if (gameDlc.length !== parsedDlc.length || _.difference(gameDlc, parsedDlc).length) {
+      throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
+    }
+
+    if (numCivs !== game.slots) {
+      throw new HttpResponseError(400, `Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
+    }
+
+    if (game.gameSpeed && game.gameSpeed !== parsed.GAME_SPEED.data) {
+      throw new HttpResponseError(
+        400,
+        `Invalid game speed in save file!  (actual: ${parsed.GAME_SPEED.data}, expected: ${game.gameSpeed})`
+      );
+    }
+
+    if (game.mapFile && parsed.MAP_FILE.data.indexOf(game.mapFile) < 0) {
+      throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${parsed.MAP_FILE.data}, expected: ${game.mapFile})`);
+    }
+
+    if (game.mapSize && game.mapSize !== parsed.MAP_SIZE.data) {
+      throw new HttpResponseError(400, `Invalid map size in save file! (actual: ${parsed.MAP_SIZE.data}, expected: ${game.mapSize})`);
+    }
+
+    const newDefeatedPlayers = [];
+
+    for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
+      const parsedCiv = parsed.CIVS[i];
+
+      if (game.players[i]) {
+        const actualCiv = parsedCiv.LEADER_NAME.data;
+        const expectedCiv = game.players[i].civType;
+
+        if (expectedCiv === 'LEADER_RANDOM') {
+          game.players[i].civType = actualCiv;
+        } else if (actualCiv !== expectedCiv) {
+          throw new HttpResponseError(400, `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
+        }
+
+        if (playerIsHuman(game.players[i])) {
+          if (parsedCiv.ACTOR_AI_HUMAN === 1) {
+            throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
+          }
+
+          if (parsedCiv.PLAYER_ALIVE && !parsedCiv.PLAYER_ALIVE.data) {
+            // Player has been defeated!
+            game.players[i].hasSurrendered = true;
+            newDefeatedPlayers.push(game.players[i]);
+          }
+        } else {
+          if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+            throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
+          }
+        }
+      } else {
+        if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+          throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
+        }
+
+        game.players[i] = {
+          civType: parsedCiv.LEADER_NAME.data
+        } as GamePlayer;
+      }
+    }
+
+    let expectedRound = gameTurn.round;
+
+    if (gameTurn.turn === 1) {
+      // When starting a game, take whatever round is in the file.  This allows starting in different eras.
+      expectedRound = parsedRound;
+    }
+
+    const nextPlayerIndex = getNextPlayerIndex(game);
+
+    if (nextPlayerIndex <= getCurrentPlayerIndex(game)) {
+      expectedRound++;
+    }
+
+    if (expectedRound !== parsedRound) {
+      throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
+    }
+
+    const isCurrentTurn = parsed.CIVS[nextPlayerIndex].IS_CURRENT_TURN;
+
+    if (!isCurrentTurn || !isCurrentTurn.data) {
+      throw new HttpResponseError(400, 'Incorrect player turn in save file!');
+    }
+
+    game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
+    game.round = expectedRound;
+
+    await gameTurnRepository.updateSaveFileForGameState(game, users, wrapper);
+    await moveToNextTurn(game, gameTurn, user);
+
+    if (newDefeatedPlayers.length) {
+      await defeatPlayers(game, users, newDefeatedPlayers);
+    }
+
+    return game;
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('{gameId}/turn/revert')
+  public async revert(@Request() request: HttpRequest, gameId: string): Promise<Game> {
+    const game = await gameRepository.get(gameId);
+
+    if (game.currentPlayerSteamId !== request.user.steamId && game.createdBySteamId !== request.user.steamId) {
+      throw new HttpResponseError(400, `You can't revert this game!`);
+    }
+
+    const turn = game.gameTurnRangeKey - 1;
+    let lastTurn: GameTurn;
+
+    do {
+      const curGameTurn = await gameTurnRepository.get({gameId: game.gameId, turn: turn});
+
+      const player = _.find(game.players, p => {
+        return p.steamId === curGameTurn.playerSteamId;
+      });
+
+      if (playerIsHuman(player)) {
+        lastTurn = curGameTurn;
+      }
+    } while (!lastTurn);
+
+    const user = await userRepository.get(lastTurn.playerSteamId);
+    gameTurnRepository.updateTurnStatistics(game, lastTurn, user, true);
+
+    // Update previous turn data
+    delete lastTurn.skipped;
+    delete lastTurn.endDate;
+    lastTurn.startDate = new Date();
+
+    const promises = [];
+
+    // Delete turns between the old turn and the turn to revert to
+    for (let i = lastTurn.turn + 1; i <= game.gameTurnRangeKey; i++) {
+      winston.info(`deleting ${gameId}/${i}`);
+      promises.push(gameTurnRepository.delete({gameId: gameId, turn: i}));
+    }
+
+    // Update game record
+    const curPlayerIndex = getCurrentPlayerIndex(game);
+    const prevPlayerIndex = getPreviousPlayerIndex(game);
+
+    if (prevPlayerIndex >= curPlayerIndex) {
+      game.round--;
+    }
+
+    game.currentPlayerSteamId = game.players[prevPlayerIndex].steamId;
+    game.gameTurnRangeKey = lastTurn.turn;
+
+    promises.push(gameTurnRepository.saveVersioned(lastTurn));
+    promises.push(gameRepository.saveVersioned(game));
+    promises.push(userRepository.saveVersioned(user));
+    promises.push(gameTurnRepository.getAndUpdateSaveFileForGameState(game));
+
+    await Promise.all(promises);
+
+    // Send an sns message that a turn has been completed.
+    await sendSnsMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+
+    return game;
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('{gameId}/turn/startSubmit')
+  public async startSubmit(@Request() request: HttpRequest, gameId: string): Promise<StartTurnSubmitResponse> {
+    const game = await gameRepository.get(gameId);
+    if (game.currentPlayerSteamId !== request.user.steamId) {
+      throw new HttpResponseError(400, 'It\'s not your turn!');
+    }
+
+    return {
+      putUrl: s3.getSignedUrl('putObject', {
+        Bucket: Config.resourcePrefix() + 'saves',
+        Key: gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
+        Expires: 60,
+        ContentType: 'application/octet-stream'
+      })
+    };
+  }
+
   @Get('{gameId}')
   public get(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     return gameRepository.get(gameId);
@@ -573,4 +854,12 @@ export interface JoinGameRequestBody extends ChangeCivRequestBody {
 export interface OpenGamesResponse {
   notStarted: Game[];
   openSlots: Game[];
+}
+
+export interface GameTurnResponse {
+  downloadUrl: string;
+}
+
+export interface StartTurnSubmitResponse {
+  putUrl: string;
 }

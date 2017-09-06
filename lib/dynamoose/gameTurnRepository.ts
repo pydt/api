@@ -3,16 +3,16 @@ import { IRepository, dynamoose } from './common';
 import { Config } from '../config';
 import { HttpResponseError } from '../../api/framework/index';
 import * as _ from 'lodash';
-import * as AWS from 'aws-sdk';
 import * as civ6 from 'civ6-save-parser';
 import * as zlib from 'zlib';
 import * as pwdgen from 'generate-password';
+import * as AWS from 'aws-sdk';
 const s3 = new AWS.S3();
 
 export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> {
   createS3SaveKey(gameId: string, turn: number): string;
   getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<any>;
-  updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo: boolean): void;
+  updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean): void;
   updateSaveFileForGameState(game: Game, users?: User[], wrapper?): Promise<any>;
   parseSaveFile(buffer, game: Game);
 }
