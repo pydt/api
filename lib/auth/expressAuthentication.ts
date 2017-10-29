@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponseError } from '../../api/framework/index';
 import { JwtUtil } from './jwtUtil';
-import * as winston from 'winston';
+import { pydtLogger } from '../logging';
 
 export async function expressAuthentication(request: HttpRequest, securityName: string, scopes?: string[]): Promise<any> {
   if (securityName === 'api_key') {
@@ -9,11 +9,11 @@ export async function expressAuthentication(request: HttpRequest, securityName: 
         return JwtUtil.parseToken(request.headers['authorization']);
       }
     } catch (e) {
-      winston.warn(`Error parsing JWT token: ${JSON.stringify(e.stack || e)}`);
+      pydtLogger.warn('Error parsing JWT token', e);
       throw HttpResponseError.createUnauthorized();
     }
 
-    winston.info('No Authorization header in request!');
+    pydtLogger.info('No Authorization header in request!');
   }
 
   throw HttpResponseError.createUnauthorized();

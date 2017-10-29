@@ -1,5 +1,4 @@
 import { LambdaProxyEvent } from './lambdaProxyEvent';
-import { FullJwtPayload } from '../../lib/auth/jwtPayload';
 import { HttpResponse } from './httpResponse';
 import * as _ from 'lodash';
 
@@ -9,7 +8,7 @@ export class HttpRequest {
   public method: string;
   public params: any;
   public query: any;
-  public user: FullJwtPayload;
+  public user: string;
   public url: string;
 
   // HACK: We pass in response here to work around limitations in the TSOA framework,

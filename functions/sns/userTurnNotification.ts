@@ -1,34 +1,27 @@
 import { gameRepository } from '../../lib/dynamoose/gameRepository';
 import { userRepository } from '../../lib/dynamoose/userRepository';
-import * as winston from 'winston';
-import * as AWS from 'aws-sdk';
+import { loggingHandler } from '../../lib/logging';
 import { User, Game } from '../../lib/models/index';
 import { Config } from '../../lib/config';
+import * as AWS from 'aws-sdk';
 const ses = new AWS.SES();
 const iotData = new AWS.IotData({endpoint: 'a21s639tnrshxf.iot.us-east-1.amazonaws.com'});
 
-export async function handler(event, context, cb) {
-  try {
-    const gameId = event.Records[0].Sns.Message;
-    const game = await gameRepository.get(gameId);
-  
-    if (!game || !game.inProgress || game.completed) {
-      return cb();
-    }
-  
-    const user = await userRepository.get(game.currentPlayerSteamId);
-  
-    await Promise.all([
-      notifyUserClient(user),
-      sendEmail(user, game)
-    ]);
+export const handler = loggingHandler(async (event, context) => {
+  const gameId = event.Records[0].Sns.Message;
+  const game = await gameRepository.get(gameId);
 
-    cb();
-  } catch (err) {
-    winston.error(err);
-    cb(err);
+  if (!game || !game.inProgress || game.completed) {
+    return;
   }
-};
+
+  const user = await userRepository.get(game.currentPlayerSteamId);
+
+  await Promise.all([
+    notifyUserClient(user),
+    sendEmail(user, game)
+  ]);
+});
 
 function notifyUserClient(user: User) {
   return iotData.publish({

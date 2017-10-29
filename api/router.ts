@@ -1,10 +1,7 @@
 import { Router } from 'express';
 import { RegisterRoutes } from './_gen/routes/routes';
-import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent, LambdaProxyCallback } from './framework';
-import { configureLogging } from '../lib/logging';
-import * as winston from 'winston';
-
-configureLogging();
+import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
+import { loggingHandler, pydtLogger } from '../lib/logging';
 
 const router = Router();
 
@@ -17,7 +14,7 @@ type middlewareExec = ((request: HttpRequest, response: HttpResponse, next: any)
 function methodHandler(method: string) {
   return function (route: string, ...routeExecs: middlewareExec[]) {
     router[method](route, (req, res) => {
-      winston.info(`Found route ${route}`);
+      pydtLogger.info(`Found route ${route}`);
 
       const runNext = (runExecs: middlewareExec[]) => {
         const curExec: middlewareExec = runExecs[0];
@@ -43,7 +40,7 @@ function methodHandler(method: string) {
             }
 
             if (logError) {
-              winston.error(err);
+              pydtLogger.error(`Unhandled Exception from ${route}`, err);
             }
 
             res.status(status).json(new ErrorResponse(message));
@@ -68,20 +65,27 @@ const mockApp = {
 
 RegisterRoutes(mockApp);
 
-export function handler(event: LambdaProxyEvent, context, callback: LambdaProxyCallback) {
-  // Typeorm will prevent the event loop from emptying
-  context.callbackWaitsForEmptyEventLoop = false;
+export const handler = loggingHandler((event: LambdaProxyEvent, context) => {
+  pydtLogger.info(`handling ${event.httpMethod} ${event.path}`);
 
-  winston.info(`handling ${event.httpMethod} ${event.path}`);
+  return new Promise((resolve, reject) => {
+    const callback = (err, resp) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(resp);
+      }
+    };
 
-  const response = new HttpResponse(callback);
+    const response = new HttpResponse(callback);
 
-  if (event.httpMethod.toLowerCase() === 'options') {
-    response.status(200).end();
-  } else {
-    (router as any).handle(new HttpRequest(event, response), response, err => {
-      winston.info(`404 for ${event.httpMethod} ${event.path}`);
-      response.status(404).json(new ErrorResponse('Not Found'));
-    });
-  }
-};
+    if (event.httpMethod.toLowerCase() === 'options') {
+      response.status(200).end();
+    } else {
+      (router as any).handle(new HttpRequest(event, response), response, err => {
+        pydtLogger.info(`404 for ${event.httpMethod} ${event.path}`);
+        response.status(404).json(new ErrorResponse('Not Found'));
+      });
+    }
+  });
+});

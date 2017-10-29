@@ -1,6 +1,10 @@
 import * as baseDynamoose from 'dynamoose';
 import * as _ from 'lodash';
 
+baseDynamoose.AWS.config.update({
+  region: 'us-east-1'
+});
+
 baseDynamoose.setDefaults({
   create: false
 });

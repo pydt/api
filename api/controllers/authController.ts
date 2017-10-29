@@ -5,7 +5,7 @@ import { steamPassport } from '../../lib/steamUtil';
 import { User, SteamProfile } from '../../lib/models';
 import { userRepository } from '../../lib/dynamoose/userRepository';
 import { JwtUtil } from '../../lib/auth/jwtUtil';
-import * as winston from 'winston';
+import { pydtLogger } from '../../lib/logging';
 import * as querystring from 'querystring';
 
 @Route('auth')
@@ -39,7 +39,7 @@ export class AuthController {
         if (err) {
           reject(err);
         } else {
-          winston.info('Callback called without error?', user, info);
+          pydtLogger.info(`Callback called without error?  user: ${JSON.stringify(user)}, info: ${JSON.stringify(info)}`);
         }
       })(req, res, next);
     });
@@ -85,7 +85,7 @@ export class AuthController {
             return userRepository.saveVersioned(dbUser);
           }).then(() => {
             resolve({
-              token: JwtUtil.createToken({ steamId: user.profile.id }),
+              token: JwtUtil.createToken(user.profile.id),
               steamProfile: user.profile._json
             });
           }).catch(perr => {

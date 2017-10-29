@@ -1,7 +1,7 @@
 import * as rp from 'request-promise';
 import { Config } from './config';
 import { Game } from './models';
-import * as winston from 'winston';
+import { pydtLogger } from './logging';
 
 export function addDiscourseGameTopic(game: Game) {
   if (Config.activeStage() === 'prod') {
@@ -16,7 +16,7 @@ export function addDiscourseGameTopic(game: Game) {
       json: true
     });
   } else {
-    winston.info(`Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
+    pydtLogger.info(`Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
     return Promise.resolve();
   }
 };
@@ -29,7 +29,7 @@ export function deleteDiscourseGameTopic(game: Game) {
       json: true
     });
   } else {
-    winston.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
+    pydtLogger.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
     return Promise.resolve();
   }
 };

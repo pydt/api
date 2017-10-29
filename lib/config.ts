@@ -23,4 +23,10 @@ export class Config {
   public static rollbarKey() {
     return process.env.ROLLBAR_API_KEY as string;
   }
+  public static commitHash() {
+    return process.env.COMMIT_HASH as string;
+  }
+  public static runningLocal() {
+    return !!process.env.RUNNING_LOCAL;
+  }
 }

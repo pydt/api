@@ -3,10 +3,10 @@ import { userRepository } from '../dynamoose/userRepository';
 import { gameRepository } from '../dynamoose/gameRepository';
 import { Config } from '../config';
 import { gameTurnRepository } from '../dynamoose/gameTurnRepository';
-import * as winston from 'winston';
 import * as _ from 'lodash';
 import * as AWS from 'aws-sdk';
 import { sendSnsMessage } from '../sns';
+import { pydtLogger } from '../logging';
 const ses = new AWS.SES();
 
 export async function moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
@@ -45,7 +45,7 @@ async function createNextGameTurn(game: Game) {
   } catch (err) {
     // If error saving, delete the game turn and retry.  This is probably because
     // a previous save failed and the game turn already exists.
-    winston.warn('Error saving game turn, deleting and trying again!', nextTurn);
+    pydtLogger.warn(`Error saving game turn, deleting and trying again: ${JSON.stringify(nextTurn)}`, err);
 
     await gameTurnRepository.delete(nextTurn);
     await gameTurnRepository.saveVersioned(nextTurn);

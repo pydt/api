@@ -14,12 +14,12 @@ export class UserController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('games')
   public async games(@Request() request: HttpRequest): Promise<GamesByUserResponse> {
-    const user = await userRepository.get(request.user.steamId);
+    const user = await userRepository.get(request.user);
     const games = await gameRepository.getGamesForUser(user);
 
     return {
       data: games,
-      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${userRepository.createS3GameCacheKey(request.user.steamId)}`
+      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${userRepository.createS3GameCacheKey(request.user)}`
     };
   }
 
@@ -53,14 +53,14 @@ export class UserController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('getCurrent')
   public getCurrent(@Request() request: HttpRequest): Promise<User> {
-    return userRepository.get(request.user.steamId);
+    return userRepository.get(request.user);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setNotificationEmail')
   public async setNotificationEmail(@Request() request: HttpRequest, @Body() body: SetNotificationEmailBody): Promise<User> {
-    const user = await userRepository.get(request.user.steamId);
+    const user = await userRepository.get(request.user);
     user.emailAddress = body.emailAddress;
     return userRepository.saveVersioned(user);
   }
@@ -69,7 +69,7 @@ export class UserController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('steamProfile')
   public async steamProfile(@Request() request: HttpRequest): Promise<SteamProfile> {
-    const players = await getPlayerSummaries([request.user.steamId]);
+    const players = await getPlayerSummaries([request.user]);
 
     if (players.length !== 1) {
       throw new Error('Couldn\'t get user profile');

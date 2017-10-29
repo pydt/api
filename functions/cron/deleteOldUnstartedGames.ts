@@ -1,24 +1,18 @@
 import { gameRepository } from '../../lib/dynamoose/gameRepository';
 import { userRepository } from '../../lib/dynamoose/userRepository';
 import { deleteGame } from '../../lib/services/gameService';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game } from '../../lib/models';
 import { Config } from '../../lib/config';
 import * as moment from 'moment';
-import * as winston from 'winston';
 import * as _ from 'lodash';
 import * as AWS from 'aws-sdk';
 const ses = new AWS.SES();
 
-export async function handler(event, context, cb) {
-  try {
-    await deleteOldUnstartedGames();
-    await notifyGamesAboutToBeDeleted();
-    cb();
-  } catch (err) {
-    winston.error(err);
-    cb(err);
-  }
-};
+export const handler = loggingHandler(async (event, context) => {
+  await deleteOldUnstartedGames();
+  await notifyGamesAboutToBeDeleted();
+});
 
 async function deleteOldUnstartedGames() {
   const games: Game[] = await gameRepository
@@ -27,7 +21,7 @@ async function deleteOldUnstartedGames() {
     .exec();
 
   await Promise.all(_.map(games, game => {
-    winston.info(`deleted game ${game.gameId}`);
+    pydtLogger.info(`deleted game ${game.gameId}`);
     return deleteGame(game, null);
   }));
 }

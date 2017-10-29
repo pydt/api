@@ -2,27 +2,21 @@ import { User, Game } from '../../lib/models';
 import { gameRepository } from '../../lib/dynamoose/gameRepository';
 import { gameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { userRepository } from '../../lib/dynamoose/userRepository';
-import * as winston from 'winston';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
 
-export async function handler(event, context, cb) {
-  try {
-    const userId = event.Records[0].Sns.Message;
-    let users: User[];
-  
-    if (userId) {
-      users = [await userRepository.get(userId)];
-    } else {
-      users = await userRepository.scan().exec();
-    }
-    
-    await calculateUserStats(users);
-    cb();
-  } catch (err) {
-    winston.error(err);
-    cb(err);
+export const handler = loggingHandler(async (event, context) => {
+  const userId = event.Records[0].Sns.Message;
+  let users: User[];
+
+  if (userId) {
+    users = [await userRepository.get(userId)];
+  } else {
+    users = await userRepository.scan().exec();
   }
-}
+  
+  await calculateUserStats(users);
+});
 
 async function calculateUserStats(users: User[]) {
   for (const user of users) {
@@ -30,7 +24,7 @@ async function calculateUserStats(users: User[]) {
   
     const allGameIds = _.concat(user.activeGameIds || [], user.inactiveGameIds || []);
     
-    winston.info(`Processing user ${user.displayName}`);
+    pydtLogger.info(`Processing user ${user.displayName}`);
   
     if (!allGameIds.length) {
       continue;

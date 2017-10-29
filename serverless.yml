@@ -13,17 +13,17 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.22.0"
+frameworkVersion: "1.23.0"
 
 plugins:
   - serverless-mocha-plugin
   - export-api-url
-  - serverless-offline
   - serverless-webpack
+  - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: nodejs6.10
   stage: dev
   iamRoleStatements: # We should tighten this up...
     - Effect: Allow
@@ -46,36 +46,11 @@ custom:
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
   DEFAULT_LAMBDA_MEMORY: 512
-  webpackIncludeModules: true
+  webpackIncludeModules:
+    forceInclude:
+      - reflect-metadata
+      - source-map-support
   packExternalModulesMaxBuffer: 512000
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-
-# you can overwrite defaults here
-#defaults:
-#  stage: dev
-#  region: us-east-1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#  exclude:
-#    - exclude-me.js
-#  artifact: my-service-code.zip
 
 functions:
   api_router:

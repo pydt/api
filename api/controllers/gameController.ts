@@ -12,12 +12,12 @@ import { gameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { sendSnsMessage } from '../../lib/sns';
 import { Config } from '../../lib/config';
 import * as _ from 'lodash';
-import * as uuid from 'node-uuid';
+import * as uuid from 'uuid/v4';
 import * as bcrypt from 'bcryptjs';
 import * as AWS from 'aws-sdk';
 import * as zlib from 'zlib';
-import * as winston from 'winston';
 import { moveToNextTurn, defeatPlayers } from '../../lib/services/gameTurnService';
+import { pydtLogger } from '../../lib/logging';
 const s3 = new AWS.S3();
 const ses = new AWS.SES();
 
@@ -39,7 +39,7 @@ export class GameController {
     }
 
     const player = _.find(game.players, p => {
-      return p.steamId === request.user.steamId;
+      return p.steamId === request.user;
     });
 
     if (!player) {
@@ -55,7 +55,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('create')
   public async create(@Request() request: HttpRequest, @Body() body: CreateGameRequestBody): Promise<Game> {
-    const user = await userRepository.get(request.user.steamId);
+    const user = await userRepository.get(request.user);
 
     if (!user.emailAddress) {
       throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
@@ -63,7 +63,7 @@ export class GameController {
 
     const games = await gameRepository.getGamesForUser(user);
     const hasFormingGame = _.some(games, game => {
-      return game.createdBySteamId === request.user.steamId && !game.inProgress;
+      return game.createdBySteamId === request.user && !game.inProgress;
     });
 
     if (hasFormingGame) {
@@ -74,7 +74,7 @@ export class GameController {
     }
 
     const newGame: Game = {
-      gameId: uuid.v4(),
+      gameId: uuid(),
       createdBySteamId: user.steamId,
       currentPlayerSteamId: user.steamId,
       dlc: body.dlc,
@@ -117,7 +117,7 @@ export class GameController {
   public async delete(@Request() request: HttpRequest, gameId: string): Promise<void> {
     const game = await gameRepository.get(gameId);
 
-    if (game.createdBySteamId !== request.user.steamId) {
+    if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, 'Only the creator of the game can delete the game!');
     }
 
@@ -125,7 +125,7 @@ export class GameController {
       throw new HttpResponseError(400, `Can't delete an in progress game!`);
     }
 
-    await deleteGame(game, request.user.steamId);
+    await deleteGame(game, request.user);
   }
 
   @Security('api_key')
@@ -134,7 +134,7 @@ export class GameController {
   public async edit(@Request() request: HttpRequest, gameId: string, @Body() body: GameRequestBody): Promise<Game> {
     const game = await gameRepository.get(gameId);
 
-    if (game.createdBySteamId !== request.user.steamId) {
+    if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You didn't create this game!`);
     }
 
@@ -200,7 +200,7 @@ export class GameController {
       }
     }
 
-    if (_.map(game.players, 'steamId').indexOf(request.user.steamId) >= 0) {
+    if (_.map(game.players, 'steamId').indexOf(request.user) >= 0) {
       throw new HttpResponseError(400, 'Player already in Game');
     }
 
@@ -215,15 +215,15 @@ export class GameController {
     }
 
     if (targetPlayer) {
-      targetPlayer.steamId = request.user.steamId;
+      targetPlayer.steamId = request.user;
     } else {
       game.players.push({
-        steamId: request.user.steamId,
+        steamId: request.user,
         civType: body.playerCiv
       });
     }
 
-    const user = await userRepository.get(request.user.steamId);
+    const user = await userRepository.get(request.user);
 
     if (!user.emailAddress) {
       throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
@@ -284,7 +284,7 @@ export class GameController {
   public async leave(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     const game = await gameRepository.get(gameId);
 
-    if (game.createdBySteamId === request.user.steamId) {
+    if (game.createdBySteamId === request.user) {
       throw new HttpResponseError(400, `You can't leave, you created the game!`);
     }
 
@@ -292,15 +292,15 @@ export class GameController {
       throw new HttpResponseError(400, 'You can only leave a game before it starts.');
     }
 
-    if (_.map(game.players, 'steamId').indexOf(request.user.steamId) < 0) {
+    if (_.map(game.players, 'steamId').indexOf(request.user) < 0) {
       throw new HttpResponseError(400, 'Player not in Game');
     }
 
     _.remove(game.players, player => {
-      return player.steamId === request.user.steamId;
+      return player.steamId === request.user;
     });
 
-    const user = await userRepository.get(request.user.steamId);
+    const user = await userRepository.get(request.user);
 
     _.pull(user.activeGameIds, game.gameId);
 
@@ -375,7 +375,7 @@ export class GameController {
       throw new HttpResponseError(400, 'Game in progress!');
     }
 
-    if (game.createdBySteamId !== request.user.steamId) {
+    if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, 'You didn\'t create this game!');
     }
 
@@ -403,10 +403,10 @@ export class GameController {
   @Post('{gameId}/surrender')
   public async surrender(@Request() request: HttpRequest, gameId: string, @Body() body: SurrenderBody): Promise<Game> {
     const game = await gameRepository.get(gameId);
-    let userId = request.user.steamId;
+    let userId = request.user;
 
     if (body.kickUserId) {
-      if (game.createdBySteamId !== request.user.steamId) {
+      if (game.createdBySteamId !== request.user) {
         throw new HttpResponseError(400, 'You must be the game creator to kick a user!');
       }
 
@@ -554,7 +554,7 @@ export class GameController {
   public async getTurn(@Request() request: HttpRequest, gameId: string): Promise<GameTurnResponse> {
     const game = await gameRepository.get(gameId);
 
-    if (game.currentPlayerSteamId !== request.user.steamId) {
+    if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
@@ -589,7 +589,7 @@ export class GameController {
   public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     const game = await gameRepository.get(gameId);
 
-    if (game.currentPlayerSteamId !== request.user.steamId) {
+    if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
@@ -598,7 +598,7 @@ export class GameController {
 
     const users = await userRepository.getUsersForGame(game);
     const user = _.find(users, u => {
-      return u.steamId === request.user.steamId;
+      return u.steamId === request.user;
     });
 
     const data = await s3.getObject({
@@ -615,10 +615,10 @@ export class GameController {
     // Attempt to gunzip...
     try {
       buffer = zlib.unzipSync(data.Body as any);
-      winston.info('unzip succeeded!');
+      pydtLogger.info('unzip succeeded!');
     } catch (e) {
       // If unzip fails, assume raw save file was uploaded...
-      winston.info('unzip failed :(', e);
+      pydtLogger.info('unzip failed :(', e);
     }
 
     const wrapper = gameTurnRepository.parseSaveFile(buffer, game);
@@ -635,7 +635,7 @@ export class GameController {
         const modTitle = mod.MOD_TITLE.data;
 
         // Ignore scenarios so we don't have to open that can of worms...
-        if (modTitle.indexOf(`{'LOC_`) === 0 && modTitle.indexOf('_SCENARIO_') < 0) {
+        if (modTitle.indexOf(`{"LOC_`) === 0 && modTitle.indexOf('_SCENARIO_') < 0) {
           parsedDlc.push(mod.MOD_ID.data);
         }
       }
@@ -747,7 +747,7 @@ export class GameController {
   public async revert(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     const game = await gameRepository.get(gameId);
 
-    if (game.currentPlayerSteamId !== request.user.steamId && game.createdBySteamId !== request.user.steamId) {
+    if (game.currentPlayerSteamId !== request.user && game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You can't revert this game!`);
     }
 
@@ -778,7 +778,7 @@ export class GameController {
 
     // Delete turns between the old turn and the turn to revert to
     for (let i = lastTurn.turn + 1; i <= game.gameTurnRangeKey; i++) {
-      winston.info(`deleting ${gameId}/${i}`);
+      pydtLogger.info(`deleting ${gameId}/${i}`);
       promises.push(gameTurnRepository.delete({gameId: gameId, turn: i}));
     }
 
@@ -811,7 +811,7 @@ export class GameController {
   @Post('{gameId}/turn/startSubmit')
   public async startSubmit(@Request() request: HttpRequest, gameId: string): Promise<StartTurnSubmitResponse> {
     const game = await gameRepository.get(gameId);
-    if (game.currentPlayerSteamId !== request.user.steamId) {
+    if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, 'It\'s not your turn!');
     }
 

@@ -5,31 +5,24 @@ import { userRepository } from '../../lib/dynamoose/userRepository';
 import { moveToNextTurn } from '../../lib/services/gameTurnService';
 import { ScheduledJob } from '../../lib/models';
 import { Config } from '../../lib/config';
-import * as winston from 'winston';
+import { loggingHandler } from '../../lib/logging';
 import * as _ from 'lodash';
 import * as AWS from 'aws-sdk';
 import * as civ6 from 'civ6-save-parser';
 const s3 = new AWS.S3();
 const ses = new AWS.SES();
 
-export async function handler(event, context, cb) {
-  try {
-    const jobs: ScheduledJob[] = await scheduledJobRepository.query('jobType')
-      .eq(JOB_TYPES.TURN_TIMER)
-      .where('scheduledTime')
-      .lt(new Date())
-      .exec();
+export const handler = loggingHandler(async (event, context) => {
+  const jobs: ScheduledJob[] = await scheduledJobRepository.query('jobType')
+    .eq(JOB_TYPES.TURN_TIMER)
+    .where('scheduledTime')
+    .lt(new Date())
+    .exec();
 
-    if (jobs && jobs.length) {
-      await processJobs(jobs);
-    }
-
-    cb();
-  } catch (err) {
-    winston.error(err);
-    cb(err);
+  if (jobs && jobs.length) {
+    await processJobs(jobs);
   }
-}
+});
 
 //////
 
