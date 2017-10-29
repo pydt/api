@@ -9,8 +9,10 @@ export interface IRepository<TKey, TEntity> {
   get(id: TKey): Promise<TEntity>;
   delete(id: TKey): Promise<void>;
   batchGet(ids: TKey[]): Promise<TEntity[]>;
+  batchDelete(entities: TEntity[]): Promise<void>;
   saveVersioned(model: TEntity): Promise<TEntity>;
   scan(column?: string): any;
+  query(column?: string): any;
 }
 
 export const dynamoose: any = _.merge(baseDynamoose, {
@@ -23,7 +25,7 @@ export const dynamoose: any = _.merge(baseDynamoose, {
       }
     };
 
-    const model = baseDynamoose.model(name, new baseDynamoose.Schema(schema, { timestamps: true }));
+    const model: any = baseDynamoose.model(name, new baseDynamoose.Schema(schema, { timestamps: true }));
 
     model.saveVersioned = (m) => {
       if (!(m instanceof model)) {

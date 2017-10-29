@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.20.2"
+frameworkVersion: "1.22.0"
 
 plugins:
   - serverless-mocha-plugin
@@ -86,6 +86,47 @@ functions:
       - http:
           path: "{proxy+}"
           method: any
+  cronCheckTurnTimerJobs:
+    handler: functions/cron/checkTurnTimerJobs.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: rate(2 minutes)
+  cronDeleteOldUnstartedGames:
+    handler: functions/cron/deleteOldUnstartedGames.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(0 8 * * ? *)
+  cronUpdateUserInfo:
+    handler: functions/cron/updateUserInfo.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(23 */6 * * ? *)
+  snsAddTurnTimer:
+    handler: functions/sns/addTurnTimerJob.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsUserTurnNotification:
+    handler: functions/sns/userTurnNotification.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}user-game-cache-updated
+  snsUpdateUserGameCache:
+    handler: functions/sns/updateUserGameCache.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted
+  snsRecalculateUserStats:
+    handler: functions/sns/recalculateUserStats.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 300
+    events:
+      - sns: ${self:custom.resourcePrefix}recalculate-user    
+  snsDeleteOldSaves:
+    handler: functions/sns/deleteOldSaves.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}turn-submitted   
 
 # you can add CloudFormation resource templates here
 resources:

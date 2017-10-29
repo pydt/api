@@ -1,28 +1,26 @@
-'use strict';
-
-const common = require('../../lib/common.js');
-const AWS = require('aws-sdk');
+import { Config } from '../../lib/config';
+import * as AWS from 'aws-sdk';
+import * as _ from 'lodash';
+import * as winston from 'winston';
 const s3 = new AWS.S3();
-const _ = require('lodash');
 
 const TURNS_TO_SAVE = 40;
 
-module.exports.handler = (event, context, cb) => {
-  const gameId = event.Records[0].Sns.Message;
+export async function handler(event, context, cb) {
+  try {
+    const gameId = event.Records[0].Sns.Message;
+    const resp = await s3.listObjectsV2({
+      Bucket: Config.resourcePrefix() + 'saves',
+      Prefix: gameId
+    }).promise();
   
-  return s3.listObjectsV2({
-    Bucket: common.config.RESOURCE_PREFIX + 'saves',
-    Prefix: gameId
-  })
-  .promise()
-  .then(resp => {
     if (!resp || !resp.Contents) {
       throw new Error(`No data returned for listObjectsV2, prefix: ${gameId}`);
     }
-
+  
     if (resp.Contents.length > TURNS_TO_SAVE) {
-      return s3.deleteObjects({
-        Bucket: common.config.RESOURCE_PREFIX + 'saves',
+      await s3.deleteObjects({
+        Bucket: Config.resourcePrefix() + 'saves',
         Delete: {
           Objects: _.chain(resp.Contents)
             .orderBy(['Key'], ['asc'])
@@ -36,8 +34,10 @@ module.exports.handler = (event, context, cb) => {
         }
       }).promise();
     }
-  })
-  .catch(err => {
-    common.generalError(cb, err);
-  });
-};
+
+    cb();
+  } catch (err) {
+    winston.error(err);
+    cb(err);
+  }
+}
