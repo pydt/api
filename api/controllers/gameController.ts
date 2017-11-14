@@ -836,11 +836,11 @@ export interface ChangeCivRequestBody {
 }
 
 export interface SurrenderBody {
-  kickUserId: string;
+  kickUserId?: string;
 }
 
 export interface GameRequestBody extends BaseGame {
-  password: string;
+  password?: string;
 }
 
 export interface CreateGameRequestBody extends GameRequestBody {
@@ -848,7 +848,7 @@ export interface CreateGameRequestBody extends GameRequestBody {
 }
 
 export interface JoinGameRequestBody extends ChangeCivRequestBody {
-  password: string;
+  password?: string;
 }
 
 export interface OpenGamesResponse {

@@ -5,7 +5,7 @@ let rollbar: Rollbar;
 
 function log(level: string, message, error?) {
   // tslint:disable-next-line
-  console.log(message + ': ' + (error ? error.stack : ''));
+  console.log(message + ': ' + (error && error.stack ? error.stack : JSON.stringify(error)));
 
   if (rollbar) {
     switch (level) {
@@ -38,6 +38,7 @@ export const pydtLogger = {
 if (!Config.runningLocal()) {
   rollbar = new Rollbar({
     accessToken: Config.rollbarKey(),
+    autoInstrument: false,
     reportLevel: 'warning',
     itemsPerMinute: 5,
     payload: {
@@ -50,7 +51,7 @@ if (!Config.runningLocal()) {
         }
       }
     }
-  });
+  } as any);
 }
 
 export function loggingHandler(handler: (event, context) => Promise<any>) {

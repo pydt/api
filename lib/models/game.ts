@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 export interface BaseGame {
   displayName: string;
-  description: string;
+  description?: string;
   dlc: string[];
   slots: number;
   humans: number;
