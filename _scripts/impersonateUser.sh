@@ -18,7 +18,7 @@ eval $(parse_yaml)
 
 export JWT_SECRET=$JWT_SECRET
 
-eval $(node -e "const auth=require('../lib/auth');console.log('TOKEN=\"' + auth.sign('$1') + '\"');")
+eval $(node -e "const auth=require('./auth');console.log('TOKEN=\"' + auth.sign('$1') + '\"');")
 
 echo $TOKEN > /dev/clipboard
 read -rsp $'token copied to clipboard, press any key to continue...\n' -n1 key

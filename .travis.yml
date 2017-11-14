@@ -2,9 +2,10 @@ language: node_js
 node_js:
   - "6"
 script:
-  - npm install --silent
-  - npm install -g serverless@1.14.0
-  - npm run deploy-prod
+  - npm install -g serverless@1.23.0
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then npm run deploy-prod; fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then npm run deploy-dev; fi
 branches:
   only:
   - master
+  - develop

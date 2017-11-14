@@ -8,7 +8,12 @@
       "type": "node",
       "request": "attach",
       "name": "Attach to Process",
-      "port": 5858
+      "address": "localhost",
+      "port": 5858,
+      "outFiles": [
+        "${workspaceRoot}/.webpack/**/*.js"
+      ],
+      "sourceMaps": true
     }
   ]
 }
