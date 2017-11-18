@@ -9,7 +9,7 @@ export interface BaseGame {
   slots: number;
   humans: number;
   gameSpeed: string;
-  mapFile: string;
+  mapFile?: string;
   mapSize: string;
   allowJoinAfterStart?: boolean;
 }
