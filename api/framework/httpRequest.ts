@@ -25,7 +25,7 @@ export class HttpRequest {
     }, {});
     this.method = event.httpMethod;
     this.params = event.pathParameters;
-    this.query = event.queryStringParameters;
+    this.query = event.queryStringParameters || {};
     this.url = event.path;
   }
 }

@@ -1,4 +1,4 @@
-import { Route, Get, Response, Request, Post, Body, Security } from 'tsoa';
+import { Route, Get, Response, Request, Post, Body, Security, Query } from 'tsoa';
 import { provideSingleton } from '../../lib/ioc';
 import {
   Game, BaseGame, GamePlayer, GameTurn, getHumans, playerIsHuman, getNextPlayerIndex, getCurrentPlayerIndex, getPreviousPlayerIndex
@@ -551,7 +551,7 @@ export class GameController {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('{gameId}/turn')
-  public async getTurn(@Request() request: HttpRequest, gameId: string): Promise<GameTurnResponse> {
+  public async getTurn(@Request() request: HttpRequest, gameId: string, @Query() compressed = ''): Promise<GameTurnResponse> {
     const game = await gameRepository.get(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
@@ -565,7 +565,7 @@ export class GameController {
       Key: file
     };
 
-    if (request.query && request.query.compressed) {
+    if (compressed) {
       fileParams.Key += '.gz';
 
       try {
