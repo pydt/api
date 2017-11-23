@@ -16,6 +16,7 @@ service: civ-serverless-api
 frameworkVersion: "1.23.0"
 
 plugins:
+  - serverless-domain-manager
   - serverless-mocha-plugin
   - export-api-url
   - serverless-webpack
@@ -51,6 +52,13 @@ custom:
       - reflect-metadata
       - source-map-support
   packExternalModulesMaxBuffer: 512000
+  domain:
+    dev: api-dev.playyourdamnturn.com
+    prod: api.playyourdamnturn.com
+  customDomain:
+    basePath: ''
+    domainName: ${self:custom.domain.${self:custom.activeStage}}
+    stage: ${self:custom.activeStage}
 
 functions:
   api_router:
