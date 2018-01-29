@@ -3,11 +3,10 @@ import { userRepository } from '../dynamoose/userRepository';
 import { gameRepository } from '../dynamoose/gameRepository';
 import { Config } from '../config';
 import { gameTurnRepository } from '../dynamoose/gameTurnRepository';
-import * as _ from 'lodash';
-import * as AWS from 'aws-sdk';
+import { sendEmail } from '../../lib/email/ses';
 import { sendSnsMessage } from '../sns';
 import { pydtLogger } from '../logging';
-const ses = new AWS.SES();
+import * as _ from 'lodash';
 
 export async function moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
   await Promise.all([
@@ -80,25 +79,12 @@ export async function defeatPlayers(game: Game, users: User[], newDefeatedPlayer
         }
 
         if (playerIsHuman(player) || player === defeatedPlayer) {
-          const email = {
-            Destination: {
-              ToAddresses: [
-                curUser.emailAddress
-              ]
-            },
-            Message: {
-              Body: {
-                Html: {
-                  Data: `<p><b>${desc}</b> been defeated in <b>${game.displayName}</b>!</p>`
-                }
-              }, Subject: {
-                Data: `${desc} been defeated in ${game.displayName}!`
-              }
-            },
-            Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-          };
-
-          promises.push(ses.sendEmail(email).promise());
+          promises.push(sendEmail(
+            `${desc} been defeated in ${game.displayName}!`,
+            'Player Defeated',
+            `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,
+            curUser.emailAddress
+          ));
         }
       }
     }

@@ -12,7 +12,8 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.ts(x?)$/, loader: 'ts-loader' },
-      { test: /\.json$/, loader: 'json-loader' }
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.html$/, loader: 'html-loader' }
     ],
   },
   resolve: {

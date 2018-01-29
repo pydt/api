@@ -4,10 +4,9 @@ import { deleteGame } from '../../lib/services/gameService';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game } from '../../lib/models';
 import { Config } from '../../lib/config';
+import { sendEmail } from '../../lib/email/ses';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import * as AWS from 'aws-sdk';
-const ses = new AWS.SES();
 
 export const handler = loggingHandler(async (event, context) => {
   await deleteOldUnstartedGames();
@@ -34,25 +33,13 @@ async function notifyGamesAboutToBeDeleted() {
 
   await Promise.all(_.map(games, async game => {
     const expirationDate = moment(game.createdAt).add(30, 'days').format('MMMM Do');
-    const user = await userRepository.get(game.createdBySteamId)    
-    const email = {
-      Destination: {
-        ToAddresses: [
-          user.emailAddress
-        ]
-      },
-      Message: {
-        Body: {
-          Html: {
-            Data: `<p>A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!</p><p>Game URL: ${Config.webUrl()}/game/${game.gameId}</p>`
-          }
-        }, Subject: {
-          Data: `Game Scheduled for Deletion`
-        }
-      },
-      Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-    };
+    const user = await userRepository.get(game.createdBySteamId);
 
-    await ses.sendEmail(email).promise();
+    await sendEmail(
+      `Game Scheduled for Deletion`,
+      `Game Scheduled for Deletion`,
+      `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl()}/game/${game.gameId}`,
+      user.emailAddress
+    );
   }));
 }

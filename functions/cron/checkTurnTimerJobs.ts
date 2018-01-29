@@ -6,11 +6,11 @@ import { moveToNextTurn } from '../../lib/services/gameTurnService';
 import { ScheduledJob } from '../../lib/models';
 import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
+import { sendEmail } from '../../lib/email/ses';
 import * as _ from 'lodash';
 import * as AWS from 'aws-sdk';
 import * as civ6 from 'civ6-save-parser';
 const s3 = new AWS.S3();
-const ses = new AWS.SES();
 
 export const handler = loggingHandler(async (event, context) => {
   const jobs: ScheduledJob[] = await scheduledJobRepository.query('jobType')
@@ -74,23 +74,10 @@ async function skipTurn(game, turn) {
   const user = await userRepository.get(currentPlayerSteamId);
   await moveToNextTurn(game, turn, user);
 
-  const email = {
-    Destination: {
-      ToAddresses: [
-        user.emailAddress
-      ]
-    },
-    Message: {
-      Body: {
-        Html: {
-          Data: `<p>You've been skipped!  Try harder next time!`
-        }
-      }, Subject: {
-        Data: 'You have been skipped in ' + game.displayName + '!'
-      }
-    },
-    Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-  };
-
-  await ses.sendEmail(email).promise();
+  await sendEmail(
+    'You have been skipped in ' + game.displayName + '!',
+    `You've been skipped!`,
+    `The amount of time alloted for you to play your turn has expired.  Try harder next time!`,
+    user.emailAddress
+  );
 }

@@ -3,8 +3,8 @@ import { userRepository } from '../../lib/dynamoose/userRepository';
 import { loggingHandler } from '../../lib/logging';
 import { User, Game } from '../../lib/models/index';
 import { Config } from '../../lib/config';
+import { sendEmail } from '../../lib/email/ses';
 import * as AWS from 'aws-sdk';
-const ses = new AWS.SES();
 const iotData = new AWS.IotData({endpoint: 'a21s639tnrshxf.iot.us-east-1.amazonaws.com'});
 
 export const handler = loggingHandler(async (event, context) => {
@@ -19,7 +19,12 @@ export const handler = loggingHandler(async (event, context) => {
 
   await Promise.all([
     notifyUserClient(user),
-    sendEmail(user, game)
+    sendEmail(
+      `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
+      'PLAY YOUR DAMN TURN!',
+      `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl()}/game/${game.gameId}`,
+      user.emailAddress
+    )
   ]);
 });
 
@@ -29,30 +34,4 @@ function notifyUserClient(user: User) {
     payload: "Hello!",
     qos: 0
   }).promise();
-}
-
-function sendEmail(user: User, game: Game) {
-  if (!user || !user.emailAddress) {
-    return;
-  }
-
-  const email = {
-    Destination: {
-      ToAddresses: [
-        user.emailAddress
-      ]
-    },
-    Message: {
-      Body: {
-        Html: {
-          Data: `<h1>PLAY YOUR DAMN TURN</h1><p>Game URL: ${Config.webUrl()}/game/${game.gameId}</p>`
-        }
-      }, Subject: {
-        Data: `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`
-      }
-    },
-    Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-  };
-
-  return ses.sendEmail(email).promise();
 }

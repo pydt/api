@@ -11,15 +11,15 @@ import { deleteGame } from '../../lib/services/gameService';
 import { gameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { sendSnsMessage } from '../../lib/sns';
 import { Config } from '../../lib/config';
+import { sendEmail } from '../../lib/email/ses';
+import { moveToNextTurn, defeatPlayers } from '../../lib/services/gameTurnService';
+import { pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v4';
 import * as bcrypt from 'bcryptjs';
 import * as AWS from 'aws-sdk';
 import * as zlib from 'zlib';
-import { moveToNextTurn, defeatPlayers } from '../../lib/services/gameTurnService';
-import { pydtLogger } from '../../lib/logging';
 const s3 = new AWS.S3();
-const ses = new AWS.SES();
 
 @Route('game')
 @provideSingleton(GameController)
@@ -246,27 +246,14 @@ export class GameController {
     const promises = [];
 
     if (createdByUser.emailAddress) {
-      const email = {
-        Destination: {
-          ToAddresses: [
-            createdByUser.emailAddress
-          ]
-        },
-        Message: {
-          Body: {
-            Html: {
-              Data: `<p>The user <b>${user.displayName}</b> has joined your game <b>${game.displayName}</b>!  ` +
-                `There are now <b>${getHumans(game, true).length} / ${game.humans}</b> ` +
-                `human player slots filled in the game.</p>`
-            }
-          }, Subject: {
-            Data: 'A new user has joined your game!'
-          }
-        },
-        Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-      };
-
-      promises.push(ses.sendEmail(email).promise());
+      promises.push(sendEmail(
+        'A new user has joined your game!',
+        'A new user has joined your game!',
+        `The user <b>${user.displayName}</b> has joined your game <b>${game.displayName}</b>!  ` +
+        `There are now <b>${getHumans(game, true).length} / ${game.humans}</b> ` +
+        `human player slots filled in the game.`,
+        createdByUser.emailAddress
+      ));
     }
 
     if (game.inProgress) {
@@ -312,26 +299,13 @@ export class GameController {
     const createdByUser = await userRepository.get(game.createdBySteamId);
 
     if (createdByUser.emailAddress) {
-      const email = {
-        Destination: {
-          ToAddresses: [
-            createdByUser.emailAddress
-          ]
-        },
-        Message: {
-          Body: {
-            Html: {
-              Data: `<p>The user <b>${user.displayName}</b> has left your game <b>${game.displayName}</b>.  ` +
-                `There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.</p>`
-            }
-          }, Subject: {
-            Data: 'A user has left your game.'
-          }
-        },
-        Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-      };
-
-      await ses.sendEmail(email).promise();
+      await sendEmail(
+        'A user has left your game.',
+        'A user has left your game.',
+        `The user <b>${user.displayName}</b> has left your game <b>${game.displayName}</b>.  ` +
+        `There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.`,
+        createdByUser.emailAddress
+      );
     }
 
     return game;
@@ -497,48 +471,22 @@ export class GameController {
         }
 
         if (playerIsHuman(gamePlayer)) {
-          const email = {
-            Destination: {
-              ToAddresses: [
-                curUser.emailAddress
-              ]
-            },
-            Message: {
-              Body: {
-                Html: {
-                  Data: `<p><b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(</p>`
-                }
-              }, Subject: {
-                Data: `A player has ${desc} from ${game.displayName}!`
-              }
-            },
-            Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-          };
-
-          emailPromises.push(ses.sendEmail(email).promise());
+          emailPromises.push(sendEmail(
+            `A player has ${desc} from ${game.displayName}!`,
+            `A player has ${desc} from ${game.displayName}!`,
+            `<b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(`,
+            curUser.emailAddress
+          ));
         }
 
         if (gamePlayer.steamId === body.kickUserId) {
-          const email = {
-            Destination: {
-              ToAddresses: [
-                curUser.emailAddress
-              ]
-            },
-            Message: {
-              Body: {
-                Html: {
-                  Data: `<p>You have been kicked from <b>${game.displayName}</b>. If you feel this was unwarranted, ` +
-                    `please contact mike@playyourdamnturn.com and we can try to mediate the situation.</p>`
-                }
-              }, Subject: {
-                Data: `You have been kicked from ${game.displayName}!`
-              }
-            },
-            Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-          };
-
-          emailPromises.push(ses.sendEmail(email).promise());
+          emailPromises.push(sendEmail(
+            `You have been kicked from ${game.displayName}!`,
+            `You have been kicked from ${game.displayName}!`,
+            `You have been kicked from <b>${game.displayName}</b>. If you feel this was unwarranted, ` +
+            `please contact mike@playyourdamnturn.com and we can try to mediate the situation.`,
+            curUser.emailAddress
+          ));
         }
       }
     }
