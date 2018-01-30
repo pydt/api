@@ -35,11 +35,13 @@ async function notifyGamesAboutToBeDeleted() {
     const expirationDate = moment(game.createdAt).add(30, 'days').format('MMMM Do');
     const user = await userRepository.get(game.createdBySteamId);
 
-    await sendEmail(
-      `Game Scheduled for Deletion`,
-      `Game Scheduled for Deletion`,
-      `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl()}/game/${game.gameId}`,
-      user.emailAddress
-    );
+    if (user.emailAddress) {
+      await sendEmail(
+        `Game Scheduled for Deletion`,
+        `Game Scheduled for Deletion`,
+        `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl()}/game/${game.gameId}`,
+        user.emailAddress
+      );
+    }
   }));
 }
