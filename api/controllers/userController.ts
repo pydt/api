@@ -6,6 +6,7 @@ import { ErrorResponse, HttpRequest } from '../framework';
 import { Config } from '../../lib/config';
 import { gameRepository } from '../../lib/dynamoose/gameRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
+import * as _ from 'lodash';
 
 @Route('user')
 @provideSingleton(UserController)
@@ -82,15 +83,20 @@ export class UserController {
   @Get('steamProfiles')
   public async steamProfiles(@Query('steamIds') rawSteamIds: string): Promise<SteamProfile[]> {
     const steamIds = rawSteamIds.split(',') || [];
+    let result: SteamProfile[] = [];
 
-    // Ensure that all requested users are in our DB...
-    const users = await userRepository.batchGet(steamIds);
+    for (const batch of _.chunk(steamIds, 100)) {
+      // Ensure that all requested users are in our DB...
+      const users = await userRepository.batchGet(batch);
 
-    if (steamIds.length !== users.length) {
-      throw new Error('Invalid users');
+      if (batch.length !== users.length) {
+        throw new Error('Invalid users');
+      }
+
+      result = result.concat(await getPlayerSummaries(batch));
     }
 
-    return getPlayerSummaries(steamIds);
+    return result;
   }
 
   @Get('{steamId}')
