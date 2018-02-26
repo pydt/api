@@ -46,7 +46,7 @@ custom:
   dev_DYNAMO_CAPACITY: 1
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
-  DEFAULT_LAMBDA_MEMORY: 512
+  DEFAULT_LAMBDA_MEMORY: 1024
   webpackIncludeModules:
     forceInclude:
       - reflect-metadata
@@ -63,7 +63,7 @@ custom:
 functions:
   api_router:
     handler: api/router.handler
-    memorySize: 512
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     timeout: 30
     events:
       - http:

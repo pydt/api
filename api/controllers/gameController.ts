@@ -332,6 +332,7 @@ export class GameController {
 
         return game.inProgress &&
           game.allowJoinAfterStart &&
+          !game.hashedPassword &&
           !game.completed &&
           numHumans < game.players.length &&
           numHumans < game.humans;
