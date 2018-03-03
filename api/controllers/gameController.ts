@@ -130,6 +130,37 @@ export class GameController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('{gameId}/updateTurnOrder')
+  public async updateTurnOrder(@Request() request: HttpRequest, gameId: string, @Body() body: UpdateTurnOrderRequestBody): Promise<Game> {
+    const game = await gameRepository.get(gameId);
+
+    if (game.createdBySteamId !== request.user) {
+      throw new HttpResponseError(400, `You didn't create this game!`);
+    }
+
+    if (!!game.inProgress) {
+      throw new HttpResponseError(400, `Can't update turn order after game start!`);
+    }
+
+    if (game.players.length !== body.steamIds.length) {
+      throw new HttpResponseError(400, `Wrong number of steamIds`);
+    }
+
+    const newPlayers = _.compact(_.map(body.steamIds, steamId => {
+      return _.find(game.players, p => p.steamId === steamId);
+    }));
+
+    if (newPlayers.length !== game.players.length) {
+      throw new HttpResponseError(400, `Invalid steamIds`);
+    }
+
+    game.players = newPlayers;
+
+    return gameRepository.saveVersioned(game);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/edit')
   public async edit(@Request() request: HttpRequest, gameId: string, @Body() body: GameRequestBody): Promise<Game> {
     const game = await gameRepository.get(gameId);
@@ -790,6 +821,10 @@ export interface SurrenderBody {
 
 export interface GameRequestBody extends BaseGame {
   password?: string;
+}
+
+export interface UpdateTurnOrderRequestBody {
+  steamIds: string[];
 }
 
 export interface CreateGameRequestBody extends GameRequestBody {
