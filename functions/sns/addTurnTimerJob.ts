@@ -1,8 +1,11 @@
-import { gameRepository } from '../../lib/dynamoose/gameRepository';
-import { scheduledJobRepository, JOB_TYPES } from '../../lib/dynamoose/scheduledJobRepository';
+import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
+import { IScheduledJobRepository, SCHEDULED_JOB_REPOSITORY_SYMBOL, JOB_TYPES } from '../../lib/dynamoose/scheduledJobRepository';
 import { loggingHandler } from '../../lib/logging';
 
-export const handler = loggingHandler(async (event, context) => {
+export const handler = loggingHandler(async (event, context, iocContainer) => {
+  const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
+  const scheduledJobRepository = iocContainer.get<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL);
+
   const gameId = event.Records[0].Sns.Message;
   const game = await gameRepository.get(gameId);
 

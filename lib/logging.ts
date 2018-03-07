@@ -1,4 +1,6 @@
 import { Config } from './config';
+import { Container } from 'inversify';
+import { iocContainer } from './ioc';
 import * as Rollbar from 'rollbar';
 
 let rollbar: Rollbar;
@@ -54,12 +56,12 @@ if (!Config.runningLocal()) {
   } as any);
 }
 
-export function loggingHandler(handler: (event, context) => Promise<any>) {
+export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<any>) {
   return async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     try {
-      const resp = await handler(event, context);
+      const resp = await handler(event, context, iocContainer);
       callback(null, resp);
     } catch (err) {
       pydtLogger.error('Handler threw unhandled exception...', err);

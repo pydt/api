@@ -1,26 +1,32 @@
 import { Route, Get, Security, Response, Request, Post, Body, Query } from 'tsoa';
-import { provideSingleton } from '../../lib/ioc';
+import { provideSingleton, inject } from '../../lib/ioc';
 import { Game, User, SteamProfile } from '../../lib/models';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest } from '../framework';
 import { Config } from '../../lib/config';
-import { gameRepository } from '../../lib/dynamoose/gameRepository';
+import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
 import * as _ from 'lodash';
 
 @Route('user')
 @provideSingleton(UserController)
 export class UserController {
+  constructor(
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository
+  ) {
+  }
+
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('games')
   public async games(@Request() request: HttpRequest): Promise<GamesByUserResponse> {
-    const user = await userRepository.get(request.user);
-    const games = await gameRepository.getGamesForUser(user);
+    const user = await this.userRepository.get(request.user);
+    const games = await this.gameRepository.getGamesForUser(user);
 
     return {
       data: games,
-      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${userRepository.createS3GameCacheKey(request.user)}`
+      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${this.userRepository.createS3GameCacheKey(request.user)}`
     };
   }
 
@@ -32,7 +38,7 @@ export class UserController {
     let lastKey;
 
     do {
-      let scan = userRepository.scan().where('turnsPlayed').gt(0);
+      let scan = this.userRepository.scan().where('turnsPlayed').gt(0);
 
       if (lastKey) {
         scan = scan.startAt(lastKey);
@@ -54,16 +60,16 @@ export class UserController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('getCurrent')
   public getCurrent(@Request() request: HttpRequest): Promise<User> {
-    return userRepository.get(request.user);
+    return this.userRepository.get(request.user);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setNotificationEmail')
   public async setNotificationEmail(@Request() request: HttpRequest, @Body() body: SetNotificationEmailBody): Promise<User> {
-    const user = await userRepository.get(request.user);
+    const user = await this.userRepository.get(request.user);
     user.emailAddress = body.emailAddress;
-    return userRepository.saveVersioned(user);
+    return this.userRepository.saveVersioned(user);
   }
 
   @Security('api_key')
@@ -87,7 +93,7 @@ export class UserController {
 
     for (const batch of _.chunk(steamIds, 100)) {
       // Ensure that all requested users are in our DB...
-      const users = await userRepository.batchGet(batch);
+      const users = await this.userRepository.batchGet(batch);
 
       if (batch.length !== users.length) {
         throw new Error('Invalid users');
@@ -101,7 +107,7 @@ export class UserController {
 
   @Get('{steamId}')
   public async byId(@Request() request: HttpRequest, steamId: string): Promise<User> {
-    const user = await userRepository.get(steamId);
+    const user = await this.userRepository.get(steamId);
     delete user.emailAddress; // make sure email address isn't returned!
     return user;
   }

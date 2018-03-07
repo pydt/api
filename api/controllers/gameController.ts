@@ -1,18 +1,18 @@
 import { Route, Get, Response, Request, Post, Body, Security, Query } from 'tsoa';
-import { provideSingleton } from '../../lib/ioc';
+import { provideSingleton, inject } from '../../lib/ioc';
 import {
   Game, BaseGame, GamePlayer, GameTurn, getHumans, playerIsHuman, getNextPlayerIndex, getCurrentPlayerIndex, getPreviousPlayerIndex
 } from '../../lib/models';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
-import { gameRepository } from '../../lib/dynamoose/gameRepository';
+import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { addDiscourseGameTopic } from '../../lib/discourse';
-import { deleteGame } from '../../lib/services/gameService';
-import { gameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
+import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
+import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
 import { sendSnsMessage } from '../../lib/sns';
 import { Config } from '../../lib/config';
 import { sendEmail } from '../../lib/email/ses';
-import { moveToNextTurn, defeatPlayers } from '../../lib/services/gameTurnService';
+import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
 import { pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v4';
@@ -24,11 +24,20 @@ const s3 = new AWS.S3();
 @Route('game')
 @provideSingleton(GameController)
 export class GameController {
+  constructor(
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
+    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService,
+    @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+  ) {
+  }
+
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/changeCiv')
   public async changeCiv(@Request() request: HttpRequest, gameId: string, @Body() body: ChangeCivRequestBody): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.inProgress) {
       throw new HttpResponseError(400, 'Game in Progress');
@@ -48,20 +57,20 @@ export class GameController {
 
     player.civType = body.playerCiv;
 
-    return gameRepository.saveVersioned(game);
+    return this.gameRepository.saveVersioned(game);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('create')
   public async create(@Request() request: HttpRequest, @Body() body: CreateGameRequestBody): Promise<Game> {
-    const user = await userRepository.get(request.user);
+    const user = await this.userRepository.get(request.user);
 
     if (!user.emailAddress) {
       throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
     }
 
-    const games = await gameRepository.getGamesForUser(user);
+    const games = await this.gameRepository.getGamesForUser(user);
     const hasFormingGame = _.some(games, game => {
       return game.createdBySteamId === request.user && !game.inProgress;
     });
@@ -102,11 +111,11 @@ export class GameController {
       newGame.hashedPassword = await bcrypt.hash(body.password, salt);
     }
 
-    await gameRepository.saveVersioned(newGame);
+    await this.gameRepository.saveVersioned(newGame);
 
     user.activeGameIds = user.activeGameIds || [];
     user.activeGameIds.push(newGame.gameId);
-    await userRepository.saveVersioned(user);
+    await this.userRepository.saveVersioned(user);
 
     return newGame;
   }
@@ -115,7 +124,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/delete')
   public async delete(@Request() request: HttpRequest, gameId: string): Promise<void> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, 'Only the creator of the game can delete the game!');
@@ -125,14 +134,14 @@ export class GameController {
       throw new HttpResponseError(400, `Can't delete an in progress game!`);
     }
 
-    await deleteGame(game, request.user);
+    await this.gameService.deleteGame(game, request.user);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/updateTurnOrder')
   public async updateTurnOrder(@Request() request: HttpRequest, gameId: string, @Body() body: UpdateTurnOrderRequestBody): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You didn't create this game!`);
@@ -156,14 +165,14 @@ export class GameController {
 
     game.players = newPlayers;
 
-    return gameRepository.saveVersioned(game);
+    return this.gameRepository.saveVersioned(game);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/edit')
   public async edit(@Request() request: HttpRequest, gameId: string, @Body() body: GameRequestBody): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You didn't create this game!`);
@@ -199,14 +208,14 @@ export class GameController {
       game.hashedPassword = null;
     }
 
-    return gameRepository.saveVersioned(game);
+    return this.gameRepository.saveVersioned(game);
   }
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/join')
   public async join(@Request() request: HttpRequest, gameId: string, @Body() body: JoinGameRequestBody): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
     let targetPlayer: GamePlayer;
 
     if (game.inProgress) {
@@ -254,7 +263,7 @@ export class GameController {
       });
     }
 
-    const user = await userRepository.get(request.user);
+    const user = await this.userRepository.get(request.user);
 
     if (!user.emailAddress) {
       throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
@@ -264,11 +273,11 @@ export class GameController {
     user.activeGameIds.push(game.gameId);
 
     await Promise.all([
-      gameRepository.saveVersioned(game),
-      userRepository.saveVersioned(user)
+      this.gameRepository.saveVersioned(game),
+      this.userRepository.saveVersioned(user)
     ]);
 
-    const users = await userRepository.getUsersForGame(game);
+    const users = await this.userRepository.getUsersForGame(game);
 
     const createdByUser = _.find(users, u => {
       return u.steamId === game.createdBySteamId;
@@ -288,7 +297,7 @@ export class GameController {
     }
 
     if (game.inProgress) {
-      promises.push(gameTurnRepository.getAndUpdateSaveFileForGameState(game, users));
+      promises.push(this.gameTurnRepository.getAndUpdateSaveFileForGameState(game, users));
     }
 
     await Promise.all(promises);
@@ -300,7 +309,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/leave')
   public async leave(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.createdBySteamId === request.user) {
       throw new HttpResponseError(400, `You can't leave, you created the game!`);
@@ -318,16 +327,16 @@ export class GameController {
       return player.steamId === request.user;
     });
 
-    const user = await userRepository.get(request.user);
+    const user = await this.userRepository.get(request.user);
 
     _.pull(user.activeGameIds, game.gameId);
 
     await Promise.all([
-      gameRepository.saveVersioned(game),
-      userRepository.saveVersioned(user)
+      this.gameRepository.saveVersioned(game),
+      this.userRepository.saveVersioned(user)
     ]);
 
-    const createdByUser = await userRepository.get(game.createdBySteamId);
+    const createdByUser = await this.userRepository.get(game.createdBySteamId);
 
     if (createdByUser.emailAddress) {
       await sendEmail(
@@ -345,11 +354,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('listOpen')
   public async listOpen(@Request() request: HttpRequest): Promise<OpenGamesResponse> {
-    const test = gameRepository;
-    if (test.batchGet) {
-      test.batchGet(['wat']);
-    }
-    const games: Game[] = await gameRepository.scan('completed').not().eq(true).exec();
+    const games: Game[] = await this.gameRepository.scan('completed').not().eq(true).exec();
     const orderedGames = _.orderBy(games, ['createdAt'], ['desc']);
 
     return {
@@ -375,7 +380,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/start')
   public async start(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.inProgress) {
       throw new HttpResponseError(400, 'Game in progress!');
@@ -390,7 +395,7 @@ export class GameController {
     }
 
     game.inProgress = true;
-    await gameRepository.saveVersioned(game);
+    await this.gameRepository.saveVersioned(game);
 
     const firstTurn: GameTurn = {
       gameId: game.gameId,
@@ -399,7 +404,7 @@ export class GameController {
       playerSteamId: game.createdBySteamId
     };
 
-    await gameTurnRepository.saveVersioned(firstTurn);
+    await this.gameTurnRepository.saveVersioned(firstTurn);
 
     return game;
   }
@@ -408,7 +413,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/surrender')
   public async surrender(@Request() request: HttpRequest, gameId: string, @Body() body: SurrenderBody): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
     let userId = request.user;
 
     if (body.kickUserId) {
@@ -448,7 +453,7 @@ export class GameController {
       return !playerIsHuman(p);
     });
 
-    const users = await userRepository.getUsersForGame(game);
+    const users = await this.userRepository.getUsersForGame(game);
     const user = _.find(users, u => {
       return u.steamId === userId;
     });
@@ -458,7 +463,7 @@ export class GameController {
     user.inactiveGameIds = user.inactiveGameIds || [];
     user.inactiveGameIds.push(gameId);
 
-    const gameTurn = await gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
+    const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
 
     if (user.steamId === game.currentPlayerSteamId) {
       // Update the current player if it's the turn of the player who's surrendering
@@ -475,13 +480,13 @@ export class GameController {
 
       gameTurn.startDate = new Date();
 
-      await gameTurnRepository.getAndUpdateSaveFileForGameState(game);
+      await this.gameTurnRepository.getAndUpdateSaveFileForGameState(game);
     }
 
     await Promise.all([
-      userRepository.saveVersioned(user),
-      gameRepository.saveVersioned(game),
-      gameTurnRepository.saveVersioned(gameTurn)
+      this.userRepository.saveVersioned(user),
+      this.gameRepository.saveVersioned(game),
+      this.gameTurnRepository.saveVersioned(gameTurn)
     ]);
 
     // Send an sns message that a turn has been completed.
@@ -532,13 +537,13 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('{gameId}/turn')
   public async getTurn(@Request() request: HttpRequest, gameId: string, @Query() compressed = ''): Promise<GameTurnResponse> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
-    const file = gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey);
+    const file = this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey);
 
     const fileParams = {
       Bucket: Config.resourcePrefix() + 'saves',
@@ -567,23 +572,23 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/finishSubmit')
   public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
-    const gameTurn = await gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+    const gameTurn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
     game.gameTurnRangeKey++;
 
-    const users = await userRepository.getUsersForGame(game);
+    const users = await this.userRepository.getUsersForGame(game);
     const user = _.find(users, u => {
       return u.steamId === request.user;
     });
 
     const data = await s3.getObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey)
+      Key: this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey)
     }).promise();
 
     if (!data && !data.Body) {
@@ -601,7 +606,7 @@ export class GameController {
       pydtLogger.info('unzip failed :(', e);
     }
 
-    const wrapper = gameTurnRepository.parseSaveFile(buffer, game);
+    const wrapper = this.gameTurnRepository.parseSaveFile(buffer, game);
     const parsed = wrapper.parsed;
 
     const numCivs = parsed.CIVS.length;
@@ -711,11 +716,11 @@ export class GameController {
     game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
     game.round = expectedRound;
 
-    await gameTurnRepository.updateSaveFileForGameState(game, users, wrapper);
-    await moveToNextTurn(game, gameTurn, user);
+    await this.gameTurnRepository.updateSaveFileForGameState(game, users, wrapper);
+    await this.gameTurnService.moveToNextTurn(game, gameTurn, user);
 
     if (newDefeatedPlayers.length) {
-      await defeatPlayers(game, users, newDefeatedPlayers);
+      await this.gameTurnService.defeatPlayers(game, users, newDefeatedPlayers);
     }
 
     return game;
@@ -725,7 +730,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/revert')
   public async revert(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
 
     if (game.currentPlayerSteamId !== request.user && game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You can't revert this game!`);
@@ -735,7 +740,7 @@ export class GameController {
     let lastTurn: GameTurn;
 
     do {
-      const curGameTurn = await gameTurnRepository.get({gameId: game.gameId, turn: turn});
+      const curGameTurn = await this.gameTurnRepository.get({gameId: game.gameId, turn: turn});
 
       const player = _.find(game.players, p => {
         return p.steamId === curGameTurn.playerSteamId;
@@ -746,8 +751,8 @@ export class GameController {
       }
     } while (!lastTurn);
 
-    const user = await userRepository.get(lastTurn.playerSteamId);
-    gameTurnRepository.updateTurnStatistics(game, lastTurn, user, true);
+    const user = await this.userRepository.get(lastTurn.playerSteamId);
+    this.gameTurnRepository.updateTurnStatistics(game, lastTurn, user, true);
 
     // Update previous turn data
     delete lastTurn.skipped;
@@ -759,7 +764,7 @@ export class GameController {
     // Delete turns between the old turn and the turn to revert to
     for (let i = lastTurn.turn + 1; i <= game.gameTurnRangeKey; i++) {
       pydtLogger.info(`deleting ${gameId}/${i}`);
-      promises.push(gameTurnRepository.delete({gameId: gameId, turn: i}));
+      promises.push(this.gameTurnRepository.delete({gameId: gameId, turn: i}));
     }
 
     // Update game record
@@ -773,10 +778,10 @@ export class GameController {
     game.currentPlayerSteamId = game.players[prevPlayerIndex].steamId;
     game.gameTurnRangeKey = lastTurn.turn;
 
-    promises.push(gameTurnRepository.saveVersioned(lastTurn));
-    promises.push(gameRepository.saveVersioned(game));
-    promises.push(userRepository.saveVersioned(user));
-    promises.push(gameTurnRepository.getAndUpdateSaveFileForGameState(game));
+    promises.push(this.gameTurnRepository.saveVersioned(lastTurn));
+    promises.push(this.gameRepository.saveVersioned(game));
+    promises.push(this.userRepository.saveVersioned(user));
+    promises.push(this.gameTurnRepository.getAndUpdateSaveFileForGameState(game));
 
     await Promise.all(promises);
 
@@ -790,7 +795,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/startSubmit')
   public async startSubmit(@Request() request: HttpRequest, gameId: string): Promise<StartTurnSubmitResponse> {
-    const game = await gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId);
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, 'It\'s not your turn!');
     }
@@ -798,7 +803,7 @@ export class GameController {
     return {
       putUrl: s3.getSignedUrl('putObject', {
         Bucket: Config.resourcePrefix() + 'saves',
-        Key: gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
+        Key: this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
         Expires: 60,
         ContentType: 'application/octet-stream'
       })
@@ -807,7 +812,7 @@ export class GameController {
 
   @Get('{gameId}')
   public get(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    return gameRepository.get(gameId);
+    return this.gameRepository.get(gameId);
   }
 }
 

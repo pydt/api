@@ -1,5 +1,5 @@
-import { gameRepository } from '../../lib/dynamoose/gameRepository';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { sendSnsMessage } from '../../lib/sns';
 import { loggingHandler } from '../../lib/logging';
 import { Config } from '../../lib/config';
@@ -8,7 +8,32 @@ import * as _ from 'lodash';
 import * as AWS from 'aws-sdk';
 const s3 = new AWS.S3();
 
-export const handler = loggingHandler(async (event, context) => {
+export const handler = loggingHandler(async (event, context, iocContainer) => {
+  const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
+  const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
+
+  async function updateUsers(users: User[]) {
+    const gameIds = _.compact(_.uniq(_.concat(_.flatMap(users, 'activeGameIds') as string[])));
+    const games = await gameRepository.batchGet(gameIds);
+    await Promise.all(_.map(users, user => {
+      return updateUser(user, games);
+    }));
+  }
+  
+  async function updateUser(user: User, games: Game[]) {
+    const result = _.filter(games, game => {
+      return _.includes(user.activeGameIds, game.gameId);
+    });
+  
+    await s3.putObject({
+      Bucket: Config.resourcePrefix() + 'saves',
+      Key: userRepository.createS3GameCacheKey(user.steamId),
+      ACL: 'public-read',
+      CacheControl: 'no-cache',
+      Body: JSON.stringify(result)
+    }).promise();
+  }
+
   const gameId = event.Records[0].Sns.Message;
   const game = await gameRepository.get(gameId);
 
@@ -27,25 +52,3 @@ export const handler = loggingHandler(async (event, context) => {
   // Send an sns message that the cache has been updated
   await sendSnsMessage(Config.resourcePrefix() + 'user-game-cache-updated', 'user-game-cache-updated', game.gameId);
 });
-
-async function updateUsers(users: User[]) {
-  const gameIds = _.compact(_.uniq(_.concat(_.flatMap(users, 'activeGameIds') as string[])));
-  const games = await gameRepository.batchGet(gameIds);
-  await Promise.all(_.map(users, user => {
-    return updateUser(user, games);
-  }));
-}
-
-async function updateUser(user: User, games: Game[]) {
-  const result = _.filter(games, game => {
-    return _.includes(user.activeGameIds, game.gameId);
-  });
-
-  await s3.putObject({
-    Bucket: Config.resourcePrefix() + 'saves',
-    Key: userRepository.createS3GameCacheKey(user.steamId),
-    ACL: 'public-read',
-    CacheControl: 'no-cache',
-    Body: JSON.stringify(result)
-  }).promise();
-}

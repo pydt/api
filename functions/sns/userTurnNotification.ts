@@ -1,5 +1,5 @@
-import { gameRepository } from '../../lib/dynamoose/gameRepository';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { loggingHandler } from '../../lib/logging';
 import { User, Game } from '../../lib/models/index';
 import { Config } from '../../lib/config';
@@ -7,7 +7,10 @@ import { sendEmail } from '../../lib/email/ses';
 import * as AWS from 'aws-sdk';
 const iotData = new AWS.IotData({endpoint: 'a21s639tnrshxf.iot.us-east-1.amazonaws.com'});
 
-export const handler = loggingHandler(async (event, context) => {
+export const handler = loggingHandler(async (event, context, iocContainer) => {
+  const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
+  const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
+  
   const gameId = event.Records[0].Sns.Message;
   const game = await gameRepository.get(gameId);
 

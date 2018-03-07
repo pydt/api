@@ -1,9 +1,9 @@
 import { HttpRequest, HttpResponseError } from '../framework';
 import { Get, Route, Request } from 'tsoa';
-import { provideSingleton } from '../../lib/ioc';
+import { provideSingleton, inject } from '../../lib/ioc';
 import { steamPassport } from '../../lib/steamUtil';
 import { User, SteamProfile } from '../../lib/models';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { JwtUtil } from '../../lib/auth/jwtUtil';
 import { pydtLogger } from '../../lib/logging';
 import * as querystring from 'querystring';
@@ -11,6 +11,9 @@ import * as querystring from 'querystring';
 @Route('auth')
 @provideSingleton(AuthController)
 export class AuthController {
+  constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {
+  }
+
   @Get('steam')
   public authenticate(): Promise<AuthenticateResponse> {
     return new Promise((resolve, reject) => {
@@ -69,7 +72,7 @@ export class AuthController {
         if (err) {
           reject(err);
         } else {
-          userRepository.get(user.profile.id).then(dbUser => {
+          this.userRepository.get(user.profile.id).then(dbUser => {
             if (!dbUser) {
               dbUser = {
                 steamId: user.profile.id
@@ -82,7 +85,7 @@ export class AuthController {
             dbUser.avatarSmall = steamProfile.avatar;
             dbUser.avatarMedium = steamProfile.avatarmedium;
             dbUser.avatarFull = steamProfile.avatarfull;
-            return userRepository.saveVersioned(dbUser);
+            return this.userRepository.saveVersioned(dbUser);
           }).then(() => {
             resolve({
               token: JwtUtil.createToken(user.profile.id),

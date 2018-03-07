@@ -2,13 +2,16 @@
 import { IRepository, dynamoose } from './common';
 import { Game, User } from '../models';
 import { Config } from '../config';
+import { iocContainer } from '../ioc';
 import * as _ from 'lodash';
+
+export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
   getGamesForUser(user: User): Promise<Game[]>;
 }
 
-export interface InternalGameRepository extends IGameRepository {
+interface InternalGameRepository extends IGameRepository {
   origBatchGet(ids: string[]): Promise<Game[]>;
 }
 
@@ -82,7 +85,7 @@ const internalGameRepository = dynamoose.createVersionedModel(Config.resourcePre
   mapSize: String
 }) as InternalGameRepository;
 
-export const gameRepository: IGameRepository = internalGameRepository;
+const gameRepository: IGameRepository = internalGameRepository;
 
 if (!internalGameRepository.origBatchGet) {
   internalGameRepository.origBatchGet = internalGameRepository.batchGet;
@@ -103,3 +106,5 @@ gameRepository.getGamesForUser = user => {
     return Promise.resolve([]);
   }
 };
+
+iocContainer.bind<IGameRepository>(GAME_REPOSITORY_SYMBOL).toConstantValue(gameRepository);

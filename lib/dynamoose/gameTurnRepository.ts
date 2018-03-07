@@ -2,12 +2,15 @@ import { GameTurn, GameTurnKey, Game, User, playerIsHuman } from '../models';
 import { IRepository, dynamoose } from './common';
 import { Config } from '../config';
 import { HttpResponseError } from '../../api/framework/index';
+import { iocContainer } from '../ioc';
 import * as _ from 'lodash';
 import * as civ6 from 'civ6-save-parser';
 import * as zlib from 'zlib';
 import * as pwdgen from 'generate-password';
 import * as AWS from 'aws-sdk';
 const s3 = new AWS.S3();
+
+export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
 export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> {
   createS3SaveKey(gameId: string, turn: number): string;
@@ -17,7 +20,7 @@ export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> 
   parseSaveFile(buffer, game: Game);
 }
 
-export const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game-turn', {
+const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game-turn', {
   gameId: {
     type: String,
     hashKey: true
@@ -193,3 +196,5 @@ gameTurnRepository.parseSaveFile = (buffer, game) => {
     throw new HttpResponseError(400, `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`);
   }
 }
+
+iocContainer.bind<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL).toConstantValue(gameTurnRepository);

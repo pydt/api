@@ -1,12 +1,15 @@
 import { Route, Get, Response, Request } from 'tsoa';
-import { provideSingleton } from '../../lib/ioc';
+import { provideSingleton, inject } from '../../lib/ioc';
 import { User } from '../../lib/models';
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest } from '../framework';
 
 @Route('users')
 @provideSingleton(UsersController)
 export class UsersController {
+  constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {
+  }
+
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('')
   public async all(@Request() request: HttpRequest): Promise<User[]> {
@@ -14,7 +17,7 @@ export class UsersController {
     let lastKey;
 
     do {
-      let scan = userRepository.scan().where('turnsPlayed').gt(0);
+      let scan = this.userRepository.scan().where('turnsPlayed').gt(0);
 
       if (lastKey) {
         scan = scan.startAt(lastKey);

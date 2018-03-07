@@ -1,10 +1,12 @@
-import { userRepository } from '../../lib/dynamoose/userRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
 import { loggingHandler } from '../../lib/logging';
 import { User } from '../../lib/models/user';
 import * as _ from 'lodash';
 
-export const handler = loggingHandler(async (event, context) => {
+export const handler = loggingHandler(async (event, context, iocContainer) => {
+  const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
+
   const usersToUpdate: User[] = [];
   const users: User[] = await userRepository.scan().exec();
 
