@@ -34,7 +34,7 @@ export class GameService implements IGameService {
         let message = `A game that you have recently joined (<b>${game.displayName}</b>) has been deleted`;
 
         if (!steamId) {
-          message = ` because it took too long to start. :(`;
+          message += ` because it took too long to start. :(`;
         } else {
           message += ` by it's creator. :(`;
         }
