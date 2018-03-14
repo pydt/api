@@ -4,8 +4,9 @@ import { Game, User, SteamProfile } from '../../lib/models';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest } from '../framework';
 import { Config } from '../../lib/config';
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
+import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
+import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
 import * as _ from 'lodash';
 
 @Route('user')
@@ -13,7 +14,8 @@ import * as _ from 'lodash';
 export class UserController {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository
+    @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
+    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService
   ) {
   }
 
@@ -22,11 +24,11 @@ export class UserController {
   @Get('games')
   public async games(@Request() request: HttpRequest): Promise<GamesByUserResponse> {
     const user = await this.userRepository.get(request.user);
-    const games = await this.gameRepository.getGamesForUser(user);
+    const games = await this.gameService.getGamesForUser(user);
 
     return {
       data: games,
-      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${this.userRepository.createS3GameCacheKey(request.user)}`
+      pollUrl: `https://${Config.resourcePrefix()}saves.s3.amazonaws.com/${this.userService.createS3GameCacheKey(request.user)}`
     };
   }
 

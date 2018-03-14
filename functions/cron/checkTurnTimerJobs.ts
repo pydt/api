@@ -3,14 +3,13 @@ import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dyna
 import { IScheduledJobRepository, SCHEDULED_JOB_REPOSITORY_SYMBOL, JOB_TYPES } from '../../lib/dynamoose/scheduledJobRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { ScheduledJob } from '../../lib/models';
 import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
 import { sendEmail } from '../../lib/email/ses';
 import * as _ from 'lodash';
-import * as AWS from 'aws-sdk';
 import * as civ6 from 'civ6-save-parser';
-const s3 = new AWS.S3();
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
@@ -18,6 +17,7 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
   const scheduledJobRepository = iocContainer.get<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL);
   const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
   const gameTurnService = iocContainer.get<IGameTurnService>(GAME_TURN_SERVICE_SYMBOL);
+  const s3 = iocContainer.get<IS3Provider>(S3_PROVIDER_SYMBOL);
 
   async function processJobs(jobs: ScheduledJob[]) {
     const gameIds = _.uniq(_.map(jobs, 'gameId'));
@@ -47,8 +47,8 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
     await gameTurnRepository.saveVersioned(turn);
     const data = await s3.getObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: gameTurnRepository.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
-    }).promise();
+      Key: gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+    });
   
     if (!data && !data.Body) {
       throw new Error('File doesn\'t exist?');
@@ -60,9 +60,8 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
   
     await s3.putObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: gameTurnRepository.createS3SaveKey(game.gameId, game.gameTurnRangeKey + 1),
-      Body: Buffer.concat(wrapper.chunks)
-    }).promise();
+      Key: gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey + 1)
+    }, Buffer.concat(wrapper.chunks));
     
     const user = await userRepository.get(currentPlayerSteamId);
     await gameTurnService.moveToNextTurn(game, turn, user);

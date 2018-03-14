@@ -8,18 +8,18 @@ import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { addDiscourseGameTopic } from '../../lib/discourse';
 import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
+import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
 import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
 import { sendSnsMessage } from '../../lib/sns';
 import { Config } from '../../lib/config';
 import { sendEmail } from '../../lib/email/ses';
 import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v4';
 import * as bcrypt from 'bcryptjs';
-import * as AWS from 'aws-sdk';
 import * as zlib from 'zlib';
-const s3 = new AWS.S3();
 
 @Route('game')
 @provideSingleton(GameController)
@@ -28,8 +28,10 @@ export class GameController {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService,
+    @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
   ) {
   }
 
@@ -70,7 +72,7 @@ export class GameController {
       throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
     }
 
-    const games = await this.gameRepository.getGamesForUser(user);
+    const games = await this.gameService.getGamesForUser(user);
     const hasFormingGame = _.some(games, game => {
       return game.createdBySteamId === request.user && !game.inProgress;
     });
@@ -277,7 +279,7 @@ export class GameController {
       this.userRepository.saveVersioned(user)
     ]);
 
-    const users = await this.userRepository.getUsersForGame(game);
+    const users = await this.userService.getUsersForGame(game);
 
     const createdByUser = _.find(users, u => {
       return u.steamId === game.createdBySteamId;
@@ -297,7 +299,7 @@ export class GameController {
     }
 
     if (game.inProgress) {
-      promises.push(this.gameTurnRepository.getAndUpdateSaveFileForGameState(game, users));
+      promises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game, users));
     }
 
     await Promise.all(promises);
@@ -453,7 +455,7 @@ export class GameController {
       return !playerIsHuman(p);
     });
 
-    const users = await this.userRepository.getUsersForGame(game);
+    const users = await this.userService.getUsersForGame(game);
     const user = _.find(users, u => {
       return u.steamId === userId;
     });
@@ -480,7 +482,7 @@ export class GameController {
 
       gameTurn.startDate = new Date();
 
-      await this.gameTurnRepository.getAndUpdateSaveFileForGameState(game);
+      await this.gameTurnService.getAndUpdateSaveFileForGameState(game);
     }
 
     await Promise.all([
@@ -543,7 +545,7 @@ export class GameController {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
-    const file = this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey);
+    const file = this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey);
 
     const fileParams = {
       Bucket: Config.resourcePrefix() + 'saves',
@@ -554,17 +556,14 @@ export class GameController {
       fileParams.Key += '.gz';
 
       try {
-        await s3.headObject(fileParams).promise();
+        await this.s3.headObject(fileParams);
       } catch (err) {
         fileParams.Key = file;
       }
     }
 
     return {
-      downloadUrl: s3.getSignedUrl('getObject', _.merge(fileParams, {
-        ResponseContentDisposition: `attachment; filename='(PYDT) Play This One!.Civ6Save'`,
-        Expires: 60
-      }))
+      downloadUrl: this.s3.signedGetUrl(fileParams, '(PYDT) Play This One!.Civ6Save', 60)
     };
   }
 
@@ -581,15 +580,15 @@ export class GameController {
     const gameTurn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
     game.gameTurnRangeKey++;
 
-    const users = await this.userRepository.getUsersForGame(game);
+    const users = await this.userService.getUsersForGame(game);
     const user = _.find(users, u => {
       return u.steamId === request.user;
     });
 
-    const data = await s3.getObject({
+    const data = await this.s3.getObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey)
-    }).promise();
+      Key: this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey)
+    });
 
     if (!data && !data.Body) {
       throw new Error('File doesn\'t exist?');
@@ -606,7 +605,7 @@ export class GameController {
       pydtLogger.info('unzip failed :(', e);
     }
 
-    const wrapper = this.gameTurnRepository.parseSaveFile(buffer, game);
+    const wrapper = this.gameTurnService.parseSaveFile(buffer, game);
     const parsed = wrapper.parsed;
 
     const numCivs = parsed.CIVS.length;
@@ -716,7 +715,7 @@ export class GameController {
     game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
     game.round = expectedRound;
 
-    await this.gameTurnRepository.updateSaveFileForGameState(game, users, wrapper);
+    await this.gameTurnService.updateSaveFileForGameState(game, users, wrapper);
     await this.gameTurnService.moveToNextTurn(game, gameTurn, user);
 
     if (newDefeatedPlayers.length) {
@@ -752,7 +751,7 @@ export class GameController {
     } while (!lastTurn);
 
     const user = await this.userRepository.get(lastTurn.playerSteamId);
-    this.gameTurnRepository.updateTurnStatistics(game, lastTurn, user, true);
+    this.gameTurnService.updateTurnStatistics(game, lastTurn, user, true);
 
     // Update previous turn data
     delete lastTurn.skipped;
@@ -781,7 +780,7 @@ export class GameController {
     promises.push(this.gameTurnRepository.saveVersioned(lastTurn));
     promises.push(this.gameRepository.saveVersioned(game));
     promises.push(this.userRepository.saveVersioned(user));
-    promises.push(this.gameTurnRepository.getAndUpdateSaveFileForGameState(game));
+    promises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game));
 
     await Promise.all(promises);
 
@@ -801,12 +800,10 @@ export class GameController {
     }
 
     return {
-      putUrl: s3.getSignedUrl('putObject', {
+      putUrl: this.s3.signedPutUrl({
         Bucket: Config.resourcePrefix() + 'saves',
-        Key: this.gameTurnRepository.createS3SaveKey(gameId, game.gameTurnRangeKey + 1),
-        Expires: 60,
-        ContentType: 'application/octet-stream'
-      })
+        Key: this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
+      }, 'application/octet-stream', 60)
     };
   }
 

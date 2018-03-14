@@ -1,6 +1,7 @@
 import { User, Game } from '../../lib/models';
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
+import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
@@ -8,6 +9,7 @@ import * as _ from 'lodash';
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
   const gameTurnRepository = iocContainer.get<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL);
+  const gameTurnService = iocContainer.get<IGameTurnService>(GAME_TURN_SERVICE_SYMBOL);
   const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
 
   async function calculateUserStats(users: User[]) {
@@ -39,7 +41,7 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
       const turns = await gameTurnRepository.query('gameId').eq(game.gameId).filter('playerSteamId').eq(user.steamId).exec();
     
       for (const turn of turns) {
-        gameTurnRepository.updateTurnStatistics(game, turn, user);
+        gameTurnService.updateTurnStatistics(game, turn, user);
       }
     
       await gameRepository.saveVersioned(game);
