@@ -3,8 +3,8 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userReposi
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../dynamoose/gameRepository';
 import { Config } from '../config';
 import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../dynamoose/gameTurnRepository';
-import { sendEmail } from '../../lib/email/ses';
-import { sendSnsMessage } from '../sns';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
 import { pydtLogger } from '../logging';
 import { inject, provideSingleton } from '../ioc';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
@@ -32,7 +32,9 @@ export class GameTurnService implements IGameTurnService {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {
   }
 
@@ -48,7 +50,7 @@ export class GameTurnService implements IGameTurnService {
     ]);
 
     // Send an sns message that a turn has been completed.
-    await sendSnsMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
   }
 
   private async closeGameTurn(game: Game, gameTurn: GameTurn, user: User) {
@@ -107,7 +109,7 @@ export class GameTurnService implements IGameTurnService {
           }
 
           if (playerIsHuman(player) || player === defeatedPlayer) {
-            promises.push(sendEmail(
+            promises.push(this.ses.sendEmail(
               `${desc} been defeated in ${game.displayName}!`,
               'Player Defeated',
               `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,

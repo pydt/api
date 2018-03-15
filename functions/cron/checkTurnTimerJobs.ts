@@ -4,10 +4,10 @@ import { IScheduledJobRepository, SCHEDULED_JOB_REPOSITORY_SYMBOL, JOB_TYPES } f
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { ScheduledJob } from '../../lib/models';
 import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
-import { sendEmail } from '../../lib/email/ses';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
 import * as _ from 'lodash';
@@ -26,7 +26,8 @@ export class CheckTurnTimerJobs {
     @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
   ) {
   }
 
@@ -85,7 +86,7 @@ export class CheckTurnTimerJobs {
     const user = await this.userRepository.get(currentPlayerSteamId);
     await this.gameTurnService.moveToNextTurn(game, turn, user);
   
-    await sendEmail(
+    await this.ses.sendEmail(
       'You have been skipped in ' + game.displayName + '!',
       `You've been skipped!`,
       `The amount of time alloted for you to play your turn has expired.  Try harder next time!`,

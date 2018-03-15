@@ -2,7 +2,7 @@ import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gam
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
-import { sendSnsMessage } from '../../lib/sns';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { loggingHandler } from '../../lib/logging';
 import { Config } from '../../lib/config';
 import { User, Game } from '../../lib/models';
@@ -20,7 +20,8 @@ export class UpdateUserGameCache {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {
   }
   
@@ -40,7 +41,7 @@ export class UpdateUserGameCache {
     await this.updateUsers(users);
   
     // Send an sns message that the cache has been updated
-    await sendSnsMessage(Config.resourcePrefix() + 'user-game-cache-updated', 'user-game-cache-updated', game.gameId);
+    await this.sns.sendMessage(Config.resourcePrefix() + 'user-game-cache-updated', 'user-game-cache-updated', game.gameId);
   }
   
   private async updateUsers(users: User[]): Promise<void> {

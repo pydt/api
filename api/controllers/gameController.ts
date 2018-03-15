@@ -10,11 +10,11 @@ import { addDiscourseGameTopic } from '../../lib/discourse';
 import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
 import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
 import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
-import { sendSnsMessage } from '../../lib/sns';
 import { Config } from '../../lib/config';
-import { sendEmail } from '../../lib/email/ses';
 import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { pydtLogger } from '../../lib/logging';
 import * as _ from 'lodash';
 import * as uuid from 'uuid/v4';
@@ -31,7 +31,9 @@ export class GameController {
     @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {
   }
 
@@ -288,7 +290,7 @@ export class GameController {
     const promises = [];
 
     if (createdByUser.emailAddress) {
-      promises.push(sendEmail(
+      promises.push(this.ses.sendEmail(
         'A new user has joined your game!',
         'A new user has joined your game!',
         `The user <b>${user.displayName}</b> has joined your game <b>${game.displayName}</b>!  ` +
@@ -341,7 +343,7 @@ export class GameController {
     const createdByUser = await this.userRepository.get(game.createdBySteamId);
 
     if (createdByUser.emailAddress) {
-      await sendEmail(
+      await this.ses.sendEmail(
         'A user has left your game.',
         'A user has left your game.',
         `The user <b>${user.displayName}</b> has left your game <b>${game.displayName}</b>.  ` +
@@ -492,7 +494,7 @@ export class GameController {
     ]);
 
     // Send an sns message that a turn has been completed.
-    await sendSnsMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
 
     // Send an email to everyone else left in the game....
     const emailPromises = [];
@@ -510,7 +512,7 @@ export class GameController {
         }
 
         if (playerIsHuman(gamePlayer)) {
-          emailPromises.push(sendEmail(
+          emailPromises.push(this.ses.sendEmail(
             `A player has ${desc} from ${game.displayName}!`,
             `A player has ${desc} from ${game.displayName}!`,
             `<b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(`,
@@ -519,7 +521,7 @@ export class GameController {
         }
 
         if (gamePlayer.steamId === body.kickUserId) {
-          emailPromises.push(sendEmail(
+          emailPromises.push(this.ses.sendEmail(
             `You have been kicked from ${game.displayName}!`,
             `You have been kicked from ${game.displayName}!`,
             `You have been kicked from <b>${game.displayName}</b>. If you feel this was unwarranted, ` +
@@ -788,7 +790,7 @@ export class GameController {
     await Promise.all(promises);
 
     // Send an sns message that a turn has been completed.
-    await sendSnsMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
 
     return game;
   }

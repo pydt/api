@@ -1,10 +1,10 @@
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game } from '../../lib/models';
 import { Config } from '../../lib/config';
-import { sendEmail } from '../../lib/email/ses';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
 import * as _ from 'lodash';
@@ -20,7 +20,8 @@ export class DeleteOldUnstartedGames {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService
+    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService,
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
   ) {
   }
 
@@ -46,7 +47,7 @@ export class DeleteOldUnstartedGames {
       const user = await this.userRepository.get(game.createdBySteamId);
   
       if (user.emailAddress) {
-        await sendEmail(
+        await this.ses.sendEmail(
           `Game Scheduled for Deletion`,
           `Game Scheduled for Deletion`,
           `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl()}/game/${game.gameId}`,

@@ -3,7 +3,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userReposi
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../dynamoose/gameRepository';
 import { USER_SERVICE_SYMBOL, IUserService } from './userService';
 import { deleteDiscourseGameTopic } from '../discourse';
-import { sendEmail } from '../../lib/email/ses';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { provideSingleton, inject } from '../ioc';
 import * as _ from 'lodash';
 
@@ -19,7 +19,8 @@ export class GameService implements IGameService {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
-    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
   ) {
   }
 
@@ -42,7 +43,7 @@ export class GameService implements IGameService {
           message += ` by it's creator. :(`;
         }
 
-        promises.push(sendEmail(
+        promises.push(this.ses.sendEmail(
           'Game Deleted',
           'Game Deleted',
           message,
