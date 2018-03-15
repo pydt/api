@@ -702,14 +702,17 @@ export class GameController {
       expectedRound++;
     }
 
-    if (expectedRound !== parsedRound) {
-      throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
-    }
-
     const isCurrentTurn = parsed.CIVS[nextPlayerIndex].IS_CURRENT_TURN;
 
     if (!isCurrentTurn || !isCurrentTurn.data) {
-      throw new HttpResponseError(400, 'Incorrect player turn in save file!');
+      throw new HttpResponseError(
+        400,
+        `Incorrect player turn in save file!  This probably means it is still your turn and you have some more moves to make!`
+      );
+    }
+
+    if (expectedRound !== parsedRound) {
+      throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
     }
 
     game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
