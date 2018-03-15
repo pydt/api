@@ -6,7 +6,7 @@ import {
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
-import { addDiscourseGameTopic } from '../../lib/discourse';
+import { IDiscourseProvider, DISCOURSE_PROVIDER_SYMBOL } from '../../lib/discourseProvider';
 import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
 import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
 import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
@@ -33,7 +33,8 @@ export class GameController {
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
-    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider,
+    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {
   }
 
@@ -104,7 +105,7 @@ export class GameController {
       mapSize: body.mapSize
     };
 
-    const topic = await addDiscourseGameTopic(newGame);
+    const topic = await this.discourse.addGameTopic(newGame);
 
     if (topic) {
       newGame.discourseTopicId = topic.topic_id;

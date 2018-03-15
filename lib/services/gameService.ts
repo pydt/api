@@ -2,7 +2,7 @@ import { Game, User } from '../models';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
 import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../dynamoose/gameRepository';
 import { USER_SERVICE_SYMBOL, IUserService } from './userService';
-import { deleteDiscourseGameTopic } from '../discourse';
+import { IDiscourseProvider, DISCOURSE_PROVIDER_SYMBOL } from '../discourseProvider';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { provideSingleton, inject } from '../ioc';
 import * as _ from 'lodash';
@@ -20,7 +20,8 @@ export class GameService implements IGameService {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
-    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
+    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {
   }
 
@@ -52,7 +53,7 @@ export class GameService implements IGameService {
       }
     }
 
-    promises.push(deleteDiscourseGameTopic(game));
+    promises.push(this.discourse.deleteGameTopic(game));
 
     await Promise.all(promises);
   }
