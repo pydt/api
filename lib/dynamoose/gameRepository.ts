@@ -1,20 +1,23 @@
 
-import { IRepository, dynamoose } from './common';
+import { IRepository, dynamoose, IInternalRepository } from './common';
 import { Game } from '../models';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
+  incompleteGames(): Promise<Game[]>;
+  unstartedGames(daysOld: number): Promise<Game[]>;
 }
 
-interface InternalGameRepository extends IGameRepository {
+interface InternalGameRepository extends IGameRepository, IInternalRepository<string, Game> {
   origBatchGet(ids: string[]): Promise<Game[]>;
 }
 
-const internalGameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game', {
+const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game', {
   gameId: {
     type: String,
     hashKey: true,
@@ -84,16 +87,25 @@ const internalGameRepository = dynamoose.createVersionedModel(Config.resourcePre
   mapSize: String
 }) as InternalGameRepository;
 
-const gameRepository: IGameRepository = internalGameRepository;
-
-if (!internalGameRepository.origBatchGet) {
-  internalGameRepository.origBatchGet = internalGameRepository.batchGet;
+if (!gameRepository.origBatchGet) {
+  gameRepository.origBatchGet = gameRepository.batchGet;
 }
 
 gameRepository.batchGet = gameKeys => {
-  return internalGameRepository.origBatchGet(gameKeys).then(games => {
+  return gameRepository.origBatchGet(gameKeys).then(games => {
     return _.orderBy(games, ['createdAt'], ['desc']);
   });
 };
+
+gameRepository.incompleteGames = () => {
+  return gameRepository.scan('completed').not().eq(true).exec();
+};
+
+gameRepository.unstartedGames = (daysOld: number) => {
+  return gameRepository
+    .scan('inProgress').not().eq(true)
+    .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
+    .exec();
+}
 
 iocContainer.bind<IGameRepository>(GAME_REPOSITORY_SYMBOL).toConstantValue(gameRepository);

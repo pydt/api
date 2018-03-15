@@ -15,6 +15,9 @@ export interface IRepository<TKey, TEntity> {
   batchGet(ids: TKey[]): Promise<TEntity[]>;
   batchDelete(entities: TEntity[]): Promise<void>;
   saveVersioned(model: TEntity): Promise<TEntity>;
+}
+
+export interface IInternalRepository<TKey, TEntity> extends IRepository<TKey, TEntity> {
   scan(column?: string): any;
   query(column?: string): any;
 }

@@ -1,11 +1,15 @@
 import { GameTurn, GameTurnKey } from '../models';
-import { IRepository, dynamoose } from './common';
+import { IRepository, dynamoose, IInternalRepository } from './common';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
 
 export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
 export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> {
+  getPlayerTurnsForGame(gameId: string, steamId: string): Promise<GameTurn[]>;
+}
+
+interface InternalGameTurnRepository extends IGameTurnRepository, IInternalRepository<GameTurnKey, GameTurn> {
 }
 
 const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game-turn', {
@@ -34,6 +38,10 @@ const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix(
   },
   endDate: Date,
   skipped: Boolean
-}) as IGameTurnRepository;
+}) as InternalGameTurnRepository;
+
+gameTurnRepository.getPlayerTurnsForGame = (gameId: string, steamId: string) => {
+  return gameTurnRepository.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId).exec();
+};
 
 iocContainer.bind<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL).toConstantValue(gameTurnRepository);

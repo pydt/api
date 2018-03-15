@@ -12,27 +12,7 @@ export class UsersController {
 
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('')
-  public async all(@Request() request: HttpRequest): Promise<User[]> {
-    const result: User[] = [];
-    let lastKey;
-
-    do {
-      let scan = this.userRepository.scan().where('turnsPlayed').gt(0);
-
-      if (lastKey) {
-        scan = scan.startAt(lastKey);
-      }
-
-      const users: User[] = await scan.exec();
-
-      for (const user of users) {
-        delete user.emailAddress; // make sure email address isn't returned!
-        result.push(user);
-      }
-
-      lastKey = (users as any).lastKey;
-    } while (lastKey);
-
-    return result;
+  public all(@Request() request: HttpRequest): Promise<User[]> {
+    return this.userRepository.usersWithTurnsPlayed();
   }
 }

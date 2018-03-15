@@ -5,35 +5,45 @@ import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game } from '../../lib/models';
 import { Config } from '../../lib/config';
 import { sendEmail } from '../../lib/email/ses';
-import * as moment from 'moment';
+import { inject } from '../../lib/ioc';
+import { injectable } from 'inversify';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
-  const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
-  const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
-  const gameService = iocContainer.get<IGameService>(GAME_SERVICE_SYMBOL);
+  const doug = iocContainer.resolve(DeleteOldUnstartedGames);
+  await doug.execute();
+});
 
-  async function deleteOldUnstartedGames() {
-    const games: Game[] = await gameRepository
-      .scan('inProgress').not().eq(true)
-      .where('createdAt').lt(moment().add(-30, 'days').valueOf())
-      .exec();
+@injectable()
+export class DeleteOldUnstartedGames {
+  constructor(
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService
+  ) {
+  }
+
+  public async execute() {
+    await this.deleteOldUnstartedGames();
+    await this.notifyGamesAboutToBeDeleted();
+  }
+
+  private async deleteOldUnstartedGames(): Promise<void> {
+    const games = await this.gameRepository.unstartedGames(30);
   
     await Promise.all(_.map(games, game => {
       pydtLogger.info(`deleted game ${game.gameId}`);
-      return gameService.deleteGame(game, null);
+      return this.gameService.deleteGame(game, null);
     }));
   }
-  
-  async function notifyGamesAboutToBeDeleted() {
-    const games: Game[] = await gameRepository
-      .scan('inProgress').not().eq(true)
-      .where('createdAt').lt(moment().add(-25, 'days').valueOf())
-      .exec();
+    
+  private async notifyGamesAboutToBeDeleted(): Promise<void> {
+    const games = await this.gameRepository.unstartedGames(25);
   
     await Promise.all(_.map(games, async game => {
       const expirationDate = moment(game.createdAt).add(30, 'days').format('MMMM Do');
-      const user = await userRepository.get(game.createdBySteamId);
+      const user = await this.userRepository.get(game.createdBySteamId);
   
       if (user.emailAddress) {
         await sendEmail(
@@ -45,7 +55,4 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
       }
     }));
   }
-
-  await deleteOldUnstartedGames();
-  await notifyGamesAboutToBeDeleted();
-});
+}

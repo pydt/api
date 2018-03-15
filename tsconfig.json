@@ -16,6 +16,7 @@
   },
   "include": [
     "api/**/*.ts",
+    "functions/**/*.ts",
     "lib/**/*.ts"
   ],
   "exclude": [

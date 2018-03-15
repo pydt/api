@@ -356,7 +356,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('listOpen')
   public async listOpen(@Request() request: HttpRequest): Promise<OpenGamesResponse> {
-    const games: Game[] = await this.gameRepository.scan('completed').not().eq(true).exec();
+    const games: Game[] = await this.gameRepository.incompleteGames();
     const orderedGames = _.orderBy(games, ['createdAt'], ['desc']);
 
     return {

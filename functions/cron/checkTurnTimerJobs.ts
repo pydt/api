@@ -8,46 +8,65 @@ import { ScheduledJob } from '../../lib/models';
 import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
 import { sendEmail } from '../../lib/email/ses';
+import { inject } from '../../lib/ioc';
+import { injectable } from 'inversify';
 import * as _ from 'lodash';
 import * as civ6 from 'civ6-save-parser';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
-  const gameRepository = iocContainer.get<IGameRepository>(GAME_REPOSITORY_SYMBOL);
-  const gameTurnRepository = iocContainer.get<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL);
-  const scheduledJobRepository = iocContainer.get<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL);
-  const userRepository = iocContainer.get<IUserRepository>(USER_REPOSITORY_SYMBOL);
-  const gameTurnService = iocContainer.get<IGameTurnService>(GAME_TURN_SERVICE_SYMBOL);
-  const s3 = iocContainer.get<IS3Provider>(S3_PROVIDER_SYMBOL);
+  const cttj = iocContainer.resolve(CheckTurnTimerJobs);
+  await cttj.execute();
+});
 
-  async function processJobs(jobs: ScheduledJob[]) {
+@injectable()
+export class CheckTurnTimerJobs {
+  constructor(
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
+    @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
+    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+  ) {
+  }
+
+  public async execute() {
+    const jobs = await this.scheduledJobRepository.getWaitingJobs(JOB_TYPES.TURN_TIMER);
+
+    if (jobs && jobs.length) {
+      await this.processJobs(jobs);
+    }
+  }
+
+  private async processJobs(jobs: ScheduledJob[]) {
     const gameIds = _.uniq(_.map(jobs, 'gameId'));
-    const games = await gameRepository.batchGet(gameIds);
+    const games = await this.gameRepository.batchGet(gameIds);
   
     await Promise.all(_.map(games, async game => {
       if (game.turnTimerMinutes) {
-        await checkTurnTimer(game);
+        await this.checkTurnTimer(game);
       }
     }));
     
-    await scheduledJobRepository.batchDelete(jobs);
+    await this.scheduledJobRepository.batchDelete(jobs);
   }
   
-  async function checkTurnTimer(game) {
-    const turn = await gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+  private async checkTurnTimer(game) {
+    const turn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
     
     if (!turn.endDate  && new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000 ) {
-      await skipTurn(game, turn);
+      await this.skipTurn(game, turn);
     }
   }
   
-  async function skipTurn(game, turn) {
+  private async skipTurn(game, turn) {
     const currentPlayerSteamId = game.currentPlayerSteamId;
     turn.skipped = true;
   
-    await gameTurnRepository.saveVersioned(turn);
-    const data = await s3.getObject({
+    await this.gameTurnRepository.saveVersioned(turn);
+    const data = await this.s3.getObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+      Key: this.gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
     });
   
     if (!data && !data.Body) {
@@ -58,13 +77,13 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
     const wrapper = civ6.parse(data.Body);
     civ6.modifyChunk(wrapper.chunks, wrapper.parsed.CIVS[civIndex].ACTOR_AI_HUMAN, 1);
   
-    await s3.putObject({
+    await this.s3.putObject({
       Bucket: Config.resourcePrefix() + 'saves',
-      Key: gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey + 1)
+      Key: this.gameTurnService.createS3SaveKey(game.gameId, game.gameTurnRangeKey + 1)
     }, Buffer.concat(wrapper.chunks));
     
-    const user = await userRepository.get(currentPlayerSteamId);
-    await gameTurnService.moveToNextTurn(game, turn, user);
+    const user = await this.userRepository.get(currentPlayerSteamId);
+    await this.gameTurnService.moveToNextTurn(game, turn, user);
   
     await sendEmail(
       'You have been skipped in ' + game.displayName + '!',
@@ -73,14 +92,4 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
       user.emailAddress
     );
   }
-
-  const jobs: ScheduledJob[] = await scheduledJobRepository.query('jobType')
-    .eq(JOB_TYPES.TURN_TIMER)
-    .where('scheduledTime')
-    .lt(new Date())
-    .exec();
-
-  if (jobs && jobs.length) {
-    await processJobs(jobs);
-  }
-});
+}

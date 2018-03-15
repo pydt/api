@@ -1,4 +1,4 @@
-import { IRepository, dynamoose } from './common';
+import { IRepository, dynamoose, IInternalRepository } from './common';
 import { ScheduledJob } from '../models';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
@@ -6,6 +6,10 @@ import { iocContainer } from '../ioc';
 export const SCHEDULED_JOB_REPOSITORY_SYMBOL = Symbol('IScheduledJobRepository');
 
 export interface IScheduledJobRepository extends IRepository<string, ScheduledJob> {
+  getWaitingJobs(jobType: string): Promise<ScheduledJob[]>;
+}
+
+interface InternalScheduledJobRepository extends IScheduledJobRepository, IInternalRepository<string, ScheduledJob> {
 }
 
 export const JOB_TYPES = {
@@ -22,6 +26,14 @@ const scheduledJobRepository = dynamoose.createVersionedModel(Config.resourcePre
     rangeKey: true
   },
   gameId: String
-}) as IScheduledJobRepository;
+}) as InternalScheduledJobRepository;
+
+scheduledJobRepository.getWaitingJobs = (jobType: string) => {
+  return scheduledJobRepository.query('jobType')
+    .eq(jobType)
+    .where('scheduledTime')
+    .lt(new Date())
+    .exec();
+}
 
 iocContainer.bind<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL).toConstantValue(scheduledJobRepository);
