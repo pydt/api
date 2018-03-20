@@ -42,7 +42,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/changeCiv')
   public async changeCiv(@Request() request: HttpRequest, gameId: string, @Body() body: ChangeCivRequestBody): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.inProgress) {
       throw new HttpResponseError(400, 'Game in Progress');
@@ -129,7 +129,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/delete')
   public async delete(@Request() request: HttpRequest, gameId: string): Promise<void> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, 'Only the creator of the game can delete the game!');
@@ -146,7 +146,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/updateTurnOrder')
   public async updateTurnOrder(@Request() request: HttpRequest, gameId: string, @Body() body: UpdateTurnOrderRequestBody): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You didn't create this game!`);
@@ -177,7 +177,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/edit')
   public async edit(@Request() request: HttpRequest, gameId: string, @Body() body: GameRequestBody): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You didn't create this game!`);
@@ -220,7 +220,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/join')
   public async join(@Request() request: HttpRequest, gameId: string, @Body() body: JoinGameRequestBody): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
     let targetPlayer: GamePlayer;
 
     if (game.inProgress) {
@@ -314,7 +314,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/leave')
   public async leave(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.createdBySteamId === request.user) {
       throw new HttpResponseError(400, `You can't leave, you created the game!`);
@@ -385,7 +385,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/start')
   public async start(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.inProgress) {
       throw new HttpResponseError(400, 'Game in progress!');
@@ -418,7 +418,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/surrender')
   public async surrender(@Request() request: HttpRequest, gameId: string, @Body() body: SurrenderBody): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
     let userId = request.user;
 
     if (body.kickUserId) {
@@ -542,7 +542,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('{gameId}/turn')
   public async getTurn(@Request() request: HttpRequest, gameId: string, @Query() compressed = ''): Promise<GameTurnResponse> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
@@ -574,7 +574,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/finishSubmit')
   public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
@@ -735,7 +735,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/revert')
   public async revert(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
 
     if (game.currentPlayerSteamId !== request.user && game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `You can't revert this game!`);
@@ -800,7 +800,7 @@ export class GameController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/startSubmit')
   public async startSubmit(@Request() request: HttpRequest, gameId: string): Promise<StartTurnSubmitResponse> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.getGame(gameId);
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, 'It\'s not your turn!');
     }
@@ -816,6 +816,16 @@ export class GameController {
   @Get('{gameId}')
   public get(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     return this.gameRepository.get(gameId);
+  }
+
+  private async getGame(gameId: string) {
+    const game = await this.gameRepository.get(gameId);
+
+    if (!game) {
+      throw new HttpResponseError(404, 'Not Found');
+    }
+
+    return game;
   }
 }
 
