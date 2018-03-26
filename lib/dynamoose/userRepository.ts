@@ -50,7 +50,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   }
 }) as InternalUserRepository;
 
-async function scanAllUsers(createScanQuery: () => any) {
+async function scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
   const result: User[] = [];
   let lastKey;
 
@@ -64,7 +64,10 @@ async function scanAllUsers(createScanQuery: () => any) {
     const users: User[] = await scan.exec();
 
     for (const user of users) {
-      delete user.emailAddress; // make sure email address isn't returned!
+      if (removeEmail) {
+        delete user.emailAddress; // make sure email address isn't returned!
+      }
+
       result.push(user);
     }
 
@@ -75,13 +78,13 @@ async function scanAllUsers(createScanQuery: () => any) {
 }
 
 userRepository.allUsers = () => {
-  return scanAllUsers(() => {
+  return scanAllUsers(false, () => {
     return userRepository.scan();
   });
 }
 
 userRepository.usersWithTurnsPlayed = () => {
-  return scanAllUsers(() => {
+  return scanAllUsers(true, () => {
     return userRepository.scan().where('turnsPlayed').gt(0);
   });
 };
