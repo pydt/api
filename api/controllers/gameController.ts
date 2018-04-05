@@ -160,6 +160,10 @@ export class GameController {
       throw new HttpResponseError(400, `Wrong number of steamIds`);
     }
 
+    if (game.createdBySteamId !== body.steamIds[0]) {
+      throw new HttpResponseError(400, `The player that created the game must be the first player!`);
+    }
+
     const newPlayers = _.compact(_.map(body.steamIds, steamId => {
       return _.find(game.players, p => p.steamId === steamId);
     }));
