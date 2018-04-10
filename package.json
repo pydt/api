@@ -14,7 +14,7 @@
     "lodash": "4.17.5",
     "moment": "2.21.0",
     "passport": "0.4.0",
-    "passport-steam": "1.0.8",
+    "passport-steam": "1.0.9",
     "reflect-metadata": "0.1.12",
     "request": "2.83.0",
     "request-promise": "4.2.2",
