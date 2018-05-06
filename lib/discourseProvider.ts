@@ -15,7 +15,7 @@ export interface IDiscourseProvider {
 export class DiscourseProvider implements IDiscourseProvider {
   public async addGameTopic(game: Game) {
     if (Config.activeStage() === 'prod') {
-      await rp({
+      return await rp({
         method: 'POST',
         uri: `https://discourse.playyourdamnturn.com/posts/?api_key=${Config.discourseApiKey()}&api_username=system`,
         form: {
@@ -32,7 +32,7 @@ export class DiscourseProvider implements IDiscourseProvider {
 
   public async deleteGameTopic(game: Game) {
     if (Config.activeStage() === 'prod') {
-      await rp({
+      return await rp({
         method: 'DELETE',
         uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}?api_key=${Config.discourseApiKey()}&api_username=system`,
         json: true
