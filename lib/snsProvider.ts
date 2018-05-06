@@ -1,17 +1,38 @@
 import * as AWS from 'aws-sdk';
 import { provideSingleton } from './ioc';
+import { Config } from './config';
+import { Game } from './models';
+import { SNS_MESSAGES, UserGameCacheUpdatedPayload } from './models/sns';
 const sns = new AWS.SNS();
 const sts = new AWS.STS();
 
 export const SNS_PROVIDER_SYMBOL = Symbol('ISnsProvider');
 
 export interface ISnsProvider {
-  sendMessage(topic: string, subject: string, message: string): Promise<any>;
+  turnSubmitted(game: Game): Promise<any>;
+  gameUpdated(game: Game): Promise<any>;
+  userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<any>;
 }
 
 @provideSingleton(SNS_PROVIDER_SYMBOL)
 export class SnsProvider implements ISnsProvider {
-  public async sendMessage(topic: string, subject: string, message: string) {
+  public turnSubmitted(game: Game) {
+    return this.sendMessage(Config.resourcePrefix() + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
+  }
+
+  public gameUpdated(game: Game) {
+    return this.sendMessage(Config.resourcePrefix() + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
+  }
+
+  public userGameCacheUpdated(payload: UserGameCacheUpdatedPayload) {
+    return this.sendMessage(
+      Config.resourcePrefix() + SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
+      SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
+      JSON.stringify(payload)
+    );
+  }
+
+  private async sendMessage(topic: string, subject: string, message: string) {
     const identity = await sts.getCallerIdentity({}).promise();
 
     const params = {

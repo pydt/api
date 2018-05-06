@@ -99,6 +99,7 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
+      - sns: ${self:custom.resourcePrefix}game-updated
   snsRecalculateUserStats:
     handler: functions/sns/recalculateUserStats.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}

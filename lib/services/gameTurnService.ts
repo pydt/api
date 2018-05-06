@@ -49,12 +49,11 @@ export class GameTurnService implements IGameTurnService {
       this.gameRepository.saveVersioned(game)
     ]);
 
-    // Send an sns message that a turn has been completed.
-    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.turnSubmitted(game);
   }
 
   private async closeGameTurn(game: Game, gameTurn: GameTurn, user: User) {
-    gameTurn.endDate = new Date();
+    game.lastTurnEndDate = gameTurn.endDate = new Date();
 
     this.updateTurnStatistics(game, gameTurn, user);
 

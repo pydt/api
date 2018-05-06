@@ -1,15 +1,17 @@
-import { Route, Get, Security, Response, Request, Post, Body, Query } from 'tsoa';
-import { provideSingleton, inject } from '../../lib/ioc';
-import { Game, User, SteamProfile } from '../../lib/models';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { ErrorResponse, HttpRequest } from '../framework';
-import { Config } from '../../lib/config';
-import { getPlayerSummaries } from '../../lib/steamUtil';
-import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
-import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
 import * as _ from 'lodash';
+import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
+
+import { Config } from '../../lib/config';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
+import { inject, provideSingleton } from '../../lib/ioc';
+import { Game, SteamProfile, User } from '../../lib/models';
+import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
+import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
+import { getPlayerSummaries } from '../../lib/steamUtil';
+import { ErrorResponse, HttpRequest } from '../framework';
 
 @Route('user')
+@Tags('user')
 @provideSingleton(UserController)
 export class UserController {
   constructor(

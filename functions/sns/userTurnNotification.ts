@@ -7,10 +7,11 @@ import { User, Game } from '../../lib/models/index';
 import { Config } from '../../lib/config';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
+import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
-  await utn.execute(event.Records[0].Sns.Message);
+  await utn.execute(JSON.parse(event.Records[0].Sns.Message));
 });
 
 @injectable()
@@ -23,8 +24,8 @@ export class UserTurnNotification {
   ) {
   }
 
-  public async execute(gameId: string) {
-    const game = await this.gameRepository.get(gameId);
+  public async execute(payload: UserGameCacheUpdatedPayload) {
+    const game = await this.gameRepository.get(payload.gameId);
 
     if (!game || !game.inProgress || game.completed) {
       return;
@@ -32,15 +33,24 @@ export class UserTurnNotification {
 
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
-    await this.iot.notifyUserClient(user);
+    if (payload.newTurn) {
+      await this.iot.notifyUserClient(user);
 
-    if (user.emailAddress) {
-      await this.ses.sendEmail(
-        `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
-        'PLAY YOUR DAMN TURN!',
-        `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl()}/game/${game.gameId}`,
-        user.emailAddress
-      );
+      if (user.emailAddress) {
+        await this.ses.sendEmail(
+          `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
+          'PLAY YOUR DAMN TURN!',
+          `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl()}/game/${game.gameId}`,
+          user.emailAddress
+        );
+      }
+    } else {
+      // Notify all users in game...
+      for (const player of game.players) {
+        if (player.steamId && !player.hasSurrendered) {
+          await this.iot.notifyUserClient(player);
+        }
+      }
     }
   }
 }

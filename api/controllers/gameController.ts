@@ -1,27 +1,37 @@
-import { Route, Get, Response, Request, Post, Body, Security, Query } from 'tsoa';
-import { provideSingleton, inject } from '../../lib/ioc';
-import {
-  Game, BaseGame, GamePlayer, GameTurn, getHumans, playerIsHuman, getNextPlayerIndex, getCurrentPlayerIndex, getPreviousPlayerIndex
-} from '../../lib/models';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
-import { IDiscourseProvider, DISCOURSE_PROVIDER_SYMBOL } from '../../lib/discourseProvider';
-import { IGameService, GAME_SERVICE_SYMBOL } from '../../lib/services/gameService';
-import { USER_SERVICE_SYMBOL, IUserService } from '../../lib/services/userService';
-import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
-import { Config } from '../../lib/config';
-import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
-import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
-import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
-import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
-import { pydtLogger } from '../../lib/logging';
-import * as _ from 'lodash';
-import * as uuid from 'uuid/v4';
 import * as bcrypt from 'bcryptjs';
+import * as _ from 'lodash';
+import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
+import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
 
+import { Config } from '../../lib/config';
+import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../lib/discourseProvider';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
+import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { inject, provideSingleton } from '../../lib/ioc';
+import { pydtLogger } from '../../lib/logging';
+import {
+  BaseGame,
+  Game,
+  GamePlayer,
+  GameTurn,
+  getCurrentPlayerIndex,
+  getHumans,
+  getNextPlayerIndex,
+  getPreviousPlayerIndex,
+  playerIsHuman,
+} from '../../lib/models';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
+import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
+import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
+import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
+import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
+
 @Route('game')
+@Tags('game')
 @provideSingleton(GameController)
 export class GameController {
   constructor(
@@ -498,8 +508,7 @@ export class GameController {
       this.gameTurnRepository.saveVersioned(gameTurn)
     ]);
 
-    // Send an sns message that a turn has been completed.
-    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.turnSubmitted(game);
 
     // Send an email to everyone else left in the game....
     const emailPromises = [];
@@ -794,8 +803,7 @@ export class GameController {
 
     await Promise.all(promises);
 
-    // Send an sns message that a turn has been completed.
-    await this.sns.sendMessage(Config.resourcePrefix() + 'turn-submitted', 'turn-submitted', game.gameId);
+    await this.sns.turnSubmitted(game);
 
     return game;
   }

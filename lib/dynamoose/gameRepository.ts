@@ -11,6 +11,7 @@ export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 export interface IGameRepository extends IRepository<string, Game> {
   incompleteGames(): Promise<Game[]>;
   unstartedGames(daysOld: number): Promise<Game[]>;
+  getByDiscourseTopicId(topicId: number): Promise<Game>;
 }
 
 interface InternalGameRepository extends IGameRepository, IInternalRepository<string, Game> {
@@ -84,7 +85,9 @@ const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   },
   gameSpeed: String,
   mapFile: String,
-  mapSize: String
+  mapSize: String,
+  latestDiscoursePostNumber: Number,
+  lastTurnEndDate: Date
 }) as InternalGameRepository;
 
 if (!gameRepository.origBatchGet) {
@@ -107,5 +110,17 @@ gameRepository.unstartedGames = (daysOld: number) => {
     .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
     .exec();
 }
+
+gameRepository.getByDiscourseTopicId = async (topicId: number) => {
+  const topics = await gameRepository
+    .scan('discourseTopicId').eq(topicId)
+    .exec();
+
+  if (!topics) {
+    return null;
+  }
+
+  return topics[0];
+};
 
 iocContainer.bind<IGameRepository>(GAME_REPOSITORY_SYMBOL).toConstantValue(gameRepository);

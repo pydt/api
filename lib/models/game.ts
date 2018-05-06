@@ -26,6 +26,8 @@ export interface Game extends Entity, BaseGame {
   round?: number;
   gameTurnRangeKey?: number;
   completed?: boolean;
+  latestDiscoursePostNumber?: number;
+  lastTurnEndDate?: Date;
 }
 
 export function getCurrentPlayerIndex(game: Game) {

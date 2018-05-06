@@ -1,5 +1,8 @@
-export interface User {
+export interface HasSteamId {
   steamId: string;
+}
+
+export interface User extends HasSteamId {
   displayName: string;
   avatarSmall: string;
   avatarMedium: string;
@@ -12,4 +15,4 @@ export interface User {
   timeTaken: number;
   fastTurns: number;
   slowTurns: number;
-};
+}

@@ -1,14 +1,16 @@
-import { HttpRequest, HttpResponseError } from '../framework';
-import { Get, Route, Request } from 'tsoa';
-import { provideSingleton, inject } from '../../lib/ioc';
-import { steamPassport } from '../../lib/steamUtil';
-import { User, SteamProfile } from '../../lib/models';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { JwtUtil } from '../../lib/auth/jwtUtil';
-import { pydtLogger } from '../../lib/logging';
 import * as querystring from 'querystring';
+import { Get, Request, Route, Tags } from 'tsoa';
+
+import { JwtUtil } from '../../lib/auth/jwtUtil';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
+import { inject, provideSingleton } from '../../lib/ioc';
+import { pydtLogger } from '../../lib/logging';
+import { SteamProfile, User } from '../../lib/models';
+import { steamPassport } from '../../lib/steamUtil';
+import { HttpRequest, HttpResponseError } from '../framework';
 
 @Route('auth')
+@Tags('auth')
 @provideSingleton(AuthController)
 export class AuthController {
   constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {

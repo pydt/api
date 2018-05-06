@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 export class HttpRequest {
   public body: any;
+  public rawBody: any;
   public headers: any;
   public method: string;
   public params: any;
@@ -16,6 +17,7 @@ export class HttpRequest {
   // revisit this.
   constructor(event: LambdaProxyEvent, public response: HttpResponse) {
     if (event.body) {
+      this.rawBody = event.body;
       this.body = JSON.parse(event.body);
     }
 

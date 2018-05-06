@@ -8,11 +8,13 @@ import { Config } from '../../lib/config';
 import { User, Game } from '../../lib/models';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
+import { SNS_MESSAGES } from '../../lib/models/sns';
 import * as _ from 'lodash';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uugc = iocContainer.resolve(UpdateUserGameCache);
-  await uugc.execute(event.Records[0].Sns.Message);
+  const snsRecord = event.Records[0].Sns;
+  await uugc.execute(snsRecord.Subject, snsRecord.Message);
 });
 
 @injectable()
@@ -25,7 +27,7 @@ export class UpdateUserGameCache {
   ) {
   }
   
-  public async execute(gameId: string) {
+  public async execute(subject: string, gameId: string) {
     const game = await this.gameRepository.get(gameId);
   
     if (!game || !game.inProgress) {
@@ -40,8 +42,10 @@ export class UpdateUserGameCache {
   
     await this.updateUsers(users);
   
-    // Send an sns message that the cache has been updated
-    await this.sns.sendMessage(Config.resourcePrefix() + 'user-game-cache-updated', 'user-game-cache-updated', game.gameId);
+    await this.sns.userGameCacheUpdated({
+      gameId: game.gameId,
+      newTurn: subject === SNS_MESSAGES.TURN_SUBMITTED
+    });
   }
   
   private async updateUsers(users: User[]): Promise<void> {
