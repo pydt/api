@@ -440,7 +440,8 @@ export class GameController {
         throw new HttpResponseError(400, 'You must be the game creator to kick a user!');
       }
 
-      const diffTime = new Date().getTime() - game.updatedAt.getTime();
+      const lastTurnTime = (game.lastTurnEndDate || game.updatedAt).getTime();
+      const diffTime = new Date().getTime() - lastTurnTime;
 
       if (diffTime < 1000 * 60 * 60 * 24) {
         throw new HttpResponseError(404, `You cannot kick a user if they haven't had 24 hours to play their turn.`);
