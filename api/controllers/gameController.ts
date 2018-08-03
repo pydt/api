@@ -197,11 +197,11 @@ export class GameController {
       throw new HttpResponseError(400, `You didn't create this game!`);
     }
 
-    if (game.slots < game.players.length) {
+    if (body.slots < game.players.length) {
       throw new HttpResponseError(400, `You can't change the number of slots to less than the current number of players!`);
     }
 
-    if (game.humans < game.players.length) {
+    if (body.humans < game.players.length) {
       throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of players!`);
     }
 
