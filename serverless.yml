@@ -51,6 +51,7 @@ custom:
     forceInclude:
       - reflect-metadata
       - source-map-support
+      - pydt-shared
   packExternalModulesMaxBuffer: 512000
   domain:
     dev: api-dev.playyourdamnturn.com

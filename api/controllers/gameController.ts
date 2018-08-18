@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
+import { CIV6_DLCS } from 'pydt-shared/dist/src/civdefs.service';
 
 import { Config } from '../../lib/config';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../lib/discourseProvider';
@@ -632,11 +633,7 @@ export class GameController {
 
     if (parsed.MOD_BLOCK_1) {
       for (const mod of parsed.MOD_BLOCK_1.data) {
-        // Official DLC starts with a localization string, assuming non-official doesn't?
-        const modTitle = mod.MOD_TITLE.data;
-
-        // Ignore scenarios so we don't have to open that can of worms...
-        if (modTitle.indexOf(`{"LOC_`) === 0 && modTitle.indexOf('_SCENARIO_') < 0) {
+        if (CIV6_DLCS.some(x => x.id === mod.MOD_ID.data)) {
           parsedDlc.push(mod.MOD_ID.data);
         }
       }
