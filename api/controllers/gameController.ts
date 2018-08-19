@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
-import { CIV6_DLCS } from 'pydt-shared/dist/src/civdefs.service';
+import { CIV6_DLCS, RANDOM_CIV } from 'pydt-shared/dist/src/civdefs.service';
 
 import { Config } from '../../lib/config';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../lib/discourseProvider';
@@ -59,8 +59,12 @@ export class GameController {
       throw new HttpResponseError(400, 'Game in Progress');
     }
 
-    if (body.playerCiv !== 'LEADER_RANDOM' && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
+    if (body.playerCiv !== RANDOM_CIV.leaderKey && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
       throw new HttpResponseError(400, 'Civ already in Game');
+    }
+
+    if (game.randomOnly && body.playerCiv !== RANDOM_CIV.leaderKey) {
+      throw new HttpResponseError(400, 'Only random civs allowed!');
     }
 
     const player = _.find(game.players, p => {
@@ -98,6 +102,10 @@ export class GameController {
       );
     }
 
+    if (body.randomOnly && body.player1Civ !== RANDOM_CIV.leaderKey) {
+      throw new HttpResponseError(400, 'Hey, you made the rules, random civs only!');
+    }
+
     const newGame: Game = {
       gameId: uuid(),
       createdBySteamId: user.steamId,
@@ -113,7 +121,8 @@ export class GameController {
       humans: body.humans,
       gameSpeed: body.gameSpeed,
       mapFile: body.mapFile,
-      mapSize: body.mapSize
+      mapSize: body.mapSize,
+      randomOnly: body.randomOnly
     };
 
     const topic = await this.discourse.addGameTopic(newGame);
@@ -215,6 +224,11 @@ export class GameController {
       game.gameSpeed = body.gameSpeed;
       game.mapFile = body.mapFile;
       game.mapSize = body.mapSize;
+      game.randomOnly = body.randomOnly;
+
+      if (game.randomOnly) {
+        game.players.forEach(x => x.civType = RANDOM_CIV.leaderKey);
+      }
     }
 
     game.allowJoinAfterStart = body.allowJoinAfterStart;
@@ -255,7 +269,11 @@ export class GameController {
         throw new HttpResponseError(400, 'Slot already assigned.');
       }
     } else {
-      if (body.playerCiv !== 'LEADER_RANDOM' && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
+      if (game.randomOnly && body.playerCiv !== RANDOM_CIV.leaderKey) {
+        throw new HttpResponseError(400, 'You can only join this game as a random civ!');
+      }
+
+      if (body.playerCiv !== RANDOM_CIV.leaderKey && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
         throw new HttpResponseError(400, 'Civ already in Game');
       }
     }
@@ -671,7 +689,7 @@ export class GameController {
         const actualCiv = parsedCiv.LEADER_NAME.data;
         const expectedCiv = game.players[i].civType;
 
-        if (expectedCiv === 'LEADER_RANDOM') {
+        if (expectedCiv === RANDOM_CIV.leaderKey) {
           game.players[i].civType = actualCiv;
         } else if (actualCiv !== expectedCiv) {
           throw new HttpResponseError(400, `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);

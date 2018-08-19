@@ -11,6 +11,7 @@ export interface BaseGame {
   gameSpeed: string;
   mapFile?: string;
   mapSize: string;
+  randomOnly: boolean;
   allowJoinAfterStart?: boolean;
 }
 
