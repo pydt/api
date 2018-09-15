@@ -1,26 +1,22 @@
 import { Container, inject, interfaces } from 'inversify';
-import { autoProvide, makeFluentProvideDecorator, makeProvideDecorator } from 'inversify-binding-decorators';
+import { buildProviderModule, fluentProvide, provide } from 'inversify-binding-decorators';
 
 const iocContainer = new Container();
-
-const provide = makeProvideDecorator(iocContainer);
-const fluentProvider = makeFluentProvideDecorator(iocContainer);
-
-const provideNamed = (
-  identifier: string | symbol | interfaces.Newable<any> | interfaces.Abstract<any>,
-  name: string,
-) => {
-  return fluentProvider(identifier)
-    .whenTargetNamed(name)
-    .done();
-};
+let initialized = false;
 
 const provideSingleton = (
   identifier: string | symbol | interfaces.Newable<any> | interfaces.Abstract<any>,
 ) => {
-  return fluentProvider(identifier)
+  return fluentProvide(identifier)
     .inSingletonScope()
     .done();
 };
 
-export { iocContainer, autoProvide, provide, provideSingleton, provideNamed, inject };
+function initContainer() {
+  if (!initialized) {
+    iocContainer.load(buildProviderModule());
+    initialized = true;
+  }
+}
+
+export { iocContainer, initContainer, provide, provideSingleton, inject };

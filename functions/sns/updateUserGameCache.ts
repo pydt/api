@@ -1,15 +1,14 @@
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
-import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
-import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
-import { loggingHandler } from '../../lib/logging';
-import { Config } from '../../lib/config';
-import { User, Game } from '../../lib/models';
-import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
-import { SNS_MESSAGES } from '../../lib/models/sns';
 import * as _ from 'lodash';
+import { Config } from '../../lib/config';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
+import { inject } from '../../lib/ioc';
+import { loggingHandler } from '../../lib/logging';
+import { Game, User } from '../../lib/models';
+import { SNS_MESSAGES } from '../../lib/models/sns';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
+import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uugc = iocContainer.resolve(UpdateUserGameCache);

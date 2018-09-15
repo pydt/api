@@ -57,7 +57,6 @@
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-unused-variable": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
@@ -99,7 +98,6 @@
         "variable-declaration": "space"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "use-isnan": true,
     "variable-name": [

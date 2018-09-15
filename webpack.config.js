@@ -8,9 +8,10 @@ var _ = require('lodash');
 module.exports = {  
   entry: slsw.lib.entries,
   target: 'node',
+  mode: 'none',
   devtool: 'source-map',
   module: {
-    loaders: [
+    rules: [
       { test: /\.ts(x?)$/, loader: 'ts-loader' },
       { test: /\.html$/, loader: 'html-loader' }
     ],

@@ -1,13 +1,13 @@
-import { Config } from './config';
 import { Container } from 'inversify';
-import { iocContainer } from './ioc';
 import * as Rollbar from 'rollbar';
+import { Config } from './config';
+import { initContainer, iocContainer } from './ioc';
 
 let rollbar: Rollbar;
 
 function log(level: string, message, error?) {
   // tslint:disable-next-line
-  console.log(message + ': ' + (error && error.stack ? error.stack : JSON.stringify(error)));
+  console.log(`${message}${error ? (': ' + (error && error.stack ? error.stack : JSON.stringify(error))) : ''}`);
 
   if (rollbar) {
     switch (level) {
@@ -57,22 +57,23 @@ if (!Config.runningLocal()) {
 }
 
 export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<any>) {
-  return async (event, context, callback) => {
+  return async (event, context) => {
+    initContainer();
+
     context.callbackWaitsForEmptyEventLoop = false;
 
     try {
-      const resp = await handler(event, context, iocContainer);
-      callback(null, resp);
+      return await handler(event, context, iocContainer);
     } catch (err) {
       pydtLogger.error('Handler threw unhandled exception...', err);
       const exposedError = new Error('Service Unavailable');
 
       if (rollbar) {
         (rollbar as any).wait(() => {
-          callback(exposedError);
+          throw exposedError;
         });
       } else {
-        callback(exposedError);
+        throw exposedError;
       }
     }
   }

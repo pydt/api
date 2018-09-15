@@ -1,12 +1,11 @@
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
-import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
-import { loggingHandler } from '../../lib/logging';
-import { User, Game } from '../../lib/models/index';
-import { Config } from '../../lib/config';
-import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
+import { Config } from '../../lib/config';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { inject } from '../../lib/ioc';
+import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
+import { loggingHandler } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {

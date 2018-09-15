@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.23.0"
+frameworkVersion: "1.31.0"
 
 plugins:
   - serverless-domain-manager
@@ -24,7 +24,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: dev
   iamRoleStatements: # We should tighten this up...
     - Effect: Allow
@@ -47,12 +47,13 @@ custom:
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
   DEFAULT_LAMBDA_MEMORY: 1024
-  webpackIncludeModules:
-    forceInclude:
-      - reflect-metadata
-      - source-map-support
-      - pydt-shared
-  packExternalModulesMaxBuffer: 512000
+  webpack:
+    #packExternalModulesMaxBuffer: 512000
+    includeModules:
+      forceInclude:
+        - reflect-metadata
+        - source-map-support
+        - pydt-shared
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com

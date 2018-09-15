@@ -1,12 +1,12 @@
-import { User, Game, GamePlayer } from '../../lib/models';
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameRepository';
-import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../../lib/dynamoose/gameTurnRepository';
-import { IGameTurnService, GAME_TURN_SERVICE_SYMBOL } from '../../lib/services/gameTurnService';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
-import { loggingHandler, pydtLogger } from '../../lib/logging';
-import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
 import * as _ from 'lodash';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
+import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
+import { inject } from '../../lib/ioc';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
+import { Game, User } from '../../lib/models';
+import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const rus = iocContainer.resolve(RecalculateUserStats);
