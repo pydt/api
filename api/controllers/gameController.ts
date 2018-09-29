@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
-import { CIV6_DLCS, RANDOM_CIV } from 'pydt-shared/dist/src/civdefs.service';
+import { RANDOM_CIV } from 'pydt-shared/dist/src/civdefs.service';
 
 import { Config } from '../../lib/config';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../lib/discourseProvider';
@@ -30,6 +30,7 @@ import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/g
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
+import { ActorType } from '../../lib/saveHandlers/saveHandler';
 
 @Route('game')
 @Tags('game')
@@ -641,23 +642,13 @@ export class GameController {
       pydtLogger.info('unzip failed :(', e);
     }
 
-    const wrapper = this.gameTurnService.parseSaveFile(buffer, game);
-    const parsed = wrapper.parsed;
+    const saveHandler = this.gameTurnService.parseSaveFile(buffer, game);
 
-    const numCivs = parsed.CIVS.length;
-    const parsedRound = parsed.GAME_TURN.data;
+    const numCivs = saveHandler.civData.length;
+    const parsedRound = saveHandler.gameTurn;
     const gameDlc = game.dlc || [];
-    const parsedDlc = [];
 
-    if (parsed.MOD_BLOCK_1) {
-      for (const mod of parsed.MOD_BLOCK_1.data) {
-        if (CIV6_DLCS.some(x => x.id === mod.MOD_ID.data)) {
-          parsedDlc.push(mod.MOD_ID.data);
-        }
-      }
-    }
-
-    if (gameDlc.length !== parsedDlc.length || _.difference(gameDlc, parsedDlc).length) {
+    if (gameDlc.length !== saveHandler.parsedDlcs.length || _.difference(gameDlc, saveHandler.parsedDlcs).length) {
       throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
     }
 
@@ -665,28 +656,28 @@ export class GameController {
       throw new HttpResponseError(400, `Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
     }
 
-    if (game.gameSpeed && game.gameSpeed !== parsed.GAME_SPEED.data) {
+    if (game.gameSpeed && game.gameSpeed !== saveHandler.gameSpeed) {
       throw new HttpResponseError(
         400,
-        `Invalid game speed in save file!  (actual: ${parsed.GAME_SPEED.data}, expected: ${game.gameSpeed})`
+        `Invalid game speed in save file!  (actual: ${saveHandler.gameSpeed}, expected: ${game.gameSpeed})`
       );
     }
 
-    if (game.mapFile && parsed.MAP_FILE.data.indexOf(game.mapFile) < 0) {
-      throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${parsed.MAP_FILE.data}, expected: ${game.mapFile})`);
+    if (game.mapFile && saveHandler.mapFile.indexOf(game.mapFile) < 0) {
+      throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`);
     }
 
-    if (game.mapSize && game.mapSize !== parsed.MAP_SIZE.data) {
-      throw new HttpResponseError(400, `Invalid map size in save file! (actual: ${parsed.MAP_SIZE.data}, expected: ${game.mapSize})`);
+    if (game.mapSize && game.mapSize !== saveHandler.mapSize) {
+      throw new HttpResponseError(400, `Invalid map size in save file! (actual: ${saveHandler.mapSize}, expected: ${game.mapSize})`);
     }
 
     const newDefeatedPlayers = [];
 
-    for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
-      const parsedCiv = parsed.CIVS[i];
+    for (let i = 0; i < saveHandler.civData.length; i++) {
+      const civ = saveHandler.civData[i];
 
       if (game.players[i]) {
-        const actualCiv = parsedCiv.LEADER_NAME.data;
+        const actualCiv = civ.leaderName;
         const expectedCiv = game.players[i].civType;
 
         if (expectedCiv === RANDOM_CIV.leaderKey) {
@@ -696,27 +687,27 @@ export class GameController {
         }
 
         if (playerIsHuman(game.players[i])) {
-          if (parsedCiv.ACTOR_AI_HUMAN === 1) {
+          if (civ.type === ActorType.AI) {
             throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
           }
 
-          if (parsedCiv.PLAYER_ALIVE && !parsedCiv.PLAYER_ALIVE.data) {
+          if (!civ.isAlive) {
             // Player has been defeated!
             game.players[i].hasSurrendered = true;
             newDefeatedPlayers.push(game.players[i]);
           }
         } else {
-          if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+          if (civ.type === ActorType.HUMAN) {
             throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
           }
         }
       } else {
-        if (parsedCiv.ACTOR_AI_HUMAN === 3) {
+        if (civ.type === ActorType.HUMAN) {
           throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
         }
 
         game.players[i] = {
-          civType: parsedCiv.LEADER_NAME.data
+          civType: civ.leaderName
         } as GamePlayer;
       }
     }
@@ -734,9 +725,7 @@ export class GameController {
       expectedRound++;
     }
 
-    const isCurrentTurn = parsed.CIVS[nextPlayerIndex].IS_CURRENT_TURN;
-
-    if (!isCurrentTurn || !isCurrentTurn.data) {
+    if (!saveHandler.civData[nextPlayerIndex].isCurrentTurn) {
       throw new HttpResponseError(
         400,
         `Incorrect player turn in save file!  This probably means it is still your turn and you have some more moves to make!`
@@ -750,7 +739,7 @@ export class GameController {
     game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
     game.round = expectedRound;
 
-    await this.gameTurnService.updateSaveFileForGameState(game, users, wrapper);
+    await this.gameTurnService.updateSaveFileForGameState(game, users, saveHandler);
     await this.gameTurnService.moveToNextTurn(game, gameTurn, user);
 
     if (newDefeatedPlayers.length) {

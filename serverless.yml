@@ -17,7 +17,6 @@ frameworkVersion: "1.31.0"
 
 plugins:
   - serverless-domain-manager
-  - serverless-mocha-plugin
   - export-api-url
   - serverless-webpack
   - serverless-offline

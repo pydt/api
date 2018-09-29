@@ -1,18 +1,19 @@
-import { Game, GameTurn, User, GamePlayer, playerIsHuman } from '../models';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../dynamoose/gameRepository';
-import { Config } from '../config';
-import { IGameTurnRepository, GAME_TURN_REPOSITORY_SYMBOL } from '../dynamoose/gameTurnRepository';
-import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
-import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
-import { pydtLogger } from '../logging';
-import { inject, provideSingleton } from '../ioc';
-import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
-import * as _ from 'lodash';
-import * as civ6 from 'civ6-save-parser';
-import * as zlib from 'zlib';
 import * as pwdgen from 'generate-password';
+import * as _ from 'lodash';
+import * as zlib from 'zlib';
 import { HttpResponseError } from '../../api/framework';
+import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { Config } from '../config';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../dynamoose/gameRepository';
+import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../dynamoose/gameTurnRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
+import { inject, provideSingleton } from '../ioc';
+import { pydtLogger } from '../logging';
+import { Game, GamePlayer, GameTurn, playerIsHuman, User } from '../models';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
+import { SaveHandler, ActorType } from '../saveHandlers/saveHandler';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
+import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -20,8 +21,8 @@ export interface IGameTurnService {
   createS3SaveKey(gameId: string, turn: number): string;
   getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<any>;
   updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean): void;
-  updateSaveFileForGameState(game: Game, users?: User[], wrapper?): Promise<any>;
-  parseSaveFile(buffer, game: Game);
+  updateSaveFileForGameState(game: Game, users: User[], handler: SaveHandler): Promise<any>;
+  parseSaveFile(buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
   defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]): Promise<void>;
 }
@@ -173,25 +174,21 @@ export class GameTurnService implements IGameTurnService {
     }
   }
 
-  public updateSaveFileForGameState(game, users, wrapper) {
-    const parsed = wrapper.parsed;
-
-    for (let i = parsed.CIVS.length - 1; i >= 0; i--) {
-      const parsedCiv = parsed.CIVS[i];
+  public updateSaveFileForGameState(game, users, handler: SaveHandler) {
+    for (let i = 0; i < handler.civData.length; i++) {
+      const civ = handler.civData[i];
 
       if (game.players[i]) {
         const player = game.players[i];
 
         if (!playerIsHuman(player)) {
           // Make sure surrendered players are marked as AI
-          if (parsedCiv.ACTOR_AI_HUMAN.data === 3) {
-            civ6.modifyChunk(wrapper.chunks, parsedCiv.ACTOR_AI_HUMAN, 1);
+          if (civ.type === ActorType.HUMAN) {
+            civ.type = ActorType.AI;
           }
         } else {
-          let slotHeaderVal = parsedCiv.SLOT_HEADER.data;
-
-          if (parsedCiv.ACTOR_AI_HUMAN.data === 1) {
-            civ6.modifyChunk(wrapper.chunks, parsedCiv.ACTOR_AI_HUMAN, 3);
+          if (civ.type === ActorType.AI) {
+            civ.type = ActorType.HUMAN;
           }
 
           if (users) {
@@ -200,53 +197,26 @@ export class GameTurnService implements IGameTurnService {
             });
 
             // Make sure player names are correct
-            if (parsedCiv.PLAYER_NAME) {
-              if (parsedCiv.PLAYER_NAME.data !== user.displayName) {
-                civ6.modifyChunk(wrapper.chunks, parsedCiv.PLAYER_NAME, user.displayName);
-              }
-            } else {
-              civ6.addChunk(
-                wrapper.chunks,
-                parsedCiv.LEADER_NAME,
-                civ6.MARKERS.ACTOR_DATA.PLAYER_NAME,
-                civ6.DATA_TYPES.STRING,
-                user.displayName
-              );
-
-              slotHeaderVal++;
+            if (civ.playerName !== user.displayName) {
+              civ.playerName = user.displayName;
             }
           }
 
           if (player.steamId === game.currentPlayerSteamId) {
             // Delete any password for the active player
-            if (parsedCiv.PLAYER_PASSWORD) {
-              civ6.deleteChunk(wrapper.chunks, parsedCiv.PLAYER_PASSWORD);
-              slotHeaderVal--;
+            if (civ.password) {
+              civ.password = null;
             }
           } else {
             // Make sure all other players have a random password
-            if (!parsedCiv.PLAYER_PASSWORD) {
-              civ6.addChunk(
-                wrapper.chunks,
-                parsedCiv.LEADER_NAME,
-                civ6.MARKERS.ACTOR_DATA.PLAYER_PASSWORD,
-                civ6.DATA_TYPES.STRING,
-                pwdgen.generate({})
-              );
-
-              slotHeaderVal++;
-            } else {
-              civ6.modifyChunk(wrapper.chunks, parsedCiv.PLAYER_PASSWORD, pwdgen.generate({}));
-            }
+            civ.password = pwdgen.generate({});
           }
-
-          civ6.modifyChunk(wrapper.chunks, parsedCiv.SLOT_HEADER, slotHeaderVal);
         }
       }
     }
 
     const saveKey = this.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
-    const uncompressedBody = Buffer.concat(wrapper.chunks);
+    const uncompressedBody = handler.getData();
 
     return Promise.all([
       this.s3.putObject({
@@ -260,9 +230,9 @@ export class GameTurnService implements IGameTurnService {
     ]);
   }
 
-  public parseSaveFile(buffer, game: Game) {
+  public parseSaveFile(buffer, game: Game): SaveHandler {
     try {
-      return civ6.parse(buffer);
+      return SaveHandlerFactory.getHandler(buffer, game);
     } catch (e) {
       // TODO: Should probably be a non-HTTP specific error type
       throw new HttpResponseError(400, `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`);
