@@ -1,5 +1,6 @@
 import * as pwdgen from 'generate-password';
 import * as _ from 'lodash';
+import { CIV6_GAME } from 'pydt-shared';
 import * as zlib from 'zlib';
 import { HttpResponseError } from '../../api/framework';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
@@ -11,9 +12,9 @@ import { inject, provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
 import { Game, GamePlayer, GameTurn, playerIsHuman, User } from '../models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
-import { SaveHandler, ActorType } from '../saveHandlers/saveHandler';
-import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
+import { ActorType, SaveHandler } from '../saveHandlers/saveHandler';
 import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -150,6 +151,11 @@ export class GameTurnService implements IGameTurnService {
         return p.steamId === user.steamId;
       });
 
+      if (!user.turnsByGameType) {
+        user.turnsByGameType = {};
+        user.turnsByGameType[CIV6_GAME.id] = user.turnsPlayed || 0;
+      }
+
       if (gameTurn.skipped) {
         player.turnsSkipped = (player.turnsSkipped || 0) + 1 * undoInc;
         user.turnsSkipped = (user.turnsSkipped || 0) + 1 * undoInc;
@@ -171,24 +177,24 @@ export class GameTurnService implements IGameTurnService {
         user.slowTurns = (user.slowTurns || 0) + 1 * undoInc;
         player.slowTurns = (player.slowTurns || 0) + 1 * undoInc;
       }
+
+      user.turnsByGameType[game.gameType] = (user.turnsByGameType[game.gameType] || 0) + 1 * undoInc;
     }
   }
 
   public updateSaveFileForGameState(game, users, handler: SaveHandler) {
     for (let i = 0; i < handler.civData.length; i++) {
-      const civ = handler.civData[i];
-
       if (game.players[i]) {
         const player = game.players[i];
 
         if (!playerIsHuman(player)) {
           // Make sure surrendered players are marked as AI
-          if (civ.type === ActorType.HUMAN) {
-            civ.type = ActorType.AI;
+          if (handler.civData[i].type === ActorType.HUMAN) {
+            handler.civData[i].type = ActorType.AI;
           }
         } else {
-          if (civ.type === ActorType.AI) {
-            civ.type = ActorType.HUMAN;
+          if (handler.civData[i].type === ActorType.AI) {
+            handler.civData[i].type = ActorType.HUMAN;
           }
 
           if (users) {
@@ -197,19 +203,19 @@ export class GameTurnService implements IGameTurnService {
             });
 
             // Make sure player names are correct
-            if (civ.playerName !== user.displayName) {
-              civ.playerName = user.displayName;
+            if (handler.civData[i].playerName !== user.displayName) {
+              handler.civData[i].playerName = user.displayName;
             }
           }
 
           if (player.steamId === game.currentPlayerSteamId) {
             // Delete any password for the active player
-            if (civ.password) {
-              civ.password = null;
+            if (handler.civData[i].password) {
+              handler.civData[i].password = null;
             }
           } else {
             // Make sure all other players have a random password
-            civ.password = pwdgen.generate({});
+            handler.civData[i].password = pwdgen.generate({});
           }
         }
       }

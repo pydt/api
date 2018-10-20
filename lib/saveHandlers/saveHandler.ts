@@ -12,7 +12,8 @@ export interface SaveHandler {
 
 export enum ActorType {
   HUMAN,
-  AI
+  AI,
+  DEAD
 }
 
 export interface CivData {
@@ -20,6 +21,5 @@ export interface CivData {
   playerName: string;
   password: string;
   leaderName: string;
-  isAlive: boolean;
   isCurrentTurn: boolean;
 }

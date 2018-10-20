@@ -1,10 +1,9 @@
 import * as bcrypt from 'bcryptjs';
 import * as _ from 'lodash';
+import { RANDOM_CIV } from 'pydt-shared';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
-import { RANDOM_CIV } from 'pydt-shared/dist/src/civdefs.service';
-
 import { Config } from '../../lib/config';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../lib/discourseProvider';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
@@ -14,23 +13,15 @@ import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../lib/ioc';
 import { pydtLogger } from '../../lib/logging';
 import {
-  BaseGame,
-  Game,
-  GamePlayer,
-  GameTurn,
-  getCurrentPlayerIndex,
-  getHumans,
-  getNextPlayerIndex,
-  getPreviousPlayerIndex,
-  playerIsHuman,
+  BaseGame, Game, GamePlayer, GameTurn, getCurrentPlayerIndex, getHumans, getNextPlayerIndex, getPreviousPlayerIndex, playerIsHuman
 } from '../../lib/models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
+import { ActorType } from '../../lib/saveHandlers/saveHandler';
 import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
-import { ActorType } from '../../lib/saveHandlers/saveHandler';
 
 @Route('game')
 @Tags('game')
@@ -120,6 +111,7 @@ export class GameController {
       description: body.description,
       slots: body.slots,
       humans: body.humans,
+      gameType: body.gameType,
       gameSpeed: body.gameSpeed,
       mapFile: body.mapFile,
       mapSize: body.mapSize,
@@ -687,23 +679,21 @@ export class GameController {
         }
 
         if (playerIsHuman(game.players[i])) {
-          if (civ.type === ActorType.AI) {
-            throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
-          }
-
-          if (!civ.isAlive) {
+          if (civ.type === ActorType.DEAD) {
             // Player has been defeated!
             game.players[i].hasSurrendered = true;
             newDefeatedPlayers.push(game.players[i]);
+          } else if (civ.type === ActorType.AI) {
+            throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
           }
         } else {
           if (civ.type === ActorType.HUMAN) {
-            throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
+            throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
           }
         }
       } else {
         if (civ.type === ActorType.HUMAN) {
-          throw new HttpResponseError(400, `Expected civ ${i} to be AI!`);
+          throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
         }
 
         game.players[i] = {

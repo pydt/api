@@ -1,6 +1,6 @@
-import { SaveHandler, CivData, ActorType } from './saveHandler';
 import * as civ6 from 'civ6-save-parser';
-import { CIV6_DLCS } from 'pydt-shared/dist/src/civdefs.service';
+import { CIV6_DLCS } from 'pydt-shared';
+import { ActorType, CivData, SaveHandler } from './saveHandler';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },
@@ -12,10 +12,18 @@ export class Civ6CivData implements CivData {
   }
 
   get type() {
+    if (this.parsedCiv.PLAYER_ALIVE && !this.parsedCiv.PLAYER_ALIVE.data) {
+      return ActorType.DEAD;
+    }
+
     return ACTOR_TYPE_MAP.find(x => x.intVal === this.parsedCiv.ACTOR_AI_HUMAN.data).actorType;
   }
 
   set type(value: ActorType) {
+    if (value === ActorType.DEAD) {
+      throw new Error('Setting DEAD not supported');
+    }
+
     const intVal = ACTOR_TYPE_MAP.find(x => x.actorType === value).intVal;
     this.setValue('ACTOR_AI_HUMAN', civ6.DATA_TYPES.INTEGER, intVal);
   }
@@ -26,10 +34,6 @@ export class Civ6CivData implements CivData {
 
   get leaderName() {
     return this.parsedCiv.LEADER_NAME.data;
-  }
-
-  get isAlive() {
-    return this.parsedCiv.PLAYER_ALIVE && !!this.parsedCiv.PLAYER_ALIVE.data;
   }
 
   get isCurrentTurn() {

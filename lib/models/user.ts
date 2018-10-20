@@ -15,4 +15,5 @@ export interface User extends HasSteamId {
   timeTaken: number;
   fastTurns: number;
   slowTurns: number;
+  turnsByGameType: { [gameType: string]: number; };
 }

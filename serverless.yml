@@ -53,6 +53,8 @@ custom:
         - reflect-metadata
         - source-map-support
         - pydt-shared
+        - rxjs-compat
+        - "@angular/animations"
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com

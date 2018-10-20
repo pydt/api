@@ -1,16 +1,14 @@
 import { GamePlayer } from './gamePlayer';
 import { Entity } from './shared';
+import { SharedGame } from 'pydt-shared';
 import * as _ from 'lodash';
 
-export interface BaseGame {
+export interface BaseGame extends SharedGame {
   displayName: string;
   description?: string;
   dlc: string[];
   slots: number;
   humans: number;
-  gameSpeed: string;
-  mapFile?: string;
-  mapSize: string;
   randomOnly?: boolean;
   allowJoinAfterStart?: boolean;
 }

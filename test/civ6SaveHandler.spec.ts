@@ -19,7 +19,6 @@ describe('Civ6SaveHandler', () => {
     expect(handler.parsedDlcs[0]).to.eq('02A8BDDE-67EA-4D38-9540-26E685E3156E');
 
     expect(handler.civData.length).to.eq(4);
-    expect(handler.civData[0].isAlive).to.eq(true);
     expect(handler.civData[0].isCurrentTurn).to.eq(true);
     expect(handler.civData[0].leaderName).to.eq('LEADER_CATHERINE_DE_MEDICI');
     expect(handler.civData[0].password).to.be.undefined;
@@ -47,7 +46,6 @@ describe('Civ6SaveHandler', () => {
     expect(handler.parsedDlcs[0]).to.eq('02A8BDDE-67EA-4D38-9540-26E685E3156E');
 
     expect(handler.civData.length).to.eq(4);
-    expect(handler.civData[0].isAlive).to.eq(true);
     expect(handler.civData[0].isCurrentTurn).to.eq(true);
     expect(handler.civData[0].leaderName).to.eq('LEADER_CATHERINE_DE_MEDICI');
     expect(handler.civData[0].password).to.eq('password');
