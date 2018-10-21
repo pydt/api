@@ -134,7 +134,9 @@ gameRepository.getByDiscourseTopicId = async (topicId: number) => {
 };
 
 function setDefaults(game: Game) {
-  game.gameType = game.gameType || CIV6_GAME.id;
+  if (game) {
+    game.gameType = game.gameType || CIV6_GAME.id;
+  }
 
   return game;
 }
