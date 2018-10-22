@@ -479,6 +479,7 @@ export class GameController {
     }
 
     player.hasSurrendered = true;
+    player.surrenderDate = new Date();
 
     // The game is completed if every player is AI
     game.completed = _.every(game.players, p => {
@@ -682,6 +683,7 @@ export class GameController {
           if (civ.type === ActorType.DEAD) {
             // Player has been defeated!
             game.players[i].hasSurrendered = true;
+            game.players[i].surrenderDate = new Date();
             newDefeatedPlayers.push(game.players[i]);
           } else if (civ.type === ActorType.AI) {
             throw new HttpResponseError(400, `Expected civ ${i} to be human!`);

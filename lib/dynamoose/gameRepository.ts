@@ -47,6 +47,7 @@ const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
       steamId: String,
       civType: String,
       hasSurrendered: Boolean,
+      surrenderDate: Date,
       turnsPlayed: {
         type: Number,
         default: 0
