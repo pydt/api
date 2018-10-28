@@ -686,7 +686,9 @@ export class GameController {
             game.players[i].surrenderDate = new Date();
             newDefeatedPlayers.push(game.players[i]);
           } else if (civ.type === ActorType.AI) {
-            throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
+            // This is OK, type will be reset in updateSaveFileForGameState, and may be wrong
+            // because of skipped turns!
+            // throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
           }
         } else {
           if (civ.type === ActorType.HUMAN) {

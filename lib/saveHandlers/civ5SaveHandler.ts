@@ -88,6 +88,11 @@ export class Civ5SaveHandler implements SaveHandler {
     return result;
   }
 
+  setCurrentTurnIndex(newIndex: number) {
+    this.rawSave = civ5.changePlayer(this.rawSave, newIndex);
+    this.reparse();
+  }
+
   getData(): Buffer {
     return this.rawSave;
   }

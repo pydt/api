@@ -7,6 +7,7 @@ export interface SaveHandler {
   mapFile: string;
   mapSize: string;
 
+  setCurrentTurnIndex(newIndex: number);
   getData(): Buffer;
 }
 

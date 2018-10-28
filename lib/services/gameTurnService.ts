@@ -10,11 +10,12 @@ import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../dynamoose/g
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
 import { inject, provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
-import { Game, GamePlayer, GameTurn, playerIsHuman, User } from '../models';
+import { Game, GamePlayer, GameTurn, getCurrentPlayerIndex, getNextPlayerIndex, playerIsHuman, User } from '../models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
 import { ActorType, SaveHandler } from '../saveHandlers/saveHandler';
 import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
+import { IUserService, USER_SERVICE_SYMBOL } from './userService';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -26,6 +27,7 @@ export interface IGameTurnService {
   parseSaveFile(buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
   defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]): Promise<void>;
+  skipTurn(game: Game, turn: GameTurn): Promise<void>;
 }
 
 @provideSingleton(GAME_TURN_SERVICE_SYMBOL)
@@ -34,6 +36,7 @@ export class GameTurnService implements IGameTurnService {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
+    @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
@@ -182,18 +185,18 @@ export class GameTurnService implements IGameTurnService {
     }
   }
 
-  public updateSaveFileForGameState(game, users, handler: SaveHandler) {
+  public updateSaveFileForGameState(game, users, handler: SaveHandler, setPlayerType = true) {
     for (let i = 0; i < handler.civData.length; i++) {
       if (game.players[i]) {
         const player = game.players[i];
 
         if (!playerIsHuman(player)) {
           // Make sure surrendered players are marked as AI
-          if (handler.civData[i].type === ActorType.HUMAN) {
+          if (setPlayerType && handler.civData[i].type === ActorType.HUMAN) {
             handler.civData[i].type = ActorType.AI;
           }
         } else {
-          if (handler.civData[i].type === ActorType.AI) {
+          if (setPlayerType && handler.civData[i].type === ActorType.AI) {
             handler.civData[i].type = ActorType.HUMAN;
           }
 
@@ -242,6 +245,53 @@ export class GameTurnService implements IGameTurnService {
     } catch (e) {
       // TODO: Should probably be a non-HTTP specific error type
       throw new HttpResponseError(400, `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`);
+    }
+  }
+
+  public async skipTurn(game: Game, turn: GameTurn) {
+    const data = await this.s3.getObject({
+      Bucket: Config.resourcePrefix() + 'saves',
+      Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+    });
+
+    if (!data && !data.Body) {
+      throw new Error('File doesn\'t exist?');
+    }
+
+    game.gameTurnRangeKey++;
+    turn.skipped = true;
+
+    const users = await this.userService.getUsersForGame(game);
+    const oldUser = users.find(x => x.steamId === game.currentPlayerSteamId);
+
+    const skippedPlayerIndex = getCurrentPlayerIndex(game);
+    const nextPlayerIndex = getNextPlayerIndex(game);
+
+    if (nextPlayerIndex <= skippedPlayerIndex) {
+      game.round++;
+    }
+
+    game.currentPlayerSteamId = game.players[nextPlayerIndex].steamId;
+
+    const saveHandler = this.parseSaveFile(data.Body, game);
+    saveHandler.civData[skippedPlayerIndex].type = ActorType.AI;
+    saveHandler.setCurrentTurnIndex(nextPlayerIndex);
+    this.updateSaveFileForGameState(game, users, saveHandler, false);
+
+    await this.s3.putObject({
+      Bucket: Config.resourcePrefix() + 'saves',
+      Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+    }, saveHandler.getData());
+
+    await this.moveToNextTurn(game, turn, oldUser);
+
+    if (oldUser.emailAddress) {
+      await this.ses.sendEmail(
+        'You have been skipped in ' + game.displayName + '!',
+        `You've been skipped!`,
+        `The amount of time alloted for you to play your turn has expired.  Try harder next time!`,
+        oldUser.emailAddress
+      );
     }
   }
 }

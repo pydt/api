@@ -34,6 +34,7 @@ describe('Civ5SaveHandler', () => {
     civ.password = 'password';
     civ.playerName = 'playerName';
     civ.type = ActorType.AI;
+    handler.setCurrentTurnIndex(2);
 
     handler = new Civ5SaveHandler(handler.getData());
 
@@ -46,7 +47,7 @@ describe('Civ5SaveHandler', () => {
     //expect(handler.parsedDlcs[0]).to.eq('Mongolia');
 
     expect(handler.civData.length).to.eq(4);
-    expect(handler.civData[1].isCurrentTurn).to.eq(true);
+    expect(handler.civData[2].isCurrentTurn).to.eq(true);
     expect(handler.civData[0].leaderName).to.eq('LEADER_HARALD');
     expect(handler.civData[0].password).to.eq('password');
     expect(handler.civData[0].playerName).to.eq('playerName');

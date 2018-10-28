@@ -121,6 +121,10 @@ export class Civ6SaveHandler implements SaveHandler {
     return result;
   }
 
+  setCurrentTurnIndex(newIndex: number) {
+    // Not implemented...
+  }
+
   getData() {
     return Buffer.concat(this.wrapper.chunks);
   }
