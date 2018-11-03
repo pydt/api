@@ -6,6 +6,7 @@ import { iocContainer } from '../ioc';
 export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
 export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> {
+  getTurnsForGame(gameId: string, startTurn: number, endTurn: number): Promise<GameTurn[]>;
   getPlayerTurnsForGame(gameId: string, steamId: string): Promise<GameTurn[]>;
 }
 
@@ -39,6 +40,10 @@ const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix(
   endDate: Date,
   skipped: Boolean
 }) as InternalGameTurnRepository;
+
+gameTurnRepository.getTurnsForGame = (gameId: string, startTurn, endTurn) => {
+  return gameTurnRepository.query('gameId').eq(gameId).where('turn').between(startTurn, endTurn).exec();
+};
 
 gameTurnRepository.getPlayerTurnsForGame = (gameId: string, steamId: string) => {
   return gameTurnRepository.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId).exec();

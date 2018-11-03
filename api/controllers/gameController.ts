@@ -838,6 +838,19 @@ export class GameController {
 
     return game;
   }
+
+  @Get('{gameId}/turns/{startTurn}/{endTurn}')
+  public async getTurns(@Request() request: HttpRequest, gameId: string, startTurn: number, endTurn: number): Promise<GameTurn[]> {
+    if (startTurn > endTurn) {
+      throw new HttpResponseError(400, 'Start turn less than end turn');
+    }
+
+    if (endTurn - startTurn > 100) {
+      throw new HttpResponseError(400, 'Too many turns requested');
+    }
+
+    return this.gameTurnRepository.getTurnsForGame(gameId, startTurn, endTurn);
+  }
 }
 
 export interface ChangeCivRequestBody {

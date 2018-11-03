@@ -28,8 +28,10 @@ export class RecalculateUserStats {
 
     if (userId) {
       users = [await this.userRepository.get(userId)];
-    } else {
+    } else if (userId === 'all') {
       users = await this.userRepository.allUsers();
+    } else {
+      throw new Error('userId or all must be provided');
     }
     
     await this.calculateUserStats(users);
