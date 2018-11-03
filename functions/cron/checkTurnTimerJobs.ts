@@ -32,7 +32,7 @@ export class CheckTurnTimerJobs {
   }
 
   private async processJobs(jobs: ScheduledJob[]) {
-    const gameIds = _.uniq(_.map(jobs, 'gameId'));
+    const gameIds = _.uniq(_.flatten(jobs.map(x => x.gameIds)));
     const games = await this.gameRepository.batchGet(gameIds);
   
     await Promise.all(_.map(games, async game => {

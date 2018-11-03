@@ -92,6 +92,7 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
+      - sns: ${self:custom.resourcePrefix}game-updated
   snsUserTurnNotification:
     handler: functions/sns/userTurnNotification.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}

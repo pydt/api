@@ -115,7 +115,8 @@ export class GameController {
       gameSpeed: body.gameSpeed,
       mapFile: body.mapFile,
       mapSize: body.mapSize,
-      randomOnly: body.randomOnly
+      randomOnly: body.randomOnly,
+      turnTimerMinutes: body.turnTimerMinutes
     };
 
     const topic = await this.discourse.addGameTopic(newGame);
@@ -225,6 +226,7 @@ export class GameController {
     }
 
     game.allowJoinAfterStart = body.allowJoinAfterStart;
+    game.turnTimerMinutes = body.turnTimerMinutes;
 
     if (body.password) {
       if (body.password !== game.hashedPassword) {
@@ -235,7 +237,9 @@ export class GameController {
       game.hashedPassword = null;
     }
 
-    return this.gameRepository.saveVersioned(game);
+    const retVal = await this.gameRepository.saveVersioned(game);
+    await this.sns.gameUpdated(game);
+    return retVal;
   }
 
   @Security('api_key')

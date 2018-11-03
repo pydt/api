@@ -1,5 +1,8 @@
-export interface ScheduledJob {
+export interface ScheduledJobKey {
   jobType: string;
   scheduledTime: Date;
-  gameId: string;
+}
+
+export interface ScheduledJob extends ScheduledJobKey {
+  gameIds: string[];
 }

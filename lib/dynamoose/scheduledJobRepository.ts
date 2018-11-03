@@ -1,15 +1,15 @@
-import { IRepository, dynamoose, IInternalRepository } from './common';
-import { ScheduledJob } from '../models';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
+import { ScheduledJob, ScheduledJobKey } from '../models';
+import { dynamoose, IInternalRepository, IRepository } from './common';
 
 export const SCHEDULED_JOB_REPOSITORY_SYMBOL = Symbol('IScheduledJobRepository');
 
-export interface IScheduledJobRepository extends IRepository<string, ScheduledJob> {
+export interface IScheduledJobRepository extends IRepository<ScheduledJobKey, ScheduledJob> {
   getWaitingJobs(jobType: string): Promise<ScheduledJob[]>;
 }
 
-interface InternalScheduledJobRepository extends IScheduledJobRepository, IInternalRepository<string, ScheduledJob> {
+interface InternalScheduledJobRepository extends IScheduledJobRepository, IInternalRepository<ScheduledJobKey, ScheduledJob> {
 }
 
 export const JOB_TYPES = {
@@ -25,7 +25,7 @@ const scheduledJobRepository = dynamoose.createVersionedModel(Config.resourcePre
     type: Date,
     rangeKey: true
   },
-  gameId: String
+  gameIds: [String]
 }) as InternalScheduledJobRepository;
 
 scheduledJobRepository.getWaitingJobs = (jobType: string) => {

@@ -11,6 +11,7 @@ export interface BaseGame extends SharedGame {
   humans: number;
   randomOnly?: boolean;
   allowJoinAfterStart?: boolean;
+  turnTimerMinutes?: number;
 }
 
 export interface Game extends Entity, BaseGame {
@@ -21,7 +22,6 @@ export interface Game extends Entity, BaseGame {
   players: GamePlayer[];
   discourseTopicId?: number;
   currentPlayerSteamId: string;
-  turnTimerMinutes?: number;
   round?: number;
   gameTurnRangeKey?: number;
   completed?: boolean;
