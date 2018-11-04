@@ -1,5 +1,6 @@
 import { SaveHandler, CivData, ActorType } from './saveHandler';
 import * as civ5 from 'pydt-civ5-save-parser';
+import { CIV5_DLCS } from 'pydt-shared';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },
@@ -83,7 +84,11 @@ export class Civ5SaveHandler implements SaveHandler {
   get parsedDlcs() {
     const result = [];
 
-    // TODO
+    for (const mod of this.parsed.mods) {
+      if (CIV5_DLCS.some(x => x.id === mod.id)) {
+        result.push(mod.id);
+      }
+    }
 
     return result;
   }

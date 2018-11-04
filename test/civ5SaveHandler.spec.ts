@@ -14,9 +14,16 @@ describe('Civ5SaveHandler', () => {
     expect(handler.gameTurn).to.eq(164);
     expect(handler.mapFile).to.eq('Assets\\Maps\\Continents.lua');
     expect(handler.mapSize).to.eq('WORLDSIZE_TINY');
-
-    //expect(handler.parsedDlcs.length).to.eq(14);
-    //expect(handler.parsedDlcs[0]).to.eq('Mongolia');
+    expect(handler.parsedDlcs).to.deep.equal([
+      'e31e3c297611f644ac1f59663826de74',
+      'ded585b6ca7c754e81b42f60754e6330',
+      '05c6f7ec11baac4c8d80d71306aac471',
+      '390d03b3d8c0c74b91b17ad1caf585ab',
+      'b2222c110853b642b734171ccab3037b',
+      '32ba59746457ae448e9501ad0e0efd48',
+      'a151370e40f81b4e9706519bf484e59d',
+      '3676a06d23411840b6436575b4ec336b'
+    ]);
 
     expect(handler.civData.length).to.eq(4);
     expect(handler.civData[1].isCurrentTurn).to.eq(true);

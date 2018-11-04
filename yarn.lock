@@ -3959,13 +3959,13 @@ punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
-pydt-civ5-save-parser@^1.0.0-beta20181028-1:
-  version "1.0.0-beta20181028-1"
-  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.0-beta20181028-1.tgz#6858e23477040e0520797cc36ea1b8cd0e744888"
+pydt-civ5-save-parser@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.0.tgz#da7a45e268acbdc5b04bdfe580e40a342f496a5a"
 
-pydt-shared@^1.2.0-beta20181020-3:
-  version "1.2.0-beta20181020-3"
-  resolved "https://registry.yarnpkg.com/pydt-shared/-/pydt-shared-1.2.0-beta20181020-3.tgz#c907b3ac259c05321db542943fc897c01f094700"
+pydt-shared@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/pydt-shared/-/pydt-shared-1.2.0.tgz#35ca3e45d4e5e96289d6362fd988874ca88f6e5d"
   dependencies:
     tslib "^1.9.0"
 
