@@ -780,7 +780,7 @@ export class GameController {
     // Update previous turn data
     delete lastTurn.skipped;
     delete lastTurn.endDate;
-    lastTurn.startDate = new Date();
+    game.lastTurnEndDate = lastTurn.startDate = new Date();
 
     const promises = [];
 
