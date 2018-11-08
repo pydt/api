@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import * as _ from 'lodash';
-import { RANDOM_CIV } from 'pydt-shared';
+import { RANDOM_CIV, GAMES } from 'pydt-shared';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
@@ -596,8 +596,10 @@ export class GameController {
       }
     }
 
+    const civGame = GAMES.find(x => x.id === game.gameType);
+
     return {
-      downloadUrl: this.s3.signedGetUrl(fileParams, '(PYDT) Play This One!.Civ6Save', 60)
+      downloadUrl: this.s3.signedGetUrl(fileParams, '(PYDT) Play This One!.' + civGame.saveExtension, 60)
     };
   }
 
