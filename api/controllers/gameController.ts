@@ -84,7 +84,7 @@ export class GameController {
 
     const games = await this.gameService.getGamesForUser(user);
     const hasFormingGame = _.some(games, game => {
-      return game.createdBySteamId === request.user && !game.inProgress;
+      return game.gameType === body.gameType && game.createdBySteamId === request.user && !game.inProgress;
     });
 
     if (hasFormingGame) {

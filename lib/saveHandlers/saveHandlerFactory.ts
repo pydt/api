@@ -1,4 +1,4 @@
-import { CIV5_GAME, CIV6_GAME } from 'pydt-shared';
+import { CIV5_GAME, CIV6_GAME, BEYOND_EARTH_GAME } from 'pydt-shared';
 import { Game } from '../models';
 import { Civ5SaveHandler } from './civ5SaveHandler';
 import { Civ6SaveHandler } from './civ6SaveHandler';
@@ -11,6 +11,7 @@ export abstract class SaveHandlerFactory {
         return new Civ6SaveHandler(data);
 
       case CIV5_GAME.id:
+      case BEYOND_EARTH_GAME.id:
         return new Civ5SaveHandler(data);
     }
 

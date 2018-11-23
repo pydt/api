@@ -1,6 +1,6 @@
 import { SaveHandler, CivData, ActorType } from './saveHandler';
 import * as civ5 from 'pydt-civ5-save-parser';
-import { CIV5_DLCS } from 'pydt-shared';
+import { CIV5_DLCS, BEYOND_EARTH_DLCS } from 'pydt-shared';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },
@@ -61,7 +61,7 @@ export class Civ5SaveHandler implements SaveHandler {
   reparse() {
     this.parsed = civ5.parse(this.rawSave);
     this.civData = this.parsed.civilizations
-      .filter(x => x.leader !== 'LEADER_BARBARIAN')
+      .filter(x => x.leader !== 'LEADER_BARBARIAN' && x.leader !== 'LEADER_ALIEN')
       .map((civ, i) => new Civ5CivData(civ, i, this));
   }
 
@@ -85,7 +85,8 @@ export class Civ5SaveHandler implements SaveHandler {
     const result = [];
 
     for (const mod of this.parsed.mods) {
-      if (CIV5_DLCS.some(x => x.id === mod.id)) {
+      const dlc = this.parsed.civ === 'CIVBE' ? BEYOND_EARTH_DLCS : CIV5_DLCS;
+      if (dlc.some(x => x.id === mod.id)) {
         result.push(mod.id);
       }
     }

@@ -33,6 +33,27 @@ describe('Civ5SaveHandler', () => {
     expect(handler.civData[0].type).to.eq(ActorType.HUMAN);
   });
 
+  it('should parse beyond earth correctly', async () => {
+    const buffer = fs.readFileSync('test/saves/civ5/beyondearth.CivBESave');
+    const handler = new Civ5SaveHandler(buffer);
+
+    expect(handler.gameSpeed).to.eq('GAMESPEED_QUICK');
+    expect(handler.gameTurn).to.eq(0);
+    expect(handler.mapFile).to.eq('Assets\\Maps\\Protean.lua');
+    expect(handler.mapSize).to.eq('WORLDSIZE_SMALL');
+    expect(handler.parsedDlcs).to.deep.equal([
+      '54df493fb668d144a930a168628faa59',
+      '57b2d25491c545408f17a69f033166c7'
+    ]);
+
+    expect(handler.civData.length).to.eq(6);
+    expect(handler.civData[1].isCurrentTurn).to.eq(true);
+    expect(handler.civData[0].leaderName).to.eq('LEADER_ARC');
+    expect(handler.civData[0].password).to.eq('');
+    expect(handler.civData[0].playerName).to.eq('Player 1');
+    expect(handler.civData[0].type).to.eq(ActorType.HUMAN);
+  });
+
   it('should update civs correctly', () => {
     const buffer = fs.readFileSync('test/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
     let handler = new Civ5SaveHandler(buffer);
