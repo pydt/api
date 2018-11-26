@@ -62,6 +62,7 @@ custom:
     basePath: ''
     domainName: ${self:custom.domain.${self:custom.activeStage}}
     stage: ${self:custom.activeStage}
+    certificateName: "playyourdamnturn.com"
 
 functions:
   api_router:
