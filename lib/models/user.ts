@@ -8,6 +8,7 @@ export interface User extends HasSteamId {
   avatarMedium: string;
   avatarFull: string;
   emailAddress: string;
+  vacationMode?: boolean;
   activeGameIds: string[];
   inactiveGameIds: string[];
   turnsPlayed: number;

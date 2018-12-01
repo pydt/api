@@ -35,7 +35,7 @@ export class UserTurnNotification {
     if (payload.newTurn) {
       await this.iot.notifyUserClient(user);
 
-      if (user.emailAddress) {
+      if (user.emailAddress && !user.vacationMode) {
         await this.ses.sendEmail(
           `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
           'PLAY YOUR DAMN TURN!',

@@ -285,7 +285,7 @@ export class GameTurnService implements IGameTurnService {
 
     await this.moveToNextTurn(game, turn, oldUser);
 
-    if (oldUser.emailAddress) {
+    if (oldUser.emailAddress && !oldUser.vacationMode) {
       await this.ses.sendEmail(
         'You have been skipped in ' + game.displayName + '!',
         `You've been skipped!`,

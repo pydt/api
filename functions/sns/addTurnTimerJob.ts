@@ -3,8 +3,10 @@ import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gam
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
 import { inject } from '../../lib/ioc';
-import { loggingHandler } from '../../lib/logging';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { ScheduledJobKey } from '../../lib/models';
+import { USER_REPOSITORY_SYMBOL, IUserRepository } from '../../lib/dynamoose/userRepository';
+import { GAMES } from 'pydt-shared';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const attj = iocContainer.resolve(AddTurnTimerJob);
@@ -16,23 +18,43 @@ export class AddTurnTimerJob {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository
+    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
   ) {
   }
 
   public async execute(gameId: string): Promise<void> {
     const game = await this.gameRepository.get(gameId);
   
-    if (!game || !game.inProgress || !game.turnTimerMinutes || !game.gameTurnRangeKey) {
+    if (!game || !game.inProgress || !game.gameTurnRangeKey || !GAMES.find(x => x.id === game.gameType).turnTimerSupported) {
+      pydtLogger.info('Ignoring game ' + gameId);
       return;
     }
 
-    const latestTurn = await this.gameTurnRepository.get({gameId, turn: game.gameTurnRangeKey});
-    const jobKey: ScheduledJobKey = {
-      jobType: JOB_TYPES.TURN_TIMER, 
-      scheduledTime: new Date(latestTurn.startDate.getTime() + game.turnTimerMinutes * 60000)
-    };
-    
+    const user = await this.userRepository.get(game.currentPlayerSteamId);
+    let jobKey: ScheduledJobKey;
+
+    pydtLogger.info('User vacation mode: ' + user.vacationMode);
+    pydtLogger.info('turn timer minutes: ' + game.turnTimerMinutes);
+
+    if (user.vacationMode) {
+      pydtLogger.info('creating vacation timer');
+      jobKey = {
+        jobType: JOB_TYPES.TURN_TIMER_VACATION, 
+        scheduledTime: new Date()
+      };
+    } else if (game.turnTimerMinutes) {
+      pydtLogger.info('creating turn timer');
+      const latestTurn = await this.gameTurnRepository.get({gameId, turn: game.gameTurnRangeKey});
+      jobKey = {
+        jobType: JOB_TYPES.TURN_TIMER, 
+        scheduledTime: new Date(latestTurn.startDate.getTime() + game.turnTimerMinutes * 60000)
+      };
+    } else {
+      pydtLogger.info('aborting...');
+      return;
+    }
+
     const job = await this.scheduledJobRepository.get(jobKey);
 
     if (!job) {
@@ -40,9 +62,11 @@ export class AddTurnTimerJob {
         ...jobKey,
         gameIds: [gameId]
       });
+      pydtLogger.info('added job', jobKey);
     } else if (job.gameIds.indexOf(gameId) < 0) {
       job.gameIds.push(gameId);
       await this.scheduledJobRepository.saveVersioned(job);
+      pydtLogger.info('updated job', jobKey);
     }
   }
 }

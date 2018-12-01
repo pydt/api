@@ -28,6 +28,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   emailAddress: String,
   activeGameIds: [String],
   inactiveGameIds: [String],
+  vacationMode: Boolean,
   turnsPlayed: {
     type: Number,
     default: 0

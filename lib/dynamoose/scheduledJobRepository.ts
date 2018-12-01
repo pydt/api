@@ -13,7 +13,8 @@ interface InternalScheduledJobRepository extends IScheduledJobRepository, IInter
 }
 
 export const JOB_TYPES = {
-  TURN_TIMER: 'TURN_TIMER'
+  TURN_TIMER: 'TURN_TIMER',
+  TURN_TIMER_VACATION: 'TURN_TIMER_VACATION'
 };
 
 const scheduledJobRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'scheduled-job', {
