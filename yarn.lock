@@ -3959,9 +3959,9 @@ punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
-pydt-civ5-save-parser@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.2.tgz#78e792e369b930a7fe01eb7502939031c158828f"
+pydt-civ5-save-parser@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.3.tgz#bb25c7fc787eb08099f487a6d85d66143da0534a"
 
 pydt-shared@^1.2.2:
   version "1.2.2"
