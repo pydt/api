@@ -52,9 +52,21 @@ export class UserController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('setUserInformation')
+  public async setUserInformation(@Request() request: HttpRequest, @Body() body: SetUserInformationBody): Promise<User> {
+    const user = await this.userRepository.get(request.user);
+    user.comments = (body.comments || '').substr(0, 50);
+    user.timezone = body.timezone;
+    user.vacationMode = body.vacationMode;
+    return this.userRepository.saveVersioned(user);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('steamProfile')
   public async steamProfile(@Request() request: HttpRequest): Promise<SteamProfile> {
-    const players = await getPlayerSummaries([request.user]);
+    const user = await this.userRepository.get(request.user);
+    const players = await this.getPlaySummariesWithUserData([user], [request.user]);
 
     if (players.length !== 1) {
       throw new Error('Couldn\'t get user profile');
@@ -77,7 +89,7 @@ export class UserController {
         throw new Error('Invalid users');
       }
 
-      result = result.concat(await getPlayerSummaries(batch));
+      result = result.concat(await this.getPlaySummariesWithUserData(users, batch));
     }
 
     return result;
@@ -89,6 +101,19 @@ export class UserController {
     delete user.emailAddress; // make sure email address isn't returned!
     return user;
   }
+
+  private async getPlaySummariesWithUserData(users: User[], userIds: string[]) {
+    const summaries = await getPlayerSummaries(userIds);
+
+    for (const summary of summaries) {
+      const user = users.find(x => x.steamId === summary.steamid);
+      summary.comments = user.comments;
+      summary.timezone = user.timezone;
+      summary.vacationMode = user.vacationMode;
+    }
+
+    return summaries;
+  }
 }
 
 export interface GamesByUserResponse {
@@ -98,4 +123,10 @@ export interface GamesByUserResponse {
 
 export interface SetNotificationEmailBody {
   emailAddress: string;
+}
+
+export interface SetUserInformationBody {
+  vacationMode?: boolean;
+  timezone?: string;
+  comments?: string;
 }

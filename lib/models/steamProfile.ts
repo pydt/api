@@ -5,4 +5,7 @@ export interface SteamProfile {
   avatar: string;
   avatarmedium: string;
   avatarfull: string;
+  vacationMode?: boolean;
+  timezone?: string;
+  comments?: string;
 }
