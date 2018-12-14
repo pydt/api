@@ -84,6 +84,7 @@ export class AuthController {
             const steamProfile = user.profile._json as SteamProfile;
 
             dbUser.displayName = user.profile.displayName;
+            dbUser.steamProfileUrl = steamProfile.profileurl;
             dbUser.avatarSmall = steamProfile.avatar;
             dbUser.avatarMedium = steamProfile.avatarmedium;
             dbUser.avatarFull = steamProfile.avatarfull;

@@ -7,7 +7,6 @@ import { inject, provideSingleton } from '../../lib/ioc';
 import { Game, SteamProfile, User } from '../../lib/models';
 import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
-import { getPlayerSummaries } from '../../lib/steamUtil';
 import { ErrorResponse, HttpRequest } from '../framework';
 
 @Route('user')
@@ -65,14 +64,13 @@ export class UserController {
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('steamProfile')
   public async steamProfile(@Request() request: HttpRequest): Promise<SteamProfile> {
-    const user = await this.userRepository.get(request.user);
-    const players = await this.getPlaySummariesWithUserData([user], [request.user]);
+    const profiles = await this.steamProfiles(request.user);
 
-    if (players.length !== 1) {
+    if (profiles.length !== 1) {
       throw new Error('Couldn\'t get user profile');
     }
 
-    return players[0];
+    return profiles[0];
   }
 
   @Response<ErrorResponse>(401, 'Unauthorized')
@@ -89,7 +87,20 @@ export class UserController {
         throw new Error('Invalid users');
       }
 
-      result = result.concat(await this.getPlaySummariesWithUserData(users, batch));
+      // TODO: There's no need to return SteamProfiles to clients anymore, we should switch to just
+      // use the User model, but that'll be a pretty big refactor and we'll need to sync the release
+      // or create overlapping methods until everyone is updated...
+      result = result.concat(users.map(x => <SteamProfile> {
+        avatar: x.avatarSmall,
+        avatarfull: x.avatarFull,
+        avatarmedium: x.avatarMedium,
+        comments: x.comments,
+        personaname: x.displayName,
+        profileurl: x.steamProfileUrl,
+        steamid: x.steamId,
+        timezone: x.timezone,
+        vacationMode: x.vacationMode
+      }));
     }
 
     return result;
@@ -100,19 +111,6 @@ export class UserController {
     const user = await this.userRepository.get(steamId);
     delete user.emailAddress; // make sure email address isn't returned!
     return user;
-  }
-
-  private async getPlaySummariesWithUserData(users: User[], userIds: string[]) {
-    const summaries = await getPlayerSummaries(userIds);
-
-    for (const summary of summaries) {
-      const user = users.find(x => x.steamId === summary.steamid);
-      summary.comments = user.comments;
-      summary.timezone = user.timezone;
-      summary.vacationMode = user.vacationMode;
-    }
-
-    return summaries;
   }
 }
 
