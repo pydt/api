@@ -25,6 +25,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   avatarSmall: String,
   avatarMedium: String,
   avatarFull: String,
+  steamProfileUrl: String,
   emailAddress: String,
   activeGameIds: [String],
   inactiveGameIds: [String],

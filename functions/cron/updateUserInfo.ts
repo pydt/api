@@ -4,7 +4,7 @@ import { loggingHandler } from '../../lib/logging';
 import { User } from '../../lib/models/user';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
-import * as _ from 'lodash';
+import { chunk } from 'lodash';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uui = iocContainer.resolve(UpdateUserInfo);
@@ -19,20 +19,19 @@ export class UpdateUserInfo {
   }
 
   public async execute(): Promise<void> {
-    const usersToUpdate: User[] = [];
     const users = await this.userRepository.allUsers();
+
+    for (const curChunk of chunk(users, 75)) {
+      const usersToUpdate: User[] = [];
+      const players = await getPlayerSummaries(curChunk.map(x => x.steamId));
   
-    await Promise.all(_.map(_.chunk(users, 75), async chunk => {
-      const steamIds = _.map(chunk, 'steamId');
-  
-      const players = await getPlayerSummaries(steamIds);
-  
-      for (let user of chunk) {
-        const curPlayer = _.find(players, player => {
+      for (let user of curChunk) {
+        const curPlayer = players.find(player => {
           return user.steamId === player.steamid;
         });
   
         const isDirty = this.possiblyUpdateValue(user, 'displayName', curPlayer.personaname) ||
+          this.possiblyUpdateValue(user, 'steamProfileUrl', curPlayer.profileurl) ||
           this.possiblyUpdateValue(user, 'avatarSmall', curPlayer.avatar) ||
           this.possiblyUpdateValue(user, 'avatarMedium', curPlayer.avatarmedium) ||
           this.possiblyUpdateValue(user, 'avatarFull', curPlayer.avatarfull);
@@ -42,10 +41,10 @@ export class UpdateUserInfo {
           usersToUpdate.push(user);
         }
       }
-    }));
-  
-    for (const user of usersToUpdate) {
-      await this.userRepository.saveVersioned(user);
+
+      for (const user of usersToUpdate) {
+        await this.userRepository.saveVersioned(user);
+      }
     }
   }
   

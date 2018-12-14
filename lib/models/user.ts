@@ -7,6 +7,7 @@ export interface User extends HasSteamId {
   avatarSmall: string;
   avatarMedium: string;
   avatarFull: string;
+  steamProfileUrl: string;
   emailAddress: string;
   vacationMode?: boolean;
   timezone?: string;
