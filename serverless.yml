@@ -25,9 +25,27 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: dev
-  iamRoleStatements: # We should tighten this up...
+  iamRoleStatements:
     - Effect: Allow
-      Action: "*"
+      Action: "dynamodb:*"
+      Resource: "arn:aws:dynamodb:*:*:table/${self:custom.resourcePrefix}*"
+    - Effect: Allow
+      Action: "iot:*"
+      Resource: "*"
+    - Effect: Allow
+      Action: "kms:*"
+      Resource: "*"
+    - Effect: Allow
+      Action: "s3:*"
+      Resource: "arn:aws:s3:::${self:custom.resourcePrefix}saves*"
+    - Effect: Allow
+      Action: "sns:*"
+      Resource: "*"
+    - Effect: Allow
+      Action: "ses:*"
+      Resource: "*"
+    - Effect: Allow
+      Action: "sts:*"
       Resource: "*"
   environment:
     SERVERLESS_STAGE: ${self:custom.activeStage}
