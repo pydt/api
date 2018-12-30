@@ -92,6 +92,11 @@ let deleteVersion = co.wrap(function* (funcArn, version) {
 });
 
 let cleanFunc = co.wrap(function* (funcArn) {
+  if (funcArn.indexOf('civ-serverless') < 0) {
+    console.log('skipping arn ' + funcArn);
+    return;
+  }
+
   console.log(`cleaning function: ${funcArn}`);
   let aliasedVersions = yield listAliasedVersions(funcArn);
   console.log('found aliased versions:\n', aliasedVersions);
