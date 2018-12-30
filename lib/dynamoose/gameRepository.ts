@@ -5,7 +5,7 @@ import { CIV6_GAME } from 'pydt-shared';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
 import { Game } from '../models';
-import { dynamoose, IInternalRepository, IRepository } from './common';
+import { dynamoose, IInternalRepository, IRepository, getAllPaged } from './common';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
@@ -109,15 +109,15 @@ gameRepository.batchGet = async gameKeys => {
 };
 
 gameRepository.incompleteGames = async () => {
-  const games: Game[] = await gameRepository.scan('completed').not().eq(true).exec();
+  const games = await getAllPaged<Game>(gameRepository.scan('completed').not().eq(true));
   return games.map(g => setDefaults(g));
 };
 
 gameRepository.unstartedGames = async (daysOld: number) => {
-  const games: Game[] = await gameRepository
+  const games: Game[] = await getAllPaged<Game>(gameRepository
     .scan('inProgress').not().eq(true)
     .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
-    .exec();
+  );
 
   return games.map(g => setDefaults(g));
 }

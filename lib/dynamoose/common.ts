@@ -22,6 +22,25 @@ export interface IInternalRepository<TKey, TEntity> extends IRepository<TKey, TE
   query(column?: string): any;
 }
 
+export async function getAllPaged<T>(scanOrQuery): Promise<T[]> {
+  let result: T[] = [];
+  let lastResult: T[] = [];
+
+  do {
+    const lastKey = (<any> lastResult).lastKey;
+
+    if (lastKey) {
+      lastResult = await scanOrQuery.startAt(lastKey).exec();
+    } else {
+      lastResult = await scanOrQuery.exec();
+    }
+
+    result = result.concat(lastResult);
+  } while ((<any> lastResult).lastKey);
+
+  return result;
+}
+
 export const dynamoose: any = _.merge(baseDynamoose, {
   createVersionedModel: (name, schema) => {
     schema.version = {
