@@ -17,7 +17,7 @@
     "moment": "2.22.2",
     "passport": "0.4.0",
     "passport-steam": "1.0.10",
-    "pydt-civ5-save-parser": "^1.0.3",
+    "pydt-civ5-save-parser": "1.0.5",
     "pydt-shared": "1.2.2",
     "reflect-metadata": "0.1.12",
     "request": "2.88.0",
