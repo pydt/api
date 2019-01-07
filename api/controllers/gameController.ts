@@ -698,7 +698,8 @@ export class GameController {
           }
         } else {
           if (civ.type === ActorType.HUMAN) {
-            throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
+            // I'm not sure that we care about this, either, should be set properly in updateSaveFileForGameState
+            // throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
           }
         }
       } else {
