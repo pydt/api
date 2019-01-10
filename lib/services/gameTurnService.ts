@@ -171,7 +171,7 @@ export class GameTurnService implements IGameTurnService {
       player.timeTaken = (player.timeTaken || 0) + timeTaken * undoInc;
       user.timeTaken = (user.timeTaken || 0) + timeTaken * undoInc;
 
-      if (timeTaken < 1000 * 60 * 60) {
+      if (!gameTurn.skipped && timeTaken < 1000 * 60 * 60) {
         user.fastTurns = (user.fastTurns || 0) + 1 * undoInc;
         player.fastTurns = (player.fastTurns || 0) + 1 * undoInc;
       }
