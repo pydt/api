@@ -267,6 +267,10 @@ export class GameTurnService implements IGameTurnService {
     const skippedPlayerIndex = getCurrentPlayerIndex(game);
     const nextPlayerIndex = getNextPlayerIndex(game);
 
+    if (nextPlayerIndex < 0) {
+      return;
+    }
+
     if (nextPlayerIndex <= skippedPlayerIndex) {
       game.round++;
     }
