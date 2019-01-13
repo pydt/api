@@ -500,31 +500,37 @@ export class GameController {
     user.inactiveGameIds = user.inactiveGameIds || [];
     user.inactiveGameIds.push(gameId);
 
-    const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
+    const savePromises: Promise<any>[] = [
+      this.userRepository.saveVersioned(user),
+      this.gameRepository.saveVersioned(game)
+    ];
 
-    if (user.steamId === game.currentPlayerSteamId) {
-      // Update the current player if it's the turn of the player who's surrendering
-      const curIndex = getCurrentPlayerIndex(game);
-      const nextIndex = getNextPlayerIndex(game);
+    if (!game.completed) {
+      const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
 
-      if (nextIndex >= 0) {
-        game.currentPlayerSteamId = gameTurn.playerSteamId = game.players[nextIndex].steamId;
+      if (user.steamId === game.currentPlayerSteamId) {
+        // Update the current player if it's the turn of the player who's surrendering
+        const curIndex = getCurrentPlayerIndex(game);
+        const nextIndex = getNextPlayerIndex(game);
 
-        if (nextIndex <= curIndex) {
-          game.round = gameTurn.round++;
+        if (nextIndex >= 0) {
+          game.currentPlayerSteamId = gameTurn.playerSteamId = game.players[nextIndex].steamId;
+
+          if (nextIndex <= curIndex) {
+            game.round = gameTurn.round++;
+          }
         }
+
+        gameTurn.startDate = new Date();
+
+        savePromises.push(
+          this.gameTurnService.getAndUpdateSaveFileForGameState(game),
+          this.gameTurnRepository.saveVersioned(gameTurn)
+        );
       }
-
-      gameTurn.startDate = new Date();
-
-      await this.gameTurnService.getAndUpdateSaveFileForGameState(game);
     }
 
-    await Promise.all([
-      this.userRepository.saveVersioned(user),
-      this.gameRepository.saveVersioned(game),
-      this.gameTurnRepository.saveVersioned(gameTurn)
-    ]);
+    await Promise.all(savePromises);
 
     await this.sns.turnSubmitted(game);
 
