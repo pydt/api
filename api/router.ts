@@ -66,7 +66,7 @@ const mockApp = {
 RegisterRoutes(mockApp);
 
 export const handler = loggingHandler((event: LambdaProxyEvent, context) => {
-  pydtLogger.info(`handling ${event.httpMethod} ${event.path}`);
+  pydtLogger.info(`handling ${event.httpMethod} ${event.path} (${event.requestContext.identity.sourceIp})`);
 
   return new Promise((resolve, reject) => {
     const callback = (err, resp) => {

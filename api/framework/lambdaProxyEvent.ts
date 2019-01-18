@@ -5,4 +5,5 @@ export interface LambdaProxyEvent {
   path: string;
   pathParameters: any;
   queryStringParameters: any;
+  requestContext: any;
 }
