@@ -25,6 +25,16 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: dev
+  resourcePolicy:
+    - Effect: Allow
+      Principal: "*"
+      Action: execute-api:Invoke
+      Resource:
+        - execute-api:/*
+      Condition:
+        NotIpAddress:
+          aws:SourceIp:
+            - 54.219.136.29
   iamRoleStatements:
     - Effect: Allow
       Action: "dynamodb:*"
