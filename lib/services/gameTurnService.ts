@@ -278,6 +278,19 @@ export class GameTurnService implements IGameTurnService {
     game.currentPlayerSteamId = game.players[nextPlayerIndex].steamId;
 
     const saveHandler = this.parseSaveFile(data.Body, game);
+    let humanCount = 0;
+
+    for (let i = 0; i < game.players.length; i++) {
+      if (saveHandler.civData[i].type === ActorType.HUMAN) {
+        humanCount++;
+      }
+    }
+
+    if (humanCount < 3) {
+      pydtLogger.warn(`Need at least 2 human players to skip!`);
+      return;
+    }
+
     saveHandler.civData[skippedPlayerIndex].type = ActorType.AI;
     saveHandler.setCurrentTurnIndex(nextPlayerIndex);
     this.updateSaveFileForGameState(game, users, saveHandler, false);
