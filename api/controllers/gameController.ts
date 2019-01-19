@@ -485,10 +485,10 @@ export class GameController {
     player.hasSurrendered = true;
     player.surrenderDate = new Date();
 
-    // The game is completed if every player is AI
-    game.completed = _.every(game.players, p => {
-      return !playerIsHuman(p);
-    });
+    // The game is completed if there's 1 or fewer humans in the game
+    game.completed = game.players.filter(p => {
+      return playerIsHuman(p);
+    }).length < 2;
 
     const users = await this.userService.getUsersForGame(game);
     const user = _.find(users, u => {

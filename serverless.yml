@@ -108,9 +108,16 @@ functions:
       - schedule: rate(2 minutes)
   cronDeleteOldUnstartedGames:
     handler: functions/cron/deleteOldUnstartedGames.handler
+    timeout: 30
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: cron(0 8 * * ? *)
+  cronCheckForCompletedGames:
+    handler: functions/cron/checkForCompletedGames.handler
+    timeout: 30
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(0 7 * * ? *)
   cronUpdateUserInfo:
     handler: functions/cron/updateUserInfo.handler
     timeout: 30
