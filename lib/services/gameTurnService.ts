@@ -1,6 +1,5 @@
 import * as pwdgen from 'generate-password';
 import * as _ from 'lodash';
-import { CIV6_GAME } from 'pydt-shared';
 import * as zlib from 'zlib';
 import { HttpResponseError } from '../../api/framework';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
@@ -150,38 +149,52 @@ export class GameTurnService implements IGameTurnService {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
-      const player = _.find(game.players, p => {
+      const player: GamePlayer = _.find(game.players, p => {
         return p.steamId === user.steamId;
-      });
+      }) || <any> {};
 
-      if (!user.turnsByGameType) {
-        user.turnsByGameType = {};
-        user.turnsByGameType[CIV6_GAME.id] = user.turnsPlayed || 0;
+      user.statsByGameType = user.statsByGameType || [];
+      let gameStats = user.statsByGameType.find(x => x.gameType === game.gameType);
+
+      if (!gameStats) {
+        gameStats = {
+          gameType: game.gameType,
+          fastTurns: 0,
+          slowTurns: 0,
+          timeTaken: 0,
+          turnsPlayed: 0,
+          turnsSkipped: 0
+        };
+
+        user.statsByGameType.push(gameStats);
       }
 
       if (gameTurn.skipped) {
         player.turnsSkipped = (player.turnsSkipped || 0) + 1 * undoInc;
         user.turnsSkipped = (user.turnsSkipped || 0) + 1 * undoInc;
+        gameStats.turnsSkipped = (gameStats.turnsSkipped || 0) + 1 * undoInc;
       } else {
         player.turnsPlayed = (player.turnsPlayed || 0) + 1 * undoInc;
         user.turnsPlayed = (user.turnsPlayed || 0) + 1 * undoInc;
+        gameStats.turnsPlayed = (gameStats.turnsPlayed || 0) + 1 * undoInc;
       }
 
       const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
       player.timeTaken = (player.timeTaken || 0) + timeTaken * undoInc;
       user.timeTaken = (user.timeTaken || 0) + timeTaken * undoInc;
+      gameStats.timeTaken = (gameStats.timeTaken || 0) + timeTaken * undoInc;
 
       if (!gameTurn.skipped && timeTaken < 1000 * 60 * 60) {
         user.fastTurns = (user.fastTurns || 0) + 1 * undoInc;
         player.fastTurns = (player.fastTurns || 0) + 1 * undoInc;
+        gameStats.fastTurns = (gameStats.fastTurns || 0) + 1 * undoInc;
       }
 
       if (timeTaken > 1000 * 60 * 60 * 6) {
         user.slowTurns = (user.slowTurns || 0) + 1 * undoInc;
         player.slowTurns = (player.slowTurns || 0) + 1 * undoInc;
+        gameStats.slowTurns = (gameStats.slowTurns || 0) + 1 * undoInc;
       }
-
-      user.turnsByGameType[game.gameType] = (user.turnsByGameType[game.gameType] || 0) + 1 * undoInc;
     }
   }
 

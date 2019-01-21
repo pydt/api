@@ -13,6 +13,8 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
   await rus.execute(event.Records[0].Sns.Message);
 });
 
+const dataVersion = 1;
+
 @injectable()
 export class RecalculateUserStats {
   constructor(
@@ -26,10 +28,11 @@ export class RecalculateUserStats {
   public async execute(userId: string) {
     let users: User[];
 
-    if (userId) {
-      users = [await this.userRepository.get(userId)];
-    } else if (userId === 'all') {
+    if (userId === 'all') {
       users = await this.userRepository.allUsers();
+      users = users.filter(x => (<any>x).dataVersion !== dataVersion);
+    } else if (userId) {
+      users = [await this.userRepository.get(userId)];
     } else {
       throw new Error('userId or all must be provided');
     }
@@ -40,18 +43,19 @@ export class RecalculateUserStats {
   private async calculateUserStats(users: User[]) {
     for (const user of users) {
       this.resetStatistics(user);
-    
+
       const allGameIds = _.concat(user.activeGameIds || [], user.inactiveGameIds || []);
-      
+
       pydtLogger.info(`Processing user ${user.displayName}`);
-    
-      if (!allGameIds.length) {
-        continue;
+
+      if (allGameIds.length) {
+        const games = await this.gameRepository.batchGet(allGameIds);
+        await this.calculateGameStats(games, user);
       }
-      
-      const games = await this.gameRepository.batchGet(allGameIds);
-      await this.calculateGameStats(games, user);
+
+      (<any>user).dataVersion = dataVersion;
       await this.userRepository.saveVersioned(user);
+      console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
     }
   }
     
@@ -60,11 +64,25 @@ export class RecalculateUserStats {
       const player = _.find(game.players, player => {
         return player.steamId === user.steamId;
       });
-    
-      this.resetStatistics(player);
-    
+
+      if (player) {
+        this.resetStatistics(player); 
+      }
+
       const turns = await this.gameTurnRepository.getPlayerTurnsForGame(game.gameId, user.steamId);
-    
+
+      if (!turns || !turns.length) {
+        continue;
+      }
+
+      const maxTurnDate = new Date(Math.max.apply(null, turns.map(x => x.endDate)));
+
+      if (!isNaN(maxTurnDate.getTime())) {
+        if (!game.lastTurnEndDate || maxTurnDate > game.lastTurnEndDate) {
+          game.lastTurnEndDate = maxTurnDate;
+        }
+      }
+
       for (const turn of turns) {
         this.gameTurnService.updateTurnStatistics(game, turn, user);
       }
@@ -79,5 +97,9 @@ export class RecalculateUserStats {
     host.timeTaken = 0;
     host.fastTurns = 0;
     host.slowTurns = 0;
+
+    if (host.statsByGameType) {
+      host.statsByGameType = [];
+    }
   }
 }

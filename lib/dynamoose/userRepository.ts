@@ -51,7 +51,33 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   slowTurns: {
     type: Number,
     default: 0
-  }
+  },
+  statsByGameType: [
+    {
+      gameType: String,
+      turnsPlayed: {
+        type: Number,
+        default: 0
+      },
+      turnsSkipped: {
+        type: Number,
+        default: 0
+      },
+      timeTaken: {
+        type: Number,
+        default: 0
+      },
+      fastTurns: {
+        type: Number,
+        default: 0
+      },
+      slowTurns: {
+        type: Number,
+        default: 0
+      }
+    }
+  ],
+  dataVersion: Number
 }) as InternalUserRepository;
 
 async function scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
