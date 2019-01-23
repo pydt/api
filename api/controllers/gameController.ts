@@ -486,9 +486,10 @@ export class GameController {
     player.surrenderDate = new Date();
 
     // The game is completed if there's 1 or fewer humans in the game
-    game.completed = game.players.filter(p => {
+    const humanPlayers = game.players.filter(p => {
       return playerIsHuman(p);
-    }).length < 2;
+    }).length;
+    game.completed = humanPlayers < 2;
 
     const users = await this.userService.getUsersForGame(game);
     const user = _.find(users, u => {
@@ -500,12 +501,9 @@ export class GameController {
     user.inactiveGameIds = user.inactiveGameIds || [];
     user.inactiveGameIds.push(gameId);
 
-    const savePromises: Promise<any>[] = [
-      this.userRepository.saveVersioned(user),
-      this.gameRepository.saveVersioned(game)
-    ];
+    const savePromises: Promise<any>[] = [];
 
-    if (!game.completed) {
+    if (humanPlayers) {
       const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
 
       if (user.steamId === game.currentPlayerSteamId) {
@@ -529,6 +527,11 @@ export class GameController {
         );
       }
     }
+
+    savePromises.push(
+      this.userRepository.saveVersioned(user),
+      this.gameRepository.saveVersioned(game)
+    );
 
     await Promise.all(savePromises);
 
