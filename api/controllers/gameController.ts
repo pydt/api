@@ -22,6 +22,7 @@ import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/g
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
+import { pull } from 'lodash';
 
 @Route('game')
 @Tags('game')
@@ -614,6 +615,75 @@ export class GameController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('{gameId}/turn/replacePlayer')
+  public async replacePlayer(@Request() request: HttpRequest, gameId: string, @Body() body: ReplacePlayerRequestBody ): Promise<Game> {
+    const game = await this.getGame(gameId);
+
+    if (!game.inProgress) {
+      throw new HttpResponseError(400, 'Game must be in progress to replace!');
+    }
+
+    // Until we get the UI ready, this is an admin function
+    if (request.user !== '76561197973299801') {
+      throw new HttpResponseError(400, 'You`re not SackGT!');
+    }
+
+    /*if (game.createdBySteamId !== request.user) {
+      throw new HttpResponseError(400, 'You didn\'t create this game!');
+    }*/
+
+    const oldPlayer = game.players.find(x => x.steamId === body.oldSteamId);
+
+    if (!oldPlayer) {
+      throw new HttpResponseError(400, 'Old player not found');
+    }
+
+    if (game.players.find(x => x.steamId === body.newSteamId)) {
+      throw new HttpResponseError(400, 'New player is already in this game!?!')
+    }
+
+    const users = await this.userService.getUsersForGame(game);
+    const oldUser = users.find(x => x.steamId === body.oldSteamId);
+
+    if (!oldUser) {
+      throw new HttpResponseError(400, 'Old user not found!');
+    }
+
+    const newUser = await this.userRepository.get(body.newSteamId);
+
+    if (!newUser) {
+      throw new HttpResponseError(400, 'New user not found!');
+    }
+
+    users.push(newUser);
+
+    pull(oldUser.activeGameIds, game.gameId);
+    oldUser.inactiveGameIds = oldUser.inactiveGameIds || [];
+    oldUser.inactiveGameIds.push(game.gameId);
+
+    newUser.activeGameIds = newUser.activeGameIds || [];
+    newUser.activeGameIds.push(game.gameId);
+
+    oldPlayer.steamId = body.newSteamId;
+
+    if (game.currentPlayerSteamId === body.oldSteamId) {
+      game.currentPlayerSteamId = body.newSteamId;
+    }
+
+    await Promise.all([
+      this.userRepository.saveVersioned(oldUser),
+      this.userRepository.saveVersioned(newUser),
+      this.gameRepository.saveVersioned(game)
+    ]);
+
+    await this.gameTurnService.getAndUpdateSaveFileForGameState(game, users);
+    await this.sns.turnSubmitted(game);
+
+    return game;
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/finishSubmit')
   public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     const game = await this.getGame(gameId);
@@ -891,6 +961,11 @@ export interface CreateGameRequestBody extends GameRequestBody {
 
 export interface JoinGameRequestBody extends ChangeCivRequestBody {
   password?: string;
+}
+
+export interface ReplacePlayerRequestBody {
+  oldSteamId: string;
+  newSteamId: string;
 }
 
 export interface OpenGamesResponse {
