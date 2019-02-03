@@ -207,15 +207,10 @@ export class GameController {
         throw new HttpResponseError(400, `You can't change the number of slots to less than the current number of players!`);
       }
 
-      if (body.humans < game.players.length) {
-        throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of players!`);
-      }
-
       game.displayName = body.displayName;
       game.description = body.description;
       game.slots = body.slots;
       game.dlc = body.dlc;
-      game.humans = body.humans;
       game.gameSpeed = body.gameSpeed;
       game.mapFile = body.mapFile;
       game.mapSize = body.mapSize;
@@ -226,6 +221,11 @@ export class GameController {
       }
     }
 
+    if (body.humans < game.players.length) {
+      throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of players!`);
+    }
+
+    game.humans = body.humans;
     game.allowJoinAfterStart = body.allowJoinAfterStart;
     game.turnTimerMinutes = body.turnTimerMinutes;
 
