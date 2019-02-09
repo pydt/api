@@ -3,6 +3,7 @@ export interface HasSteamId {
 }
 
 export interface TurnData {
+  lastTurnEndDate?: Date;
   turnsPlayed: number;
   turnsSkipped: number;
   timeTaken: number;
@@ -12,6 +13,8 @@ export interface TurnData {
 
 export interface GameTypeTurnData extends TurnData {
   gameType: string;
+  activeGames: number;
+  totalGames: number;
 }
 
 export interface User extends HasSteamId, TurnData {

@@ -1,6 +1,5 @@
-import * as _ from 'lodash';
+import { chunk } from 'lodash';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
-
 import { Config } from '../../lib/config';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../lib/ioc';
@@ -79,7 +78,7 @@ export class UserController {
     const steamIds = rawSteamIds.split(',') || [];
     let result: SteamProfile[] = [];
 
-    for (const batch of _.chunk(steamIds, 100)) {
+    for (const batch of chunk(steamIds, 100)) {
       // Ensure that all requested users are in our DB...
       const users = await this.userRepository.batchGet(batch);
 

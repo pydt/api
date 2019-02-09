@@ -1,11 +1,10 @@
-import { Game, User } from '../models';
-import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
-import { IGameRepository, GAME_REPOSITORY_SYMBOL } from '../dynamoose/gameRepository';
-import { USER_SERVICE_SYMBOL, IUserService } from './userService';
-import { IDiscourseProvider, DISCOURSE_PROVIDER_SYMBOL } from '../discourseProvider';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
-import { provideSingleton, inject } from '../ioc';
-import * as _ from 'lodash';
+import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../discourseProvider';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../dynamoose/gameRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
+import { inject, provideSingleton } from '../ioc';
+import { Game, User } from '../models';
+import { IUserService, USER_SERVICE_SYMBOL } from './userService';
 
 export const GAME_SERVICE_SYMBOL = Symbol('IGameService');
 
@@ -32,7 +31,7 @@ export class GameService implements IGameService {
     promises.push(this.gameRepository.delete(game.gameId));
 
     for (const curUser of users) {
-      _.pull(curUser.activeGameIds, game.gameId);
+      this.userService.removeUserFromGame(curUser, game, false);
       promises.push(this.userRepository.saveVersioned(curUser));
 
       if (curUser.emailAddress && (!steamId || curUser.steamId !== steamId)) {

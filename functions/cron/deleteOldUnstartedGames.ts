@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
@@ -33,7 +32,7 @@ export class DeleteOldUnstartedGames {
   private async deleteOldUnstartedGames(): Promise<void> {
     const games = await this.gameRepository.unstartedGames(30);
   
-    await Promise.all(_.map(games, game => {
+    await Promise.all(games.map(game => {
       pydtLogger.info(`deleted game ${game.gameId}`);
       return this.gameService.deleteGame(game, null);
     }));
@@ -42,7 +41,7 @@ export class DeleteOldUnstartedGames {
   private async notifyGamesAboutToBeDeleted(): Promise<void> {
     const games = await this.gameRepository.unstartedGames(25);
   
-    await Promise.all(_.map(games, async game => {
+    await Promise.all(games.map(async game => {
       const expirationDate = moment(game.createdAt).add(30, 'days').format('MMMM Do');
       const user = await this.userRepository.get(game.createdBySteamId);
   

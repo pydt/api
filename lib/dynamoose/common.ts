@@ -1,5 +1,5 @@
 import * as baseDynamoose from 'dynamoose';
-import * as _ from 'lodash';
+import { merge } from 'lodash';
 
 baseDynamoose.AWS.config.update({
   region: 'us-east-1'
@@ -41,7 +41,7 @@ export async function getAllPaged<T>(scanOrQuery): Promise<T[]> {
   return result;
 }
 
-export const dynamoose: any = _.merge(baseDynamoose, {
+export const dynamoose: any = merge(baseDynamoose, {
   createVersionedModel: (name, schema) => {
     schema.version = {
       type: Number,

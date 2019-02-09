@@ -1,5 +1,4 @@
 import * as pwdgen from 'generate-password';
-import * as _ from 'lodash';
 import * as zlib from 'zlib';
 import { HttpResponseError } from '../../api/framework';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
@@ -88,19 +87,16 @@ export class GameTurnService implements IGameTurnService {
     const promises = [];
 
     for (const defeatedPlayer of newDefeatedPlayers) {
-      const defeatedUser = _.find(users, user => {
+      const defeatedUser = users.find(user => {
         return user.steamId === defeatedPlayer.steamId;
       });
 
-      _.pull(defeatedUser.activeGameIds, game.gameId);
-
-      defeatedUser.inactiveGameIds = defeatedUser.inactiveGameIds || [];
-      defeatedUser.inactiveGameIds.push(game.gameId);
+      this.userService.removeUserFromGame(defeatedUser, game, true);
 
       promises.push(this.userRepository.saveVersioned(defeatedUser));
 
       for (const player of game.players) {
-        const curUser = _.find(users, user => {
+        const curUser = users.find(user => {
           return user.steamId === player.steamId;
         });
 
@@ -149,24 +145,18 @@ export class GameTurnService implements IGameTurnService {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
-      const player: GamePlayer = _.find(game.players, p => {
+      const player: GamePlayer = game.players.find(p => {
         return p.steamId === user.steamId;
       }) || <any> {};
 
-      user.statsByGameType = user.statsByGameType || [];
-      let gameStats = user.statsByGameType.find(x => x.gameType === game.gameType);
+      const gameStats = this.userService.getUserGameStats(user, game.gameType);
 
-      if (!gameStats) {
-        gameStats = {
-          gameType: game.gameType,
-          fastTurns: 0,
-          slowTurns: 0,
-          timeTaken: 0,
-          turnsPlayed: 0,
-          turnsSkipped: 0
-        };
+      if (!user.lastTurnEndDate || gameTurn.endDate > user.lastTurnEndDate) {
+        user.lastTurnEndDate = gameTurn.endDate;
+      }
 
-        user.statsByGameType.push(gameStats);
+      if (!gameStats.lastTurnEndDate || gameTurn.endDate > gameStats.lastTurnEndDate) {
+        gameStats.lastTurnEndDate = gameTurn.endDate;
       }
 
       if (gameTurn.skipped) {
@@ -214,7 +204,7 @@ export class GameTurnService implements IGameTurnService {
           }
 
           if (users) {
-            const user = _.find(users, u => {
+            const user = users.find(u => {
               return u.steamId === player.steamId;
             });
 

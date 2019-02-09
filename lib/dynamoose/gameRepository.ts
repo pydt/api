@@ -1,11 +1,11 @@
 
-import * as _ from 'lodash';
+import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import { CIV6_GAME } from 'pydt-shared';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
 import { Game } from '../models';
-import { dynamoose, IInternalRepository, IRepository, getAllPaged } from './common';
+import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
@@ -105,7 +105,7 @@ gameRepository.origBatchGet = gameRepository.origBatchGet || gameRepository.batc
 
 gameRepository.batchGet = async gameKeys => {
   const games: Game[] = await gameRepository.origBatchGet(gameKeys);
-  return _.orderBy(games, ['createdAt'], ['desc']).map(g => setDefaults(g));
+  return orderBy(games, ['createdAt'], ['desc']).map(g => setDefaults(g));
 };
 
 gameRepository.incompleteGames = async () => {

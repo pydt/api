@@ -32,6 +32,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   vacationMode: Boolean,
   timezone: String,
   comments: String,
+  lastTurnEndDate: Date,
   turnsPlayed: {
     type: Number,
     default: 0
@@ -55,6 +56,15 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   statsByGameType: [
     {
       gameType: String,
+      lastTurnEndDate: Date,
+      activeGames: {
+        type: Number,
+        default: 0
+      },
+      totalGames: {
+        type: Number,
+        default: 0
+      },
       turnsPlayed: {
         type: Number,
         default: 0

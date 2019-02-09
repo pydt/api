@@ -1,13 +1,13 @@
 import { injectable } from 'inversify';
-import * as _ from 'lodash';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
-import { ScheduledJob, Game } from '../../lib/models';
+import { Game, ScheduledJob } from '../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
-import { USER_REPOSITORY_SYMBOL, IUserRepository } from '../../lib/dynamoose/userRepository';
+import { uniq, flatten } from 'lodash';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const cttj = iocContainer.resolve(CheckTurnTimerJobs);
@@ -40,10 +40,10 @@ export class CheckTurnTimerJobs {
   }
 
   private async processJobs(jobs: ScheduledJob[], callback: (game: Game) => Promise<void>) {
-    const gameIds = _.uniq(_.flatten(jobs.map(x => x.gameIds)));
+    const gameIds = uniq(flatten(jobs.map(x => x.gameIds)));
     const games = await this.gameRepository.batchGet(gameIds);
   
-    await Promise.all(_.map(games, async game => {
+    await Promise.all(games.map(async game => {
       await callback.call(this, game);
     }));
     

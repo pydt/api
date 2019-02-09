@@ -2,8 +2,8 @@ import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { inject } from '../../lib/ioc';
-import * as _ from 'lodash';
 import { injectable } from 'inversify';
+import { orderBy, take } from 'lodash';
 
 const TURNS_TO_SAVE = 40;
 
@@ -29,11 +29,11 @@ export class DeleteOldSaves {
     if (resp.Contents.length > TURNS_TO_SAVE) {
       await this.s3.deleteObjects(
         Config.resourcePrefix() + 'saves',
-          _.chain(resp.Contents)
-            .orderBy(['Key'], ['asc'])
-            .take(resp.Contents.length - TURNS_TO_SAVE)
-            .map(obj => obj.Key)
-            .value()
+        take(
+          orderBy(resp.Contents, ['Key'], ['asc']),
+          resp.Contents.length - TURNS_TO_SAVE
+        )
+        .map(obj => obj.Key)
       );
     }
   }

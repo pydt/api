@@ -1,6 +1,7 @@
-import { provideSingleton } from './ioc';
 import * as AWS from 'aws-sdk';
-import * as _ from 'lodash';
+import { merge } from 'lodash';
+import { provideSingleton } from './ioc';
+
 const s3 = new AWS.S3();
 
 export const S3_PROVIDER_SYMBOL = Symbol('IS3Provider');
@@ -19,13 +20,13 @@ export interface IS3Provider {
 export class S3Provider implements IS3Provider {
   putObject(fileParams: FileParams, data: any, isPublic?: boolean): Promise<any> {
     if (isPublic) {
-      fileParams = _.merge(fileParams, {
+      fileParams = merge(fileParams, {
         ACL: 'public-read',
         CacheControl: 'no-cache'
       });
     }
 
-    return s3.putObject(_.merge(fileParams, {
+    return s3.putObject(merge(fileParams, {
       Body: data
     })).promise();
   }
@@ -34,7 +35,7 @@ export class S3Provider implements IS3Provider {
     return s3.deleteObjects({
       Bucket: bucket,
       Delete: {
-        Objects: _.map(keys, key => {
+        Objects: keys.map(key => {
           return {
             Key: key
           }
@@ -59,14 +60,14 @@ export class S3Provider implements IS3Provider {
   }
 
   signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number) {
-    return s3.getSignedUrl('getObject', _.merge(fileParams, {
+    return s3.getSignedUrl('getObject', merge(fileParams, {
       ResponseContentDisposition: `attachment; filename='${downloadAsFilename}'`,
       Expires: expiration
     }));
   }
 
   signedPutUrl(fileParams: FileParams, contentType: string, expiration: number) {
-    return s3.getSignedUrl('putObject', _.merge(fileParams, {
+    return s3.getSignedUrl('putObject', merge(fileParams, {
       Expires: expiration,
       ContentType: contentType
     }));

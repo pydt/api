@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
-import * as _ from 'lodash';
-import { RANDOM_CIV, GAMES } from 'pydt-shared';
+import { compact, difference, orderBy, remove } from 'lodash';
+import { GAMES, RANDOM_CIV } from 'pydt-shared';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
@@ -22,7 +22,6 @@ import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/g
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
-import { pull } from 'lodash';
 
 @Route('game')
 @Tags('game')
@@ -52,7 +51,7 @@ export class GameController {
       throw new HttpResponseError(400, 'Game in Progress');
     }
 
-    if (body.playerCiv !== RANDOM_CIV.leaderKey && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
+    if (body.playerCiv !== RANDOM_CIV.leaderKey && game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0) {
       throw new HttpResponseError(400, 'Civ already in Game');
     }
 
@@ -60,7 +59,7 @@ export class GameController {
       throw new HttpResponseError(400, 'Only random civs allowed!');
     }
 
-    const player = _.find(game.players, p => {
+    const player = game.players.find(p => {
       return p.steamId === request.user;
     });
 
@@ -84,7 +83,7 @@ export class GameController {
     }
 
     const games = await this.gameService.getGamesForUser(user);
-    const hasFormingGame = _.some(games, game => {
+    const hasFormingGame = games.some(game => {
       return game.gameType === body.gameType && game.createdBySteamId === request.user && !game.inProgress;
     });
 
@@ -133,8 +132,8 @@ export class GameController {
 
     await this.gameRepository.saveVersioned(newGame);
 
-    user.activeGameIds = user.activeGameIds || [];
-    user.activeGameIds.push(newGame.gameId);
+    this.userService.addUserToGame(user, newGame);
+
     await this.userRepository.saveVersioned(user);
 
     return newGame;
@@ -179,8 +178,8 @@ export class GameController {
       throw new HttpResponseError(400, `The player that created the game must be the first player!`);
     }
 
-    const newPlayers = _.compact(_.map(body.steamIds, steamId => {
-      return _.find(game.players, p => p.steamId === steamId);
+    const newPlayers = compact(body.steamIds.map(steamId => {
+      return game.players.find(p => p.steamId === steamId);
     }));
 
     if (newPlayers.length !== game.players.length) {
@@ -255,7 +254,7 @@ export class GameController {
         throw new HttpResponseError(400, 'Game does not allow joining after start!');
       }
 
-      targetPlayer = _.find(game.players, player => {
+      targetPlayer = game.players.find(player => {
         return player.civType === body.playerCiv;
       });
 
@@ -271,12 +270,12 @@ export class GameController {
         throw new HttpResponseError(400, 'You can only join this game as a random civ!');
       }
 
-      if (body.playerCiv !== RANDOM_CIV.leaderKey && _.map(game.players, 'civType').indexOf(body.playerCiv) >= 0) {
+      if (body.playerCiv !== RANDOM_CIV.leaderKey && game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0) {
         throw new HttpResponseError(400, 'Civ already in Game');
       }
     }
 
-    if (_.map(game.players, 'steamId').indexOf(request.user) >= 0) {
+    if (game.players.map(x => x.steamId).indexOf(request.user) >= 0) {
       throw new HttpResponseError(400, 'Player already in Game');
     }
 
@@ -305,8 +304,7 @@ export class GameController {
       throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
     }
 
-    user.activeGameIds = user.activeGameIds || [];
-    user.activeGameIds.push(game.gameId);
+    this.userService.addUserToGame(user, game);
 
     await Promise.all([
       this.gameRepository.saveVersioned(game),
@@ -315,7 +313,7 @@ export class GameController {
 
     const users = await this.userService.getUsersForGame(game);
 
-    const createdByUser = _.find(users, u => {
+    const createdByUser = users.find(u => {
       return u.steamId === game.createdBySteamId;
     });
 
@@ -355,17 +353,17 @@ export class GameController {
       throw new HttpResponseError(400, 'You can only leave a game before it starts.');
     }
 
-    if (_.map(game.players, 'steamId').indexOf(request.user) < 0) {
+    if (game.players.map(x => x.steamId).indexOf(request.user) < 0) {
       throw new HttpResponseError(400, 'Player not in Game');
     }
 
-    _.remove(game.players, player => {
+    remove(game.players, player => {
       return player.steamId === request.user;
     });
 
     const user = await this.userRepository.get(request.user);
 
-    _.pull(user.activeGameIds, game.gameId);
+    this.userService.removeUserFromGame(user, game, false);
 
     await Promise.all([
       this.gameRepository.saveVersioned(game),
@@ -391,14 +389,14 @@ export class GameController {
   @Get('listOpen')
   public async listOpen(@Request() request: HttpRequest): Promise<OpenGamesResponse> {
     const games: Game[] = await this.gameRepository.incompleteGames();
-    const orderedGames = _.orderBy(games, ['createdAt'], ['desc']);
+    const orderedGames = orderBy(games, ['createdAt'], ['desc']);
 
     return {
-      notStarted: _.filter(orderedGames, game => {
+      notStarted: orderedGames.filter(game => {
         return !game.inProgress;
       }),
-      openSlots: _.filter(orderedGames, game => {
-        const numHumans = _.filter(game.players, player => {
+      openSlots: orderedGames.filter(game => {
+        const numHumans = game.players.filter(player => {
           return !!player.steamId;
         }).length;
 
@@ -467,7 +465,7 @@ export class GameController {
       userId = body.kickUserId;
     }
 
-    const player = _.find(game.players, p => {
+    const player = game.players.find(p => {
       return p.steamId === userId;
     });
 
@@ -493,14 +491,11 @@ export class GameController {
     game.completed = humanPlayers < 2;
 
     const users = await this.userService.getUsersForGame(game);
-    const user = _.find(users, u => {
+    const user = users.find(u => {
       return u.steamId === userId;
     });
 
-    _.pull(user.activeGameIds, gameId);
-
-    user.inactiveGameIds = user.inactiveGameIds || [];
-    user.inactiveGameIds.push(gameId);
+    this.userService.removeUserFromGame(user, game, true);
 
     const savePromises: Promise<any>[] = [];
 
@@ -542,7 +537,7 @@ export class GameController {
     const emailPromises = [];
 
     for (const gamePlayer of game.players) {
-      const curUser = _.find(users, u => {
+      const curUser = users.find(u => {
         return u.steamId === gamePlayer.steamId;
       });
 
@@ -657,12 +652,8 @@ export class GameController {
 
     users.push(newUser);
 
-    pull(oldUser.activeGameIds, game.gameId);
-    oldUser.inactiveGameIds = oldUser.inactiveGameIds || [];
-    oldUser.inactiveGameIds.push(game.gameId);
-
-    newUser.activeGameIds = newUser.activeGameIds || [];
-    newUser.activeGameIds.push(game.gameId);
+    this.userService.removeUserFromGame(oldUser, game, true);
+    this.userService.addUserToGame(newUser, game);
 
     oldPlayer.steamId = body.newSteamId;
 
@@ -696,7 +687,7 @@ export class GameController {
     game.gameTurnRangeKey++;
 
     const users = await this.userService.getUsersForGame(game);
-    const user = _.find(users, u => {
+    const user = users.find(u => {
       return u.steamId === request.user;
     });
 
@@ -726,7 +717,7 @@ export class GameController {
     const parsedRound = saveHandler.gameTurn;
     const gameDlc = game.dlc || [];
 
-    if (gameDlc.length !== saveHandler.parsedDlcs.length || _.difference(gameDlc, saveHandler.parsedDlcs).length) {
+    if (gameDlc.length !== saveHandler.parsedDlcs.length || difference(gameDlc, saveHandler.parsedDlcs).length) {
       throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
     }
 
@@ -845,7 +836,7 @@ export class GameController {
     do {
       const curGameTurn = await this.gameTurnRepository.get({gameId: game.gameId, turn: turn});
 
-      const player = _.find(game.players, p => {
+      const player = game.players.find(p => {
         return p.steamId === curGameTurn.playerSteamId;
       });
 

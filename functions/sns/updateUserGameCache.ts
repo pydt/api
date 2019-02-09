@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import * as _ from 'lodash';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { inject } from '../../lib/ioc';
@@ -9,6 +8,7 @@ import { SNS_MESSAGES } from '../../lib/models/sns';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
+import { flatMap, concat, uniq, compact, includes } from 'lodash';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uugc = iocContainer.resolve(UpdateUserGameCache);
@@ -48,16 +48,16 @@ export class UpdateUserGameCache {
   }
   
   private async updateUsers(users: User[]): Promise<void> {
-    const gameIds = _.compact(_.uniq(_.concat(_.flatMap(users, 'activeGameIds') as string[])));
+    const gameIds = compact(uniq(concat(flatMap(users, 'activeGameIds') as string[])));
     const games = await this.gameRepository.batchGet(gameIds);
-    await Promise.all(_.map(users, user => {
+    await Promise.all(users.map(user => {
       return this.updateUser(user, games);
     }));
   }
     
   private async updateUser(user: User, games: Game[]): Promise<void> {
-    const result = _.filter(games, game => {
-      return _.includes(user.activeGameIds, game.gameId);
+    const result = games.filter(game => {
+      return includes(user.activeGameIds, game.gameId);
     });
   
     await this.s3.putObject({

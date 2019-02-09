@@ -1,6 +1,6 @@
-import { LambdaProxyEvent } from './lambdaProxyEvent';
+import { reduce } from 'lodash';
 import { HttpResponse } from './httpResponse';
-import * as _ from 'lodash';
+import { LambdaProxyEvent } from './lambdaProxyEvent';
 
 export class HttpRequest {
   public body: any;
@@ -21,7 +21,7 @@ export class HttpRequest {
       this.body = JSON.parse(event.body);
     }
 
-    this.headers = _.reduce(event.headers || {}, (result, value, key) => {
+    this.headers = reduce(event.headers || {}, (result, value, key) => {
       result[key.toLowerCase()] = value;
       return result;
     }, {});

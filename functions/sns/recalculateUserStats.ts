@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import * as _ from 'lodash';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
@@ -7,13 +6,14 @@ import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game, User } from '../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
+import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const rus = iocContainer.resolve(RecalculateUserStats);
   await rus.execute(event.Records[0].Sns.Message);
 });
 
-const dataVersion = 1;
+const dataVersion = 2;
 
 @injectable()
 export class RecalculateUserStats {
@@ -21,7 +21,8 @@ export class RecalculateUserStats {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
+    @inject(USER_SERVICE_SYMBOL) private userService: IUserService
   ) {
   }
 
@@ -44,7 +45,7 @@ export class RecalculateUserStats {
     for (const user of users) {
       this.resetStatistics(user);
 
-      const allGameIds = _.concat(user.activeGameIds || [], user.inactiveGameIds || []);
+      const allGameIds = (user.activeGameIds || []).concat(user.inactiveGameIds || []);
 
       pydtLogger.info(`Processing user ${user.displayName}`);
 
@@ -61,7 +62,7 @@ export class RecalculateUserStats {
     
   private async calculateGameStats(games: Game[], user: User) {
     for (const game of games) {
-      const player = _.find(game.players, player => {
+      const player = game.players.find(player => {
         return player.steamId === user.steamId;
       });
 
@@ -86,8 +87,13 @@ export class RecalculateUserStats {
       for (const turn of turns) {
         this.gameTurnService.updateTurnStatistics(game, turn, user);
       }
-    
-      await this.gameRepository.saveVersioned(game);
+
+      const stats = this.userService.getUserGameStats(user, game.gameType);
+      stats.activeGames += game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered) ? 1 : 0;
+      stats.totalGames++;
+
+      // no need to update game at this time, should be OK
+      //await this.gameRepository.saveVersioned(game);
     }
   }
   

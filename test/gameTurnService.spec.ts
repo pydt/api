@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { GameTurnService } from '../lib/services/gameTurnService';
 import { Game, GameTurn, User } from '../lib/models';
-import { IUserService } from '../lib/services/userService';
+import { IUserService, UserService } from '../lib/services/userService';
 import { IS3Provider } from '../lib/s3Provider';
 import { IGameTurnRepository } from '../lib/dynamoose/gameTurnRepository';
 import { IUserRepository } from '../lib/dynamoose/userRepository';
@@ -50,6 +50,9 @@ describe('GameTurnService', () => {
     const userService = <IUserService> {
       getUsersForGame: (game: Game) => {
         return Promise.resolve(game.players.map(x => <User>{ steamId: x.steamId, displayName: x.civType }));
+      },
+      getUserGameStats: (user, game) => {
+        return new UserService(null).getUserGameStats(user, game);
       }
     };
 

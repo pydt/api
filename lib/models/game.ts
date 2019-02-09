@@ -1,7 +1,6 @@
 import { GamePlayer } from './gamePlayer';
 import { Entity } from './shared';
 import { SharedGame } from 'pydt-shared';
-import * as _ from 'lodash';
 
 export interface BaseGame extends SharedGame {
   displayName: string;
@@ -30,7 +29,7 @@ export interface Game extends Entity, BaseGame {
 }
 
 export function getCurrentPlayerIndex(game: Game) {
-  return _.indexOf(game.players, _.find(game.players, player => {
+  return game.players.indexOf(game.players.find(player => {
     return player.steamId === game.currentPlayerSteamId;
   }));
 };
@@ -76,7 +75,7 @@ export function getPreviousPlayerIndex(game: Game) {
 };
 
 export function getHumans(game: Game, includeSurrendered?: boolean) {
-  return _.filter(game.players, player => {
+  return game.players.filter(player => {
     return player.steamId && (includeSurrendered || !player.hasSurrendered);
   });
 };
