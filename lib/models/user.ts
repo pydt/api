@@ -2,7 +2,19 @@ export interface HasSteamId {
   steamId: string;
 }
 
-export interface User extends HasSteamId {
+export interface TurnData {
+  turnsPlayed: number;
+  turnsSkipped: number;
+  timeTaken: number;
+  fastTurns: number;
+  slowTurns: number;
+}
+
+export interface GameTypeTurnData extends TurnData {
+  gameType: string;
+}
+
+export interface User extends HasSteamId, TurnData {
   displayName: string;
   avatarSmall: string;
   avatarMedium: string;
@@ -14,17 +26,5 @@ export interface User extends HasSteamId {
   comments?: string;
   activeGameIds: string[];
   inactiveGameIds: string[];
-  turnsPlayed: number;
-  turnsSkipped: number;
-  timeTaken: number;
-  fastTurns: number;
-  slowTurns: number;
-  statsByGameType: {
-    gameType: string;
-    turnsPlayed: number;
-    turnsSkipped: number;
-    timeTaken: number;
-    fastTurns: number;
-    slowTurns: number;
-  }[];
+  statsByGameType: GameTypeTurnData[];
 }
