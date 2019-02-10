@@ -61,7 +61,7 @@ export class S3Provider implements IS3Provider {
 
   signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number) {
     return s3.getSignedUrl('getObject', merge(fileParams, {
-      ResponseContentDisposition: `attachment; filename='${downloadAsFilename}'`,
+      ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`,
       Expires: expiration
     }));
   }
