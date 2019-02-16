@@ -8,6 +8,12 @@
   dependencies:
     tslib "^1.9.0"
 
+"@angular/common@6":
+  version "6.1.10"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-6.1.10.tgz#96e01564031b23cf54e4264e4c9defd6e10a0e11"
+  dependencies:
+    tslib "^1.9.0"
+
 "@angular/core@6":
   version "6.1.10"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-6.1.10.tgz#9f3d8b7e44ec0a68c88745d25a920f98bfb2bc43"
@@ -3535,6 +3541,10 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
 
+ngx-bootstrap@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.2.0.tgz#ece7c48af0bc260462c3f77de14f22d4b3dde149"
+
 nigel@2.x.x:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/nigel/-/nigel-2.0.2.tgz#93a1866fb0c52d87390aa75e2b161f4b5c75e5b1"
@@ -4022,9 +4032,9 @@ pydt-civ5-save-parser@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.6.tgz#f21ea63260ca58cfc8c11432fa427c0740619235"
 
-pydt-shared@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/pydt-shared/-/pydt-shared-1.2.2.tgz#807b4768b12678950941a9db8e6c42fa254564d5"
+pydt-shared@1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/pydt-shared/-/pydt-shared-1.2.8.tgz#fe6ab4cbd394deb98dfcc665d3a489255a6a86b0"
   dependencies:
     tslib "^1.9.0"
 
