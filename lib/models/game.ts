@@ -5,6 +5,7 @@ import { SharedGame } from 'pydt-shared';
 export interface BaseGame extends SharedGame {
   displayName: string;
   description?: string;
+  webhookUrl?: string;
   dlc: string[];
   slots: number;
   humans: number;

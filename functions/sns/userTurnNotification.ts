@@ -7,6 +7,7 @@ import { inject } from '../../lib/ioc';
 import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
 import { loggingHandler } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
+import { Http } from '@angular/http';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -19,7 +20,8 @@ export class UserTurnNotification {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(IOT_PROVIDER_SYMBOL) private iot: IIotProvider,
-    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
+    @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
+    private http: Http
   ) {
   }
 
@@ -33,6 +35,22 @@ export class UserTurnNotification {
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
     if (payload.newTurn) {
+      if (game.webhookUrl) {
+        // Webhook
+        let jsonData = {
+          value1: $game.displayName,
+          value2: user.displayName,
+          value3: game.round
+        };
+        let data = JSON.stringify(jsonData);
+        this.http.post(${game.webhookUrl}, data)
+            .subscribe(data => {
+                  alert('ok');
+            }, error => {
+                console.log(error.json());
+          });
+      }
+
       await this.iot.notifyUserClient(user);
 
       if (user.emailAddress && !user.vacationMode) {

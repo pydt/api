@@ -109,6 +109,7 @@ export class GameController {
       }],
       displayName: body.displayName,
       description: body.description,
+      webhookUrl: body.webhookUrl,
       slots: body.slots,
       humans: body.humans,
       gameType: body.gameType,
@@ -213,6 +214,7 @@ export class GameController {
       game.gameSpeed = body.gameSpeed;
       game.mapFile = body.mapFile;
       game.mapSize = body.mapSize;
+      game.webhookUrl = body.webhookUrl;
       game.randomOnly = body.randomOnly;
 
       if (game.randomOnly) {
