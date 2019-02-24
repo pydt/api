@@ -92,7 +92,8 @@ const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   mapSize: String,
   latestDiscoursePostNumber: Number,
   lastTurnEndDate: Date,
-  randomOnly: Boolean
+  randomOnly: Boolean,
+  webhookUrl: String
 }) as InternalGameRepository;
 
 gameRepository.origGet = gameRepository.origGet || gameRepository.get;

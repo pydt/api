@@ -3,11 +3,12 @@ import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
+import { HTTP_REQUEST_PROVIDER_SYMBOL, IHttpRequestProvider } from '../../lib/httpRequestProvider';
 import { inject } from '../../lib/ioc';
 import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
 import { loggingHandler } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
-import { Http } from '@angular/http';
+import { pydtLogger } from '../../lib/logging';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -21,7 +22,7 @@ export class UserTurnNotification {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(IOT_PROVIDER_SYMBOL) private iot: IIotProvider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
-    private http: Http
+    @inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider
   ) {
   }
 
@@ -35,20 +36,30 @@ export class UserTurnNotification {
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
     if (payload.newTurn) {
-      if (game.webhookUrl) {
-        // Webhook
-        let jsonData = {
-          value1: $game.displayName,
-          value2: user.displayName,
-          value3: game.round
-        };
-        let data = JSON.stringify(jsonData);
-        this.http.post(${game.webhookUrl}, data)
-            .subscribe(data => {
-                  alert('ok');
-            }, error => {
-                console.log(error.json());
+      const webhooks = [game.webhookUrl, user.webhookUrl].filter(Boolean);
+
+      for (const webhook of webhooks) {
+        try
+        {
+          await this.http.request({
+            method: 'POST',
+            uri: webhook,
+            body: {
+              gameName: game.displayName,
+              userName: user.displayName,
+              round: game.round,
+              // Duplicate "play by cloud" format
+              value1: game.displayName,
+              value2: user.displayName,
+              value3: game.round
+            },
+            json: true,
+            timeout: 2000
           });
+        }
+        catch (e) {
+          pydtLogger.error('Error sending webhook to ' + webhook, e);
+        }
       }
 
       await this.iot.notifyUserClient(user);

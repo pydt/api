@@ -33,6 +33,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   timezone: String,
   comments: String,
   lastTurnEndDate: Date,
+  webhookUrl: String,
   turnsPlayed: {
     type: Number,
     default: 0

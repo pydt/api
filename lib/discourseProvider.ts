@@ -1,8 +1,8 @@
 import { Config } from './config';
-import { Game } from './models';
+import { HTTP_REQUEST_PROVIDER_SYMBOL, IHttpRequestProvider } from './httpRequestProvider';
+import { inject, provideSingleton } from './ioc';
 import { pydtLogger } from './logging';
-import { provideSingleton } from './ioc';
-import * as rp from 'request-promise';
+import { Game } from './models';
 
 export const DISCOURSE_PROVIDER_SYMBOL = Symbol('IDiscourseProvider');
 
@@ -13,9 +13,14 @@ export interface IDiscourseProvider {
 
 @provideSingleton(DISCOURSE_PROVIDER_SYMBOL)
 export class DiscourseProvider implements IDiscourseProvider {
+  constructor(
+    @inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider
+  ) {
+  }
+
   public async addGameTopic(game: Game) {
     if (Config.activeStage() === 'prod') {
-      return await rp({
+      return await this.http.request({
         method: 'POST',
         uri: `https://discourse.playyourdamnturn.com/posts/?api_key=${Config.discourseApiKey()}&api_username=system`,
         form: {
@@ -32,7 +37,7 @@ export class DiscourseProvider implements IDiscourseProvider {
 
   public async deleteGameTopic(game: Game) {
     if (Config.activeStage() === 'prod') {
-      return await rp({
+      return await this.http.request({
         method: 'DELETE',
         uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}?api_key=${Config.discourseApiKey()}&api_username=system`,
         json: true

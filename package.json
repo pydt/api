@@ -37,6 +37,7 @@
     "@types/hapi": "17.0.19",
     "@types/lodash": "^4.14.116",
     "@types/node": "^10.9.4",
+    "@types/request-promise": "^4.1.42",
     "@types/webpack-env": "^1.13.6",
     "chai": "^4.2.0",
     "co": "^4.6.0",

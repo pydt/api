@@ -50,6 +50,15 @@ export class UserController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('setWebhookUrl')
+  public async setWebhookUrl(@Request() request: HttpRequest, @Body() body: SetWebhookUrlBody): Promise<User> {
+    const user = await this.userRepository.get(request.user);
+    user.webhookUrl = body.webhookUrl;
+    return this.userRepository.saveVersioned(user);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setUserInformation')
   public async setUserInformation(@Request() request: HttpRequest, @Body() body: SetUserInformationBody): Promise<User> {
     const user = await this.userRepository.get(request.user);
@@ -120,6 +129,10 @@ export interface GamesByUserResponse {
 
 export interface SetNotificationEmailBody {
   emailAddress: string;
+}
+
+export interface SetWebhookUrlBody {
+  webhookUrl: string;
 }
 
 export interface SetUserInformationBody {

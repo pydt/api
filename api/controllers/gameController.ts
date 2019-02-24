@@ -214,7 +214,6 @@ export class GameController {
       game.gameSpeed = body.gameSpeed;
       game.mapFile = body.mapFile;
       game.mapSize = body.mapSize;
-      game.webhookUrl = body.webhookUrl;
       game.randomOnly = body.randomOnly;
 
       if (game.randomOnly) {
@@ -228,6 +227,7 @@ export class GameController {
 
     game.humans = body.humans;
     game.allowJoinAfterStart = body.allowJoinAfterStart;
+    game.webhookUrl = body.webhookUrl;
     game.turnTimerMinutes = body.turnTimerMinutes;
 
     if (body.password) {
