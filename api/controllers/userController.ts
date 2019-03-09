@@ -6,6 +6,7 @@ import { inject, provideSingleton } from '../../lib/ioc';
 import { Game, SteamProfile, User } from '../../lib/models';
 import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
 import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 import { ErrorResponse, HttpRequest } from '../framework';
 
 @Route('user')
@@ -15,7 +16,8 @@ export class UserController {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
-    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService
+    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {
   }
 
@@ -65,7 +67,20 @@ export class UserController {
     user.comments = (body.comments || '').substr(0, 50);
     user.timezone = body.timezone;
     user.vacationMode = body.vacationMode;
-    return this.userRepository.saveVersioned(user);
+
+    const result = this.userRepository.saveVersioned(user);
+    const games = await this.gameService.getGamesForUser(user);
+
+    if (user.vacationMode) {
+      // If the user is in vacation mode, mark the game as updated so their turn will get skipped.
+      for (const game of games) {
+        if (game.currentPlayerSteamId === user.steamId) {
+          await this.sns.gameUpdated(game);
+        }
+      }
+    }
+
+    return result;
   }
 
   @Security('api_key')

@@ -36,41 +36,43 @@ export class UserTurnNotification {
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
     if (payload.newTurn) {
-      const webhooks = [game.webhookUrl, user.webhookUrl].filter(Boolean);
+      if (!user.vacationMode) {
+        const webhooks = [game.webhookUrl, user.webhookUrl].filter(Boolean);
 
-      for (const webhook of webhooks) {
-        try
-        {
-          await this.http.request({
-            method: 'POST',
-            uri: webhook,
-            body: {
-              gameName: game.displayName,
-              userName: user.displayName,
-              round: game.round,
-              // Duplicate "play by cloud" format
-              value1: game.displayName,
-              value2: user.displayName,
-              value3: game.round
-            },
-            json: true,
-            timeout: 2000
-          });
+        for (const webhook of webhooks) {
+          try
+          {
+            await this.http.request({
+              method: 'POST',
+              uri: webhook,
+              body: {
+                gameName: game.displayName,
+                userName: user.displayName,
+                round: game.round,
+                // Duplicate "play by cloud" format
+                value1: game.displayName,
+                value2: user.displayName,
+                value3: game.round
+              },
+              json: true,
+              timeout: 2000
+            });
+          }
+          catch (e) {
+            pydtLogger.error('Error sending webhook to ' + webhook, e);
+          }
         }
-        catch (e) {
-          pydtLogger.error('Error sending webhook to ' + webhook, e);
+  
+        await this.iot.notifyUserClient(user);
+  
+        if (user.emailAddress) {
+          await this.ses.sendEmail(
+            `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
+            'PLAY YOUR DAMN TURN!',
+            `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl()}/game/${game.gameId}`,
+            user.emailAddress
+          );
         }
-      }
-
-      await this.iot.notifyUserClient(user);
-
-      if (user.emailAddress && !user.vacationMode) {
-        await this.ses.sendEmail(
-          `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
-          'PLAY YOUR DAMN TURN!',
-          `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl()}/game/${game.gameId}`,
-          user.emailAddress
-        );
       }
     } else {
       // Notify all users in game...
