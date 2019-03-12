@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { compact, difference, orderBy, remove } from 'lodash';
-import { GAMES, RANDOM_CIV } from 'pydt-shared';
+import { GAMES, RANDOM_CIV, CIV6_GAME } from 'pydt-shared';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
@@ -795,7 +795,10 @@ export class GameController {
     const nextPlayerIndex = getNextPlayerIndex(game);
 
     if (nextPlayerIndex <= getCurrentPlayerIndex(game)) {
-      expectedRound++;
+      // Allow round to stay the same on the turn for civ 6 world congress...
+      if (!(game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round)) {
+        expectedRound++;
+      }
     }
 
     if (!saveHandler.civData[nextPlayerIndex].isCurrentTurn) {
