@@ -19,7 +19,7 @@
     "ngx-bootstrap": "^3.2.0",
     "passport": "0.4.0",
     "passport-steam": "1.0.10",
-    "pydt-civ5-save-parser": "1.0.6",
+    "pydt-civ5-save-parser": "1.0.7",
     "pydt-shared": "1.2.8",
     "reflect-metadata": "0.1.12",
     "request": "2.88.0",

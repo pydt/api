@@ -140,7 +140,6 @@
 "@types/bluebird@*":
   version "3.5.25"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.25.tgz#59188b871208092e37767e4b3d80c3b3eaae43bd"
-  integrity sha512-yfhIBix+AIFTmYGtkC0Bi+XGjSkOINykqKvO/Wqdz/DuXlAKK7HmhLAXdPIGsV4xzKcL3ev/zYc4yLNo+OvGaw==
 
 "@types/body-parser@*":
   version "1.16.8"
@@ -156,7 +155,6 @@
 "@types/caseless@*":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
-  integrity sha512-FhlMa34NHp9K5MY1Uz8yb+ZvuX0pnvn3jScRSNAb75KHGB8d3rEU6hqMs3Z2vjuytcMfRg6c5CHMc3wtYyD2/A==
 
 "@types/catbox@*":
   version "10.0.0"
@@ -202,7 +200,6 @@
 "@types/form-data@*":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.1.tgz#ee2b3b8eaa11c0938289953606b745b738c54b1e"
-  integrity sha512-JAMFhOaHIciYVh8fb5/83nmuO/AHwmto+Hq7a9y8FzLDcC1KCU344XDOMEmahnrTFlHjgh4L0WJFczNIX2GxnQ==
   dependencies:
     "@types/node" "*"
 
@@ -262,7 +259,6 @@
 "@types/request-promise@^4.1.42":
   version "4.1.42"
   resolved "https://registry.yarnpkg.com/@types/request-promise/-/request-promise-4.1.42.tgz#a70a6777429531e60ed09faa077ead9b995204cd"
-  integrity sha512-b8li55sEZ00BXZstZ3d8WOi48dnapTqB1VufEG9Qox0nVI2JVnTVT1Mw4JbBa1j+1sGVX/qJ0R4WDv4v2GjT0w==
   dependencies:
     "@types/bluebird" "*"
     "@types/request" "*"
@@ -270,7 +266,6 @@
 "@types/request@*":
   version "2.48.1"
   resolved "https://registry.yarnpkg.com/@types/request/-/request-2.48.1.tgz#e402d691aa6670fbbff1957b15f1270230ab42fa"
-  integrity sha512-ZgEZ1TiD+KGA9LiAAPPJL68Id2UWfeSO62ijSXZjFJArVV+2pKcsVHmrcu+1oiE3q6eDGiFiSolRc4JHoerBBg==
   dependencies:
     "@types/caseless" "*"
     "@types/form-data" "*"
@@ -297,7 +292,6 @@
 "@types/tough-cookie@*":
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.5.tgz#9da44ed75571999b65c37b60c9b2b88db54c585d"
-  integrity sha512-SCcK7mvGi3+ZNz833RRjFIxrn4gI1PPR3NtuIS+6vMkvmsGjosqTJwRt5bAEFLRz+wtJMWv8+uOnZf2hi2QXTg==
 
 "@types/webpack-env@^1.13.6":
   version "1.13.6"
@@ -4068,9 +4062,9 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-pydt-civ5-save-parser@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.6.tgz#f21ea63260ca58cfc8c11432fa427c0740619235"
+pydt-civ5-save-parser@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/pydt-civ5-save-parser/-/pydt-civ5-save-parser-1.0.7.tgz#c5946f63d1806552e8ad16e14716583b5e701648"
 
 pydt-shared@1.2.8:
   version "1.2.8"
