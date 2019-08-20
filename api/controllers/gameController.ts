@@ -734,7 +734,7 @@ export class GameController {
       );
     }
 
-    if (game.mapFile && saveHandler.mapFile.indexOf(game.mapFile) < 0) {
+    if (game.mapFile && saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
       throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`);
     }
 
