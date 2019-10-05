@@ -9,6 +9,7 @@ import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
 import { loggingHandler } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 import { pydtLogger } from '../../lib/logging';
+import { GAMES } from 'pydt-shared';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -42,6 +43,10 @@ export class UserTurnNotification {
         for (const webhook of webhooks) {
           try
           {
+            const currentPlayer = game.players.find(x => x.steamId === game.currentPlayerSteamId);
+            const gameData = GAMES.find(x => x.id === game.gameType);
+            const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
+            
             await this.http.request({
               method: 'POST',
               uri: webhook,
@@ -49,6 +54,8 @@ export class UserTurnNotification {
                 gameName: game.displayName,
                 userName: user.displayName,
                 round: game.round,
+                civName: leader ? leader.civDisplayName : null,
+                leaderName: leader ? leader.leaderDisplayName : null,
                 // Duplicate "play by cloud" format
                 value1: game.displayName,
                 value2: user.displayName,
