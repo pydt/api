@@ -8,6 +8,7 @@ export const USER_REPOSITORY_SYMBOL = Symbol('IUserRepository');
 export interface IUserRepository extends IRepository<string, User> {
   allUsers(): Promise<User[]>;
   usersWithTurnsPlayed(): Promise<User[]>;
+  substituteUsers(): Promise<User[]>;
 }
 
 interface InternalUserRepository extends IUserRepository, IInternalRepository<string, User> {
@@ -88,6 +89,7 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
       }
     }
   ],
+  willSubstituteForGameTypes: [String],
   dataVersion: Number
 }) as InternalUserRepository;
 
@@ -129,5 +131,11 @@ userRepository.usersWithTurnsPlayed = () => {
     return userRepository.scan().where('turnsPlayed').gt(0);
   });
 };
+
+userRepository.substituteUsers = () => {
+  return scanAllUsers(true, () => {
+    return userRepository.scan().where('willSubstituteForGameTypes').not().null();
+  });
+}
 
 iocContainer.bind<IUserRepository>(USER_REPOSITORY_SYMBOL).toConstantValue(userRepository);
