@@ -61,6 +61,28 @@ export class UserController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('setSubstitutionPrefs')
+  public async setSubstitutionPrefs(@Request() request: HttpRequest, @Body() body: SetSubstitutionPrefsBody): Promise<User> {
+    const user = await this.userRepository.get(request.user);
+
+    if (user.turnsPlayed < 500) {
+      throw new Error('Must have played 500 turns to substitute!');
+    }
+
+    user.willSubstituteForGameTypes = body.willSubstituteForGameTypes;
+    return this.userRepository.saveVersioned(user);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Get('getSubstituteUsers')
+  public async getSubstituteUsers(@Request() request: HttpRequest, @Query('gameType') gameType): Promise<User[]> {
+    const subUsers = await this.userRepository.substituteUsers();
+    return subUsers.filter(x => x.willSubstituteForGameTypes.indexOf(gameType) >= 0);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setUserInformation')
   public async setUserInformation(@Request() request: HttpRequest, @Body() body: SetUserInformationBody): Promise<User> {
     const user = await this.userRepository.get(request.user);
@@ -154,4 +176,8 @@ export interface SetUserInformationBody {
   vacationMode?: boolean;
   timezone?: string;
   comments?: string;
+}
+
+export interface SetSubstitutionPrefsBody {
+  willSubstituteForGameTypes: string[];
 }

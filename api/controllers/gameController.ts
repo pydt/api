@@ -620,14 +620,9 @@ export class GameController {
       throw new HttpResponseError(400, 'Game must be in progress to replace!');
     }
 
-    // Until we get the UI ready, this is an admin function
-    if (request.user !== '76561197973299801') {
-      throw new HttpResponseError(400, 'You`re not SackGT!');
+    if (game.createdBySteamId !== request.user || body.oldSteamId !== request.user) {
+      throw new HttpResponseError(400, 'You don\'t have permission to replace a player in this game!');
     }
-
-    /*if (game.createdBySteamId !== request.user) {
-      throw new HttpResponseError(400, 'You didn\'t create this game!');
-    }*/
 
     const oldPlayer = game.players.find(x => x.steamId === body.oldSteamId);
 
@@ -650,6 +645,10 @@ export class GameController {
 
     if (!newUser) {
       throw new HttpResponseError(400, 'New user not found!');
+    }
+
+    if (!newUser.willSubstituteForGameTypes || newUser.willSubstituteForGameTypes.indexOf(game.gameType) < 0) {
+      throw new HttpResponseError(400, 'User to substitute has not given permission!');
     }
 
     users.push(newUser);
