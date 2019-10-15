@@ -4,8 +4,8 @@ node_js:
 script:
   - npm install -g serverless@1.31.0
   - npm run test
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then npm run deploy-prod; fi
-  - if [ "$TRAVIS_BRANCH" == "develop" ]; then npm run deploy-dev; fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then npm run deploy-prod; fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "develop" ]; then npm run deploy-dev; fi
 branches:
   only:
   - master
