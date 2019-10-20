@@ -124,9 +124,7 @@ gameRepository.unstartedGames = async (daysOld: number) => {
 }
 
 gameRepository.getByDiscourseTopicId = async (topicId: number) => {
-  const topics = await gameRepository
-    .scan('discourseTopicId').eq(topicId)
-    .exec();
+  const topics = await getAllPaged<Game>(gameRepository.scan('discourseTopicId').eq(topicId));
 
   if (!topics) {
     return null;
