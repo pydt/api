@@ -73,8 +73,6 @@ export class UserController {
     return this.userRepository.saveVersioned(user);
   }
 
-  @Security('api_key')
-  @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('getSubstituteUsers')
   public async getSubstituteUsers(@Request() request: HttpRequest, @Query('gameType') gameType): Promise<User[]> {
     const subUsers = await this.userRepository.substituteUsers();
@@ -118,7 +116,6 @@ export class UserController {
     return profiles[0];
   }
 
-  @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('steamProfiles')
   public async steamProfiles(@Query('steamIds') rawSteamIds: string): Promise<SteamProfile[]> {
     const steamIds = rawSteamIds.split(',') || [];
