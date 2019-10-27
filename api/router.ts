@@ -55,7 +55,7 @@ function methodHandler(method: string) {
   };
 }
 
-const mockApp = {
+const mockApp: any = {
   delete: methodHandler('delete'),
   get: methodHandler('get'),
   patch: methodHandler('patch'),

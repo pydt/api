@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.31.0"
+frameworkVersion: "1.55.1"
 
 plugins:
   - serverless-domain-manager
@@ -23,7 +23,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.x
   stage: dev
   resourcePolicy:
     - Effect: Allow
