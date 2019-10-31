@@ -1,7 +1,7 @@
-import { GameTurn, GameTurnKey } from '../models';
-import { IRepository, dynamoose, IInternalRepository } from './common';
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
+import { GameTurn, GameTurnKey } from '../models';
+import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
 
 export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
@@ -46,7 +46,7 @@ gameTurnRepository.getTurnsForGame = (gameId: string, startTurn, endTurn) => {
 };
 
 gameTurnRepository.getPlayerTurnsForGame = (gameId: string, steamId: string) => {
-  return gameTurnRepository.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId).exec();
+  return getAllPaged<GameTurn>(gameTurnRepository.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId));
 };
 
 iocContainer.bind<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL).toConstantValue(gameTurnRepository);

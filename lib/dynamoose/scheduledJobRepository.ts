@@ -1,7 +1,7 @@
 import { Config } from '../config';
 import { iocContainer } from '../ioc';
 import { ScheduledJob, ScheduledJobKey } from '../models';
-import { dynamoose, IInternalRepository, IRepository } from './common';
+import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
 
 export const SCHEDULED_JOB_REPOSITORY_SYMBOL = Symbol('IScheduledJobRepository');
 
@@ -30,11 +30,11 @@ const scheduledJobRepository = dynamoose.createVersionedModel(Config.resourcePre
 }) as InternalScheduledJobRepository;
 
 scheduledJobRepository.getWaitingJobs = (jobType: string) => {
-  return scheduledJobRepository.query('jobType')
-    .eq(jobType)
-    .where('scheduledTime')
-    .lt(new Date())
-    .exec();
+  return getAllPaged<ScheduledJob>(
+    scheduledJobRepository.query('jobType')
+      .eq(jobType)
+      .where('scheduledTime')
+      .lt(new Date()));
 }
 
 iocContainer.bind<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL).toConstantValue(scheduledJobRepository);
