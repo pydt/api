@@ -834,10 +834,11 @@ export class GameController {
       throw new HttpResponseError(400, `You can't revert this game!`);
     }
 
-    const turn = game.gameTurnRangeKey - 1;
+    let turn = game.gameTurnRangeKey;
     let lastTurn: GameTurn;
 
     do {
+      turn--;
       const curGameTurn = await this.gameTurnRepository.get({gameId: game.gameId, turn: turn});
 
       const player = game.players.find(p => {
