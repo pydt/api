@@ -51,7 +51,11 @@ export const dynamoose: any = merge(baseDynamoose, {
       }
     };
 
-    const model: any = baseDynamoose.model(name, new baseDynamoose.Schema(schema, { timestamps: true }));
+    const model: any = baseDynamoose.model(name, new baseDynamoose.Schema(schema, {
+      timestamps: true,
+      useNativeBooleans: false,
+      useDocumentTypes: false
+    }));
 
     model.saveVersioned = (m) => {
       if (!(m instanceof model)) {

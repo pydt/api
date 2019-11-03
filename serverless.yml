@@ -81,7 +81,6 @@ custom:
         - reflect-metadata
         - source-map-support
         - pydt-shared
-        - rxjs-compat
         - "@angular/animations"
         - "@angular/common"
         - "ngx-bootstrap"
