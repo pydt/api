@@ -10,6 +10,7 @@ import { loggingHandler } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 import { pydtLogger } from '../../lib/logging';
 import { GAMES } from 'pydt-shared';
+import * as isUrl from 'is-url';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -41,32 +42,34 @@ export class UserTurnNotification {
         const webhooks = [game.webhookUrl, user.webhookUrl].filter(Boolean);
 
         for (const webhook of webhooks) {
-          try
-          {
-            const currentPlayer = game.players.find(x => x.steamId === game.currentPlayerSteamId);
-            const gameData = GAMES.find(x => x.id === game.gameType);
-            const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
-            
-            await this.http.request({
-              method: 'POST',
-              uri: webhook,
-              body: {
-                gameName: game.displayName,
-                userName: user.displayName,
-                round: game.round,
-                civName: leader ? leader.civDisplayName : null,
-                leaderName: leader ? leader.leaderDisplayName : null,
-                // Duplicate "play by cloud" format
-                value1: game.displayName,
-                value2: user.displayName,
-                value3: game.round
-              },
-              json: true,
-              timeout: 2000
-            });
-          }
-          catch (e) {
-            pydtLogger.error('Error sending webhook to ' + webhook, e);
+          if (isUrl(webhook)) {
+            try
+            {
+              const currentPlayer = game.players.find(x => x.steamId === game.currentPlayerSteamId);
+              const gameData = GAMES.find(x => x.id === game.gameType);
+              const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
+              
+              await this.http.request({
+                method: 'POST',
+                uri: webhook,
+                body: {
+                  gameName: game.displayName,
+                  userName: user.displayName,
+                  round: game.round,
+                  civName: leader ? leader.civDisplayName : null,
+                  leaderName: leader ? leader.leaderDisplayName : null,
+                  // Duplicate "play by cloud" format
+                  value1: game.displayName,
+                  value2: user.displayName,
+                  value3: game.round
+                },
+                json: true,
+                timeout: 2000
+              });
+            }
+            catch (e) {
+              pydtLogger.error('Error sending webhook to ' + webhook, e);
+            }
           }
         }
   

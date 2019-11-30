@@ -72,7 +72,7 @@ describe('UserTurnNotification', () => {
   };
 
   it('should send notifications correctly on new turn', async () => {
-    const mocks = createMocks('http://gamehook', 'http://userhook', 'wat@whoa.com');
+    const mocks = createMocks('http://gamehook.com', 'http://userhook.com', 'wat@whoa.com');
     await mocks.utn.execute({
       gameId: '1',
       newTurn: true
@@ -92,11 +92,11 @@ describe('UserTurnNotification', () => {
 
     expect(mocks.requestSpy.calledTwice).to.be.true;
     expect(mocks.requestSpy.firstCall.args[0]).to.deep.include({
-      uri: 'http://gamehook',
+      uri: 'http://gamehook.com',
       body: expectedRequestBody
     });
     expect(mocks.requestSpy.secondCall.args[0]).to.deep.include({
-      uri: 'http://userhook',
+      uri: 'http://userhook.com',
       body: expectedRequestBody
     });
 
