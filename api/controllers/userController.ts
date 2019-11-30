@@ -52,6 +52,15 @@ export class UserController {
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('setForumUsername')
+  public async setForumUsername(@Request() request: HttpRequest, @Body() body: SetForumUsernameBody): Promise<User> {
+    const user = await this.userRepository.get(request.user);
+    user.forumUsername = body.forumUsername;
+    return this.userRepository.saveVersioned(user);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setWebhookUrl')
   public async setWebhookUrl(@Request() request: HttpRequest, @Body() body: SetWebhookUrlBody): Promise<User> {
     const user = await this.userRepository.get(request.user);
@@ -173,6 +182,10 @@ export interface SetUserInformationBody {
   vacationMode?: boolean;
   timezone?: string;
   comments?: string;
+}
+
+export interface SetForumUsernameBody {
+  forumUsername: string;
 }
 
 export interface SetSubstitutionPrefsBody {

@@ -30,6 +30,7 @@ export interface User extends HasSteamId, TurnData {
   activeGameIds: string[];
   inactiveGameIds: string[];
   statsByGameType: GameTypeTurnData[];
+  forumUsername?: string;
   webhookUrl?: string;
   willSubstituteForGameTypes: string[];
 }

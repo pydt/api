@@ -34,6 +34,7 @@ export class WebhookController {
 
     if (game) {
       game.latestDiscoursePostNumber = body.post.post_number;
+      game.latestDiscoursePostUser = body.post.display_username;
       await this.gameRepository.saveVersioned(game);
       await this.sns.gameUpdated(game);
     }
@@ -45,5 +46,6 @@ export interface NewDiscordPostBody {
     id: number;
     post_number: number;
     topic_id: number;
+    display_username: string;
   };
 }

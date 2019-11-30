@@ -26,6 +26,7 @@ export interface Game extends Entity, BaseGame {
   gameTurnRangeKey?: number;
   completed?: boolean;
   latestDiscoursePostNumber?: number;
+  latestDiscoursePostUser?: string;
   lastTurnEndDate?: Date;
 }
 

@@ -91,6 +91,7 @@ const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
   mapFile: String,
   mapSize: String,
   latestDiscoursePostNumber: Number,
+  latestDiscoursePostUser: String,
   lastTurnEndDate: Date,
   randomOnly: Boolean,
   webhookUrl: String
