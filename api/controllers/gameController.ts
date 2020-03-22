@@ -82,6 +82,10 @@ export class GameController {
       throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
     }
 
+    if (user.banned) {
+      throw new HttpResponseError(400, 'You have been banned from the site.  Please get in touch with us to state your case if you want reinstatement.');
+    }
+
     const games = await this.gameService.getGamesForUser(user);
     const hasFormingGame = games.some(game => {
       return game.gameType === body.gameType && game.createdBySteamId === request.user && !game.inProgress;
@@ -304,6 +308,10 @@ export class GameController {
 
     if (!user.emailAddress) {
       throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
+    }
+
+    if (user.banned) {
+      throw new HttpResponseError(400, 'You have been banned from the site.  Please get in touch with us to state your case if you want reinstatement.');
     }
 
     this.userService.addUserToGame(user, game);

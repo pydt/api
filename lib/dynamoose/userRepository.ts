@@ -91,7 +91,8 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
     }
   ],
   willSubstituteForGameTypes: [String],
-  dataVersion: Number
+  dataVersion: Number,
+  banned: Boolean
 }) as InternalUserRepository;
 
 async function scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
