@@ -225,8 +225,8 @@ export class GameController {
       }
     }
 
-    if (body.humans < game.players.length) {
-      throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of players!`);
+    if (body.humans < game.players.filter(x => playerIsHuman(x)).length) {
+      throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of humans!`);
     }
 
     game.humans = body.humans;
