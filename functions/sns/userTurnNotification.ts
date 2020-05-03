@@ -68,7 +68,7 @@ export class UserTurnNotification {
               });
             }
             catch (e) {
-              pydtLogger.error('Error sending webhook to ' + webhook, e);
+              pydtLogger.info('Error sending webhook to ' + webhook, e);
             }
           }
         }
