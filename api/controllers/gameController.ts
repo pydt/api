@@ -135,11 +135,12 @@ export class GameController {
       newGame.hashedPassword = await bcrypt.hash(body.password, salt);
     }
 
-    await this.gameRepository.saveVersioned(newGame);
-
     this.userService.addUserToGame(user, newGame);
 
     await this.userRepository.saveVersioned(user);
+
+    // Save game after user, if user is trying to create games in quick succession one user save should fail
+    await this.gameRepository.saveVersioned(newGame);
 
     return newGame;
   }
