@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "10"
 script:
-  - npm install -g serverless@1.55.1
+  - npm install -g serverless@1.70.0
   - npm run test
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then npm run deploy-prod; fi
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "develop" ]; then npm run deploy-dev; fi

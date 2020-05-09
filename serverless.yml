@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.55.1"
+frameworkVersion: "1.70.0"
 
 plugins:
   - serverless-domain-manager
@@ -88,10 +88,14 @@ custom:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com
   customDomain:
-    basePath: ''
     domainName: ${self:custom.domain.${self:custom.activeStage}}
     stage: ${self:custom.activeStage}
+    basePath: ''
     certificateName: "playyourdamnturn.com"
+    createRoute53Record: true
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    apiType: rest
 
 functions:
   api_router:
