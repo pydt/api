@@ -29,7 +29,7 @@ export class UserTurnNotification {
   }
 
   public async execute(payload: UserGameCacheUpdatedPayload) {
-    const game = await this.gameRepository.get(payload.gameId);
+    const game = await this.gameRepository.get(payload.gameId, true);
 
     if (!game || !game.inProgress || game.completed) {
       return;

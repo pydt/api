@@ -3,9 +3,9 @@ import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import { CIV6_GAME } from 'pydt-shared';
 import { Config } from '../config';
-import { iocContainer } from '../ioc';
+import { provideSingleton } from '../ioc';
 import { Game } from '../models';
-import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
+import { BaseDynamooseRepository, IRepository } from './common';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
@@ -15,131 +15,125 @@ export interface IGameRepository extends IRepository<string, Game> {
   getByDiscourseTopicId(topicId: number): Promise<Game>;
 }
 
-interface InternalGameRepository extends IGameRepository, IInternalRepository<string, Game> {
-  origGet(id: string): Promise<Game>;
-  origBatchGet(ids: string[]): Promise<Game[]>;
-}
+@provideSingleton(GAME_REPOSITORY_SYMBOL)
+export class GameRepository extends BaseDynamooseRepository<string, Game> implements IGameRepository {
+  constructor() {
+    super(Config.resourcePrefix() + 'game', {
+      gameId: {
+        type: String,
+        hashKey: true,
+        required: true
+      },
+      createdBySteamId: {
+        type: String,
+        required: true
+      },
+      dlc: [String],
+      inProgress: Boolean,
+      completed: Boolean,
+      hashedPassword: String,
+      displayName: {
+        type: String,
+        required: true
+      },
+      allowJoinAfterStart: Boolean,
+      description: String,
+      slots: Number,
+      humans: Number,
+      players: [
+        {
+          steamId: String,
+          civType: String,
+          hasSurrendered: Boolean,
+          surrenderDate: Date,
+          turnsPlayed: {
+            type: Number,
+            default: 0
+          },
+          turnsSkipped: {
+            type: Number,
+            default: 0
+          },
+          timeTaken: {
+            type: Number,
+            default: 0
+          },
+          fastTurns: {
+            type: Number,
+            default: 0
+          },
+          slowTurns: {
+            type: Number,
+            default: 0
+          }
+        }
+      ],
+      discourseTopicId: Number,
+      currentPlayerSteamId: {
+        type: String,
+        required: true
+      },
+      turnTimerMinutes: Number,
+      round: {
+        type: Number,
+        required: true,
+        default: 1
+      },
+      gameTurnRangeKey: {
+        type: Number,
+        required: true,
+        default: 1
+      },
+      gameSpeed: String,
+      gameType: String,
+      mapFile: String,
+      mapSize: String,
+      latestDiscoursePostNumber: Number,
+      latestDiscoursePostUser: String,
+      lastTurnEndDate: Date,
+      randomOnly: Boolean,
+      webhookUrl: String
+    });
+  }
 
-const gameRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game', {
-  gameId: {
-    type: String,
-    hashKey: true,
-    required: true
-  },
-  createdBySteamId: {
-    type: String,
-    required: true
-  },
-  dlc: [String],
-  inProgress: Boolean,
-  completed: Boolean,
-  hashedPassword: String,
-  displayName: {
-    type: String,
-    required: true
-  },
-  allowJoinAfterStart: Boolean,
-  description: String,
-  slots: Number,
-  humans: Number,
-  players: [
-    {
-      steamId: String,
-      civType: String,
-      hasSurrendered: Boolean,
-      surrenderDate: Date,
-      turnsPlayed: {
-        type: Number,
-        default: 0
-      },
-      turnsSkipped: {
-        type: Number,
-        default: 0
-      },
-      timeTaken: {
-        type: Number,
-        default: 0
-      },
-      fastTurns: {
-        type: Number,
-        default: 0
-      },
-      slowTurns: {
-        type: Number,
-        default: 0
-      }
+  async get(id: string, consistent?: boolean) {
+    return this.setDefaults(await super.get(id, consistent));
+  }
+
+  async batchGet(ids: string[], consistent?: boolean) {
+    const games = await super.batchGet(ids, consistent);
+    return orderBy(games, ['createdAt'], ['desc']).map(g => this.setDefaults(g));
+  }
+
+  async incompleteGames() {
+    const games = await this.getAllPaged(this.scan('completed').not().eq(true));
+    return games.map(g => this.setDefaults(g));
+  };
+
+  async unstartedGames(daysOld: number) {
+    const games = await this.getAllPaged(this
+      .scan('inProgress').not().eq(true)
+      .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
+    );
+
+    return games.map(g => this.setDefaults(g));
+  }
+
+  async getByDiscourseTopicId(topicId: number) {
+    const topics = await this.getAllPaged(this.scan('discourseTopicId').eq(topicId));
+
+    if (!topics) {
+      return null;
     }
-  ],
-  discourseTopicId: Number,
-  currentPlayerSteamId: {
-    type: String,
-    required: true
-  },
-  turnTimerMinutes: Number,
-  round: {
-    type: Number,
-    required: true,
-    default: 1
-  },
-  gameTurnRangeKey: {
-    type: Number,
-    required: true,
-    default: 1
-  },
-  gameSpeed: String,
-  gameType: String,
-  mapFile: String,
-  mapSize: String,
-  latestDiscoursePostNumber: Number,
-  latestDiscoursePostUser: String,
-  lastTurnEndDate: Date,
-  randomOnly: Boolean,
-  webhookUrl: String
-}) as InternalGameRepository;
 
-gameRepository.origGet = gameRepository.origGet || gameRepository.get;
+    return this.setDefaults(topics[0]);
+  };
 
-gameRepository.get = async key => {
-  return setDefaults(await gameRepository.origGet(key));
-};
+  private setDefaults(game: Game) {
+    if (game) {
+      game.gameType = game.gameType || CIV6_GAME.id;
+    }
 
-gameRepository.origBatchGet = gameRepository.origBatchGet || gameRepository.batchGet;
-
-gameRepository.batchGet = async gameKeys => {
-  const games: Game[] = await gameRepository.origBatchGet(gameKeys);
-  return orderBy(games, ['createdAt'], ['desc']).map(g => setDefaults(g));
-};
-
-gameRepository.incompleteGames = async () => {
-  const games = await getAllPaged<Game>(gameRepository.scan('completed').not().eq(true));
-  return games.map(g => setDefaults(g));
-};
-
-gameRepository.unstartedGames = async (daysOld: number) => {
-  const games: Game[] = await getAllPaged<Game>(gameRepository
-    .scan('inProgress').not().eq(true)
-    .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
-  );
-
-  return games.map(g => setDefaults(g));
-}
-
-gameRepository.getByDiscourseTopicId = async (topicId: number) => {
-  const topics = await getAllPaged<Game>(gameRepository.scan('discourseTopicId').eq(topicId));
-
-  if (!topics) {
-    return null;
+    return game;
   }
-
-  return setDefaults(topics[0]);
-};
-
-function setDefaults(game: Game) {
-  if (game) {
-    game.gameType = game.gameType || CIV6_GAME.id;
-  }
-
-  return game;
 }
-
-iocContainer.bind<IGameRepository>(GAME_REPOSITORY_SYMBOL).toConstantValue(gameRepository);

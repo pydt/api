@@ -24,7 +24,7 @@ export class AddTurnTimerJob {
   }
 
   public async execute(gameId: string): Promise<void> {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId, true);
   
     if (!game || !game.inProgress || !game.gameTurnRangeKey || !GAMES.find(x => x.id === game.gameType).turnTimerSupported) {
       pydtLogger.info('Ignoring game ' + gameId);

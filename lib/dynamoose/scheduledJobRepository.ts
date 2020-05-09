@@ -1,7 +1,7 @@
 import { Config } from '../config';
-import { iocContainer } from '../ioc';
+import { provideSingleton } from '../ioc';
 import { ScheduledJob, ScheduledJobKey } from '../models';
-import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
+import { BaseDynamooseRepository, IRepository } from './common';
 
 export const SCHEDULED_JOB_REPOSITORY_SYMBOL = Symbol('IScheduledJobRepository');
 
@@ -9,32 +9,32 @@ export interface IScheduledJobRepository extends IRepository<ScheduledJobKey, Sc
   getWaitingJobs(jobType: string): Promise<ScheduledJob[]>;
 }
 
-interface InternalScheduledJobRepository extends IScheduledJobRepository, IInternalRepository<ScheduledJobKey, ScheduledJob> {
-}
-
 export const JOB_TYPES = {
   TURN_TIMER: 'TURN_TIMER',
   TURN_TIMER_VACATION: 'TURN_TIMER_VACATION'
 };
 
-const scheduledJobRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'scheduled-job', {
-  jobType: {
-    type: String,
-    hashKey: true
-  },
-  scheduledTime: {
-    type: Date,
-    rangeKey: true
-  },
-  gameIds: [String]
-}) as InternalScheduledJobRepository;
+@provideSingleton(SCHEDULED_JOB_REPOSITORY_SYMBOL)
+export class ScheduledJobRepository extends BaseDynamooseRepository<ScheduledJobKey, ScheduledJob> implements IScheduledJobRepository {
+  constructor() {
+    super(Config.resourcePrefix() + 'scheduled-job', {
+      jobType: {
+        type: String,
+        hashKey: true
+      },
+      scheduledTime: {
+        type: Date,
+        rangeKey: true
+      },
+      gameIds: [String]
+    });
+  }
 
-scheduledJobRepository.getWaitingJobs = (jobType: string) => {
-  return getAllPaged<ScheduledJob>(
-    scheduledJobRepository.query('jobType')
-      .eq(jobType)
-      .where('scheduledTime')
-      .lt(new Date()));
+  getWaitingJobs(jobType: string) {
+    return this.getAllPaged(
+      this.query('jobType')
+        .eq(jobType)
+        .where('scheduledTime')
+        .lt(new Date()));
+  }
 }
-
-iocContainer.bind<IScheduledJobRepository>(SCHEDULED_JOB_REPOSITORY_SYMBOL).toConstantValue(scheduledJobRepository);

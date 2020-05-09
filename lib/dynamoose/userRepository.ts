@@ -1,7 +1,7 @@
-import { dynamoose, IRepository, IInternalRepository } from './common';
 import { Config } from '../config';
+import { provideSingleton } from '../ioc';
 import { User } from '../models/user';
-import { iocContainer } from '../ioc';
+import { BaseDynamooseRepository, IRepository } from './common';
 
 export const USER_REPOSITORY_SYMBOL = Symbol('IUserRepository');
 
@@ -11,63 +11,31 @@ export interface IUserRepository extends IRepository<string, User> {
   substituteUsers(): Promise<User[]>;
 }
 
-interface InternalUserRepository extends IUserRepository, IInternalRepository<string, User> {
-}
-
-const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'user', {
-  steamId: {
-    type: String,
-    hashKey: true
-  },
-  displayName: {
-    type: String,
-    required: true
-  },
-  avatarSmall: String,
-  avatarMedium: String,
-  avatarFull: String,
-  steamProfileUrl: String,
-  emailAddress: String,
-  activeGameIds: [String],
-  inactiveGameIds: [String],
-  vacationMode: Boolean,
-  timezone: String,
-  comments: String,
-  lastTurnEndDate: Date,
-  webhookUrl: String,
-  forumUsername: String,
-  turnsPlayed: {
-    type: Number,
-    default: 0
-  },
-  turnsSkipped: {
-    type: Number,
-    default: 0
-  },
-  timeTaken: {
-    type: Number,
-    default: 0
-  },
-  fastTurns: {
-    type: Number,
-    default: 0
-  },
-  slowTurns: {
-    type: Number,
-    default: 0
-  },
-  statsByGameType: [
-    {
-      gameType: String,
+@provideSingleton(USER_REPOSITORY_SYMBOL)
+export class UserRepository extends BaseDynamooseRepository<string, User> implements IUserRepository {
+  constructor() {
+    super(Config.resourcePrefix() + 'user', {
+      steamId: {
+        type: String,
+        hashKey: true
+      },
+      displayName: {
+        type: String,
+        required: true
+      },
+      avatarSmall: String,
+      avatarMedium: String,
+      avatarFull: String,
+      steamProfileUrl: String,
+      emailAddress: String,
+      activeGameIds: [String],
+      inactiveGameIds: [String],
+      vacationMode: Boolean,
+      timezone: String,
+      comments: String,
       lastTurnEndDate: Date,
-      activeGames: {
-        type: Number,
-        default: 0
-      },
-      totalGames: {
-        type: Number,
-        default: 0
-      },
+      webhookUrl: String,
+      forumUsername: String,
       turnsPlayed: {
         type: Number,
         default: 0
@@ -87,57 +55,89 @@ const userRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 
       slowTurns: {
         type: Number,
         default: 0
+      },
+      statsByGameType: [
+        {
+          gameType: String,
+          lastTurnEndDate: Date,
+          activeGames: {
+            type: Number,
+            default: 0
+          },
+          totalGames: {
+            type: Number,
+            default: 0
+          },
+          turnsPlayed: {
+            type: Number,
+            default: 0
+          },
+          turnsSkipped: {
+            type: Number,
+            default: 0
+          },
+          timeTaken: {
+            type: Number,
+            default: 0
+          },
+          fastTurns: {
+            type: Number,
+            default: 0
+          },
+          slowTurns: {
+            type: Number,
+            default: 0
+          }
+        }
+      ],
+      willSubstituteForGameTypes: [String],
+      dataVersion: Number,
+      banned: Boolean
+    });
+  }
+
+  allUsers() {
+    return this.scanAllUsers(false, () => {
+      return this.scan();
+    });
+  }
+
+  usersWithTurnsPlayed() {
+    return this.scanAllUsers(true, () => {
+      return this.scan().where('turnsPlayed').gt(0);
+    });
+  };
+
+  substituteUsers() {
+    return this.scanAllUsers(true, () => {
+      return this.scan().where('willSubstituteForGameTypes').not().null();
+    });
+  }
+
+  private async scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
+    const result: User[] = [];
+    let lastKey;
+
+    do {
+      let scan = createScanQuery();
+
+      if (lastKey) {
+        scan = scan.startAt(lastKey);
       }
-    }
-  ],
-  willSubstituteForGameTypes: [String],
-  dataVersion: Number,
-  banned: Boolean
-}) as InternalUserRepository;
 
-async function scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
-  const result: User[] = [];
-  let lastKey;
+      const users: User[] = await scan.exec();
 
-  do {
-    let scan = createScanQuery();
+      for (const user of users) {
+        if (removeEmail) {
+          delete user.emailAddress; // make sure email address isn't returned!
+        }
 
-    if (lastKey) {
-      scan = scan.startAt(lastKey);
-    }
-
-    const users: User[] = await scan.exec();
-
-    for (const user of users) {
-      if (removeEmail) {
-        delete user.emailAddress; // make sure email address isn't returned!
+        result.push(user);
       }
 
-      result.push(user);
-    }
+      lastKey = (users as any).lastKey;
+    } while (lastKey);
 
-    lastKey = (users as any).lastKey;
-  } while (lastKey);
-
-  return result;
+    return result;
+  }
 }
-
-userRepository.allUsers = () => {
-  return scanAllUsers(false, () => {
-    return userRepository.scan();
-  });
-}
-
-userRepository.usersWithTurnsPlayed = () => {
-  return scanAllUsers(true, () => {
-    return userRepository.scan().where('turnsPlayed').gt(0);
-  });
-};
-
-userRepository.substituteUsers = () => {
-  return scanAllUsers(true, () => {
-    return userRepository.scan().where('willSubstituteForGameTypes').not().null();
-  });
-}
-
-iocContainer.bind<IUserRepository>(USER_REPOSITORY_SYMBOL).toConstantValue(userRepository);

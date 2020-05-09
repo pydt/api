@@ -1,7 +1,7 @@
 import { Config } from '../config';
-import { iocContainer } from '../ioc';
+import { provideSingleton } from '../ioc';
 import { GameTurn, GameTurnKey } from '../models';
-import { dynamoose, getAllPaged, IInternalRepository, IRepository } from './common';
+import { BaseDynamooseRepository, IRepository } from './common';
 
 export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
@@ -10,43 +10,43 @@ export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> 
   getPlayerTurnsForGame(gameId: string, steamId: string): Promise<GameTurn[]>;
 }
 
-interface InternalGameTurnRepository extends IGameTurnRepository, IInternalRepository<GameTurnKey, GameTurn> {
+@provideSingleton(GAME_TURN_REPOSITORY_SYMBOL)
+export class GameTurnRepository extends BaseDynamooseRepository<GameTurnKey, GameTurn> implements GameTurnRepository {
+  constructor() {
+    super(Config.resourcePrefix() + 'game-turn', {
+      gameId: {
+        type: String,
+        hashKey: true
+      },
+      turn: {
+        type: Number,
+        rangeKey: true
+      },
+      round: {
+        type: Number,
+        required: true
+      },
+      playerSteamId: {
+        type: String,
+        required: true
+      },
+      startDate: {
+        type: Date,
+        required: true,
+        default: function() {
+          return new Date();
+        }
+      },
+      endDate: Date,
+      skipped: Boolean
+    });
+  }
+
+  getTurnsForGame(gameId: string, startTurn, endTurn)  {
+    return this.query('gameId').eq(gameId).where('turn').between(startTurn, endTurn).exec();
+  }
+
+  getPlayerTurnsForGame(gameId: string, steamId: string) {
+    return this.getAllPaged(this.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId));
+  };
 }
-
-const gameTurnRepository = dynamoose.createVersionedModel(Config.resourcePrefix() + 'game-turn', {
-  gameId: {
-    type: String,
-    hashKey: true
-  },
-  turn: {
-    type: Number,
-    rangeKey: true
-  },
-  round: {
-    type: Number,
-    required: true
-  },
-  playerSteamId: {
-    type: String,
-    required: true
-  },
-  startDate: {
-    type: Date,
-    required: true,
-    default: function() {
-      return new Date();
-    }
-  },
-  endDate: Date,
-  skipped: Boolean
-}) as InternalGameTurnRepository;
-
-gameTurnRepository.getTurnsForGame = (gameId: string, startTurn, endTurn) => {
-  return gameTurnRepository.query('gameId').eq(gameId).where('turn').between(startTurn, endTurn).exec();
-};
-
-gameTurnRepository.getPlayerTurnsForGame = (gameId: string, steamId: string) => {
-  return getAllPaged<GameTurn>(gameTurnRepository.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId));
-};
-
-iocContainer.bind<IGameTurnRepository>(GAME_TURN_REPOSITORY_SYMBOL).toConstantValue(gameTurnRepository);

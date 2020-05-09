@@ -27,7 +27,7 @@ export class UpdateUserGameCache {
   }
   
   public async execute(subject: string, gameId: string) {
-    const game = await this.gameRepository.get(gameId);
+    const game = await this.gameRepository.get(gameId, true);
   
     if (!game || !game.inProgress) {
       return;
@@ -49,7 +49,7 @@ export class UpdateUserGameCache {
   
   private async updateUsers(users: User[]): Promise<void> {
     const gameIds = compact(uniq(concat(flatMap(users, 'activeGameIds') as string[])));
-    const games = await this.gameRepository.batchGet(gameIds);
+    const games = await this.gameRepository.batchGet(gameIds, true);
     await Promise.all(users.map(user => {
       return this.updateUser(user, games);
     }));
