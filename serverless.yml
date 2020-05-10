@@ -95,17 +95,16 @@ custom:
     createRoute53Record: true
     endpointType: 'regional'
     securityPolicy: tls_1_2
-    apiType: rest
+    apiType: http
+    #allowPathMatching: true # Only for one deploy
 
 functions:
   api_router:
     handler: api/router.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    timeout: 30
+    timeout: 20
     events:
-      - http:
-          path: "{proxy+}"
-          method: any
+      - httpApi: '*'
   cronCheckTurnTimerJobs:
     handler: functions/cron/checkTurnTimerJobs.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
