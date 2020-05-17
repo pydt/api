@@ -81,9 +81,6 @@ custom:
         - reflect-metadata
         - source-map-support
         - pydt-shared
-        - "@angular/animations"
-        - "@angular/common"
-        - "ngx-bootstrap"
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com

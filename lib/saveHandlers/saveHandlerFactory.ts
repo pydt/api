@@ -1,4 +1,4 @@
-import { CIV5_GAME, CIV6_GAME, BEYOND_EARTH_GAME } from 'pydt-shared';
+import { BEYOND_EARTH_GAME, CIV5_GAME, CIV6_GAME } from 'pydt-shared-models';
 import { Game } from '../models';
 import { Civ5SaveHandler } from './civ5SaveHandler';
 import { Civ6SaveHandler } from './civ6SaveHandler';

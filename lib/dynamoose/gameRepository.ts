@@ -1,7 +1,7 @@
 
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
-import { CIV6_GAME } from 'pydt-shared';
+import { CIV6_GAME } from 'pydt-shared-models';
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { Game } from '../models';

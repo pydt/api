@@ -1,6 +1,6 @@
+import { SharedGame } from 'pydt-shared-models';
 import { GamePlayer } from './gamePlayer';
 import { Entity } from './shared';
-import { SharedGame } from 'pydt-shared';
 
 export interface BaseGame extends SharedGame {
   displayName: string;

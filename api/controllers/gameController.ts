@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { compact, difference, orderBy, remove } from 'lodash';
-import { GAMES, RANDOM_CIV, CIV6_GAME } from 'pydt-shared';
+import { CIV6_GAME, GAMES, RANDOM_CIV } from 'pydt-shared-models';
 import { Body, Get, Post, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';

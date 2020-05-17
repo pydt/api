@@ -1,12 +1,12 @@
 import { injectable } from 'inversify';
+import { GAMES } from 'pydt-shared-models';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { ScheduledJobKey } from '../../lib/models';
-import { USER_REPOSITORY_SYMBOL, IUserRepository } from '../../lib/dynamoose/userRepository';
-import { GAMES } from 'pydt-shared';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const attj = iocContainer.resolve(AddTurnTimerJob);

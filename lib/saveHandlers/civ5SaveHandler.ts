@@ -1,6 +1,6 @@
-import { SaveHandler, CivData, ActorType } from './saveHandler';
 import * as civ5 from 'pydt-civ5-save-parser';
-import { CIV5_DLCS, BEYOND_EARTH_DLCS } from 'pydt-shared';
+import { BEYOND_EARTH_DLCS, CIV5_DLCS } from 'pydt-shared-models';
+import { ActorType, CivData, SaveHandler } from './saveHandler';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },

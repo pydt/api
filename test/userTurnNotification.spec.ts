@@ -1,5 +1,6 @@
+import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { CIV6_GAME } from 'pydt-shared';
+import { CIV6_GAME } from 'pydt-shared-models';
 import * as sinon from 'sinon';
 import { UserTurnNotification } from '../functions/sns/userTurnNotification';
 import { IGameRepository } from '../lib/dynamoose/gameRepository';
@@ -9,7 +10,6 @@ import { IHttpRequestProvider } from '../lib/httpRequestProvider';
 import { IIotProvider } from '../lib/iotProvider';
 import { Game } from '../lib/models/game';
 import { User } from '../lib/models/user';
-import { expect } from 'chai';
 
 describe('UserTurnNotification', () => {
 

@@ -1,4 +1,6 @@
 import { injectable } from 'inversify';
+import * as isUrl from 'is-url';
+import { GAMES } from 'pydt-shared-models';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
@@ -6,11 +8,8 @@ import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { HTTP_REQUEST_PROVIDER_SYMBOL, IHttpRequestProvider } from '../../lib/httpRequestProvider';
 import { inject } from '../../lib/ioc';
 import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
-import { loggingHandler } from '../../lib/logging';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
-import { pydtLogger } from '../../lib/logging';
-import { GAMES } from 'pydt-shared';
-import * as isUrl from 'is-url';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
