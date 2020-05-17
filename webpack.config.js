@@ -8,7 +8,7 @@ var _ = require('lodash');
 module.exports = {  
   entry: slsw.lib.entries,
   target: 'node',
-  mode: 'none',
+  mode: 'production',
   devtool: 'source-map',
   module: {
     rules: [
