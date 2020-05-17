@@ -22,7 +22,11 @@ export class DiscourseProvider implements IDiscourseProvider {
     if (Config.activeStage() === 'prod') {
       return await this.http.request({
         method: 'POST',
-        uri: `https://discourse.playyourdamnturn.com/posts/?api_key=${Config.discourseApiKey()}&api_username=system`,
+        headers: {
+          'Api-Key': Config.discourseApiKey(),
+          'Api-Username': 'system'
+        },
+        uri: `https://discourse.playyourdamnturn.com/posts`,
         form: {
           title: `${game.displayName} (${game.gameId.substring(0, 8)})`,
           raw: `Smack talk goes here for ${game.displayName}!  Game URL: https://playyourdamnturn.com/game/${game.gameId}`,
@@ -39,7 +43,11 @@ export class DiscourseProvider implements IDiscourseProvider {
     if (Config.activeStage() === 'prod') {
       return await this.http.request({
         method: 'DELETE',
-        uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}?api_key=${Config.discourseApiKey()}&api_username=system`,
+        headers: {
+          'Api-Key': Config.discourseApiKey(),
+          'Api-Username': 'system'
+        },
+        uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}`,
         json: true
       });
     } else {
