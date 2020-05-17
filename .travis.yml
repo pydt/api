@@ -3,7 +3,7 @@ node_js:
   - "10"
 script:
   - npm install -g serverless@1.70.0
-  - npm run test
+  - npm run test || travis_terminate 1
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then npm run deploy-prod; fi
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "develop" ]; then npm run deploy-dev; fi
 branches:

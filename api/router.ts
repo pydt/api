@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { RegisterRoutes } from './_gen/routes/routes';
 import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
 import { loggingHandler, pydtLogger } from '../lib/logging';
+import { ValidateError } from 'tsoa';
 
 const router = Router();
 
@@ -40,7 +41,11 @@ function methodHandler(method: string) {
             }
 
             if (logError) {
-              pydtLogger.error(`Unhandled Exception from ${route}`, err);
+              if (err instanceof ValidateError) {
+                pydtLogger.error(`Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`, err);
+              } else {
+                pydtLogger.error(`Unhandled Exception from ${route}`, err); 
+              }
             }
 
             res.status(status).json(new ErrorResponse(message));
