@@ -44,7 +44,7 @@ function methodHandler(method: string) {
               if (err instanceof ValidateError) {
                 pydtLogger.error(`Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`, err);
               } else {
-                pydtLogger.error(`Unhandled Exception from ${route}`, err); 
+                pydtLogger.error(`Unhandled Exception from ${route}`, err);
               }
             }
 

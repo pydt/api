@@ -37,18 +37,18 @@ export const pydtLogger = {
   }
 };
 
-if (!Config.runningLocal()) {
+if (!Config.runningLocal) {
   rollbar = new Rollbar({
-    accessToken: Config.rollbarKey(),
+    accessToken: Config.rollbarKey,
     autoInstrument: false,
     reportLevel: 'warning',
     itemsPerMinute: 5,
     payload: {
-      environment: Config.activeStage(),
+      environment: Config.activeStage,
       client: {
         javascript: {
           source_map_enabled: true,
-          code_version: Config.commitHash(),
+          code_version: Config.commitHash,
           guess_uncaught_frames: true
         }
       }

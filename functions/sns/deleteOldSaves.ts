@@ -20,7 +20,7 @@ export class DeleteOldSaves {
   }
 
   public async execute(gameId: string) {
-    const resp = await this.s3.listObjects(Config.resourcePrefix() + 'saves', gameId)
+    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', gameId)
   
     if (!resp || !resp.Contents) {
       throw new Error(`No data returned for listObjectsV2, prefix: ${gameId}`);
@@ -28,7 +28,7 @@ export class DeleteOldSaves {
   
     if (resp.Contents.length > TURNS_TO_SAVE) {
       await this.s3.deleteObjects(
-        Config.resourcePrefix() + 'saves',
+        Config.resourcePrefix + 'saves',
         take(
           orderBy(resp.Contents, ['Key'], ['asc']),
           resp.Contents.length - TURNS_TO_SAVE

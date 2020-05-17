@@ -19,11 +19,11 @@ export class DiscourseProvider implements IDiscourseProvider {
   }
 
   public async addGameTopic(game: Game) {
-    if (Config.activeStage() === 'prod') {
+    if (Config.activeStage === 'prod') {
       return await this.http.request({
         method: 'POST',
         headers: {
-          'Api-Key': Config.discourseApiKey(),
+          'Api-Key': Config.discourseApiKey,
           'Api-Username': 'system'
         },
         uri: `https://discourse.playyourdamnturn.com/posts`,
@@ -35,23 +35,23 @@ export class DiscourseProvider implements IDiscourseProvider {
         json: true
       });
     } else {
-      pydtLogger.info(`Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
+      pydtLogger.info(`Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`);
     }
   }
 
   public async deleteGameTopic(game: Game) {
-    if (Config.activeStage() === 'prod') {
+    if (Config.activeStage === 'prod') {
       return await this.http.request({
         method: 'DELETE',
         headers: {
-          'Api-Key': Config.discourseApiKey(),
+          'Api-Key': Config.discourseApiKey,
           'Api-Username': 'system'
         },
         uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}`,
         json: true
       });
     } else {
-      pydtLogger.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage()}`);
+      pydtLogger.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`);
     }
   }
 }

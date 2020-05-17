@@ -61,7 +61,7 @@ export class UpdateUserGameCache {
     });
   
     await this.s3.putObject({
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: this.userService.createS3GameCacheKey(user.steamId)
     }, JSON.stringify(result), true);
   }

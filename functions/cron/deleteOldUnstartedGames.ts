@@ -49,7 +49,7 @@ export class DeleteOldUnstartedGames {
         await this.ses.sendEmail(
           `Game Scheduled for Deletion`,
           `Game Scheduled for Deletion`,
-          `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl()}/game/${game.gameId}`,
+          `A game that you have created but not started (<b>${game.displayName}</b>) is scheduled to be deleted if you don't start it before <b>${expirationDate}</b>.  Please come start it before then!<br /><br />Game URL: ${Config.webUrl}/game/${game.gameId}`,
           user.emailAddress
         );
       }

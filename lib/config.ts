@@ -1,32 +1,35 @@
 import * as AWS from 'aws-sdk';
 AWS.config.update({ region: 'us-east-1' });
 
-export class Config {
-  public static activeStage() {
+class ConfigClass {
+  public get activeStage() {
     return process.env.SERVERLESS_STAGE as string;
   }
-  public static resourcePrefix() {
+  public get resourcePrefix() {
     return process.env.RESOURCE_PREFIX as string;
   }
-  public static webUrl() {
+  public get webUrl() {
     return process.env.WEB_URL as string;
   }
-  public static jwtSecret() {
+  public get jwtSecret() {
     return process.env.JWT_SECRET as string;
   }
-  public static discourseApiKey() {
+  public get discourseApiKey() {
     return process.env.DISCOURSE_API_KEY as string;
   }
-  public static steamApiKey() {
+  public get steamApiKey() {
     return process.env.STEAM_API_KEY as string;
   }
-  public static rollbarKey() {
+  public get rollbarKey() {
     return process.env.ROLLBAR_API_KEY as string;
   }
-  public static commitHash() {
+  public get commitHash() {
     return process.env.COMMIT_HASH as string;
   }
-  public static runningLocal() {
+  public get runningLocal() {
     return !!process.env.RUNNING_LOCAL;
   }
 }
+
+// tslint:disable-next-line
+export const Config = new ConfigClass();

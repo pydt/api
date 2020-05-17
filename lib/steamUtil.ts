@@ -7,9 +7,9 @@ import { SteamProfile } from './models';
 
 passport.use(
   new passportSteam.Strategy({
-    returnURL: Config.webUrl() + '/steamreturn',
-    realm: Config.webUrl(),
-    apiKey: Config.steamApiKey()
+    returnURL: Config.webUrl + '/steamreturn',
+    realm: Config.webUrl,
+    apiKey: Config.steamApiKey
   },
   function(identifier, profile, done) {
     done(null, {
@@ -23,7 +23,7 @@ export const steamPassport = passport;
 
 export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfile[]> {
   const resp = await rp({
-    uri: `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${Config.steamApiKey()}&steamids=${join(steamIds)}`,
+    uri: `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${Config.steamApiKey}&steamids=${join(steamIds)}`,
     json: true
   });
 

@@ -17,16 +17,16 @@ export interface ISnsProvider {
 @provideSingleton(SNS_PROVIDER_SYMBOL)
 export class SnsProvider implements ISnsProvider {
   public turnSubmitted(game: Game) {
-    return this.sendMessage(Config.resourcePrefix() + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
+    return this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
   }
 
   public gameUpdated(game: Game) {
-    return this.sendMessage(Config.resourcePrefix() + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
+    return this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
   }
 
   public userGameCacheUpdated(payload: UserGameCacheUpdatedPayload) {
     return this.sendMessage(
-      Config.resourcePrefix() + SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
+      Config.resourcePrefix + SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
       SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
       JSON.stringify(payload)
     );

@@ -18,7 +18,7 @@ export interface IGameRepository extends IRepository<string, Game> {
 @provideSingleton(GAME_REPOSITORY_SYMBOL)
 export class GameRepository extends BaseDynamooseRepository<string, Game> implements IGameRepository {
   constructor() {
-    super(Config.resourcePrefix() + 'game', {
+    super(Config.resourcePrefix + 'game', {
       gameId: {
         type: String,
         hashKey: true,

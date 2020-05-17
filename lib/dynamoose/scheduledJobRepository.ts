@@ -17,7 +17,7 @@ export const JOB_TYPES = {
 @provideSingleton(SCHEDULED_JOB_REPOSITORY_SYMBOL)
 export class ScheduledJobRepository extends BaseDynamooseRepository<ScheduledJobKey, ScheduledJob> implements IScheduledJobRepository {
   constructor() {
-    super(Config.resourcePrefix() + 'scheduled-job', {
+    super(Config.resourcePrefix + 'scheduled-job', {
       jobType: {
         type: String,
         hashKey: true

@@ -126,7 +126,7 @@ export class GameTurnService implements IGameTurnService {
     const s3Key = this.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
 
     const data = await this.s3.getObject({
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: s3Key
     });
 
@@ -232,11 +232,11 @@ export class GameTurnService implements IGameTurnService {
 
     return Promise.all([
       this.s3.putObject({
-        Bucket: Config.resourcePrefix() + 'saves',
+        Bucket: Config.resourcePrefix + 'saves',
         Key: saveKey
       }, uncompressedBody),
       this.s3.putObject({
-        Bucket: Config.resourcePrefix() + 'saves',
+        Bucket: Config.resourcePrefix + 'saves',
         Key: saveKey + '.gz'
       }, zlib.gzipSync(uncompressedBody))
     ]);
@@ -253,7 +253,7 @@ export class GameTurnService implements IGameTurnService {
 
   public async skipTurn(game: Game, turn: GameTurn) {
     const data = await this.s3.getObject({
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
     });
 
@@ -299,7 +299,7 @@ export class GameTurnService implements IGameTurnService {
     this.updateSaveFileForGameState(game, users, saveHandler, false);
 
     await this.s3.putObject({
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
     }, saveHandler.getData());
 

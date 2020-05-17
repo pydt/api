@@ -598,7 +598,7 @@ export class GameController {
     const file = this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey);
 
     const fileParams = {
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: file
     };
 
@@ -705,7 +705,7 @@ export class GameController {
     });
 
     const data = await this.s3.getObject({
-      Bucket: Config.resourcePrefix() + 'saves',
+      Bucket: Config.resourcePrefix + 'saves',
       Key: this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey)
     });
 
@@ -912,7 +912,7 @@ export class GameController {
 
     return {
       putUrl: this.s3.signedPutUrl({
-        Bucket: Config.resourcePrefix() + 'saves',
+        Bucket: Config.resourcePrefix + 'saves',
         Key: this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
       }, 'application/octet-stream', 60)
     };
