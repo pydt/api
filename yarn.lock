@@ -1048,14 +1048,14 @@ bl@^4.0.1:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-bluebird@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
-
-bluebird@^3.5.5:
+bluebird@^3.4.7, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
+
+bluebird@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.4.0:
   version "4.11.8"
@@ -4879,6 +4879,13 @@ serverless-offline@^6.1.5:
     update-notifier "^4.1.0"
     velocityjs "^2.0.0"
     ws "^7.2.1"
+
+serverless-prune-plugin@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/serverless-prune-plugin/-/serverless-prune-plugin-1.4.3.tgz#556d76a86e37bf57d4ccd8449a7d98b6496bd5ed"
+  integrity sha512-gsZF3oLs5rFdp6ynjiWf5cuXZ4DZrAhxRd5Zf2gfH/43kPqtZMZzUqcGYbHh1OXbOzogdn8fEg5d4Q3xxWwRBA==
+  dependencies:
+    bluebird "^3.4.7"
 
 serverless-webpack@^5.2.0:
   version "5.3.2"

@@ -16,6 +16,7 @@ service: civ-serverless-api
 frameworkVersion: "1.70.0"
 
 plugins:
+  - serverless-prune-plugin
   - serverless-domain-manager
   - export-api-url
   - serverless-webpack
@@ -94,6 +95,9 @@ custom:
     securityPolicy: tls_1_2
     apiType: http
     #allowPathMatching: true # Only for one deploy
+  prune:
+    automatic: true
+    number: 3
 
 functions:
   api_router:
