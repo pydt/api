@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { injectable } from 'inversify';
 import * as moment from 'moment';
 import { Config } from '../../lib/config';

@@ -67,7 +67,13 @@ provider:
     DISCOURSE_API_KEY: ${env:DISCOURSE_API_KEY, file(./config.yml):DISCOURSE_API_KEY}
     STEAM_API_KEY: ${env:STEAM_API_KEY, file(./config.yml):STEAM_API_KEY}
 
+package:
+  individually: ${self:custom.package_individually.${env:RUNNING_LOCAL, 'other'}}
+
 custom:
+  package_individually:
+    local: false
+    other: false
   activeStage: ${opt:stage, self:provider.stage}
   resourcePrefix: ${self:custom.activeStage}-civx-
   DEV_WEB_URL: "http://localhost:8080"
@@ -76,12 +82,9 @@ custom:
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
   DEFAULT_LAMBDA_MEMORY: 1024
   webpack:
-    #packExternalModulesMaxBuffer: 512000
-    includeModules:
-      forceInclude:
-        - reflect-metadata
-        - source-map-support
-        - pydt-shared
+    packager: 'yarn'
+    keepOutputDirectory: true
+    includeModules: false
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com

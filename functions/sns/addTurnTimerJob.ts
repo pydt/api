@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { injectable } from 'inversify';
 import { GAMES } from 'pydt-shared-models';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';

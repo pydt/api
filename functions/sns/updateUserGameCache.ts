@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { injectable } from 'inversify';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';

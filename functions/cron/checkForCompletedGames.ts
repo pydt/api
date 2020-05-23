@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { injectable } from 'inversify';
 import { chunk } from 'lodash';
 import * as moment from 'moment';

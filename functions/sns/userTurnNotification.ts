@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { injectable } from 'inversify';
 import * as isUrl from 'is-url';
 import { GAMES } from 'pydt-shared-models';

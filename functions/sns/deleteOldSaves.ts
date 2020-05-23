@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { Config } from '../../lib/config';
 import { loggingHandler } from '../../lib/logging';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';

@@ -1,3 +1,5 @@
+require('../lib/banner');
+
 import { Router } from 'express';
 import { RegisterRoutes } from './_gen/routes/routes';
 import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';

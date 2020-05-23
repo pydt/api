@@ -1,3 +1,5 @@
+require('../../lib/banner');
+
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
 import { loggingHandler } from '../../lib/logging';
