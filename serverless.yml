@@ -24,7 +24,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   stage: dev
   resourcePolicy:
     - Effect: Allow

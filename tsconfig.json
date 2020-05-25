@@ -8,7 +8,7 @@
       "es6"
     ],
     "sourceMap": true,
-    "target": "es5",
+    "target": "es6",
     "types": [
       "node",
       "reflect-metadata",
