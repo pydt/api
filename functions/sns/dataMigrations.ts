@@ -1,42 +1,70 @@
 import { injectable } from 'inversify';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
+import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
-import { Game, User } from '../../lib/models';
+import { DeprecatedUser, Game, PrivateUserData, User } from '../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
 import { UserUtil } from '../../lib/util/userUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
-  const rus = iocContainer.resolve(RecalculateUserStats);
+  const rus = iocContainer.resolve(DataMigrations);
   await rus.execute(event.Records[0].Sns.Message);
 });
 
-const dataVersion = 2;
-
 @injectable()
-export class RecalculateUserStats {
+export class DataMigrations {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
   ) {}
 
-  public async execute(userId: string) {
-    let users: User[];
-
-    if (userId === 'all') {
-      users = await this.userRepository.allUsers();
-      users = users.filter(x => x.dataVersion !== dataVersion);
-    } else if (userId) {
-      users = [await this.userRepository.get(userId)];
-    } else {
-      throw new Error('userId or all must be provided');
+  public async execute(message: string) {
+    if (message === 'privateuserdata') {
+      await this.createPrivateUserData();
     }
 
-    await this.calculateUserStats(users);
+    if (message.startsWith('userstats')) {
+      let users: User[];
+      const userId = message.replace('userstats:', '');
+
+      if (userId === 'all') {
+        users = await this.userRepository.allUsers();
+        users = users.filter(x => x.dataVersion < 2);
+      } else if (userId) {
+        users = [await this.userRepository.get(userId)];
+      } else {
+        throw new Error('userId or all must be provided');
+      }
+  
+      await this.calculateUserStats(users);
+    }
+  }
+
+  private async createPrivateUserData() {
+    const users = (await this.userRepository.allUsers()).filter(x => x.dataVersion < 3).map(x => x as DeprecatedUser);
+
+    for (const user of users) {
+      const pud: PrivateUserData = {
+        emailAddress: user.emailAddress,
+        steamId: user.steamId,
+        webhookUrl: user.webhookUrl
+      };
+
+      user.dataVersion = 3;
+      delete user.emailAddress;
+      delete user.webhookUrl;
+
+      await this.pudRepository.saveVersioned(pud);
+      await this.userRepository.saveVersioned(user);
+      console.log(`Created private user data for user ${user.displayName} (${user.steamId})`);
+    }
+
   }
 
   private async calculateUserStats(users: User[]) {
@@ -52,7 +80,10 @@ export class RecalculateUserStats {
         await this.calculateGameStats(games, user);
       }
 
-      user.dataVersion = dataVersion;
+      if (user.dataVersion < 2) {
+        user.dataVersion = 2;
+      }
+
       await this.userRepository.saveVersioned(user);
       console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
     }

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { GameTurnService } from './gameTurnService';
-import { Game, GameTurn, User } from '../models';
+import { Game, GameTurn, User, PrivateUserData } from '../models';
 import { IS3Provider } from '../s3Provider';
 import { IGameTurnRepository } from '../dynamoose/gameTurnRepository';
 import { IUserRepository } from '../dynamoose/userRepository';
@@ -13,6 +13,7 @@ import { ISesProvider } from '../email/sesProvider';
 import { Civ5SaveHandler } from '../saveHandlers/civ5SaveHandler';
 import { ActorType } from '../saveHandlers/saveHandler';
 import { Mock, It } from 'typemoq';
+import { IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
 
 describe('GameTurnService', () => {
   it('should skip turn correctly', async () => {
@@ -57,6 +58,9 @@ describe('GameTurnService', () => {
     userRepositoryMock
       .setup(x => x.getUsersForGame(It.isAny()))
       .returns(g => Promise.resolve(g.players.map(x => ({ steamId: x.steamId, displayName: x.civType } as User))));
+    
+    const pudRepositoryMock = Mock.ofType<IPrivateUserDataRepository>();
+    pudRepositoryMock.setup(x => x.get(It.isAny())).returns(x => Promise.resolve({ emailAddress: 'email@address.com' } as PrivateUserData));
 
     let skippedData: Buffer;
 
@@ -77,6 +81,7 @@ describe('GameTurnService', () => {
 
     const gts = new GameTurnService(
       userRepositoryMock.object,
+      pudRepositoryMock.object,
       gameRepositoryMock.object,
       gameTurnRepositoryMock.object,
       s3ProviderMock.object,

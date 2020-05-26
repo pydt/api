@@ -5,6 +5,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userReposi
 import { inject, provideSingleton } from '../ioc';
 import { Game } from '../models';
 import { UserUtil } from '../util/userUtil';
+import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
 
 export const GAME_SERVICE_SYMBOL = Symbol('IGameService');
 
@@ -16,6 +17,7 @@ export interface IGameService {
 export class GameService implements IGameService {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
@@ -23,6 +25,7 @@ export class GameService implements IGameService {
 
   public async deleteGame(game: Game, steamId: string) {
     const users = await this.userRepository.getUsersForGame(game);
+    const puds = await this.pudRepository.getUserDataForGame(game);
     const promises = [];
 
     promises.push(this.gameRepository.delete(game.gameId));
@@ -30,8 +33,9 @@ export class GameService implements IGameService {
     for (const curUser of users) {
       UserUtil.removeUserFromGame(curUser, game, false);
       promises.push(this.userRepository.saveVersioned(curUser));
+      const pud = puds.find(x => x.steamId === curUser.steamId);
 
-      if (curUser.emailAddress && (!steamId || curUser.steamId !== steamId)) {
+      if (pud.emailAddress && (!steamId || curUser.steamId !== steamId)) {
         let message = `A game that you have recently joined (<b>${game.displayName}</b>) has been deleted`;
 
         if (!steamId) {
@@ -40,7 +44,7 @@ export class GameService implements IGameService {
           message += ` by it's creator. :(`;
         }
 
-        promises.push(this.ses.sendEmail('Game Deleted', 'Game Deleted', message, curUser.emailAddress));
+        promises.push(this.ses.sendEmail('Game Deleted', 'Game Deleted', message, pud.emailAddress));
       }
     }
 

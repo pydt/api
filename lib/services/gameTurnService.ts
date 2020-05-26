@@ -15,6 +15,7 @@ import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
 import { UserUtil } from '../util/userUtil';
 import { GameUtil } from '../util/gameUtil';
+import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -32,6 +33,7 @@ export interface IGameTurnService {
 export class GameTurnService implements IGameTurnService {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
@@ -77,6 +79,7 @@ export class GameTurnService implements IGameTurnService {
 
   public async defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]) {
     const promises = [];
+    const puds = await this.pudRepository.getUserDataForGame(game);
 
     for (const defeatedPlayer of newDefeatedPlayers) {
       const defeatedUser = users.find(user => {
@@ -88,11 +91,11 @@ export class GameTurnService implements IGameTurnService {
       promises.push(this.userRepository.saveVersioned(defeatedUser));
 
       for (const player of game.players) {
-        const curUser = users.find(user => {
-          return user.steamId === player.steamId;
+        const curPud = puds.find(pud => {
+          return pud.steamId === player.steamId;
         });
 
-        if (curUser && curUser.emailAddress) {
+        if (curPud && curPud.emailAddress) {
           let desc = defeatedUser.displayName + ' has';
           const isDefeatedPlayer = player.steamId === defeatedPlayer.steamId;
 
@@ -106,7 +109,7 @@ export class GameTurnService implements IGameTurnService {
                 `${desc} been defeated in ${game.displayName}!`,
                 'Player Defeated',
                 `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,
-                curUser.emailAddress
+                curPud.emailAddress
               )
             );
           }
@@ -306,12 +309,14 @@ export class GameTurnService implements IGameTurnService {
 
     await this.moveToNextTurn(game, turn, oldUser);
 
-    if (oldUser.emailAddress && !oldUser.vacationMode) {
+    const pud = await this.pudRepository.get(oldUser.steamId);
+
+    if (pud.emailAddress && !oldUser.vacationMode) {
       await this.ses.sendEmail(
         'You have been skipped in ' + game.displayName + '!',
         `You've been skipped!`,
         `The amount of time alloted for you to play your turn has expired.  Try harder next time!`,
-        oldUser.emailAddress
+        pud.emailAddress
       );
     }
   }

@@ -11,6 +11,7 @@ import { GameUtil } from '../../../lib/util/gameUtil';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { SurrenderBody } from './_models';
+import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')
@@ -18,6 +19,7 @@ import { SurrenderBody } from './_models';
 export class GameController_Surrender {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
@@ -72,10 +74,7 @@ export class GameController_Surrender {
     }).length;
     game.completed = humanPlayers < 2;
 
-    const users = await this.userRepository.getUsersForGame(game);
-    const user = users.find(u => {
-      return u.steamId === userId;
-    });
+    const user = await this.userRepository.get(userId);
 
     UserUtil.removeUserFromGame(user, game, true);
 
@@ -111,13 +110,14 @@ export class GameController_Surrender {
 
     // Send an email to everyone else left in the game....
     const emailPromises = [];
+    const puds = await this.pudRepository.getUserDataForGame(game);
 
     for (const gamePlayer of game.players) {
-      const curUser = users.find(u => {
+      const curUserData = puds.find(u => {
         return u.steamId === gamePlayer.steamId;
       });
 
-      if (curUser && curUser.emailAddress) {
+      if (curUserData && curUserData.emailAddress) {
         let desc = 'surrendered';
 
         if (body.kickUserId) {
@@ -130,7 +130,7 @@ export class GameController_Surrender {
               `A player has ${desc} from ${game.displayName}!`,
               `A player has ${desc} from ${game.displayName}!`,
               `<b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(`,
-              curUser.emailAddress
+              curUserData.emailAddress
             )
           );
         }
@@ -142,7 +142,7 @@ export class GameController_Surrender {
               `You have been kicked from ${game.displayName}!`,
               `You have been kicked from <b>${game.displayName}</b>. If you feel this was unwarranted, ` +
                 `please contact mike@playyourdamnturn.com and we can try to mediate the situation.`,
-              curUser.emailAddress
+              curUserData.emailAddress
             )
           );
         }

@@ -12,8 +12,6 @@ export class UserController_ById {
 
   @Get('{steamId}')
   public async byId(@Request() request: HttpRequest, steamId: string): Promise<User> {
-    const user = await this.userRepository.getOrThrow404(steamId);
-    delete user.emailAddress; // make sure email address isn't returned!
-    return user;
+    return await this.userRepository.getOrThrow404(steamId);
   }
 }

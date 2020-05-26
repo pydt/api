@@ -23,7 +23,6 @@ export interface User extends HasSteamId, TurnData {
   avatarMedium: string;
   avatarFull: string;
   steamProfileUrl: string;
-  emailAddress: string;
   vacationMode?: boolean;
   timezone?: string;
   comments?: string;
@@ -31,8 +30,12 @@ export interface User extends HasSteamId, TurnData {
   inactiveGameIds: string[];
   statsByGameType: GameTypeTurnData[];
   forumUsername?: string;
-  webhookUrl?: string;
   willSubstituteForGameTypes: string[];
   banned?: boolean;
   dataVersion?: number;
+}
+
+export interface DeprecatedUser extends User {
+  emailAddress: string;
+  webhookUrl?: string;
 }

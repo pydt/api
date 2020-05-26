@@ -2,6 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { RANDOM_CIV } from 'pydt-shared-models';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
+import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../../lib/ioc';
@@ -18,6 +19,7 @@ import { JoinGameRequestBody } from './_models';
 export class GameController_Join {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
@@ -79,9 +81,12 @@ export class GameController_Join {
       });
     }
 
-    const user = await this.userRepository.get(request.user);
+    const users = await this.userRepository.getUsersForGame(game);
+    const user = users.find(x => x.steamId === request.user);
+    const puds = await this.pudRepository.getUserDataForGame(game);
+    const pud = puds.find(x => x.steamId === request.user);
 
-    if (!user.emailAddress) {
+    if (!pud.emailAddress) {
       throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
     }
 
@@ -96,15 +101,13 @@ export class GameController_Join {
 
     await Promise.all([this.gameRepository.saveVersioned(game), this.userRepository.saveVersioned(user)]);
 
-    const users = await this.userRepository.getUsersForGame(game);
-
-    const createdByUser = users.find(u => {
+    const createdByUserData = puds.find(u => {
       return u.steamId === game.createdBySteamId;
     });
 
     const promises = [];
 
-    if (createdByUser.emailAddress) {
+    if (createdByUserData.emailAddress) {
       promises.push(
         this.ses.sendEmail(
           'A new user has joined your game!',
@@ -112,7 +115,7 @@ export class GameController_Join {
           `The user <b>${user.displayName}</b> has joined your game <b>${game.displayName}</b>!  ` +
             `There are now <b>${GameUtil.getHumans(game, true).length} / ${game.humans}</b> ` +
             `human player slots filled in the game.`,
-          createdByUser.emailAddress
+          createdByUserData.emailAddress
         )
       );
     }
