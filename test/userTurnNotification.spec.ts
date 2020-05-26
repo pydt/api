@@ -82,6 +82,7 @@ describe('UserTurnNotification', () => {
       gameName: 'Test Game',
       userName: 'Test User',
       round: 10,
+      content: `It's Test User's turn in Test Game (Round 10)`,
       civName: 'Macedon',
       leaderName: 'Alexander',
       // Duplicate "play by cloud" format

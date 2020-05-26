@@ -60,7 +60,12 @@ export class UserTurnNotification {
                   // Duplicate "play by cloud" format
                   value1: game.displayName,
                   value2: user.displayName,
-                  value3: game.round
+                  value3: game.round,
+                  // Discourse webhook "content" field
+                  content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
+                },
+                headers: {
+                  'Content-Type': 'application/json'
                 },
                 json: true,
                 timeout: 2000
