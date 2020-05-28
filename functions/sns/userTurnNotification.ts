@@ -64,9 +64,6 @@ export class UserTurnNotification {
                   // Discourse webhook "content" field
                   content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
                 },
-                headers: {
-                  'Content-Type': 'application/json'
-                },
                 json: true,
                 timeout: 2000
               });
