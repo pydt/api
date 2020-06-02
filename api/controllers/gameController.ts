@@ -729,6 +729,7 @@ export class GameController {
     const numCivs = saveHandler.civData.length;
     const parsedRound = saveHandler.gameTurn;
     const gameDlc = game.dlc || [];
+    const civGame = GAMES.find(x => x.id === game.gameType);
 
     if (gameDlc.length !== saveHandler.parsedDlcs.length || difference(gameDlc, saveHandler.parsedDlcs).length) {
       throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
@@ -745,8 +746,16 @@ export class GameController {
       );
     }
 
-    if (game.mapFile && saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
-      throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`);
+    if (game.mapFile) {
+      const map = civGame.maps.find(x => x.file === game.mapFile);
+
+      if (map && map.regex) {
+        if (!map.regex.test(saveHandler.mapFile)) {
+          throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected regex: ${map.regex})`);
+        }
+      } else if (saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
+        throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`);
+      }
     }
 
     if (game.mapSize && game.mapSize !== saveHandler.mapSize) {
