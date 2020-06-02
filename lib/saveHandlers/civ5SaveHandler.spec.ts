@@ -1,13 +1,14 @@
+import 'reflect-metadata';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import { describe, it } from 'mocha';
-import { Civ5SaveHandler } from '../lib/saveHandlers/civ5SaveHandler';
-import { ActorType } from '../lib/saveHandlers/saveHandler';
+import { Civ5SaveHandler } from './civ5SaveHandler';
+import { ActorType } from './saveHandler';
 
 describe('Civ5SaveHandler', () => {
 
   it('should parse correctly', async () => {
-    const buffer = fs.readFileSync('test/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
+    const buffer = fs.readFileSync('testdata/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
     const handler = new Civ5SaveHandler(buffer);
 
     expect(handler.gameSpeed).to.eq('GAMESPEED_QUICK');
@@ -34,7 +35,7 @@ describe('Civ5SaveHandler', () => {
   });
 
   it('should parse beyond earth correctly', async () => {
-    const buffer = fs.readFileSync('test/saves/civ5/beyondearth.CivBESave');
+    const buffer = fs.readFileSync('testdata/saves/civ5/beyondearth.CivBESave');
     const handler = new Civ5SaveHandler(buffer);
 
     expect(handler.gameSpeed).to.eq('GAMESPEED_QUICK');
@@ -55,7 +56,7 @@ describe('Civ5SaveHandler', () => {
   });
 
   it('should update civs correctly', () => {
-    const buffer = fs.readFileSync('test/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
+    const buffer = fs.readFileSync('testdata/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
     let handler = new Civ5SaveHandler(buffer);
 
     const civ = handler.civData[0];

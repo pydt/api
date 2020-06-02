@@ -51,12 +51,13 @@
     "ts-node": "^8.4.1",
     "tslint": "^6.1.2",
     "tslint-no-circular-imports": "^0.7.0",
+    "typemoq": "^2.1.0",
     "typescript": "^3.8.3",
     "webpack": "^4.19.0",
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "mocha -r ts-node/register **/*.spec.ts",
     "clean": "rimraf api/_gen .webpack",
     "swagger-gen": "tsoa spec",
     "routes-gen": "bash -c 'mkdir -p api/_gen/routes' && tsoa routes",

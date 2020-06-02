@@ -1,13 +1,14 @@
+import 'reflect-metadata';
 import { expect } from 'chai';
 import * as fs from 'fs';
 import { describe, it } from 'mocha';
-import { Civ6SaveHandler } from '../lib/saveHandlers/civ6SaveHandler';
-import { ActorType } from '../lib/saveHandlers/saveHandler';
+import { Civ6SaveHandler } from './civ6SaveHandler';
+import { ActorType } from './saveHandler';
 
 describe('Civ6SaveHandler', () => {
 
   it('should parse correctly', () => {
-    const buffer = fs.readFileSync('test/saves/civ6/CATHERINE DE MEDICI 1 4000 BC.Civ6Save');
+    const buffer = fs.readFileSync('testdata/saves/civ6/CATHERINE DE MEDICI 1 4000 BC.Civ6Save');
     const handler = new Civ6SaveHandler(buffer);
 
     expect(handler.gameSpeed).to.eq('GAMESPEED_ONLINE');
@@ -27,7 +28,7 @@ describe('Civ6SaveHandler', () => {
   });
 
   it('should update civs correctly', () => {
-    const buffer = fs.readFileSync('test/saves/civ6/CATHERINE DE MEDICI 1 4000 BC.Civ6Save');
+    const buffer = fs.readFileSync('testdata/saves/civ6/CATHERINE DE MEDICI 1 4000 BC.Civ6Save');
     let handler = new Civ6SaveHandler(buffer);
 
     const civ = handler.civData[0];
