@@ -2,17 +2,17 @@ import 'reflect-metadata';
 import * as fs from 'fs';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { GameTurnService } from '../lib/services/gameTurnService';
-import { Game, GameTurn, User } from '../lib/models';
-import { IUserService, UserService } from '../lib/services/userService';
-import { IS3Provider } from '../lib/s3Provider';
-import { IGameTurnRepository } from '../lib/dynamoose/gameTurnRepository';
-import { IUserRepository } from '../lib/dynamoose/userRepository';
-import { IGameRepository } from '../lib/dynamoose/gameRepository';
-import { ISnsProvider } from '../lib/snsProvider';
-import { ISesProvider } from '../lib/email/sesProvider';
-import { Civ5SaveHandler } from '../lib/saveHandlers/civ5SaveHandler';
-import { ActorType } from '../lib/saveHandlers/saveHandler';
+import { GameTurnService } from './gameTurnService';
+import { Game, GameTurn, User } from '../models';
+import { IUserService, UserService } from './userService';
+import { IS3Provider } from '../s3Provider';
+import { IGameTurnRepository } from '../dynamoose/gameTurnRepository';
+import { IUserRepository } from '../dynamoose/userRepository';
+import { IGameRepository } from '../dynamoose/gameRepository';
+import { ISnsProvider } from '../snsProvider';
+import { ISesProvider } from '../email/sesProvider';
+import { Civ5SaveHandler } from '../saveHandlers/civ5SaveHandler';
+import { ActorType } from '../saveHandlers/saveHandler';
 
 describe('GameTurnService', () => {
 
@@ -73,7 +73,7 @@ describe('GameTurnService', () => {
     const s3 = <IS3Provider> {
       getObject: (fp) => {
         expect(fp.Key.indexOf('/000020')).to.be.greaterThan(0);
-        return Promise.resolve({ Body: fs.readFileSync('test/saves/civ5/000020.Civ5Save')});
+        return Promise.resolve({ Body: fs.readFileSync('testdata/saves/civ5/000020.Civ5Save')});
       },
       putObject: (fp, data, isPublic) => {
         skippedData = data;

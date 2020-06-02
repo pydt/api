@@ -1,15 +1,16 @@
+import 'reflect-metadata';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { CIV6_GAME } from 'pydt-shared-models';
 import * as sinon from 'sinon';
-import { UserTurnNotification } from '../functions/sns/userTurnNotification';
-import { IGameRepository } from '../lib/dynamoose/gameRepository';
-import { IUserRepository } from '../lib/dynamoose/userRepository';
-import { ISesProvider } from '../lib/email/sesProvider';
-import { IHttpRequestProvider } from '../lib/httpRequestProvider';
-import { IIotProvider } from '../lib/iotProvider';
-import { Game } from '../lib/models/game';
-import { User } from '../lib/models/user';
+import { UserTurnNotification } from './userTurnNotification';
+import { IGameRepository } from '../../lib/dynamoose/gameRepository';
+import { IUserRepository } from '../../lib/dynamoose/userRepository';
+import { ISesProvider } from '../../lib/email/sesProvider';
+import { IHttpRequestProvider } from '../../lib/httpRequestProvider';
+import { IIotProvider } from '../../lib/iotProvider';
+import { Game } from '../../lib/models/game';
+import { User } from '../../lib/models/user';
 
 describe('UserTurnNotification', () => {
 

@@ -5,10 +5,12 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userReposi
 import { inject, provideSingleton } from '../ioc';
 import { Game, User } from '../models';
 import { IUserService, USER_SERVICE_SYMBOL } from './userService';
+import { HttpResponseError } from '../../api/framework';
 
 export const GAME_SERVICE_SYMBOL = Symbol('IGameService');
 
 export interface IGameService {
+  getGame(gameId: string): Promise<Game>;
   deleteGame(game: Game, steamId: string): Promise<void>;
   getGamesForUser(user: User): Promise<Game[]>;
 }
@@ -22,6 +24,16 @@ export class GameService implements IGameService {
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {
+  }
+
+  public async getGame(gameId: string) {
+    const game = await this.gameRepository.get(gameId);
+
+    if (!game) {
+      throw new HttpResponseError(404, 'Not Found');
+    }
+
+    return game;
   }
 
   public async deleteGame(game: Game, steamId: string) {
