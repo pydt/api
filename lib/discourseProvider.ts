@@ -7,16 +7,13 @@ import { Game } from './models';
 export const DISCOURSE_PROVIDER_SYMBOL = Symbol('IDiscourseProvider');
 
 export interface IDiscourseProvider {
-  addGameTopic(game: Game): Promise<any>;
-  deleteGameTopic(game: Game): Promise<any>;
+  addGameTopic(game: Game): Promise<DiscourseTopic>;
+  deleteGameTopic(game: Game): Promise<void>;
 }
 
 @provideSingleton(DISCOURSE_PROVIDER_SYMBOL)
 export class DiscourseProvider implements IDiscourseProvider {
-  constructor(
-    @inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider
-  ) {
-  }
+  constructor(@inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider) {}
 
   public async addGameTopic(game: Game) {
     if (Config.activeStage === 'prod') {
@@ -54,4 +51,8 @@ export class DiscourseProvider implements IDiscourseProvider {
       pydtLogger.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`);
     }
   }
+}
+
+export interface DiscourseTopic {
+  topic_id: number;
 }

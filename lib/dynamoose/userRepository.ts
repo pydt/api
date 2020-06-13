@@ -2,6 +2,7 @@ import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { User } from '../models/user';
 import { BaseDynamooseRepository, IRepository } from './common';
+import { Game } from '../models';
 
 export const USER_REPOSITORY_SYMBOL = Symbol('IUserRepository');
 
@@ -9,6 +10,7 @@ export interface IUserRepository extends IRepository<string, User> {
   allUsers(): Promise<User[]>;
   usersWithTurnsPlayed(): Promise<User[]>;
   substituteUsers(): Promise<User[]>;
+  getUsersForGame(game: Game): Promise<User[]>;
 }
 
 @provideSingleton(USER_REPOSITORY_SYMBOL)
@@ -106,7 +108,7 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
     return this.scanAllUsers(true, () => {
       return this.scan().where('turnsPlayed').gt(0);
     });
-  };
+  }
 
   substituteUsers() {
     return this.scanAllUsers(true, () => {
@@ -114,6 +116,23 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
     });
   }
 
+  public getUsersForGame(game: Game): Promise<User[]> {
+    const steamIds = game.players.map(x => x.steamId).filter(Boolean);
+    return this.batchGet(steamIds).then(users => {
+      // make sure they're sorted correctly...
+      const playersWithSteamIds = game.players.filter(player => {
+        return !!player.steamId;
+      });
+
+      return playersWithSteamIds.map(player => {
+        return users.find(user => {
+          return user.steamId === player.steamId;
+        });
+      });
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async scanAllUsers(removeEmail: boolean, createScanQuery: () => any) {
     const result: User[] = [];
     let lastKey;
@@ -135,6 +154,7 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
         result.push(user);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       lastKey = (users as any).lastKey;
     } while (lastKey);
 

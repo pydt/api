@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { reduce } from 'lodash';
 import { HttpResponse } from './httpResponse';
 import { LambdaProxyEvent } from './lambdaProxyEvent';
@@ -21,10 +22,14 @@ export class HttpRequest {
       this.body = JSON.parse(event.body);
     }
 
-    this.headers = reduce(event.headers || {}, (result, value, key) => {
-      result[key.toLowerCase()] = value;
-      return result;
-    }, {});
+    this.headers = reduce(
+      event.headers || {},
+      (result, value, key) => {
+        result[key.toLowerCase()] = value;
+        return result;
+      },
+      {}
+    );
     this.method = event.httpMethod;
     this.params = event.pathParameters;
     this.query = event.queryStringParameters || {};

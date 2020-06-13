@@ -31,10 +31,6 @@ export class ScheduledJobRepository extends BaseDynamooseRepository<ScheduledJob
   }
 
   getWaitingJobs(jobType: string) {
-    return this.getAllPaged(
-      this.query('jobType')
-        .eq(jobType)
-        .where('scheduledTime')
-        .lt(new Date()));
+    return this.getAllPaged(this.query('jobType').eq(jobType).where('scheduledTime').lt(new Date()));
   }
 }

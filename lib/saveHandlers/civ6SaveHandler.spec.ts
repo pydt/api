@@ -6,7 +6,6 @@ import { Civ6SaveHandler } from './civ6SaveHandler';
 import { ActorType } from './saveHandler';
 
 describe('Civ6SaveHandler', () => {
-
   it('should parse correctly', () => {
     const buffer = fs.readFileSync('testdata/saves/civ6/CATHERINE DE MEDICI 1 4000 BC.Civ6Save');
     const handler = new Civ6SaveHandler(buffer);
@@ -53,5 +52,4 @@ describe('Civ6SaveHandler', () => {
     expect(handler.civData[0].playerName).to.eq('playerName');
     expect(handler.civData[0].type).to.eq(ActorType.AI);
   });
-
 });

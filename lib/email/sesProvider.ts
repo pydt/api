@@ -5,32 +5,31 @@ const ses = new AWS.SES();
 export const SES_PROVIDER_SYMBOL = Symbol('ISesProvider');
 
 export interface ISesProvider {
-  sendEmail(subject: string, bodyTitle: string, bodyHtml: string, toAddress: string): Promise<any>;
+  sendEmail(subject: string, bodyTitle: string, bodyHtml: string, toAddress: string): Promise<void>;
 }
 
 @provideSingleton(SES_PROVIDER_SYMBOL)
 export class SesProvider implements ISesProvider {
   private templateHtml: string = require('./email.html');
 
-  public async sendEmail(subject: string, bodyTitle: string, bodyHtml: string, toAddress: string): Promise<any> {
+  public async sendEmail(subject: string, bodyTitle: string, bodyHtml: string, toAddress: string) {
     const email = {
       Destination: {
-        ToAddresses: [
-          toAddress
-        ]
+        ToAddresses: [toAddress]
       },
       Message: {
         Body: {
           Html: {
             Data: this.templateHtml.replace('__TITLE__', bodyTitle).replace('__BODY__', bodyHtml)
           }
-        }, Subject: {
+        },
+        Subject: {
           Data: subject
         }
       },
       Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
     };
 
-    return ses.sendEmail(email).promise();
-  };
+    await ses.sendEmail(email).promise();
+  }
 }

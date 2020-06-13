@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as dynamoose from 'dynamoose';
 import { injectable, unmanaged } from 'inversify';
 import { Entity } from '../models/shared';
+import { HttpResponseError } from '../../api/framework';
 
 dynamoose.AWS.config.update({
   region: 'us-east-1'
@@ -12,6 +14,7 @@ dynamoose.setDefaults({
 
 export interface IRepository<TKey, TEntity> {
   get(id: TKey, consistent?: boolean): Promise<TEntity>;
+  getOrThrow404(gameId: TKey): Promise<TEntity>;
   delete(id: TKey): Promise<void>;
   batchGet(ids: TKey[], consistent?: boolean): Promise<TEntity[]>;
   batchDelete(entities: TEntity[]): Promise<void>;
@@ -30,18 +33,21 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     schema.version = {
       type: Number,
       default: 0,
-      set: function(value) {
-        return value + 1
+      set: function (value) {
+        return value + 1;
       }
     };
 
-    this.model = dynamoose.model(name, new dynamoose.Schema(schema, {
-      timestamps: true,
-      useNativeBooleans: false,
-      useDocumentTypes: false
-    })) as any;
+    this.model = dynamoose.model(
+      name,
+      new dynamoose.Schema(schema, {
+        timestamps: true,
+        useNativeBooleans: false,
+        useDocumentTypes: false
+      })
+    ) as any;
 
-    this.model.saveVersioned = (m) => {
+    this.model.saveVersioned = m => {
       if (!(m instanceof this.model)) {
         m = new this.model(m as any);
       }
@@ -57,6 +63,16 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     return this.model.get(id, {
       consistent: !!consistent
     } as any);
+  }
+
+  async getOrThrow404(id: TKey) {
+    const result = await this.get(id);
+
+    if (!result) {
+      throw new HttpResponseError(404, 'Not Found');
+    }
+
+    return result;
   }
 
   public delete(id: TKey) {
@@ -90,7 +106,7 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     let lastResult: TEntity[] = [];
 
     do {
-      const lastKey = (<any> lastResult).lastKey;
+      const lastKey = (<any>lastResult).lastKey;
 
       if (lastKey) {
         lastResult = await scanOrQuery.startAt(lastKey).exec();
@@ -99,7 +115,7 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
       }
 
       result = result.concat(lastResult);
-    } while ((<any> lastResult).lastKey);
+    } while ((<any>lastResult).lastKey);
 
     return result;
   }

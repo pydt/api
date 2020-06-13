@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Router } from 'express';
 import { RegisterRoutes } from './_gen/routes/routes';
 import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
@@ -7,10 +9,11 @@ import { ValidateError } from 'tsoa';
 const router = Router();
 
 router.get('/swagger.json', (req, res) => {
+  // eslint-disable-next-line
   res.status(200).json(require('./_gen/swagger/swagger.json'));
 });
 
-type middlewareExec = ((request: HttpRequest, response: HttpResponse, next: any) => void);
+type middlewareExec = (request: HttpRequest, response: HttpResponse, next: any) => void;
 
 function methodHandler(method: string) {
   return function (route: string, ...routeExecs: middlewareExec[]) {
@@ -20,7 +23,7 @@ function methodHandler(method: string) {
       const runNext = (runExecs: middlewareExec[]) => {
         const curExec: middlewareExec = runExecs[0];
 
-        curExec(req, res, (err) => {
+        curExec(req, res, err => {
           if (err) {
             let status = 500;
             let message = 'There was an error processing your request.';
@@ -70,7 +73,7 @@ const mockApp: any = {
 
 RegisterRoutes(mockApp);
 
-export const handler = loggingHandler((event: LambdaProxyEvent, context) => {
+export const handler = loggingHandler((event: LambdaProxyEvent) => {
   pydtLogger.info(`handling ${event.httpMethod} ${event.path} (${event.requestContext.identity.sourceIp})`);
 
   return new Promise((resolve, reject) => {
@@ -87,7 +90,7 @@ export const handler = loggingHandler((event: LambdaProxyEvent, context) => {
     if (event.httpMethod.toLowerCase() === 'options') {
       response.status(200).end();
     } else {
-      (router as any).handle(new HttpRequest(event, response), response, err => {
+      (router as any).handle(new HttpRequest(event, response), response, () => {
         pydtLogger.info(`404 for ${event.httpMethod} ${event.path}`);
         response.status(404).json(new ErrorResponse('Not Found'));
       });

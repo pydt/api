@@ -34,4 +34,5 @@ export interface User extends HasSteamId, TurnData {
   webhookUrl?: string;
   willSubstituteForGameTypes: string[];
   banned?: boolean;
+  dataVersion?: number;
 }

@@ -9,23 +9,23 @@ const sts = new AWS.STS();
 export const SNS_PROVIDER_SYMBOL = Symbol('ISnsProvider');
 
 export interface ISnsProvider {
-  turnSubmitted(game: Game): Promise<any>;
-  gameUpdated(game: Game): Promise<any>;
-  userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<any>;
+  turnSubmitted(game: Game): Promise<void>;
+  gameUpdated(game: Game): Promise<void>;
+  userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<void>;
 }
 
 @provideSingleton(SNS_PROVIDER_SYMBOL)
 export class SnsProvider implements ISnsProvider {
-  public turnSubmitted(game: Game) {
-    return this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
+  public async turnSubmitted(game: Game) {
+    await this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
   }
 
-  public gameUpdated(game: Game) {
-    return this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
+  public async gameUpdated(game: Game) {
+    await this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
   }
 
-  public userGameCacheUpdated(payload: UserGameCacheUpdatedPayload) {
-    return this.sendMessage(
+  public async userGameCacheUpdated(payload: UserGameCacheUpdatedPayload) {
+    await this.sendMessage(
       Config.resourcePrefix + SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
       SNS_MESSAGES.USER_GAME_CACHE_UPDATED,
       JSON.stringify(payload)

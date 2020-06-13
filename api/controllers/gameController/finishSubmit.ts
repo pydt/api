@@ -3,35 +3,35 @@ import { CIV6_GAME, GAMES, RANDOM_CIV } from 'pydt-shared-models';
 import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as zlib from 'zlib';
 import { Config } from '../../../lib/config';
+import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
+import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';
-import { Game, GamePlayer, getCurrentPlayerIndex, getNextPlayerIndex, playerIsHuman } from '../../../lib/models';
+import { Game, GamePlayer } from '../../../lib/models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../../lib/s3Provider';
 import { ActorType } from '../../../lib/saveHandlers/saveHandler';
-import { GAME_SERVICE_SYMBOL, IGameService } from '../../../lib/services/gameService';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
-import { IUserService, USER_SERVICE_SYMBOL } from '../../../lib/services/userService';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
+import { GameUtil } from '../../../lib/util/gameUtil';
 
 @Route('game')
 @Tags('game')
 @provideSingleton(GameController_FinishSubmit)
 export class GameController_FinishSubmit {
   constructor(
-    @inject(GAME_SERVICE_SYMBOL) private gameService: IGameService,
-    @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
+    @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
-  ) {
-  }
+  ) {}
 
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/finishSubmit')
   public async finishSubmit(@Request() request: HttpRequest, gameId: string): Promise<Game> {
-    const game = await this.gameService.getGame(gameId);
+    const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, `It's not your turn!`);
@@ -40,25 +40,25 @@ export class GameController_FinishSubmit {
     const gameTurn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
     game.gameTurnRangeKey++;
 
-    const users = await this.userService.getUsersForGame(game);
+    const users = await this.userRepository.getUsersForGame(game);
     const user = users.find(u => {
       return u.steamId === request.user;
     });
 
     const data = await this.s3.getObject({
       Bucket: Config.resourcePrefix + 'saves',
-      Key: this.gameTurnService.createS3SaveKey(gameId, game.gameTurnRangeKey)
+      Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey)
     });
 
     if (!data || !data.Body) {
-      throw new Error('File doesn\'t exist?');
+      throw new Error("File doesn't exist?");
     }
 
     let buffer = data.Body;
 
     // Attempt to gunzip...
     try {
-      buffer = zlib.unzipSync(data.Body as any);
+      buffer = zlib.unzipSync(data.Body as Buffer);
     } catch (e) {
       // If unzip fails, assume raw save file was uploaded...
       pydtLogger.info('unzip failed :(', e);
@@ -80,10 +80,7 @@ export class GameController_FinishSubmit {
     }
 
     if (game.gameSpeed && game.gameSpeed !== saveHandler.gameSpeed) {
-      throw new HttpResponseError(
-        400,
-        `Invalid game speed in save file!  (actual: ${saveHandler.gameSpeed}, expected: ${game.gameSpeed})`
-      );
+      throw new HttpResponseError(400, `Invalid game speed in save file!  (actual: ${saveHandler.gameSpeed}, expected: ${game.gameSpeed})`);
     }
 
     if (game.mapFile) {
@@ -117,7 +114,7 @@ export class GameController_FinishSubmit {
           throw new HttpResponseError(400, `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
         }
 
-        if (playerIsHuman(game.players[i])) {
+        if (GameUtil.playerIsHuman(game.players[i])) {
           if (civ.type === ActorType.DEAD) {
             // Player has been defeated!
             game.players[i].hasSurrendered = true;
@@ -152,9 +149,9 @@ export class GameController_FinishSubmit {
       expectedRound = parsedRound;
     }
 
-    const nextPlayerIndex = getNextPlayerIndex(game);
+    const nextPlayerIndex = GameUtil.getNextPlayerIndex(game);
 
-    if (nextPlayerIndex <= getCurrentPlayerIndex(game)) {
+    if (nextPlayerIndex <= GameUtil.getCurrentPlayerIndex(game)) {
       // Allow round to stay the same on the turn for civ 6 world congress...
       if (!(game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round)) {
         expectedRound++;
@@ -172,7 +169,7 @@ export class GameController_FinishSubmit {
       throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
     }
 
-    game.currentPlayerSteamId = game.players[getNextPlayerIndex(game)].steamId;
+    game.currentPlayerSteamId = game.players[GameUtil.getNextPlayerIndex(game)].steamId;
     game.round = expectedRound;
 
     await this.gameTurnService.updateSaveFileForGameState(game, users, saveHandler);

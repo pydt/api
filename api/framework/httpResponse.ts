@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LambdaProxyCallback } from './lambdaProxyCallback';
 
 export class HttpResponse {
@@ -10,8 +11,7 @@ export class HttpResponse {
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH'
   };
 
-  constructor(private callback: LambdaProxyCallback) {
-  }
+  constructor(private callback: LambdaProxyCallback) {}
 
   public json(data: any) {
     this.data = data;
@@ -32,7 +32,7 @@ export class HttpResponse {
       this.callback(null, {
         body: JSON.stringify(this.data),
         headers: this.headers,
-        statusCode: this.statusCode,
+        statusCode: this.statusCode
       });
 
       this.callback = null;

@@ -20,12 +20,11 @@ export class AddTurnTimerJob {
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
-  ) {
-  }
+  ) {}
 
   public async execute(gameId: string): Promise<void> {
     const game = await this.gameRepository.get(gameId, true);
-  
+
     if (!game || !game.inProgress || !game.gameTurnRangeKey || !GAMES.find(x => x.id === game.gameType).turnTimerSupported) {
       pydtLogger.info('Ignoring game ' + gameId);
       return;
@@ -40,14 +39,14 @@ export class AddTurnTimerJob {
     if (user.vacationMode) {
       pydtLogger.info('creating vacation timer');
       jobKey = {
-        jobType: JOB_TYPES.TURN_TIMER_VACATION, 
+        jobType: JOB_TYPES.TURN_TIMER_VACATION,
         scheduledTime: new Date()
       };
     } else if (game.turnTimerMinutes) {
       pydtLogger.info('creating turn timer');
-      const latestTurn = await this.gameTurnRepository.get({gameId, turn: game.gameTurnRangeKey});
+      const latestTurn = await this.gameTurnRepository.get({ gameId, turn: game.gameTurnRangeKey });
       jobKey = {
-        jobType: JOB_TYPES.TURN_TIMER, 
+        jobType: JOB_TYPES.TURN_TIMER,
         scheduledTime: new Date(latestTurn.startDate.getTime() + game.turnTimerMinutes * 60000)
       };
     } else {

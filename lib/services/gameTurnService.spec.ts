@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { GameTurnService } from './gameTurnService';
 import { Game, GameTurn, User } from '../models';
-import { IUserService, UserService } from './userService';
 import { IS3Provider } from '../s3Provider';
 import { IGameTurnRepository } from '../dynamoose/gameTurnRepository';
 import { IUserRepository } from '../dynamoose/userRepository';
@@ -13,82 +12,77 @@ import { ISnsProvider } from '../snsProvider';
 import { ISesProvider } from '../email/sesProvider';
 import { Civ5SaveHandler } from '../saveHandlers/civ5SaveHandler';
 import { ActorType } from '../saveHandlers/saveHandler';
+import { Mock, It } from 'typemoq';
 
 describe('GameTurnService', () => {
-
   it('should skip turn correctly', async () => {
     const turnTimerMinutes = 60;
     const turnStartDate = new Date(new Date().getTime() - (turnTimerMinutes + 1) * 60000);
 
-    const game = <Game> {
-      createdBySteamId: "1",
-      currentPlayerSteamId: "4",
-      displayName: "Civ5 Test",
-      gameId: "testGame",
+    const game = <Game>{
+      createdBySteamId: '1',
+      currentPlayerSteamId: '4',
+      displayName: 'Civ5 Test',
+      gameId: 'testGame',
       gameTurnRangeKey: 20,
-      gameType: "CIV5",
+      gameType: 'CIV5',
       humans: 4,
       lastTurnEndDate: turnStartDate,
       players: [
-        {steamId:"1",civType:"LEADER_ALEXANDER"},
-        {steamId:"2",civType:"LEADER_HIAWATHA"},
-        {steamId:"3",civType:"LEADER_DARIUS"},
-        {steamId:"4",civType:"LEADER_AUGUSTUS"}
+        { steamId: '1', civType: 'LEADER_ALEXANDER' },
+        { steamId: '2', civType: 'LEADER_HIAWATHA' },
+        { steamId: '3', civType: 'LEADER_DARIUS' },
+        { steamId: '4', civType: 'LEADER_AUGUSTUS' }
       ],
       round: 4,
       turnTimerMinutes
     };
 
     const turn: GameTurn = {
-      gameId: "testGame",
-      playerSteamId: "4",
+      gameId: 'testGame',
+      playerSteamId: '4',
       round: 4,
       startDate: turnStartDate,
       turn: 20
     };
 
-    const userService = <IUserService> {
-      getUsersForGame: (game: Game) => {
-        return Promise.resolve(game.players.map(x => <User>{ steamId: x.steamId, displayName: x.civType }));
-      },
-      getUserGameStats: (user, game) => {
-        return new UserService(null).getUserGameStats(user, game);
-      }
-    };
+    const gameRepositoryMock = Mock.ofType<IGameRepository>();
+    gameRepositoryMock.setup(x => x.saveVersioned(It.isAny())).returns(g => Promise.resolve(g));
 
-    const gameRepository = <IGameRepository> {
-      saveVersioned: (g => Promise.resolve(g))
-    };
+    const gameTurnRepositoryMock = Mock.ofType<IGameTurnRepository>();
+    gameTurnRepositoryMock.setup(x => x.saveVersioned(It.isAny())).returns(x => Promise.resolve(x));
 
-    const gameTurnRepository = <IGameTurnRepository> {
-      saveVersioned: (m => Promise.resolve(m))
-    };
-
-    const userRepository = <IUserRepository> {
-      saveVersioned: (u => Promise.resolve(u))
-    };
+    const userRepositoryMock = Mock.ofType<IUserRepository>();
+    userRepositoryMock.setup(x => x.saveVersioned(It.isAny())).returns(u => Promise.resolve(u));
+    userRepositoryMock
+      .setup(x => x.getUsersForGame(It.isAny()))
+      .returns(g => Promise.resolve(g.players.map(x => ({ steamId: x.steamId, displayName: x.civType } as User))));
 
     let skippedData: Buffer;
 
-    const s3 = <IS3Provider> {
-      getObject: (fp) => {
+    const s3ProviderMock = Mock.ofType<IS3Provider>();
+    s3ProviderMock
+      .setup(x => x.getObject(It.isAny()))
+      .returns(fp => {
         expect(fp.Key.indexOf('/000020')).to.be.greaterThan(0);
-        return Promise.resolve({ Body: fs.readFileSync('testdata/saves/civ5/000020.Civ5Save')});
-      },
-      putObject: (fp, data, isPublic) => {
-        skippedData = data;
-      }
-    };
+        return Promise.resolve({ Body: fs.readFileSync('testdata/saves/civ5/000020.Civ5Save') });
+      });
+    s3ProviderMock.setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny())).callback((fp, data) => (skippedData = data));
 
-    const ses = <ISesProvider> {
-      sendEmail: (subject, bodyTitle, bodyHtml, toAddress) => Promise.resolve()
-    };
+    const sesProviderMock = Mock.ofType<ISesProvider>();
+    sesProviderMock.setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny())).returns(() => Promise.resolve());
 
-    const sns = <ISnsProvider> {
-      turnSubmitted: (g => Promise.resolve())
-    };
+    const snsProviderMock = Mock.ofType<ISnsProvider>();
+    snsProviderMock.setup(x => x.turnSubmitted(It.isAny())).returns(() => Promise.resolve());
 
-    const gts = new GameTurnService(userRepository, gameRepository, gameTurnRepository, userService, s3, ses, sns);
+    const gts = new GameTurnService(
+      userRepositoryMock.object,
+      gameRepositoryMock.object,
+      gameTurnRepositoryMock.object,
+      s3ProviderMock.object,
+      sesProviderMock.object,
+      snsProviderMock.object
+    );
     await gts.skipTurn(game, turn);
     expect(skippedData).to.not.be.null;
 
@@ -110,5 +104,4 @@ describe('GameTurnService', () => {
     expect(handler.civData[3].password).to.not.be.empty;
     expect(handler.civData[3].playerName).to.be.eq(game.players[3].civType);
   });
-
 });

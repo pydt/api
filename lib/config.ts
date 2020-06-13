@@ -31,5 +31,4 @@ class ConfigClass {
   }
 }
 
-// tslint:disable-next-line
 export const Config = new ConfigClass();

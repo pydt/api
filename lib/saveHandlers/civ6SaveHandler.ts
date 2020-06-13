@@ -8,8 +8,7 @@ const ACTOR_TYPE_MAP = [
 ];
 
 export class Civ6CivData implements CivData {
-  constructor(private wrapper, private parsedCiv) {
-  }
+  constructor(private wrapper, private parsedCiv) {}
 
   get type() {
     if (this.parsedCiv.PLAYER_ALIVE && !this.parsedCiv.PLAYER_ALIVE.data) {
@@ -32,16 +31,16 @@ export class Civ6CivData implements CivData {
     return (this.parsedCiv.PLAYER_NAME || {}).data;
   }
 
+  set playerName(value: string) {
+    this.setValue('PLAYER_NAME', civ6.DATA_TYPES.STRING, value);
+  }
+
   get leaderName() {
     return this.parsedCiv.LEADER_NAME.data;
   }
 
   get isCurrentTurn() {
-    return this.parsedCiv.IS_CURRENT_TURN && !!this.parsedCiv.IS_CURRENT_TURN.data
-  }
-
-  set playerName(value: string) {
-    this.setValue('PLAYER_NAME', civ6.DATA_TYPES.STRING, value);
+    return this.parsedCiv.IS_CURRENT_TURN && !!this.parsedCiv.IS_CURRENT_TURN.data;
   }
 
   get password() {
@@ -69,13 +68,7 @@ export class Civ6CivData implements CivData {
         this.slotHeaderVal--;
       }
     } else if (value) {
-      civ6.addChunk(
-        this.wrapper.chunks,
-        this.parsedCiv.LEADER_NAME,
-        civ6.MARKERS.ACTOR_DATA[markerName],
-        dataType,
-        value
-      );
+      civ6.addChunk(this.wrapper.chunks, this.parsedCiv.LEADER_NAME, civ6.MARKERS.ACTOR_DATA[markerName], dataType, value);
 
       this.slotHeaderVal++;
     }
@@ -121,7 +114,7 @@ export class Civ6SaveHandler implements SaveHandler {
     return result;
   }
 
-  setCurrentTurnIndex(newIndex: number) {
+  setCurrentTurnIndex() {
     // Not implemented...
   }
 

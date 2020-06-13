@@ -5,12 +5,11 @@ import { ActorType, CivData, SaveHandler } from './saveHandler';
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },
   { intVal: 2, actorType: ActorType.DEAD },
-  { intVal: 3, actorType: ActorType.HUMAN },
+  { intVal: 3, actorType: ActorType.HUMAN }
 ];
 
 export class Civ5CivData implements CivData {
-  constructor(private civ, private index: number, private handler: Civ5SaveHandler) {
-  }
+  constructor(private civ, private index: number, private handler: Civ5SaveHandler) {}
 
   get type() {
     return ACTOR_TYPE_MAP.find(x => x.intVal === this.civ.type).actorType;
@@ -25,17 +24,17 @@ export class Civ5CivData implements CivData {
     return this.civ.playerName;
   }
 
+  set playerName(value: string) {
+    this.handler.rawSave = civ5.changePlayerName(this.handler.rawSave, this.index, value || '');
+    this.handler.reparse();
+  }
+
   get leaderName() {
     return this.civ.leader;
   }
 
   get isCurrentTurn(): boolean {
     return this.handler.parsed.player === this.index;
-  }
-
-  set playerName(value: string) {
-    this.handler.rawSave = civ5.changePlayerName(this.handler.rawSave, this.index, value || '');
-    this.handler.reparse();
   }
 
   get password() {

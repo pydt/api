@@ -8,20 +8,20 @@ import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../dynamoose/g
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
 import { inject, provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
-import { Game, GamePlayer, GameTurn, getCurrentPlayerIndex, getNextPlayerIndex, playerIsHuman, User } from '../models';
+import { Game, GamePlayer, GameTurn, User } from '../models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
 import { ActorType, SaveHandler } from '../saveHandlers/saveHandler';
 import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
-import { IUserService, USER_SERVICE_SYMBOL } from './userService';
+import { UserUtil } from '../util/userUtil';
+import { GameUtil } from '../util/gameUtil';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
 export interface IGameTurnService {
-  createS3SaveKey(gameId: string, turn: number): string;
-  getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<any>;
+  getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<void>;
   updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean): void;
-  updateSaveFileForGameState(game: Game, users: User[], handler: SaveHandler): Promise<any>;
+  updateSaveFileForGameState(game: Game, users: User[], handler: SaveHandler): Promise<void>;
   parseSaveFile(buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
   defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]): Promise<void>;
@@ -34,23 +34,15 @@ export class GameTurnService implements IGameTurnService {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(USER_SERVICE_SYMBOL) private userService: IUserService,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
-  ) {
-  }
+  ) {}
 
   public async moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
-    await Promise.all([
-      this.closeGameTurn(game, gameTurn, user),
-      this.createNextGameTurn(game)
-    ]);
+    await Promise.all([this.closeGameTurn(game, gameTurn, user), this.createNextGameTurn(game)]);
 
-    await Promise.all([
-      this.userRepository.saveVersioned(user),
-      this.gameRepository.saveVersioned(game)
-    ]);
+    await Promise.all([this.userRepository.saveVersioned(user), this.gameRepository.saveVersioned(game)]);
 
     await this.sns.turnSubmitted(game);
   }
@@ -91,7 +83,7 @@ export class GameTurnService implements IGameTurnService {
         return user.steamId === defeatedPlayer.steamId;
       });
 
-      this.userService.removeUserFromGame(defeatedUser, game, true);
+      UserUtil.removeUserFromGame(defeatedUser, game, true);
 
       promises.push(this.userRepository.saveVersioned(defeatedUser));
 
@@ -107,13 +99,15 @@ export class GameTurnService implements IGameTurnService {
             desc = 'You have';
           }
 
-          if (playerIsHuman(player) || player === defeatedPlayer) {
-            promises.push(this.ses.sendEmail(
-              `${desc} been defeated in ${game.displayName}!`,
-              'Player Defeated',
-              `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,
-              curUser.emailAddress
-            ));
+          if (GameUtil.playerIsHuman(player) || player === defeatedPlayer) {
+            promises.push(
+              this.ses.sendEmail(
+                `${desc} been defeated in ${game.displayName}!`,
+                'Player Defeated',
+                `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,
+                curUser.emailAddress
+              )
+            );
           }
         }
       }
@@ -123,7 +117,7 @@ export class GameTurnService implements IGameTurnService {
   }
 
   public async getAndUpdateSaveFileForGameState(game: Game, users: User[]) {
-    const s3Key = this.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
+    const s3Key = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
 
     const data = await this.s3.getObject({
       Bucket: Config.resourcePrefix + 'saves',
@@ -134,22 +128,19 @@ export class GameTurnService implements IGameTurnService {
       throw new Error(`File doesn't exist: ${s3Key}`);
     }
 
-    return this.updateSaveFileForGameState(game, users, this.parseSaveFile(data.Body, game));
-  }
-
-  public createS3SaveKey(gameId: string, turn: number) {
-    return gameId + '/' + ('000000' + turn).slice(-6) + '.CivXSave';
+    await this.updateSaveFileForGameState(game, users, this.parseSaveFile(data.Body, game));
   }
 
   public updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean) {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
-      const player: GamePlayer = game.players.find(p => {
-        return p.steamId === user.steamId;
-      }) || <any> {};
+      const player =
+        game.players.find(p => {
+          return p.steamId === user.steamId;
+        }) || ({} as GamePlayer);
 
-      const gameStats = this.userService.getUserGameStats(user, game.gameType);
+      const gameStats = UserUtil.getUserGameStats(user, game.gameType);
 
       if (!user.lastTurnEndDate || gameTurn.endDate > user.lastTurnEndDate) {
         user.lastTurnEndDate = gameTurn.endDate;
@@ -188,12 +179,12 @@ export class GameTurnService implements IGameTurnService {
     }
   }
 
-  public updateSaveFileForGameState(game, users, handler: SaveHandler, setPlayerType = true) {
+  public async updateSaveFileForGameState(game, users, handler: SaveHandler, setPlayerType = true) {
     for (let i = 0; i < handler.civData.length; i++) {
       if (game.players[i]) {
         const player = game.players[i];
 
-        if (!playerIsHuman(player)) {
+        if (!GameUtil.playerIsHuman(player)) {
           // Make sure surrendered players are marked as AI
           if (setPlayerType && handler.civData[i].type === ActorType.HUMAN) {
             handler.civData[i].type = ActorType.AI;
@@ -227,18 +218,24 @@ export class GameTurnService implements IGameTurnService {
       }
     }
 
-    const saveKey = this.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
+    const saveKey = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
     const uncompressedBody = handler.getData();
 
-    return Promise.all([
-      this.s3.putObject({
-        Bucket: Config.resourcePrefix + 'saves',
-        Key: saveKey
-      }, uncompressedBody),
-      this.s3.putObject({
-        Bucket: Config.resourcePrefix + 'saves',
-        Key: saveKey + '.gz'
-      }, zlib.gzipSync(uncompressedBody))
+    await Promise.all([
+      this.s3.putObject(
+        {
+          Bucket: Config.resourcePrefix + 'saves',
+          Key: saveKey
+        },
+        uncompressedBody
+      ),
+      this.s3.putObject(
+        {
+          Bucket: Config.resourcePrefix + 'saves',
+          Key: saveKey + '.gz'
+        },
+        zlib.gzipSync(uncompressedBody)
+      )
     ]);
   }
 
@@ -254,21 +251,21 @@ export class GameTurnService implements IGameTurnService {
   public async skipTurn(game: Game, turn: GameTurn) {
     const data = await this.s3.getObject({
       Bucket: Config.resourcePrefix + 'saves',
-      Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+      Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
     });
 
     if (!data && !data.Body) {
-      throw new Error('File doesn\'t exist?');
+      throw new Error("File doesn't exist?");
     }
 
     game.gameTurnRangeKey++;
     turn.skipped = true;
 
-    const users = await this.userService.getUsersForGame(game);
+    const users = await this.userRepository.getUsersForGame(game);
     const oldUser = users.find(x => x.steamId === game.currentPlayerSteamId);
 
-    const skippedPlayerIndex = getCurrentPlayerIndex(game);
-    const nextPlayerIndex = getNextPlayerIndex(game);
+    const skippedPlayerIndex = GameUtil.getCurrentPlayerIndex(game);
+    const nextPlayerIndex = GameUtil.getNextPlayerIndex(game);
 
     if (nextPlayerIndex < 0) {
       return;
@@ -298,10 +295,13 @@ export class GameTurnService implements IGameTurnService {
     saveHandler.setCurrentTurnIndex(nextPlayerIndex);
     this.updateSaveFileForGameState(game, users, saveHandler, false);
 
-    await this.s3.putObject({
-      Bucket: Config.resourcePrefix + 'saves',
-      Key: this.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
-    }, saveHandler.getData());
+    await this.s3.putObject(
+      {
+        Bucket: Config.resourcePrefix + 'saves',
+        Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+      },
+      saveHandler.getData()
+    );
 
     await this.moveToNextTurn(game, turn, oldUser);
 

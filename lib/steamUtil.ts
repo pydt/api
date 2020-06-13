@@ -6,17 +6,19 @@ import { Config } from './config';
 import { SteamProfile } from './models';
 
 passport.use(
-  new passportSteam.Strategy({
-    returnURL: Config.webUrl + '/steamreturn',
-    realm: Config.webUrl,
-    apiKey: Config.steamApiKey
-  },
-  function(identifier, profile, done) {
-    done(null, {
-      identifier: identifier,
-      profile: profile
-    });
-  })
+  new passportSteam.Strategy(
+    {
+      returnURL: Config.webUrl + '/steamreturn',
+      realm: Config.webUrl,
+      apiKey: Config.steamApiKey
+    },
+    function (identifier, profile, done) {
+      done(null, {
+        identifier: identifier,
+        profile: profile
+      });
+    }
+  )
 );
 
 export const steamPassport = passport;
@@ -28,4 +30,4 @@ export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfi
   });
 
   return resp.response.players;
-};
+}

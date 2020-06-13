@@ -6,7 +6,6 @@ import { Civ5SaveHandler } from './civ5SaveHandler';
 import { ActorType } from './saveHandler';
 
 describe('Civ5SaveHandler', () => {
-
   it('should parse correctly', async () => {
     const buffer = fs.readFileSync('testdata/saves/civ5/Harald Bluetooth_0164 AD-1695.Civ5Save');
     const handler = new Civ5SaveHandler(buffer);
@@ -42,10 +41,7 @@ describe('Civ5SaveHandler', () => {
     expect(handler.gameTurn).to.eq(0);
     expect(handler.mapFile).to.eq('Assets\\Maps\\Protean.lua');
     expect(handler.mapSize).to.eq('WORLDSIZE_SMALL');
-    expect(handler.parsedDlcs).to.deep.equal([
-      '54df493fb668d144a930a168628faa59',
-      '57b2d25491c545408f17a69f033166c7'
-    ]);
+    expect(handler.parsedDlcs).to.deep.equal(['54df493fb668d144a930a168628faa59', '57b2d25491c545408f17a69f033166c7']);
 
     expect(handler.civData.length).to.eq(6);
     expect(handler.civData[1].isCurrentTurn).to.eq(true);
@@ -72,9 +68,6 @@ describe('Civ5SaveHandler', () => {
     expect(handler.mapFile).to.eq('Assets\\Maps\\Continents.lua');
     expect(handler.mapSize).to.eq('WORLDSIZE_TINY');
 
-    //expect(handler.parsedDlcs.length).to.eq(14);
-    //expect(handler.parsedDlcs[0]).to.eq('Mongolia');
-
     expect(handler.civData.length).to.eq(4);
     expect(handler.civData[2].isCurrentTurn).to.eq(true);
     expect(handler.civData[0].leaderName).to.eq('LEADER_HARALD');
@@ -82,5 +75,4 @@ describe('Civ5SaveHandler', () => {
     expect(handler.civData[0].playerName).to.eq('playerName');
     expect(handler.civData[0].type).to.eq(ActorType.AI);
   });
-
 });

@@ -1,4 +1,3 @@
 export class ErrorResponse {
-  constructor(public errorMessage: string) {
-  }
+  constructor(public errorMessage: string) {}
 }

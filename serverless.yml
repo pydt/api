@@ -82,6 +82,8 @@ custom:
         - reflect-metadata
         - source-map-support
         - pydt-shared
+      forceExclude:
+        - aws-sdk
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com

@@ -14,26 +14,19 @@ export const handler = loggingHandler(async (event, context, iocContainer) => {
 
 @injectable()
 export class DeleteOldSaves {
-  constructor(
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
-  ) {
-  }
+  constructor(@inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider) {}
 
   public async execute(gameId: string) {
-    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', gameId)
-  
+    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', gameId);
+
     if (!resp || !resp.Contents) {
       throw new Error(`No data returned for listObjectsV2, prefix: ${gameId}`);
     }
-  
+
     if (resp.Contents.length > TURNS_TO_SAVE) {
       await this.s3.deleteObjects(
         Config.resourcePrefix + 'saves',
-        take(
-          orderBy(resp.Contents, ['Key'], ['asc']),
-          resp.Contents.length - TURNS_TO_SAVE
-        )
-        .map(obj => obj.Key)
+        take(orderBy(resp.Contents, ['Key'], ['asc']), resp.Contents.length - TURNS_TO_SAVE).map(obj => obj.Key)
       );
     }
   }

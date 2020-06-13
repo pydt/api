@@ -6,7 +6,7 @@ import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game, User } from '../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
-import { IUserService, USER_SERVICE_SYMBOL } from '../../lib/services/userService';
+import { UserUtil } from '../../lib/util/userUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const rus = iocContainer.resolve(RecalculateUserStats);
@@ -21,23 +21,21 @@ export class RecalculateUserStats {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(USER_SERVICE_SYMBOL) private userService: IUserService
-  ) {
-  }
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+  ) {}
 
   public async execute(userId: string) {
     let users: User[];
 
     if (userId === 'all') {
       users = await this.userRepository.allUsers();
-      users = users.filter(x => (<any>x).dataVersion !== dataVersion);
+      users = users.filter(x => x.dataVersion !== dataVersion);
     } else if (userId) {
       users = [await this.userRepository.get(userId)];
     } else {
       throw new Error('userId or all must be provided');
     }
-    
+
     await this.calculateUserStats(users);
   }
 
@@ -54,12 +52,12 @@ export class RecalculateUserStats {
         await this.calculateGameStats(games, user);
       }
 
-      (<any>user).dataVersion = dataVersion;
+      user.dataVersion = dataVersion;
       await this.userRepository.saveVersioned(user);
       console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
     }
   }
-    
+
   private async calculateGameStats(games: Game[], user: User) {
     for (const game of games) {
       const player = game.players.find(player => {
@@ -67,7 +65,7 @@ export class RecalculateUserStats {
       });
 
       if (player) {
-        this.resetStatistics(player); 
+        this.resetStatistics(player);
       }
 
       const turns = await this.gameTurnRepository.getPlayerTurnsForGame(game.gameId, user.steamId);
@@ -76,7 +74,12 @@ export class RecalculateUserStats {
         continue;
       }
 
-      const maxTurnDate = new Date(Math.max.apply(null, turns.map(x => x.endDate)));
+      const maxTurnDate = new Date(
+        Math.max.apply(
+          null,
+          turns.map(x => x.endDate)
+        )
+      );
 
       if (!isNaN(maxTurnDate.getTime())) {
         if (!game.lastTurnEndDate || maxTurnDate > game.lastTurnEndDate) {
@@ -88,7 +91,7 @@ export class RecalculateUserStats {
         this.gameTurnService.updateTurnStatistics(game, turn, user);
       }
 
-      const stats = this.userService.getUserGameStats(user, game.gameType);
+      const stats = UserUtil.getUserGameStats(user, game.gameType);
       stats.activeGames += game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered) ? 1 : 0;
       stats.totalGames++;
 
@@ -96,7 +99,7 @@ export class RecalculateUserStats {
       //await this.gameRepository.saveVersioned(game);
     }
   }
-  
+
   private resetStatistics(host) {
     host.turnsPlayed = 0;
     host.turnsSkipped = 0;

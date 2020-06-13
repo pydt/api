@@ -1,15 +1,15 @@
-
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import { CIV6_GAME } from 'pydt-shared-models';
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
-import { Game } from '../models';
+import { Game, User } from '../models';
 import { BaseDynamooseRepository, IRepository } from './common';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
+  getGamesForUser(user: User): Promise<Game[]>;
   incompleteGames(): Promise<Game[]>;
   unstartedGames(daysOld: number): Promise<Game[]>;
   getByDiscourseTopicId(topicId: number): Promise<Game>;
@@ -100,6 +100,16 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
     return this.setDefaults(await super.get(id, consistent));
   }
 
+  public getGamesForUser(user: User): Promise<Game[]> {
+    const gameKeys = user.activeGameIds || [];
+
+    if (gameKeys.length > 0) {
+      return this.batchGet(gameKeys);
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
   async batchGet(ids: string[], consistent?: boolean) {
     const games = await super.batchGet(ids, consistent);
     return orderBy(games, ['createdAt'], ['desc']).map(g => this.setDefaults(g));
@@ -108,12 +118,19 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
   async incompleteGames() {
     const games = await this.getAllPaged(this.scan('completed').not().eq(true));
     return games.map(g => this.setDefaults(g));
-  };
+  }
 
   async unstartedGames(daysOld: number) {
-    const games = await this.getAllPaged(this
-      .scan('inProgress').not().eq(true)
-      .where('createdAt').lt(moment().add(daysOld * -1, 'days').valueOf())
+    const games = await this.getAllPaged(
+      this.scan('inProgress')
+        .not()
+        .eq(true)
+        .where('createdAt')
+        .lt(
+          moment()
+            .add(daysOld * -1, 'days')
+            .valueOf()
+        )
     );
 
     return games.map(g => this.setDefaults(g));
@@ -127,7 +144,7 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
     }
 
     return this.setDefaults(topics[0]);
-  };
+  }
 
   private setDefaults(game: Game) {
     if (game) {

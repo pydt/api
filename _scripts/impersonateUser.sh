@@ -23,6 +23,6 @@ eval $(node -e "const auth=require('./auth');console.log('TOKEN=\"' + auth.sign(
 echo $TOKEN > /dev/clipboard
 read -rsp $'token copied to clipboard, press any key to continue...\n' -n1 key
 
-PROFILE=$(curl -s --header "Authorization: $TOKEN" https://5wa5xzappj.execute-api.us-east-1.amazonaws.com/prod/user/steamProfile)
+PROFILE=$(curl -s --header "Authorization: $TOKEN" https://api.playyourdamnturn.com/user/steamProfile)
 echo "${PROFILE}" > /dev/clipboard
 echo 'steamProfile copied to clipboard'

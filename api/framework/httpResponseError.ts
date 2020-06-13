@@ -7,7 +7,6 @@ export class HttpResponseError extends Error {
     super(message);
 
     // Set the prototype explicitly:
-    // tslint:disable-next-line
     // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, HttpResponseError.prototype);
   }

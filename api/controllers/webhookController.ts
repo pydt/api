@@ -13,8 +13,7 @@ export class WebhookController {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
-  ) {
-  }
+  ) {}
 
   @Post('newDiscordPost')
   public async newDiscordPost(@Request() request: HttpRequest, @Body() body: NewDiscordPostBody): Promise<void> {

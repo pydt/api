@@ -24,8 +24,7 @@ export class UserTurnNotification {
     @inject(IOT_PROVIDER_SYMBOL) private iot: IIotProvider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider
-  ) {
-  }
+  ) {}
 
   public async execute(payload: UserGameCacheUpdatedPayload) {
     const game = await this.gameRepository.get(payload.gameId, true);
@@ -42,12 +41,11 @@ export class UserTurnNotification {
 
         for (const webhook of webhooks) {
           if (isUrl(webhook)) {
-            try
-            {
+            try {
               const currentPlayer = game.players.find(x => x.steamId === game.currentPlayerSteamId);
               const gameData = GAMES.find(x => x.id === game.gameType);
               const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
-              
+
               await this.http.request({
                 method: 'POST',
                 uri: webhook,
@@ -67,15 +65,14 @@ export class UserTurnNotification {
                 json: true,
                 timeout: 2000
               });
-            }
-            catch (e) {
+            } catch (e) {
               pydtLogger.info('Error sending webhook to ' + webhook, e);
             }
           }
         }
-  
+
         await this.iot.notifyUserClient(user);
-  
+
         if (user.emailAddress) {
           await this.ses.sendEmail(
             `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,

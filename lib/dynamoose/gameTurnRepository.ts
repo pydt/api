@@ -33,7 +33,7 @@ export class GameTurnRepository extends BaseDynamooseRepository<GameTurnKey, Gam
       startDate: {
         type: Date,
         required: true,
-        default: function() {
+        default: function () {
           return new Date();
         }
       },
@@ -42,11 +42,11 @@ export class GameTurnRepository extends BaseDynamooseRepository<GameTurnKey, Gam
     });
   }
 
-  getTurnsForGame(gameId: string, startTurn, endTurn)  {
+  getTurnsForGame(gameId: string, startTurn, endTurn) {
     return this.query('gameId').eq(gameId).where('turn').between(startTurn, endTurn).exec();
   }
 
   getPlayerTurnsForGame(gameId: string, steamId: string) {
     return this.getAllPaged(this.query('gameId').eq(gameId).filter('playerSteamId').eq(steamId));
-  };
+  }
 }

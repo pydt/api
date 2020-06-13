@@ -6,8 +6,7 @@ import { initContainer, iocContainer } from './ioc';
 let rollbar: Rollbar;
 
 function log(level: string, message, error?) {
-  // tslint:disable-next-line
-  console.log(`${message}${error ? (': ' + (error && error.stack ? error.stack : JSON.stringify(error))) : ''}`);
+  console.log(`${message}${error ? ': ' + (error && error.stack ? error.stack : JSON.stringify(error)) : ''}`);
 
   if (rollbar) {
     switch (level) {
@@ -26,13 +25,13 @@ function log(level: string, message, error?) {
 }
 
 export const pydtLogger = {
-  info: function(message, error?) {
+  info: function (message, error?) {
     log('info', message, error);
   },
-  warn: function(message, error?) {
+  warn: function (message, error?) {
     log('warn', message, error);
   },
-  error: function(message, error) {
+  error: function (message, error) {
     log('error', message, error);
   }
 };
@@ -53,10 +52,10 @@ if (!Config.runningLocal) {
         }
       }
     }
-  } as any);
+  });
 }
 
-export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<any>) {
+export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<void>) {
   return async (event, context) => {
     initContainer();
 
@@ -69,12 +68,12 @@ export function loggingHandler(handler: (event, context, iocContainer: Container
       const exposedError = new Error('Service Unavailable');
 
       if (rollbar) {
-        (rollbar as any).wait(() => {
+        rollbar.wait(() => {
           throw exposedError;
         });
       } else {
         throw exposedError;
       }
     }
-  }
+  };
 }

@@ -22,8 +22,7 @@ export class CheckTurnTimerJobs {
     @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
-  ) {
-  }
+  ) {}
 
   public async execute() {
     const jobs = await this.scheduledJobRepository.getWaitingJobs(JOB_TYPES.TURN_TIMER);
@@ -31,7 +30,7 @@ export class CheckTurnTimerJobs {
     if (jobs && jobs.length) {
       await this.processJobs(jobs, this.checkTurnTimer);
     }
-    
+
     const vacationJobs = await this.scheduledJobRepository.getWaitingJobs(JOB_TYPES.TURN_TIMER_VACATION);
 
     if (vacationJobs && vacationJobs.length) {
@@ -42,19 +41,21 @@ export class CheckTurnTimerJobs {
   private async processJobs(jobs: ScheduledJob[], callback: (game: Game) => Promise<void>) {
     const gameIds = uniq(flatten(jobs.map(x => x.gameIds)));
     const games = await this.gameRepository.batchGet(gameIds);
-  
-    await Promise.all(games.map(async game => {
-      await callback.call(this, game);
-    }));
-    
+
+    await Promise.all(
+      games.map(async game => {
+        await callback.call(this, game);
+      })
+    );
+
     await this.scheduledJobRepository.batchDelete(jobs);
   }
-  
+
   private async checkTurnTimer(game: Game) {
     if (game.turnTimerMinutes) {
       const turn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
-      
-      if (!turn.endDate  && new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000 ) {
+
+      if (!turn.endDate && new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000) {
         pydtLogger.info('Skipping turn due to timer in game ' + game.gameId);
         await this.gameTurnService.skipTurn(game, turn);
       }

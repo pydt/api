@@ -4,12 +4,9 @@ import { buildProviderModule, fluentProvide, provide } from 'inversify-binding-d
 const iocContainer = new Container();
 let initialized = false;
 
-const provideSingleton = (
-  identifier: string | symbol | interfaces.Newable<any> | interfaces.Abstract<any>,
-) => {
-  return fluentProvide(identifier)
-    .inSingletonScope()
-    .done();
+// eslint-disable-next-line
+const provideSingleton = (identifier: string | symbol | interfaces.Newable<any> | interfaces.Abstract<any>) => {
+  return fluentProvide(identifier).inSingletonScope().done();
 };
 
 function initContainer() {

@@ -13,8 +13,7 @@ import { HttpRequest, HttpResponseError } from '../framework';
 @Tags('auth')
 @provideSingleton(AuthController)
 export class AuthController {
-  constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {
-  }
+  constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {}
 
   @Get('steam')
   public authenticate(): Promise<AuthenticateResponse> {
@@ -58,7 +57,7 @@ export class AuthController {
         url: '/blah?' + querystring.stringify(request.query)
       };
       const res = {
-        setHeader: (key, value) => {
+        setHeader: key => {
           if (key === 'Location') {
             // We shouldn't get here in validate...
             reject(new HttpResponseError(400, 'Bad Request'));
@@ -70,33 +69,37 @@ export class AuthController {
         reject(new HttpResponseError(400, 'Bad Request'));
       };
 
-      steamPassport.authenticate('steam', (err, user, info) => {
+      steamPassport.authenticate('steam', (err, user) => {
         if (err) {
           reject(err);
         } else {
-          this.userRepository.get(user.profile.id).then(dbUser => {
-            if (!dbUser) {
-              dbUser = {
-                steamId: user.profile.id
-              } as User;
-            }
+          this.userRepository
+            .get(user.profile.id)
+            .then(dbUser => {
+              if (!dbUser) {
+                dbUser = {
+                  steamId: user.profile.id
+                } as User;
+              }
 
-            const steamProfile = user.profile._json as SteamProfile;
+              const steamProfile = user.profile._json as SteamProfile;
 
-            dbUser.displayName = user.profile.displayName;
-            dbUser.steamProfileUrl = steamProfile.profileurl;
-            dbUser.avatarSmall = steamProfile.avatar;
-            dbUser.avatarMedium = steamProfile.avatarmedium;
-            dbUser.avatarFull = steamProfile.avatarfull;
-            return this.userRepository.saveVersioned(dbUser);
-          }).then(() => {
-            resolve({
-              token: JwtUtil.createToken(user.profile.id),
-              steamProfile: user.profile._json
+              dbUser.displayName = user.profile.displayName;
+              dbUser.steamProfileUrl = steamProfile.profileurl;
+              dbUser.avatarSmall = steamProfile.avatar;
+              dbUser.avatarMedium = steamProfile.avatarmedium;
+              dbUser.avatarFull = steamProfile.avatarfull;
+              return this.userRepository.saveVersioned(dbUser);
+            })
+            .then(() => {
+              resolve({
+                token: JwtUtil.createToken(user.profile.id),
+                steamProfile: user.profile._json
+              });
+            })
+            .catch(perr => {
+              reject(perr);
             });
-          }).catch(perr => {
-            reject(perr);
-          });
         }
       })(req, res, next);
     });

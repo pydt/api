@@ -2,7 +2,8 @@ import { HttpRequest, HttpResponseError } from '../../api/framework/index';
 import { JwtUtil } from './jwtUtil';
 import { pydtLogger } from '../logging';
 
-export async function expressAuthentication(request: HttpRequest, securityName: string, scopes?: string[]): Promise<any> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function expressAuthentication(request: HttpRequest, securityName: string, scopes?: string[]): Promise<string> {
   if (securityName === 'api_key') {
     try {
       if (request.headers && request.headers['authorization']) {
@@ -17,4 +18,4 @@ export async function expressAuthentication(request: HttpRequest, securityName: 
   }
 
   throw HttpResponseError.createUnauthorized();
-};
+}
