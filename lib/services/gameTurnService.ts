@@ -94,12 +94,13 @@ export class GameTurnService implements IGameTurnService {
 
         if (curUser && curUser.emailAddress) {
           let desc = defeatedUser.displayName + ' has';
+          const isDefeatedPlayer = player.steamId === defeatedPlayer.steamId;
 
-          if (player === defeatedPlayer) {
+          if (isDefeatedPlayer) {
             desc = 'You have';
           }
 
-          if (GameUtil.playerIsHuman(player) || player === defeatedPlayer) {
+          if (GameUtil.playerIsHuman(player) || isDefeatedPlayer) {
             promises.push(
               this.ses.sendEmail(
                 `${desc} been defeated in ${game.displayName}!`,
