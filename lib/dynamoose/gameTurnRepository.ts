@@ -11,7 +11,7 @@ export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> 
 }
 
 @provideSingleton(GAME_TURN_REPOSITORY_SYMBOL)
-export class GameTurnRepository extends BaseDynamooseRepository<GameTurnKey, GameTurn> implements GameTurnRepository {
+export class GameTurnRepository extends BaseDynamooseRepository<GameTurnKey, GameTurn> implements IGameTurnRepository {
   constructor() {
     super(Config.resourcePrefix + 'game-turn', {
       gameId: {

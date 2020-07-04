@@ -87,16 +87,27 @@ custom:
   domain:
     dev: api-dev.playyourdamnturn.com
     prod: api.playyourdamnturn.com
+  wsDomain:
+    dev: ws-dev.playyourdamnturn.com
+    prod: ws.playyourdamnturn.com
   customDomain:
-    domainName: ${self:custom.domain.${self:custom.activeStage}}
-    stage: ${self:custom.activeStage}
-    basePath: ''
-    certificateName: "playyourdamnturn.com"
-    createRoute53Record: true
-    endpointType: 'regional'
-    securityPolicy: tls_1_2
-    apiType: http
-    #allowPathMatching: true # Only for one deploy
+    http:
+      domainName: ${self:custom.domain.${self:custom.activeStage}}
+      stage: ${self:custom.activeStage}
+      basePath: ''
+      certificateName: "playyourdamnturn.com"
+      createRoute53Record: true
+      endpointType: 'regional'
+      securityPolicy: tls_1_2
+    websocket:
+      domainName: ${self:custom.wsDomain.${self:custom.activeStage}}
+      stage: ${self:custom.activeStage}
+      basePath: ''
+      certificateName: "playyourdamnturn.com"
+      createRoute53Record: true
+      endpointType: 'regional'
+      securityPolicy: tls_1_2
+
   prune:
     automatic: true
     number: 3
@@ -149,17 +160,26 @@ functions:
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted
       - sns: ${self:custom.resourcePrefix}game-updated
-  snsRecalculateUserStats:
-    handler: functions/sns/recalculateUserStats.handler
+  snsDataMigrations:
+    handler: functions/sns/dataMigrations.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    timeout: 300
+    timeout: 900
     events:
-      - sns: ${self:custom.resourcePrefix}recalculate-user    
+      - sns: ${self:custom.resourcePrefix}data-migrations
   snsDeleteOldSaves:
     handler: functions/sns/deleteOldSaves.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
-      - sns: ${self:custom.resourcePrefix}turn-submitted   
+      - sns: ${self:custom.resourcePrefix}turn-submitted  
+  websockets:
+    handler: api/websocket.handler
+    events:
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $disconnect
+      - websocket:
+          route: auth
 
 # you can add CloudFormation resource templates here
 resources:
@@ -237,3 +257,29 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.resourcePrefix}scheduled-job
+    PrivateUserDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: steamId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: steamId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.resourcePrefix}private-user-data
+    WebsocketConnectionTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.resourcePrefix}websocket-connection

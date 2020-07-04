@@ -10,6 +10,9 @@ import { IIotProvider } from '../../lib/iotProvider';
 import { Game } from '../../lib/models/game';
 import { User } from '../../lib/models/user';
 import { Mock, It, Times, ExpectedCallType } from 'typemoq';
+import { IPrivateUserDataRepository } from '../../lib/dynamoose/privateUserDataRepository';
+import { PrivateUserData } from '../../lib/models';
+import { IWebsocketProvider } from '../../lib/websocketProvider';
 
 describe('UserTurnNotification', () => {
   const createMocks = (gameWebook?, userWebhook?, userEmail?) => {
@@ -47,27 +50,39 @@ describe('UserTurnNotification', () => {
       .returns(() =>
         Promise.resolve({
           displayName: 'Test User',
-          steamId: '1',
+          steamId: '1'
+        } as User)
+      );
+
+    const pudRepositoryMock = Mock.ofType<IPrivateUserDataRepository>();
+    pudRepositoryMock
+      .setup(x => x.get(It.isAny(), It.isAny()))
+      .returns(() =>
+        Promise.resolve({
           webhookUrl: userWebhook,
           emailAddress: userEmail
-        } as User)
+        } as PrivateUserData)
       );
 
     const iotMock = Mock.ofType<IIotProvider>();
     const emailMock = Mock.ofType<ISesProvider>();
     const httpRequestMock = Mock.ofType<IHttpRequestProvider>();
+    const websocketMock = Mock.ofType<IWebsocketProvider>();
 
     return {
       utn: new UserTurnNotification(
         gameRepositoryMock.object,
         userRepositoryMock.object,
+        pudRepositoryMock.object,
         iotMock.object,
         emailMock.object,
-        httpRequestMock.object
+        httpRequestMock.object,
+        websocketMock.object
       ),
       iotMock,
       emailMock,
-      httpRequestMock
+      httpRequestMock,
+      websocketMock
     };
   };
 
@@ -117,10 +132,11 @@ describe('UserTurnNotification', () => {
     mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.exactly(2));
     mocks.httpRequestMock.verifyAll();
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
+    mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
     mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.once());
   });
 
-  it('should not try to call webhooks or send enails when not present on new turn', async () => {
+  it('should not try to call webhooks or send emails when not present on new turn', async () => {
     const mocks = createMocks();
     await mocks.utn.execute({
       gameId: '1',
@@ -129,6 +145,7 @@ describe('UserTurnNotification', () => {
 
     mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.never());
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
+    mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
     mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.never());
   });
 
@@ -141,6 +158,14 @@ describe('UserTurnNotification', () => {
 
     mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.never());
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.exactly(3));
+    mocks.websocketMock.verify(
+      x =>
+        x.sendMessage(
+          It.is(x => x.length === 3),
+          It.isAny()
+        ),
+      Times.once()
+    );
     mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.never());
   });
 });

@@ -1,8 +1,13 @@
-import { Game } from '../../../lib/models';
+import { Game, User, PrivateUserData } from '../../../lib/models';
 
 export interface GamesByUserResponse {
   data: Game[];
   pollUrl: string;
+}
+
+export interface CurrentUserDataWithPud {
+  user: User;
+  pud: PrivateUserData;
 }
 
 export interface SetNotificationEmailBody {

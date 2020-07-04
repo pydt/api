@@ -7,6 +7,7 @@ import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
+import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')
@@ -14,6 +15,7 @@ import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 export class GameController_Leave {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider
   ) {}
@@ -40,21 +42,23 @@ export class GameController_Leave {
       return player.steamId === request.user;
     });
 
-    const user = await this.userRepository.get(request.user);
+    const users = await this.userRepository.getUsersForGame(game);
+    const user = users.find(x => x.steamId === request.user);
 
     UserUtil.removeUserFromGame(user, game, false);
 
     await Promise.all([this.gameRepository.saveVersioned(game), this.userRepository.saveVersioned(user)]);
 
-    const createdByUser = await this.userRepository.get(game.createdBySteamId);
+    const puds = await this.pudRepository.getUserDataForGame(game);
+    const createdByUserData = puds.find(x => x.steamId === game.createdBySteamId);
 
-    if (createdByUser.emailAddress) {
+    if (createdByUserData.emailAddress) {
       await this.ses.sendEmail(
         'A user has left your game.',
         'A user has left your game.',
         `The user <b>${user.displayName}</b> has left your game <b>${game.displayName}</b>.  ` +
           `There are now <b>${game.players.length} / ${game.humans}</b> human players in the game.`,
-        createdByUser.emailAddress
+        createdByUserData.emailAddress
       );
     }
 

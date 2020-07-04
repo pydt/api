@@ -1,6 +1,6 @@
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
-import { User } from '../models/user';
+import { User, DeprecatedUser } from '../models/user';
 import { BaseDynamooseRepository, IRepository } from './common';
 import { Game } from '../models';
 
@@ -29,14 +29,14 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
       avatarMedium: String,
       avatarFull: String,
       steamProfileUrl: String,
-      emailAddress: String,
+      emailAddress: String, // Obsolete
       activeGameIds: [String],
       inactiveGameIds: [String],
       vacationMode: Boolean,
       timezone: String,
       comments: String,
       lastTurnEndDate: Date,
-      webhookUrl: String,
+      webhookUrl: String, // Obsolete
       forumUsername: String,
       turnsPlayed: {
         type: Number,
@@ -148,7 +148,7 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
 
       for (const user of users) {
         if (removeEmail) {
-          delete user.emailAddress; // make sure email address isn't returned!
+          delete (user as DeprecatedUser).emailAddress; // make sure email address isn't returned!
         }
 
         result.push(user);

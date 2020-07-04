@@ -55,7 +55,8 @@ if (!Config.runningLocal) {
   });
 }
 
-export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<void>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<any>) {
   return async (event, context) => {
     initContainer();
 

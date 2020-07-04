@@ -4,7 +4,7 @@
 
 ## Dev Setup / Deployment
 
-* `yarn install`
+* `npm install`
 * `npm install -g serverless@1.70.0`
 * Copy config.yml.template to config.yml and set the appropriate values.
 * `npm run debug`

@@ -1,5 +1,6 @@
 export * from './games';
 export * from './getCurrent';
+export * from './getCurrentWithPud';
 export * from './getSubstituteUsers';
 export * from './setForumUsername';
 export * from './setNotificationEmail';

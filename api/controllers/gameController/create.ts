@@ -10,6 +10,7 @@ import { Game } from '../../../lib/models';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { CreateGameRequestBody } from './_models';
 import { UserUtil } from '../../../lib/util/userUtil';
+import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')
@@ -17,6 +18,7 @@ import { UserUtil } from '../../../lib/util/userUtil';
 export class GameController_Create {
   constructor(
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {}
@@ -26,8 +28,9 @@ export class GameController_Create {
   @Post('create')
   public async create(@Request() request: HttpRequest, @Body() body: CreateGameRequestBody): Promise<Game> {
     const user = await this.userRepository.get(request.user);
+    const pud = await this.pudRepository.get(request.user);
 
-    if (!user.emailAddress) {
+    if (!pud.emailAddress) {
       throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
     }
 
