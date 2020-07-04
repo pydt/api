@@ -2,7 +2,9 @@ import * as AWS from 'aws-sdk';
 import { merge } from 'lodash';
 import { provideSingleton } from './ioc';
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  useAccelerateEndpoint: true
+});
 
 export const S3_PROVIDER_SYMBOL = Symbol('IS3Provider');
 
