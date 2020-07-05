@@ -171,6 +171,7 @@ export class GameController_FinishSubmit {
 
     game.currentPlayerSteamId = game.players[GameUtil.getNextPlayerIndex(game)].steamId;
     game.round = expectedRound;
+    game.completed = GameUtil.calculateIsCompleted(game);
 
     await this.gameTurnService.updateSaveFileForGameState(game, users, saveHandler);
     await this.gameTurnService.moveToNextTurn(game, gameTurn, user);

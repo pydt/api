@@ -20,14 +20,10 @@ export class CheckForCompletedGames {
 
     for (const curChunk of chunk(games, 75)) {
       for (const game of curChunk) {
-        // Game is completed if...
         game.completed =
           game.inProgress &&
-          // ...there's one or fewer human players...
-          (game.players.filter(p => {
-            return GameUtil.playerIsHuman(p);
-          }).length < 2 ||
-            // ...it's been 180 days since the last turn...
+          (GameUtil.calculateIsCompleted(game) ||
+            // mark stale games as completed...
             moment().diff(game.lastTurnEndDate || game.updatedAt, 'days') > 180);
 
         if (game.completed) {

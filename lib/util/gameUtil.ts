@@ -5,6 +5,10 @@ export class GameUtil {
     return gameId + '/' + ('000000' + turn).slice(-6) + '.CivXSave';
   }
 
+  public static calculateIsCompleted(game: Game) {
+    return game.players.filter(p => this.playerIsHuman(p)).length < 2;
+  }
+
   public static getCurrentPlayerIndex(game: Game) {
     return game.players.indexOf(
       game.players.find(player => {

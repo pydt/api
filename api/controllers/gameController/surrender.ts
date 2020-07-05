@@ -68,11 +68,7 @@ export class GameController_Surrender {
     player.hasSurrendered = true;
     player.surrenderDate = new Date();
 
-    // The game is completed if there's 1 or fewer humans in the game
-    const humanPlayers = game.players.filter(p => {
-      return GameUtil.playerIsHuman(p);
-    }).length;
-    game.completed = humanPlayers < 2;
+    game.completed = GameUtil.calculateIsCompleted(game);
 
     const user = await this.userRepository.get(userId);
 
@@ -80,7 +76,7 @@ export class GameController_Surrender {
 
     const savePromises: Promise<User | Game | GameTurn | void>[] = [];
 
-    if (humanPlayers) {
+    if (game.players.filter(p => GameUtil.playerIsHuman(p)).length) {
       const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
 
       if (user.steamId === game.currentPlayerSteamId) {
