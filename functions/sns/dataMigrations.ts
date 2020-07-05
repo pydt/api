@@ -47,7 +47,7 @@ export class DataMigrations {
   }
 
   private async createPrivateUserData() {
-    const users = (await this.userRepository.allUsers()).filter(x => x.dataVersion < 3).map(x => x as DeprecatedUser);
+    const users = (await this.userRepository.allUsers()).filter(x => !x.dataVersion || x.dataVersion < 3).map(x => x as DeprecatedUser);
 
     for (const user of users) {
       const pud: PrivateUserData = {
