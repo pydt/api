@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { reduce } from 'lodash';
-import { HttpResponse } from './httpResponse';
 import { LambdaProxyEvent } from './lambdaProxyEvent';
+import { EventEmitter } from 'events';
+import { Subsegment } from 'aws-xray-sdk';
 
-export class HttpRequest {
+export class HttpRequest extends EventEmitter {
   public body: any;
   public rawBody: any;
   public headers: any;
@@ -12,11 +13,11 @@ export class HttpRequest {
   public query: any;
   public user: string;
   public url: string;
+  public subSegment: Subsegment;
 
-  // HACK: We pass in response here to work around limitations in the TSOA framework,
-  // when they make it easier to create your own templates for authentication we can
-  // revisit this.
-  constructor(event: LambdaProxyEvent, public response: HttpResponse) {
+  constructor(event: LambdaProxyEvent) {
+    super();
+
     if (event.body) {
       this.rawBody = event.body;
       this.body = JSON.parse(event.body);

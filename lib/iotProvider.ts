@@ -1,6 +1,6 @@
 import { provideSingleton } from './ioc';
 import { HasSteamId } from './models';
-import * as AWS from 'aws-sdk';
+import { AWS } from './config';
 
 export const IOT_PROVIDER_SYMBOL = Symbol('IIotProvider');
 

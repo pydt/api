@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import { AWS } from './config';
 import { provideSingleton } from './ioc';
 import { Config } from './config';
 import { Game } from './models';

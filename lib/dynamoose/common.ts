@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as dynamoose from 'dynamoose';
 import { injectable, unmanaged } from 'inversify';
-import { Entity } from '../models/shared';
 import { HttpResponseError } from '../../api/framework';
+import { AWS } from '../config';
+import { Entity } from '../models/shared';
 
-dynamoose.AWS.config.update({
-  region: 'us-east-1'
-});
+(dynamoose.AWS as any) = AWS;
 
 dynamoose.setDefaults({
   create: false

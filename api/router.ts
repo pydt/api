@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as AWSXRay from 'aws-xray-sdk';
 import { Router } from 'express';
-import { RegisterRoutes } from './_gen/routes/routes';
-import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
-import { loggingHandler, pydtLogger } from '../lib/logging';
 import { ValidateError } from 'tsoa';
+import { loggingHandler, pydtLogger } from '../lib/logging';
+import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
+import { RegisterRoutes } from './_gen/routes/routes';
 
 const router = Router();
 
@@ -17,7 +18,23 @@ type middlewareExec = (request: HttpRequest, response: HttpResponse, next: any) 
 
 function methodHandler(method: string) {
   return function (route: string, ...routeExecs: middlewareExec[]) {
-    router[method](route, (req, res) => {
+    router[method](route, (req: HttpRequest, res: HttpResponse) => {
+      const mainSegment = AWSXRay.getSegment(); //returns the facade segment
+      req.subSegment = mainSegment.addNewSubsegment(`${method} ${route}`);
+      const ird = new AWSXRay.middleware.IncomingRequestData(req as any);
+      ird.request.url = req.url;
+      (req.subSegment as any).http = ird;
+
+      const ns = AWSXRay.getNamespace();
+      ns.run(function () {
+        AWSXRay.setSegment(req.subSegment);
+      });
+
+      res.on('finish', () => {
+        (req.subSegment as any).http.close(this);
+        req.subSegment.close();
+      });
+
       pydtLogger.info(`Found route ${route}`);
 
       const runNext = (runExecs: middlewareExec[]) => {
@@ -85,14 +102,15 @@ export const handler = loggingHandler((event: LambdaProxyEvent) => {
       }
     };
 
-    const response = new HttpResponse(callback);
+    const req = new HttpRequest(event);
+    const resp = new HttpResponse(callback, req);
 
     if (event.httpMethod.toLowerCase() === 'options') {
-      response.status(200).end();
+      resp.status(200).end();
     } else {
-      (router as any).handle(new HttpRequest(event, response), response, () => {
-        pydtLogger.info(`404 for ${event.httpMethod} ${event.path}`);
-        response.status(404).json(new ErrorResponse('Not Found'));
+      (router as any).handle(req, resp, err => {
+        pydtLogger.error(`404 for ${event.httpMethod} ${event.path}`, err);
+        resp.status(404).json(new ErrorResponse('Not Found'));
       });
     }
   });

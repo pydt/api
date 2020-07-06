@@ -25,6 +25,8 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
+  tracing:
+    lambda: true
   stage: dev
   resourcePolicy:
     - Effect: Allow

@@ -1,6 +1,6 @@
-import * as AWS from 'aws-sdk';
 import { merge } from 'lodash';
 import { provideSingleton } from './ioc';
+import { AWS } from './config';
 
 const s3 = new AWS.S3({
   useAccelerateEndpoint: true

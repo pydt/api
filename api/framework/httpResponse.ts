@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LambdaProxyCallback } from './lambdaProxyCallback';
+import { HttpRequest } from './httpRequest';
+import { EventEmitter } from 'events';
 
-export class HttpResponse {
+export class HttpResponse extends EventEmitter {
   private data: any;
   private statusCode: number;
   private headers = {
@@ -11,7 +13,9 @@ export class HttpResponse {
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH'
   };
 
-  constructor(private callback: LambdaProxyCallback) {}
+  constructor(private callback: LambdaProxyCallback, public req: HttpRequest) {
+    super();
+  }
 
   public json(data: any) {
     this.data = data;
@@ -28,6 +32,8 @@ export class HttpResponse {
   }
 
   public end() {
+    this.emit('finish');
+
     if (this.callback) {
       this.callback(null, {
         body: JSON.stringify(this.data),

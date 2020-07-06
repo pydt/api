@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import { AWS } from '../config';
 import { provideSingleton } from '../ioc';
 const ses = new AWS.SES();
 
