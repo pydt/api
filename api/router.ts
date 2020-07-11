@@ -81,11 +81,8 @@ function methodHandler(method: string) {
 }
 
 const mockApp: any = {
-  delete: methodHandler('delete'),
   get: methodHandler('get'),
-  patch: methodHandler('patch'),
-  post: methodHandler('post'),
-  put: methodHandler('put')
+  post: methodHandler('post')
 };
 
 RegisterRoutes(mockApp);
@@ -105,13 +102,9 @@ export const handler = loggingHandler((event: LambdaProxyEvent) => {
     const req = new HttpRequest(event);
     const resp = new HttpResponse(callback, req);
 
-    if (event.httpMethod.toLowerCase() === 'options') {
-      resp.status(200).end();
-    } else {
-      (router as any).handle(req, resp, err => {
-        pydtLogger.error(`404 for ${event.httpMethod} ${event.path}`, err);
-        resp.status(404).json(new ErrorResponse('Not Found'));
-      });
-    }
+    (router as any).handle(req, resp, err => {
+      pydtLogger.error(`404 for ${event.httpMethod} ${event.path}`, err);
+      resp.status(404).json(new ErrorResponse('Not Found'));
+    });
   });
 });

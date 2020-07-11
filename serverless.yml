@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.70.0"
+frameworkVersion: "1.74.1"
 
 plugins:
   - serverless-prune-plugin
@@ -28,6 +28,8 @@ provider:
   tracing:
     lambda: true
   stage: dev
+  httpApi:
+    cors: true
   resourcePolicy:
     - Effect: Allow
       Principal: "*"
@@ -120,7 +122,12 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     timeout: 20
     events:
-      - httpApi: '*'
+      - httpApi:
+          method: GET
+          path: '/{proxy+}'
+      - httpApi:
+          method: POST
+          path: '/{proxy+}'
   cronCheckTurnTimerJobs:
     handler: functions/cron/checkTurnTimerJobs.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}

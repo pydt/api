@@ -6,12 +6,7 @@ import { EventEmitter } from 'events';
 export class HttpResponse extends EventEmitter {
   private data: any;
   private statusCode: number;
-  private headers = {
-    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    'Access-Control-Expose-Headers': 'Authorization',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH'
-  };
+  private headers = {};
 
   constructor(private callback: LambdaProxyCallback, public req: HttpRequest) {
     super();
