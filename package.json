@@ -63,6 +63,7 @@
   },
   "scripts": {
     "test": "mocha -r ts-node/register {api,functions,lib}/**/*.spec.ts",
+    "integration-test": "bash -c \"RESOURCE_PREFIX=civx-integration- mocha -r ts-node/register {api,functions,lib}/**/*.int-spec.ts --timeout 20000\"",
     "clean": "rimraf api/_gen .webpack",
     "swagger-gen": "tsoa spec",
     "routes-gen": "bash -c 'mkdir -p api/_gen/routes' && tsoa routes",

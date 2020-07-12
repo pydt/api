@@ -1,5 +1,6 @@
 import { AWS } from '../config';
 import { provideSingleton } from '../ioc';
+import { pydtLogger } from '../logging';
 const ses = new AWS.SES();
 
 export const SES_PROVIDER_SYMBOL = Symbol('ISesProvider');
@@ -30,6 +31,13 @@ export class SesProvider implements ISesProvider {
       Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
     };
 
-    await ses.sendEmail(email).promise();
+    pydtLogger.info(`Sending email ${subject} to ${toAddress}...`);
+
+    try {
+      const result = await ses.sendEmail(email).promise();
+      pydtLogger.info(`Email send succeeded with message ID: ${result.MessageId}`);
+    } catch (err) {
+      pydtLogger.error(`Email send failed!`, err);
+    }
   }
 }

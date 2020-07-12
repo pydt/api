@@ -102,8 +102,8 @@ export const handler = loggingHandler((event: LambdaProxyEvent) => {
     const req = new HttpRequest(event);
     const resp = new HttpResponse(callback, req);
 
-    (router as any).handle(req, resp, err => {
-      pydtLogger.error(`404 for ${event.httpMethod} ${event.path}`, err);
+    (router as any).handle(req, resp, () => {
+      pydtLogger.info(`404 for ${event.httpMethod} ${event.path}`);
       resp.status(404).json(new ErrorResponse('Not Found'));
     });
   });
