@@ -1,16 +1,16 @@
 import * as bcrypt from 'bcryptjs';
-import { RANDOM_CIV } from 'pydt-shared-models';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as uuid from 'uuid/v4';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../../lib/discourseProvider';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
+import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game } from '../../../lib/models';
+import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { CreateGameRequestBody } from './_models';
-import { UserUtil } from '../../../lib/util/userUtil';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')

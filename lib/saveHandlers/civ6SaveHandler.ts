@@ -1,6 +1,6 @@
 import * as civ6 from 'civ6-save-parser';
-import { CIV6_DLCS } from 'pydt-shared-models';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
+import { CIV6_DLCS } from '../metadata/civGames/civ6';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },

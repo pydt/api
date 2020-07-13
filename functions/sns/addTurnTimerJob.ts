@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { GAMES } from 'pydt-shared-models';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
 import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
@@ -7,6 +6,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/use
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { ScheduledJobKey } from '../../lib/models';
+import { PYDT_METADATA } from '../../lib/metadata/metadata';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const attj = iocContainer.resolve(AddTurnTimerJob);
@@ -25,7 +25,12 @@ export class AddTurnTimerJob {
   public async execute(gameId: string): Promise<void> {
     const game = await this.gameRepository.get(gameId, true);
 
-    if (!game || !game.inProgress || !game.gameTurnRangeKey || !GAMES.find(x => x.id === game.gameType).turnTimerSupported) {
+    if (
+      !game ||
+      !game.inProgress ||
+      !game.gameTurnRangeKey ||
+      !PYDT_METADATA.civGames.find(x => x.id === game.gameType).turnTimerSupported
+    ) {
       pydtLogger.info('Ignoring game ' + gameId);
       return;
     }

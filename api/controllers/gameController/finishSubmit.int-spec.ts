@@ -7,7 +7,6 @@ dynamoose.AWS.config.update({
 dynamoose.local();
 
 import { describe, it } from 'mocha';
-import { CIV6_GAME } from 'pydt-shared-models';
 import { It, Mock, Times } from 'typemoq';
 import * as uuid from 'uuid/v4';
 import * as zlib from 'zlib';
@@ -23,6 +22,7 @@ import { GameController_FinishSubmit } from './finishSubmit';
 import { PrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 import { ISnsProvider } from '../../../lib/snsProvider';
 import { ISesProvider } from '../../../lib/email/sesProvider';
+import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 
 dynamoose.setDefaults({
   create: true

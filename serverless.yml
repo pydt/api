@@ -29,7 +29,19 @@ provider:
     lambda: true
   stage: dev
   httpApi:
-    cors: true
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+      exposedResponseHeaders:
+        - Authorization
+        - Metadata-Hash
+      maxAge: 600
   resourcePolicy:
     - Effect: Allow
       Principal: "*"

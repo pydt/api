@@ -1,5 +1,4 @@
 import { difference } from 'lodash';
-import { CIV6_GAME, GAMES, RANDOM_CIV } from 'pydt-shared-models';
 import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as zlib from 'zlib';
 import { Config } from '../../../lib/config';
@@ -8,12 +7,15 @@ import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../../lib/d
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
+import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
+import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game, GamePlayer } from '../../../lib/models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../../lib/s3Provider';
 import { ActorType } from '../../../lib/saveHandlers/saveHandler';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
-import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { GameUtil } from '../../../lib/util/gameUtil';
+import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 
 @Route('game')
 @Tags('game')
@@ -69,7 +71,7 @@ export class GameController_FinishSubmit {
     const numCivs = saveHandler.civData.length;
     const parsedRound = saveHandler.gameTurn;
     const gameDlc = game.dlc || [];
-    const civGame = GAMES.find(x => x.id === game.gameType);
+    const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     if (gameDlc.length !== saveHandler.parsedDlcs.length || difference(gameDlc, saveHandler.parsedDlcs).length) {
       throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
@@ -87,7 +89,7 @@ export class GameController_FinishSubmit {
       const map = civGame.maps.find(x => x.file === game.mapFile);
 
       if (map && map.regex) {
-        if (!map.regex.test(saveHandler.mapFile)) {
+        if (!new RegExp(map.regex).test(saveHandler.mapFile)) {
           throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected regex: ${map.regex})`);
         }
       } else if (saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {

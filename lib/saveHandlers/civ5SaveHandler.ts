@@ -1,5 +1,6 @@
 import * as civ5 from 'pydt-civ5-save-parser';
-import { BEYOND_EARTH_DLCS, CIV5_DLCS } from 'pydt-shared-models';
+import { BEYOND_EARTH_DLCS } from '../metadata/civGames/beyondEarth';
+import { CIV5_DLCS } from '../metadata/civGames/civ5';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
 
 const ACTOR_TYPE_MAP = [

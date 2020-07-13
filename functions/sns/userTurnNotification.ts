@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
 import * as isUrl from 'is-url';
-import { GAMES } from 'pydt-shared-models';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../lib/dynamoose/privateUserDataRepository';
@@ -12,6 +11,7 @@ import { IIotProvider, IOT_PROVIDER_SYMBOL } from '../../lib/iotProvider';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 import { IWebsocketProvider, WEBSOCKET_PROVIDER_SYMBOL } from '../../lib/websocketProvider';
+import { PYDT_METADATA } from '../../lib/metadata/metadata';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -48,7 +48,7 @@ export class UserTurnNotification {
           if (isUrl(webhook)) {
             try {
               const currentPlayer = game.players.find(x => x.steamId === game.currentPlayerSteamId);
-              const gameData = GAMES.find(x => x.id === game.gameType);
+              const gameData = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
               const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
 
               await this.http.request({

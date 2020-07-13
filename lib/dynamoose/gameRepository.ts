@@ -1,10 +1,10 @@
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
-import { CIV6_GAME } from 'pydt-shared-models';
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { Game, User } from '../models';
 import { BaseDynamooseRepository, IRepository } from './common';
+import { CIV6_GAME } from '../metadata/civGames/civ6';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 

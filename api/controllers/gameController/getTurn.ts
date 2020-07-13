@@ -1,4 +1,3 @@
-import { GAMES } from 'pydt-shared-models';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Why is this flagging Query?
 import { Get, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import { Config } from '../../../lib/config';
@@ -8,6 +7,7 @@ import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../../lib/s3Provider';
 import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { GameTurnResponse } from './_models';
+import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 
 @Route('game')
 @Tags('game')
@@ -45,7 +45,7 @@ export class GameController_GetTurn {
       }
     }
 
-    const civGame = GAMES.find(x => x.id === game.gameType);
+    const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     return {
       downloadUrl: this.s3.signedGetUrl(fileParams, '(PYDT) Play This One!.' + civGame.saveExtension, 60)

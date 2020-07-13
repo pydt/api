@@ -1,7 +1,7 @@
-import { RANDOM_CIV } from 'pydt-shared-models';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game } from '../../../lib/models';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { ChangeCivRequestBody } from './_models';

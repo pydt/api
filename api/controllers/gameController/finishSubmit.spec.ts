@@ -1,18 +1,18 @@
 import 'reflect-metadata';
-import { describe, it } from 'mocha';
-import { GameController_FinishSubmit } from './finishSubmit';
-import { HttpRequest } from '../../framework';
-import { Mock, It } from 'typemoq';
-import { Game, User, GameTurn } from '../../../lib/models';
-import { IGameTurnService } from '../../../lib/services/gameTurnService';
-import { SaveHandler } from '../../../lib/saveHandlers/saveHandler';
-import { IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
-import { IS3Provider, GetObjectResult } from '../../../lib/s3Provider';
-import * as zlib from 'zlib';
-import { CIV6_GAME } from 'pydt-shared-models';
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { It, Mock } from 'typemoq';
+import * as zlib from 'zlib';
 import { IGameRepository } from '../../../lib/dynamoose/gameRepository';
+import { IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository } from '../../../lib/dynamoose/userRepository';
+import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
+import { Game, GameTurn, User } from '../../../lib/models';
+import { GetObjectResult, IS3Provider } from '../../../lib/s3Provider';
+import { SaveHandler } from '../../../lib/saveHandlers/saveHandler';
+import { IGameTurnService } from '../../../lib/services/gameTurnService';
+import { HttpRequest } from '../../framework';
+import { GameController_FinishSubmit } from './finishSubmit';
 
 describe('GameController_FinishSubmit', () => {
   it('should be able to handle weird new EarthStandard map name', async () => {

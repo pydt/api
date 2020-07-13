@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { describe, it } from 'mocha';
-import { CIV6_GAME } from 'pydt-shared-models';
 import { UserTurnNotification } from './userTurnNotification';
 import { IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { IUserRepository } from '../../lib/dynamoose/userRepository';
@@ -13,6 +12,7 @@ import { Mock, It, Times, ExpectedCallType } from 'typemoq';
 import { IPrivateUserDataRepository } from '../../lib/dynamoose/privateUserDataRepository';
 import { PrivateUserData } from '../../lib/models';
 import { IWebsocketProvider } from '../../lib/websocketProvider';
+import { CIV6_GAME } from '../../lib/metadata/civGames/civ6';
 
 describe('UserTurnNotification', () => {
   const createMocks = (gameWebook?, userWebhook?, userEmail?) => {

@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcryptjs';
-import { RANDOM_CIV } from 'pydt-shared-models';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game, GamePlayer } from '../../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { GameUtil } from '../../../lib/util/gameUtil';
