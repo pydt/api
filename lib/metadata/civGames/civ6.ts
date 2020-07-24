@@ -10,6 +10,9 @@ export const CIV6_DLCS = [
   DlcFactory('643EA320-8E1A-4CF1-A01C-00D88DDD131A', 'Nubia Civilization & Scenario Pack'),
   DlcFactory('1F367231-A040-4793-BDBB-088816853683', 'Khmer and Indonesia Civilization & Scenario Pack'),
   DlcFactory('9DE86512-DE1A-400D-8C0A-AB46EBBF76B9', 'Maya and Gran Colombia Pack'),
+  DlcFactory('1B394FE9-23DC-4868-8F0A-5220CB8FB427', 'Ethiopia Pack'),
+  DlcFactory('113D9459-0A3B-4FCB-A49C-483F40303575', 'Teddy Roosevelt Persona Pack'),
+  DlcFactory('CE5876CD-6900-46D1-9C9C-8DBA1F28872E', 'Catherine de Medici Persona Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -25,6 +28,10 @@ export const CIV6_LEADERS = [
     dlcId: '643EA320-8E1A-4CF1-A01C-00D88DDD131A'
   }),
   CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI', ASSET_PREFIX),
+  CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI_ALT', ASSET_PREFIX, {
+    leaderDisplayName: 'Catherine De Medici (Magnificence)',
+    dlcId: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E'
+  }),
   CivDefFactory('CIVILIZATION_INDIA', 'LEADER_CHANDRAGUPTA', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
@@ -91,6 +98,10 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_AZTEC', 'LEADER_MONTEZUMA', ASSET_PREFIX, {
     dlcId: '02A8BDDE-67EA-4D38-9540-26E685E3156E'
   }),
+  CivDefFactory('CIVILIZATION_ETHIOPIA', 'LEADER_MENELIK', ASSET_PREFIX, {
+    dlcId: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+    leaderDisplayName: 'Menelik II'
+  }),
   CivDefFactory('CIVILIZATION_KONGO', 'LEADER_MVEMBA', ASSET_PREFIX, {
     leaderDisplayName: 'Mvemba a Nzinga'
   }),
@@ -134,6 +145,10 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT', ASSET_PREFIX, {
     leaderDisplayName: 'Teddy Roosevelt'
+  }),
+  CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT_ROUGHRIDER', ASSET_PREFIX, {
+    leaderDisplayName: 'Teddy Roosevelt (Rough Rider)',
+    dlcId: '113D9459-0A3B-4FCB-A49C-483F40303575'
   }),
   CivDefFactory('CIVILIZATION_SCYTHIA', 'LEADER_TOMYRIS', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_ROME', 'LEADER_TRAJAN', ASSET_PREFIX),
