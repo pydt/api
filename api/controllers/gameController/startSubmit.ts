@@ -32,7 +32,7 @@ export class GameController_StartSubmit {
           Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
         },
         'application/octet-stream',
-        60
+        300
       )
     };
   }
