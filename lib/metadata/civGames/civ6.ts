@@ -13,6 +13,7 @@ export const CIV6_DLCS = [
   DlcFactory('1B394FE9-23DC-4868-8F0A-5220CB8FB427', 'Ethiopia Pack'),
   DlcFactory('113D9459-0A3B-4FCB-A49C-483F40303575', 'Teddy Roosevelt Persona Pack'),
   DlcFactory('CE5876CD-6900-46D1-9C9C-8DBA1F28872E', 'Catherine de Medici Persona Pack'),
+  DlcFactory('A1100FC4-70F2-4129-AC27-2A65A685ED08', 'Byzantium and Gaul Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -26,6 +27,13 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_NUBIA', 'LEADER_AMANITORE', ASSET_PREFIX, {
     dlcId: '643EA320-8E1A-4CF1-A01C-00D88DDD131A'
+  }),
+  CivDefFactory('CIVILIZATION_GAUL', 'LEADER_AMBIORIX', ASSET_PREFIX, {
+    dlcId: 'A1100FC4-70F2-4129-AC27-2A65A685ED08'
+  }),
+  CivDefFactory('CIVILIZATION_BYZANTIUM', 'LEADER_BASIL', ASSET_PREFIX, {
+    leaderDisplayName: 'Basil II',
+    dlcId: 'A1100FC4-70F2-4129-AC27-2A65A685ED08'
   }),
   CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI_ALT', ASSET_PREFIX, {
