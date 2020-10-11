@@ -16,10 +16,6 @@ export class GameController_GetTurns {
       throw new HttpResponseError(400, 'Start turn less than end turn');
     }
 
-    if (endTurn - startTurn > 100) {
-      throw new HttpResponseError(400, 'Too many turns requested');
-    }
-
     return this.gameTurnRepository.getTurnsForGame(gameId, startTurn, endTurn);
   }
 }
