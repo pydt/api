@@ -3,6 +3,7 @@ import { Config } from '../../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { Game } from '../../../lib/models/game';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest } from '../../framework';
 import { GamesByUserResponse } from './_models';
@@ -27,5 +28,13 @@ export class UserController_Games {
       data: games,
       pollUrl: `https://${Config.resourcePrefix}saves.s3.amazonaws.com/${UserUtil.createS3GameCacheKey(request.user)}`
     };
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Get('completedGames')
+  public async completedGames(@Request() request: HttpRequest): Promise<Game[]> {
+    const user = await this.userRepository.get(request.user);
+    return await this.gameRepository.getCompletedGamesForUser(user);
   }
 }

@@ -10,6 +10,7 @@ export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
   getGamesForUser(user: User): Promise<Game[]>;
+  getCompletedGamesForUser(user: User): Promise<Game[]>;
   incompleteGames(): Promise<Game[]>;
   unstartedGames(daysOld: number): Promise<Game[]>;
   getByDiscourseTopicId(topicId: number): Promise<Game>;
@@ -102,6 +103,16 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
 
   public getGamesForUser(user: User): Promise<Game[]> {
     const gameKeys = user.activeGameIds || [];
+
+    if (gameKeys.length > 0) {
+      return this.batchGet(gameKeys);
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
+  public getCompletedGamesForUser(user: User): Promise<Game[]> {
+    const gameKeys = user.inactiveGameIds || [];
 
     if (gameKeys.length > 0) {
       return this.batchGet(gameKeys);
