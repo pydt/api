@@ -12,6 +12,7 @@ export interface CurrentUserDataWithPud {
 
 export interface SetNotificationEmailBody {
   emailAddress: string;
+  newTurnEmails: boolean;
 }
 
 export interface SetWebhookUrlBody {

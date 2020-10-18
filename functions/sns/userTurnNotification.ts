@@ -79,7 +79,7 @@ export class UserTurnNotification {
         await this.iot.notifyUserClient(user);
         await this.ws.sendMessage([user.steamId], 'newturn');
 
-        if (pud.emailAddress) {
+        if (pud.emailAddress && pud.newTurnEmails) {
           await this.ses.sendEmail(
             `PLAY YOUR DAMN TURN in ${game.displayName} (Round ${game.round})`,
             'PLAY YOUR DAMN TURN!',

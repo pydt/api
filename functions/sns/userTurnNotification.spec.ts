@@ -60,7 +60,8 @@ describe('UserTurnNotification', () => {
       .returns(() =>
         Promise.resolve({
           webhookUrl: userWebhook,
-          emailAddress: userEmail
+          emailAddress: userEmail,
+          newTurnEmails: true
         } as PrivateUserData)
       );
 

@@ -19,6 +19,7 @@ export class PrivateUserDataRepository extends BaseDynamooseRepository<string, P
       },
       websocketConnectionIds: [String],
       emailAddress: String,
+      newTurnEmails: Boolean,
       webhookUrl: String
     });
   }
@@ -30,6 +31,10 @@ export class PrivateUserDataRepository extends BaseDynamooseRepository<string, P
       result = {
         steamId: id
       };
+    }
+
+    if (result.newTurnEmails === null || result.newTurnEmails === undefined) {
+      result.newTurnEmails = true;
     }
 
     return result;
