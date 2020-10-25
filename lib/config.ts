@@ -32,6 +32,9 @@ class ConfigClass {
   public get runningLocal() {
     return !!process.env.RUNNING_LOCAL;
   }
+  public get vapidPrivateKey() {
+    return process.env.VAPID_PRIVATE_KEY as string;
+  }
 }
 
 export const Config = new ConfigClass();
