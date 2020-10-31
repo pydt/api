@@ -32,3 +32,7 @@ export interface SetForumUsernameBody {
 export interface SetSubstitutionPrefsBody {
   willSubstituteForGameTypes: string[];
 }
+
+export interface DeleteWebPushBody {
+  endpoint: string;
+}

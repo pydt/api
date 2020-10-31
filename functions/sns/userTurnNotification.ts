@@ -12,6 +12,7 @@ import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { UserGameCacheUpdatedPayload } from '../../lib/models/sns';
 import { IWebsocketProvider, WEBSOCKET_PROVIDER_SYMBOL } from '../../lib/websocketProvider';
 import { PYDT_METADATA } from '../../lib/metadata/metadata';
+import { IWebPushProvider, WEB_PUSH_PROVIDER_SYMBOL } from '../../lib/webPushProvider';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const utn = iocContainer.resolve(UserTurnNotification);
@@ -27,7 +28,8 @@ export class UserTurnNotification {
     @inject(IOT_PROVIDER_SYMBOL) private iot: IIotProvider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider,
-    @inject(WEBSOCKET_PROVIDER_SYMBOL) private ws: IWebsocketProvider
+    @inject(WEBSOCKET_PROVIDER_SYMBOL) private ws: IWebsocketProvider,
+    @inject(WEB_PUSH_PROVIDER_SYMBOL) private wp: IWebPushProvider
   ) {}
 
   public async execute(payload: UserGameCacheUpdatedPayload) {
@@ -39,6 +41,7 @@ export class UserTurnNotification {
 
     const user = await this.userRepository.get(game.currentPlayerSteamId);
     const pud = await this.pudRepository.get(game.currentPlayerSteamId);
+    let updatePud = false;
 
     if (payload.newTurn) {
       if (!user.vacationMode) {
@@ -76,6 +79,16 @@ export class UserTurnNotification {
           }
         }
 
+        for (const wps of [...(pud.webPushSubscriptions || [])]) {
+          try {
+            await this.wp.sendNotification(wps, game);
+          } catch (err) {
+            pydtLogger.error('webpush failed', err);
+            pud.webPushSubscriptions = pud.webPushSubscriptions.filter(x => x !== wps);
+            updatePud = true;
+          }
+        }
+
         await this.iot.notifyUserClient(user);
         await this.ws.sendMessage([user.steamId], 'newturn');
 
@@ -86,6 +99,10 @@ export class UserTurnNotification {
             `It's your turn in ${game.displayName}.  You should be able to play your turn in the client, or go here to download the save file: ${Config.webUrl}/game/${game.gameId}`,
             pud.emailAddress
           );
+        }
+
+        if (updatePud) {
+          this.pudRepository.saveVersioned(pud);
         }
       }
     } else {

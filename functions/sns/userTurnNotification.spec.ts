@@ -13,6 +13,7 @@ import { IPrivateUserDataRepository } from '../../lib/dynamoose/privateUserDataR
 import { PrivateUserData } from '../../lib/models';
 import { IWebsocketProvider } from '../../lib/websocketProvider';
 import { CIV6_GAME } from '../../lib/metadata/civGames/civ6';
+import { IWebPushProvider } from '../../lib/webPushProvider';
 
 describe('UserTurnNotification', () => {
   const createMocks = (gameWebook?, userWebhook?, userEmail?) => {
@@ -69,6 +70,7 @@ describe('UserTurnNotification', () => {
     const emailMock = Mock.ofType<ISesProvider>();
     const httpRequestMock = Mock.ofType<IHttpRequestProvider>();
     const websocketMock = Mock.ofType<IWebsocketProvider>();
+    const webPushMock = Mock.ofType<IWebPushProvider>();
 
     return {
       utn: new UserTurnNotification(
@@ -78,7 +80,8 @@ describe('UserTurnNotification', () => {
         iotMock.object,
         emailMock.object,
         httpRequestMock.object,
-        websocketMock.object
+        websocketMock.object,
+        webPushMock.object
       ),
       iotMock,
       emailMock,

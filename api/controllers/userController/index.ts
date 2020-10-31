@@ -9,6 +9,7 @@ export * from './setUserInformation';
 export * from './setWebhookUrl';
 export * from './steamProfile';
 export * from './steamProfiles';
+export * from './webPush';
 export * from './_models';
 // byId should be last because it's a catchall!
 export * from './byId';

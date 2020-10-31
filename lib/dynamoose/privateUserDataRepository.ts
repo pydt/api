@@ -20,7 +20,17 @@ export class PrivateUserDataRepository extends BaseDynamooseRepository<string, P
       websocketConnectionIds: [String],
       emailAddress: String,
       newTurnEmails: Boolean,
-      webhookUrl: String
+      webhookUrl: String,
+      webPushSubscriptions: {
+        type: Array,
+        schema: {
+          endpoint: String,
+          keys: {
+            p256dh: String,
+            auth: String
+          }
+        }
+      }
     });
   }
 

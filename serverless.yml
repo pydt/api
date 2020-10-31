@@ -82,6 +82,7 @@ provider:
     ROLLBAR_API_KEY: ${env:ROLLBAR_API_KEY, file(./config.yml):ROLLBAR_API_KEY}
     DISCOURSE_API_KEY: ${env:DISCOURSE_API_KEY, file(./config.yml):DISCOURSE_API_KEY}
     STEAM_API_KEY: ${env:STEAM_API_KEY, file(./config.yml):STEAM_API_KEY}
+    VAPID_PRIVATE_KEY: ${env:VAPID_PRIVATE_KEY, file(./config.yml):VAPID_PRIVATE_KEY}
 
 custom:
   activeStage: ${opt:stage, self:provider.stage}
