@@ -45,7 +45,7 @@ function defaultDisplayName(str: string) {
 }
 
 export function CivDefFactory(civKey: string, leaderKey: string, assetPrefix: string, options: CivDefOptions = {}): CivDef {
-  const civDisplayName = defaultDisplayName(civKey);
+  const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
   const leaderDisplayName = options.leaderDisplayName || defaultDisplayName(leaderKey);
 
   let fullDisplayName = leaderDisplayName;
@@ -66,6 +66,7 @@ export function CivDefFactory(civKey: string, leaderKey: string, assetPrefix: st
 }
 
 export interface CivDefOptions {
+  civDisplayName?: string;
   leaderDisplayName?: string;
   dlcId?: string;
   justShowLeaderName?: boolean;

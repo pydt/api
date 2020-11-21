@@ -14,6 +14,7 @@ export const CIV6_DLCS = [
   DlcFactory('113D9459-0A3B-4FCB-A49C-483F40303575', 'Teddy Roosevelt Persona Pack'),
   DlcFactory('CE5876CD-6900-46D1-9C9C-8DBA1F28872E', 'Catherine de Medici Persona Pack'),
   DlcFactory('A1100FC4-70F2-4129-AC27-2A65A685ED08', 'Byzantium and Gaul Pack'),
+  DlcFactory('8424840C-92EF-4426-A9B4-B4E0CB818049', 'Babylon Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -72,6 +73,10 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_GREECE', 'LEADER_GORGO', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_NORWAY', 'LEADER_HARDRADA', ASSET_PREFIX, {
     leaderDisplayName: 'Harald Hardrada'
+  }),
+  CivDefFactory('CIVILIZATION_BABYLON_STK', 'LEADER_HAMMURABI', ASSET_PREFIX, {
+    civDisplayName: 'Babylon',
+    dlcId: '8424840C-92EF-4426-A9B4-B4E0CB818049'
   }),
   CivDefFactory('CIVILIZATION_JAPAN', 'LEADER_HOJO', ASSET_PREFIX, {
     leaderDisplayName: 'Hojo Tokimune'
