@@ -38,12 +38,12 @@ export class GameController_Leave {
       throw new HttpResponseError(400, 'Player not in Game');
     }
 
+    const users = await this.userRepository.getUsersForGame(game);
+    const user = users.find(x => x.steamId === request.user);
+
     remove(game.players, player => {
       return player.steamId === request.user;
     });
-
-    const users = await this.userRepository.getUsersForGame(game);
-    const user = users.find(x => x.steamId === request.user);
 
     UserUtil.removeUserFromGame(user, game, false);
 
