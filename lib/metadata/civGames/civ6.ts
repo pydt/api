@@ -15,6 +15,7 @@ export const CIV6_DLCS = [
   DlcFactory('CE5876CD-6900-46D1-9C9C-8DBA1F28872E', 'Catherine de Medici Persona Pack'),
   DlcFactory('A1100FC4-70F2-4129-AC27-2A65A685ED08', 'Byzantium and Gaul Pack'),
   DlcFactory('8424840C-92EF-4426-A9B4-B4E0CB818049', 'Babylon Pack'),
+  DlcFactory('A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C', 'Vietnam and Kublai Khan Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -93,11 +94,23 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_SWEDEN', 'LEADER_KRISTINA', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
   }),
+  CivDefFactory('CIVILIZATION_CHINA', 'LEADER_KUBLAI_KHAN_CHINA', ASSET_PREFIX, {
+    leaderDisplayName: 'Kublai Khan',
+    dlcId: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C'
+  }),
+  CivDefFactory('CIVILIZATION_MONGOLIA', 'LEADER_KUBLAI_KHAN_MONGOLIA', ASSET_PREFIX, {
+    leaderDisplayName: 'Kublai Khan',
+    dlcId: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C'
+  }),
   CivDefFactory('CIVILIZATION_MAORI', 'LEADER_KUPE', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
   }),
   CivDefFactory('CIVILIZATION_MAYA', 'LEADER_LADY_SIX_SKY', ASSET_PREFIX, {
     dlcId: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9'
+  }),
+  CivDefFactory('CIVILIZATION_VIETNAM', 'LEADER_LADY_TRIEU', ASSET_PREFIX, {
+    leaderDisplayName: 'Ba Trieu',
+    dlcId: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C'
   }),
   CivDefFactory('CIVILIZATION_MAPUCHE', 'LEADER_LAUTARO', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
