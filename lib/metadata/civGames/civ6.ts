@@ -37,6 +37,10 @@ export const CIV6_LEADERS = [
     leaderDisplayName: 'Basil II',
     dlcId: 'A1100FC4-70F2-4129-AC27-2A65A685ED08'
   }),
+  CivDefFactory('CIVILIZATION_VIETNAM', 'LEADER_LADY_TRIEU', ASSET_PREFIX, {
+    leaderDisplayName: 'Ba Trieu',
+    dlcId: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C'
+  }),
   CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_FRANCE', 'LEADER_CATHERINE_DE_MEDICI_ALT', ASSET_PREFIX, {
     leaderDisplayName: 'Catherine De Medici (Magnificence)',
@@ -108,10 +112,6 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_MAYA', 'LEADER_LADY_SIX_SKY', ASSET_PREFIX, {
     dlcId: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9'
   }),
-  CivDefFactory('CIVILIZATION_VIETNAM', 'LEADER_LADY_TRIEU', ASSET_PREFIX, {
-    leaderDisplayName: 'Ba Trieu',
-    dlcId: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C'
-  }),
   CivDefFactory('CIVILIZATION_MAPUCHE', 'LEADER_LAUTARO', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
@@ -170,7 +170,7 @@ export const CIV6_LEADERS = [
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
   CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT', ASSET_PREFIX, {
-    leaderDisplayName: 'Teddy Roosevelt'
+    leaderDisplayName: 'Teddy Roosevelt (Bull Moose)'
   }),
   CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT_ROUGHRIDER', ASSET_PREFIX, {
     leaderDisplayName: 'Teddy Roosevelt (Rough Rider)',
