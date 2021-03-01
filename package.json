@@ -5,7 +5,7 @@
   "dependencies": {
     "aws-xray-sdk": "3.1.0",
     "bcryptjs": "2.4.3",
-    "civ6-save-parser": "1.1.14",
+    "civ6-save-parser": "1.2.0",
     "dynamoose": "1.11.1",
     "express": "4.17.1",
     "generate-password": "1.5.1",
