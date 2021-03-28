@@ -16,6 +16,7 @@ export const CIV6_DLCS = [
   DlcFactory('A1100FC4-70F2-4129-AC27-2A65A685ED08', 'Byzantium and Gaul Pack'),
   DlcFactory('8424840C-92EF-4426-A9B4-B4E0CB818049', 'Babylon Pack'),
   DlcFactory('A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C', 'Vietnam and Kublai Khan Pack'),
+  DlcFactory('FFDF4E79-DEE2-47BB-919B-F5739106627A', 'Portugal Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -91,6 +92,9 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_KHMER', 'LEADER_JAYAVARMAN', ASSET_PREFIX, {
     dlcId: '1F367231-A040-4793-BDBB-088816853683'
+  }),
+  CivDefFactory('CIVILIZATION_PORTUGAL', 'LEADER_JOAO_III', ASSET_PREFIX, {
+    dlcId: 'FFDF4E79-DEE2-47BB-919B-F5739106627A'
   }),
   CivDefFactory('CIVILIZATION_AUSTRALIA', 'LEADER_JOHN_CURTIN', ASSET_PREFIX, {
     dlcId: 'E3F53C61-371C-440B-96CE-077D318B36C0'
