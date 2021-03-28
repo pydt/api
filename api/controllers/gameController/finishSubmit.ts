@@ -145,15 +145,15 @@ export class GameController_FinishSubmit {
     }
 
     let expectedRound = gameTurn.round;
+    let nextPlayerIndex = GameUtil.getNextPlayerIndex(game);
 
     if (gameTurn.turn === 1) {
       // When starting a game, take whatever round is in the file.  This allows starting in different eras.
       expectedRound = parsedRound;
-    }
 
-    const nextPlayerIndex = GameUtil.getNextPlayerIndex(game);
-
-    if (nextPlayerIndex <= GameUtil.getCurrentPlayerIndex(game)) {
+      // Also take whatever player is active in the file.  This helps with migrating games from PBC/online.
+      nextPlayerIndex = saveHandler.civData.findIndex(x => x.isCurrentTurn);
+    } else if (nextPlayerIndex <= GameUtil.getCurrentPlayerIndex(game)) {
       // Allow round to stay the same on the turn for civ 6 world congress...
       if (!(game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round)) {
         expectedRound++;
@@ -171,7 +171,7 @@ export class GameController_FinishSubmit {
       throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
     }
 
-    game.currentPlayerSteamId = game.players[GameUtil.getNextPlayerIndex(game)].steamId;
+    game.currentPlayerSteamId = game.players[nextPlayerIndex].steamId;
     game.round = expectedRound;
     game.completed = GameUtil.calculateIsCompleted(game);
 
