@@ -153,6 +153,13 @@ export class GameController_FinishSubmit {
 
       // Also take whatever player is active in the file.  This helps with migrating games from PBC/online.
       nextPlayerIndex = saveHandler.civData.findIndex(x => x.isCurrentTurn);
+
+      if (nextPlayerIndex === -1) {
+        throw new HttpResponseError(
+          400,
+          `Couldn't detect the current player in the save file.  If you're converting this game from PBC or Online multiplayer, you may need to play a turn in Hotseat mode to get the file converted properly.`
+        );
+      }
     } else if (nextPlayerIndex <= GameUtil.getCurrentPlayerIndex(game)) {
       // Allow round to stay the same on the turn for civ 6 world congress...
       if (!(game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round)) {
