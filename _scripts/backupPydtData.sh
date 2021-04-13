@@ -17,17 +17,9 @@ aws dynamodb list-backups --table-name prod-civx-user | jq '.BackupSummaries[] |
 aws dynamodb list-backups --table-name prod-civx-private-user-data | jq '.BackupSummaries[] | select(.BackupCreationDateTime < '$TRUNCATE_DATE').BackupArn' | xargs -L1 -I'{}' aws dynamodb delete-backup --backup-arn '{}' > /dev/null
 aws dynamodb list-backups --table-name prod-civx-websocket-connection | jq '.BackupSummaries[] | select(.BackupCreationDateTime < '$TRUNCATE_DATE').BackupArn' | xargs -L1 -I'{}' aws dynamodb delete-backup --backup-arn '{}' > /dev/null
 
-aws s3 ls s3://prod-civx-saves --recursive | while read -r line;
+newerThan=`date -d "-1 days" -I`
+
+aws s3api list-objects-v2 --bucket prod-civx-saves --query 'Contents[?LastModified>=`'"$newerThan"'`].Key' | jq -r '.[]' | while read -r filename;
   do
-    createDate=`echo $line|awk {'print $1" "$2'}`
-    createDate=`date -d"$createDate" +%s`
-    newerThan=`date -d "-1 days" +%s`
-    if [[ $createDate -gt $newerThan ]]
-      then 
-        filename=`echo $line|awk {'print $4'}`
-        if [[ $filename != "" ]]
-          then
-            aws s3 cp s3://prod-civx-saves/$filename s3://pydt-backup/$DATE/$filename --storage-class STANDARD_IA --only-show-errors
-        fi
-    fi
+    aws s3 cp s3://prod-civx-saves/$filename s3://pydt-backup/$DATE/$filename --storage-class STANDARD_IA --only-show-errors
   done;
