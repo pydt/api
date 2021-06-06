@@ -36,8 +36,12 @@ export interface CivDef {
   options: CivDefOptions;
 }
 
+function removePrefixes(str) {
+  return ['CIVILIZATION_', 'LEADER_', 'NATION_'].reduce((acc, cur) => acc.replace(cur, ''), str);
+}
+
 function defaultDisplayName(str: string) {
-  str = str.replace('CIVILIZATION_', '').replace('LEADER_', '').replace(/_/g, ' ');
+  str = removePrefixes(str).replace(/_/g, ' ');
 
   return str.replace(/\w\S*/g, txt => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -60,7 +64,7 @@ export function CivDefFactory(civKey: string, leaderKey: string, assetPrefix: st
     civDisplayName,
     leaderDisplayName,
     options,
-    imageFileName: `${assetPrefix}${civKey.replace('CIVILIZATION_', '')}_${leaderKey.replace('LEADER_', '')}.png`,
+    imageFileName: `${assetPrefix}${removePrefixes(civKey)}_${removePrefixes(leaderKey)}.png`,
     fullDisplayName
   };
 }
