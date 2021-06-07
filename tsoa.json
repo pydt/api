@@ -21,6 +21,7 @@
     "authenticationModule": "./lib/auth/expressAuthentication"
   },
   "ignore": [
-    "**/node_modules/pydt-shared/lib/_gen/**"
+    "**/node_modules/pydt-shared/lib/_gen/**",
+    "**/node_modules/@types/lodash/**"
   ]
 }
