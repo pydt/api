@@ -1,6 +1,6 @@
 import { GameStore, Platform } from 'pydt-shared-models';
 import { BasePath, CivGame, RANDOM_CIV } from '../civGame';
-import { CivDefFactory } from './../civGame';
+import { CivDefFactory, MapSizeFactory, MapFactory } from './../civGame';
 
 export const OLD_WORLD_DLCS = [];
 
@@ -40,9 +40,15 @@ export const OLD_WORLD_LEADERS = [
 
 export const OLD_WORLD_GAME_SPEEDS = [];
 
-export const OLD_WORLD_MAP_SIZES = [];
+export const OLD_WORLD_MAP_SIZES = [
+  MapSizeFactory('MAPSIZE_DUEL', 'Duel', 2),
+  MapSizeFactory('MAPSIZE_SMALL', 'Small', 4),
+  MapSizeFactory('MAPSIZE_MEDIUM', 'Standard', 6),
+  MapSizeFactory('MAPSIZE_LARGE', 'Large', 8),
+  MapSizeFactory('MAPSIZE_HUGE', 'Huge', 10)
+];
 
-export const OLD_WORLD_MAPS = [];
+export const OLD_WORLD_MAPS = [MapFactory('MAPCLASS_CoastalRainBasin', 'Coastal Rain Basin')];
 
 export const OLD_WORLD_GAME: CivGame = {
   id: 'OLD_WORLD',

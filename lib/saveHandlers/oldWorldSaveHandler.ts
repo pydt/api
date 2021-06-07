@@ -62,7 +62,7 @@ export class OldWorldSaveHandler implements SaveHandler {
   }
 
   get gameSpeed(): string {
-    return this.saveData.elements[0].attributes.TurnScale;
+    return ''; // Doesn't seem to be a setting in the UI?
   }
 
   get gameTurn(): number {

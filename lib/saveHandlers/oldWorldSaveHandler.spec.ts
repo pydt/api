@@ -10,7 +10,7 @@ describe('OldWorldSaveHandler', () => {
     const buffer = fs.readFileSync('testdata/saves/oldWorld/Turn1.zip');
     const handler = new OldWorldSaveHandler(buffer);
 
-    expect(handler.gameSpeed).to.eq('TURNSCALE_YEAR');
+    expect(handler.gameSpeed).to.eq('');
     expect(handler.gameTurn).to.eq(1);
     expect(handler.mapFile).to.eq('MAPCLASS_CoastalRainBasin');
     expect(handler.mapSize).to.eq('MAPSIZE_MEDIUM');
