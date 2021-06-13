@@ -87,7 +87,14 @@ export class OldWorldSaveHandler implements SaveHandler {
 
   getData(): Buffer {
     const zip = new AdmZip();
-    zip.addFile(`Turn${this.gameTurn}.xml`, Buffer.from(js2xml(this.saveData)));
+    zip.addFile(
+      `Turn${this.gameTurn}.xml`,
+      Buffer.from(
+        js2xml(this.saveData, {
+          spaces: 1
+        })
+      )
+    );
     return zip.toBuffer();
   }
 }
