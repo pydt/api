@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/pydt/api.svg?branch=master)](https://travis-ci.org/pydt/api)
+[![Build Status](https://travis-ci.com/pydt/api.svg?branch=master)](https://travis-ci.com/pydt/api)
 
 # PYDT Serverless API
 
