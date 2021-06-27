@@ -27,16 +27,20 @@ export class UpdateUserInfo {
           return user.steamId === player.steamid;
         });
 
-        const isDirty =
-          this.possiblyUpdateValue(user, 'displayName', curPlayer.personaname) ||
-          this.possiblyUpdateValue(user, 'steamProfileUrl', curPlayer.profileurl) ||
-          this.possiblyUpdateValue(user, 'avatarSmall', curPlayer.avatar) ||
-          this.possiblyUpdateValue(user, 'avatarMedium', curPlayer.avatarmedium) ||
-          this.possiblyUpdateValue(user, 'avatarFull', curPlayer.avatarfull);
+        if (curPlayer) {
+          const isDirty =
+            this.possiblyUpdateValue(user, 'displayName', curPlayer.personaname) ||
+            this.possiblyUpdateValue(user, 'steamProfileUrl', curPlayer.profileurl) ||
+            this.possiblyUpdateValue(user, 'avatarSmall', curPlayer.avatar) ||
+            this.possiblyUpdateValue(user, 'avatarMedium', curPlayer.avatarmedium) ||
+            this.possiblyUpdateValue(user, 'avatarFull', curPlayer.avatarfull);
 
-        if (isDirty) {
-          console.log(`Updating ${user.displayName}...`);
-          usersToUpdate.push(user);
+          if (isDirty) {
+            console.log(`Updating ${user.displayName}...`);
+            usersToUpdate.push(user);
+          }
+        } else {
+          console.log(`Couldn't find steamId ${user.steamId}!`);
         }
       }
 
