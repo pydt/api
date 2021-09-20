@@ -1,22 +1,37 @@
 import { ActorType, CivData, SaveHandler } from './saveHandler';
 import * as AdmZip from 'adm-zip';
 import { xml2js, js2xml } from 'xml-js';
+import { HttpResponseError } from './../../api/framework/httpResponseError';
+
+const AI_CONTROLLED_TURN = '99999999';
 
 export class OldWorldCivData implements CivData {
-  constructor(private saveData, private playerData, private index: number) {}
+  constructor(private root, private playerData, private index: number) {}
 
-  get type() {
-    // TODO: Dead?
-    return this.saveData.elements[0].elements
+  get isReallyHuman() {
+    return this.root.elements
       .find(x => x.name === 'Humans')
       .elements.filter(x => x.name === 'PlayerHuman')
-      .some(x => +x.elements[0].text === this.index)
-      ? ActorType.HUMAN
-      : ActorType.AI;
+      .some(x => +x.elements[0].text === this.index);
+  }
+
+  get type() {
+    if (!this.isReallyHuman) {
+      return ActorType.AI;
+    }
+
+    if (this.playerData.attributes.AIControlledToTurn === AI_CONTROLLED_TURN) {
+      return ActorType.AI;
+    }
+
+    // TODO: Dead?
+    return ActorType.HUMAN;
   }
 
   set type(value: ActorType) {
-    // TODO
+    if (this.isReallyHuman) {
+      this.playerData.attributes.AIControlledToTurn = value === ActorType.AI ? AI_CONTROLLED_TURN : '0';
+    }
   }
 
   get playerName() {
@@ -32,19 +47,16 @@ export class OldWorldCivData implements CivData {
   }
 
   get isCurrentTurn() {
-    return (
-      +this.saveData.elements[0].elements.find(x => x.name === 'Game').elements.find(x => x.name === 'PlayerTurn').elements[0].text ===
-      this.index
-    );
+    return +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'PlayerTurn').elements[0].text === this.index;
   }
 
   get password() {
-    // TODO: is there a password?
+    // No password needed, mod enforces like password normally would
     return '';
   }
 
   set password(value: string) {
-    //TODO
+    // No password needed, mod enforces like password normally would
   }
 }
 
@@ -55,10 +67,18 @@ export class OldWorldSaveHandler implements SaveHandler {
     const zip = new AdmZip(data);
     const entries = zip.getEntries();
     this.saveData = xml2js(entries[0].getData().toString('utf-8'));
+
+    if (this.root.attributes.Version.indexOf('Play-Your-Damn-Turn-Support') < 0) {
+      throw new HttpResponseError(400, `To play Old World, the "Play Your Damn Turn Support" mod must be enabled!`);
+    }
+  }
+
+  get root() {
+    return this.saveData.elements[0];
   }
 
   get civData(): CivData[] {
-    return this.saveData.elements[0].elements.filter(x => x.name === 'Player').map((p, i) => new OldWorldCivData(this.saveData, p, i));
+    return this.root.elements.filter(x => x.name === 'Player').map((p, i) => new OldWorldCivData(this.root, p, i));
   }
 
   get gameSpeed(): string {
@@ -66,15 +86,15 @@ export class OldWorldSaveHandler implements SaveHandler {
   }
 
   get gameTurn(): number {
-    return +this.saveData.elements[0].elements.find(x => x.name === 'Game').elements.find(x => x.name === 'Turn').elements[0].text;
+    return +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'Turn').elements[0].text;
   }
 
   get mapFile(): string {
-    return this.saveData.elements[0].attributes.MapClass;
+    return this.root.attributes.MapClass;
   }
 
   get mapSize(): string {
-    return this.saveData.elements[0].attributes.MapSize;
+    return this.root.attributes.MapSize;
   }
 
   get parsedDlcs(): string[] {

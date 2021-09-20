@@ -53,7 +53,7 @@ export const OLD_WORLD_MAPS = [MapFactory('MAPCLASS_CoastalRainBasin', 'Coastal 
 export const OLD_WORLD_GAME: CivGame = {
   id: 'OLD_WORLD',
   displayName: 'Old World',
-  turnTimerSupported: false,
+  turnTimerSupported: true,
   assetPrefix: ASSET_PREFIX,
   dlcs: OLD_WORLD_DLCS,
   gameSpeeds: OLD_WORLD_GAME_SPEEDS,
