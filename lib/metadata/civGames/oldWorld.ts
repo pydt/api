@@ -41,14 +41,23 @@ export const OLD_WORLD_LEADERS = [
 export const OLD_WORLD_GAME_SPEEDS = [];
 
 export const OLD_WORLD_MAP_SIZES = [
-  MapSizeFactory('MAPSIZE_DUEL', 'Duel', 2),
+  MapSizeFactory('MAPSIZE_DUEL', 'Duel', 3),
   MapSizeFactory('MAPSIZE_SMALL', 'Small', 4),
-  MapSizeFactory('MAPSIZE_MEDIUM', 'Standard', 6),
-  MapSizeFactory('MAPSIZE_LARGE', 'Large', 8),
-  MapSizeFactory('MAPSIZE_HUGE', 'Huge', 10)
+  MapSizeFactory('MAPSIZE_MEDIUM', 'Medium', 5),
+  MapSizeFactory('MAPSIZE_LARGE', 'Large', 6),
+  MapSizeFactory('MAPSIZE_HUGE', 'Huge', 7)
 ];
 
-export const OLD_WORLD_MAPS = [MapFactory('MAPCLASS_CoastalRainBasin', 'Coastal Rain Basin')];
+export const OLD_WORLD_MAPS = [
+  MapFactory('MAPCLASS_CoastalRainBasin', 'Coastal Rain Basin'),
+  MapFactory('MAPCLASS_Archipelago', 'Archipelago'),
+  MapFactory('MAPCLASS_AridPlateau', 'Arid Plateau'),
+  MapFactory('MAPCLASS_Continent', 'Continent'),
+  MapFactory('MAPCLASS_Disjunction', 'Disjunction'),
+  MapFactory('MAPCLASS_HardwoodForest', 'Hardwood Forest'),
+  MapFactory('MAPCLASS_NorthernOcean', 'Northern Ocean'),
+  MapFactory('MAPCLASS_Seaside', 'Seaside')
+];
 
 export const OLD_WORLD_GAME: CivGame = {
   id: 'OLD_WORLD',
