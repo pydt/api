@@ -110,7 +110,7 @@ export class GameController_FinishSubmit {
         const actualCiv = civ.leaderName;
         const expectedCiv = game.players[i].civType;
 
-        if (expectedCiv === RANDOM_CIV.leaderKey) {
+        if (!expectedCiv || expectedCiv === RANDOM_CIV.leaderKey) {
           game.players[i].civType = actualCiv;
         } else if (actualCiv !== expectedCiv) {
           throw new HttpResponseError(400, `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
