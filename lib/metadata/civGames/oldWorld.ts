@@ -50,13 +50,15 @@ export const OLD_WORLD_MAP_SIZES = [
 
 export const OLD_WORLD_MAPS = [
   MapFactory('MAPCLASS_CoastalRainBasin', 'Coastal Rain Basin'),
-  MapFactory('MAPCLASS_Archipelago', 'Archipelago'),
+  MapFactory('MAPCLASS_MapScriptArchipelago', 'Archipelago'),
   MapFactory('MAPCLASS_AridPlateau', 'Arid Plateau'),
-  MapFactory('MAPCLASS_Continent', 'Continent'),
-  MapFactory('MAPCLASS_Disjunction', 'Disjunction'),
-  MapFactory('MAPCLASS_HardwoodForest', 'Hardwood Forest'),
-  MapFactory('MAPCLASS_NorthernOcean', 'Northern Ocean'),
-  MapFactory('MAPCLASS_Seaside', 'Seaside')
+  MapFactory('MAPCLASS_MapScriptContinent', 'Continent'),
+  MapFactory('MAPCLASS_MapScriptContinents', 'Multiple Continents'),
+  MapFactory('MAPCLASS_MapScriptDisjunction', 'Disjunction'),
+  MapFactory('MAPCLASS_MapScriptHardwoodForest', 'Hardwood Forest'),
+  MapFactory('MAPCLASS_MapScriptInlandSea', 'Inland Sea'),
+  MapFactory('MAPCLASS_MapScriptNorthernOcean', 'Northern Ocean'),
+  MapFactory('MAPCLASS_MapScriptSeaside', 'Seaside')
 ];
 
 export const OLD_WORLD_GAME: CivGame = {
