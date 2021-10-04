@@ -28,4 +28,5 @@ export interface Game extends Entity, BaseGame {
   latestDiscoursePostNumber?: number;
   latestDiscoursePostUser?: string;
   lastTurnEndDate?: Date;
+  resetGameStateOnNextUpload?: boolean;
 }

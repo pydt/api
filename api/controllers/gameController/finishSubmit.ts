@@ -147,12 +147,14 @@ export class GameController_FinishSubmit {
     let expectedRound = gameTurn.round;
     let nextPlayerIndex = GameUtil.getNextPlayerIndex(game);
 
-    if (gameTurn.turn === 1) {
+    if (gameTurn.turn === 1 || game.resetGameStateOnNextUpload) {
       // When starting a game, take whatever round is in the file.  This allows starting in different eras.
       expectedRound = parsedRound;
 
       // Also take whatever player is active in the file.  This helps with migrating games from PBC/online.
       nextPlayerIndex = saveHandler.civData.findIndex(x => x.isCurrentTurn);
+
+      game.resetGameStateOnNextUpload = false;
 
       if (nextPlayerIndex === -1) {
         throw new HttpResponseError(

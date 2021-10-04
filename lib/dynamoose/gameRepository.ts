@@ -93,7 +93,8 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
       latestDiscoursePostUser: String,
       lastTurnEndDate: Date,
       randomOnly: Boolean,
-      webhookUrl: String
+      webhookUrl: String,
+      resetGameStateOnNextUpload: Boolean
     });
   }
 
