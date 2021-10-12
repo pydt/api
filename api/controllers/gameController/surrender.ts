@@ -93,9 +93,9 @@ export class GameController_Surrender {
         }
 
         gameTurn.startDate = new Date();
-
-        savePromises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game), this.gameTurnRepository.saveVersioned(gameTurn));
       }
+
+      savePromises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game), this.gameTurnRepository.saveVersioned(gameTurn));
     }
 
     savePromises.push(this.userRepository.saveVersioned(user), this.gameRepository.saveVersioned(game));
