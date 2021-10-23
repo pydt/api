@@ -24,7 +24,10 @@ export class OldWorldCivData implements CivData {
       return ActorType.AI;
     }
 
-    // TODO: Dead?
+    if (this.playerData.elements.find(x => x.name === 'Dead')) {
+      return ActorType.DEAD;
+    }
+
     return ActorType.HUMAN;
   }
 
@@ -101,7 +104,7 @@ export class OldWorldSaveHandler implements SaveHandler {
     return [];
   }
 
-  setCurrentTurnIndex(newIndex: number) {
+  setCurrentTurnIndex() {
     // Not implemented...
   }
 

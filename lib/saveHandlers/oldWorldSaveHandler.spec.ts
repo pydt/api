@@ -52,4 +52,16 @@ describe('OldWorldSaveHandler', () => {
     expect(handler.civData[0].type).to.eq(ActorType.HUMAN);
     expect(handler.civData[1].isCurrentTurn).to.eq(true);
   });
+
+  it('should detect dead correctly', () => {
+    const buffer = fs.readFileSync('testdata/saves/oldWorld/deadtest.zip');
+    const handler = new OldWorldSaveHandler(buffer);
+
+    expect(handler.civData.length).to.eq(5);
+    expect(handler.civData[0].type).to.eq(ActorType.HUMAN);
+    expect(handler.civData[1].type).to.eq(ActorType.HUMAN);
+    expect(handler.civData[2].type).to.eq(ActorType.DEAD);
+    expect(handler.civData[3].type).to.eq(ActorType.HUMAN);
+    expect(handler.civData[4].type).to.eq(ActorType.HUMAN);
+  });
 });
