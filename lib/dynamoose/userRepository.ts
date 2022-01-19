@@ -94,7 +94,8 @@ export class UserRepository extends BaseDynamooseRepository<string, User> implem
       ],
       willSubstituteForGameTypes: [String],
       dataVersion: Number,
-      banned: Boolean
+      banned: Boolean,
+      canCreateMultipleGames: Boolean
     });
   }
 

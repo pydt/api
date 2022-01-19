@@ -32,6 +32,7 @@ export interface User extends HasSteamId, TurnData {
   forumUsername?: string;
   willSubstituteForGameTypes: string[];
   banned?: boolean;
+  canCreateMultipleGames?: boolean;
   dataVersion?: number;
 }
 

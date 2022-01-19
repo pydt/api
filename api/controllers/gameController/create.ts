@@ -46,7 +46,7 @@ export class GameController_Create {
       return game.gameType === body.gameType && game.createdBySteamId === request.user && !game.inProgress;
     });
 
-    if (hasFormingGame) {
+    if (!user.canCreateMultipleGames && hasFormingGame) {
       throw new HttpResponseError(
         400,
         `You cannot create a new game at the moment because you already have one game that hasn't been started yet!`
