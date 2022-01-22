@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { compact, concat, flatMap, includes, uniq } from 'lodash';
+import { compact, concat, flatMap, uniq } from 'lodash';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
@@ -58,9 +58,25 @@ export class UpdateUserGameCache {
   }
 
   private async updateUser(user: User, games: Game[]): Promise<void> {
-    const result = games.filter(game => {
-      return includes(user.activeGameIds, game.gameId);
-    });
+    const result: Game[] = [];
+    let updateUser = false;
+
+    for (const game of games) {
+      if (game.players.some(x => x.steamId === user.steamId)) {
+        // Player in game
+        result.push(game);
+      } else {
+        // Player not in game, validate active game list
+        if ((user.activeGameIds || []).includes(game.gameId)) {
+          UserUtil.removeUserFromGame(user, game, true);
+          updateUser = true;
+        }
+      }
+    }
+
+    if (updateUser) {
+      await this.userRepository.saveVersioned(user);
+    }
 
     await this.s3.putObject(
       {
