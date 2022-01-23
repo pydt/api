@@ -1,0 +1,29 @@
+name: Deploy PYDT API
+on:
+  push:
+    branches:
+      - master
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: |
+          npm install
+          npm install -g serverless@1.74.1
+          npm run test
+          docker-compose -f testdata/docker-compose.yml up -d
+          npm run integration-test
+          npm run deploy-${GITHUB_REF##*/}
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+          ROLLBAR_API_KEY: ${{secrets.ROLLBAR_API_KEY}}
+          DISCOURSE_API_KEY: ${{secrets.DISCOURSE_API_KEY}}
+          STEAM_API_KEY: ${{secrets.STEAM_API_KEY}}
+          VAPID_PRIVATE_KEY: ${{secrets.VAPID_PRIVATE_KEY}}
