@@ -62,7 +62,7 @@ export class UpdateUserGameCache {
     let updateUser = false;
 
     for (const game of games) {
-      if (game.players.some(x => x.steamId === user.steamId)) {
+      if (game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered)) {
         // Player in game
         result.push(game);
       } else {
