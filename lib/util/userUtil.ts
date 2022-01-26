@@ -7,7 +7,7 @@ export class UserUtil {
 
   public static addUserToGame(user: User, game: Game) {
     user.activeGameIds = user.activeGameIds || [];
-    user.activeGameIds.push(game.gameId);
+    user.activeGameIds = [...new Set([...user.activeGameIds, game.gameId])];
 
     const gameStats = this.getUserGameStats(user, game.gameType);
     gameStats.activeGames++;
@@ -16,11 +16,11 @@ export class UserUtil {
 
   public static removeUserFromGame(user: User, game: Game, addToInactiveGames: boolean) {
     user.activeGameIds = user.activeGameIds || [];
-    user.activeGameIds = user.activeGameIds.filter(x => x !== game.gameId);
+    user.activeGameIds = [...new Set(user.activeGameIds.filter(x => x !== game.gameId))];
 
     if (addToInactiveGames) {
       user.inactiveGameIds = user.inactiveGameIds || [];
-      user.inactiveGameIds.push(game.gameId);
+      user.inactiveGameIds = [...new Set([...user.inactiveGameIds, game.gameId])];
     }
 
     const gameStats = this.getUserGameStats(user, game.gameType);
