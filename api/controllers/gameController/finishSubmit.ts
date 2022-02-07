@@ -125,17 +125,17 @@ export class GameController_FinishSubmit {
           } else if (civ.type === ActorType.AI) {
             // This is OK, type will be reset in updateSaveFileForGameState, and may be wrong
             // because of skipped turns!
-            // throw new HttpResponseError(400, `Expected civ ${i} to be human!`);
+            // throw new HttpResponseError(400, `Expected civ ${i + 1} to be human!`);
           }
         } else {
           if (civ.type === ActorType.HUMAN) {
             // I'm not sure that we care about this, either, should be set properly in updateSaveFileForGameState
-            // throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
+            // throw new HttpResponseError(400, `Expected civ ${i + 1} to be AI/Dead!`);
           }
         }
       } else {
         if (civ.type === ActorType.HUMAN) {
-          throw new HttpResponseError(400, `Expected civ ${i} to be AI/Dead!`);
+          throw new HttpResponseError(400, `Expected civ ${i + 1} to be AI/Dead!`);
         }
 
         game.players[i] = {
