@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
-import * as uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../../lib/discourseProvider';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';

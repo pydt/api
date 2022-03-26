@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 var _ = require('lodash');
 
 module.exports = {  
@@ -25,9 +25,10 @@ module.exports = {
     filename: '[name].js',
     devtoolModuleFilenameTemplate: '[absolute-resource-path]'
   },
+  externalsPresets: { node: true },
   externals: [nodeExternals()],
   plugins: [
-    new webpack.IgnorePlugin(/\.(css|less)$/),
+    new webpack.IgnorePlugin({ resourceRegExp: /\.(css|less)$/ }),
     new webpack.BannerPlugin({ banner: 'require("reflect-metadata");', raw: true, entryOnly: false }),
     new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
     new webpack.DefinePlugin({

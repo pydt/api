@@ -10,8 +10,10 @@ export interface IWebsocketConnectionRepository extends IRepository<WebsocketCon
 }
 
 @provideSingleton(WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL)
-export class WebsocketConnectionRepository extends BaseDynamooseRepository<WebsocketConnectionKey, WebsocketConnection>
-  implements IWebsocketConnectionRepository {
+export class WebsocketConnectionRepository
+  extends BaseDynamooseRepository<WebsocketConnectionKey, WebsocketConnection>
+  implements IWebsocketConnectionRepository
+{
   constructor() {
     super(Config.resourcePrefix + 'websocket-connection', {
       connectionId: {

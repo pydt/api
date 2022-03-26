@@ -8,7 +8,7 @@ dynamoose.local();
 
 import { describe, it } from 'mocha';
 import { It, Mock, Times } from 'typemoq';
-import * as uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import * as zlib from 'zlib';
 import { GameRepository } from '../../../lib/dynamoose/gameRepository';
 import { GameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
