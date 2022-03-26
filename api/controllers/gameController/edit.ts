@@ -29,17 +29,7 @@ export class GameController_Edit {
     }
 
     if (!game.inProgress) {
-      if (body.slots < game.players.length) {
-        throw new HttpResponseError(400, `You can't change the number of slots to less than the current number of players!`);
-      }
-
       game.displayName = body.displayName;
-      game.description = body.description;
-      game.slots = body.slots;
-      game.dlc = body.dlc;
-      game.gameSpeed = body.gameSpeed;
-      game.mapFile = body.mapFile;
-      game.mapSize = body.mapSize;
       game.randomOnly = body.randomOnly;
 
       if (game.randomOnly) {
@@ -47,10 +37,23 @@ export class GameController_Edit {
       }
     }
 
+    if (game.gameTurnRangeKey || 0 <= 1) {
+      if (body.slots < game.players.length) {
+        throw new HttpResponseError(400, `You can't change the number of slots to less than the current number of players!`);
+      }
+
+      game.slots = body.slots;
+      game.dlc = body.dlc;
+      game.gameSpeed = body.gameSpeed;
+      game.mapFile = body.mapFile;
+      game.mapSize = body.mapSize;
+    }
+
     if (body.humans < game.players.filter(x => GameUtil.playerIsHuman(x)).length) {
       throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of humans!`);
     }
 
+    game.description = body.description;
     game.humans = body.humans;
     game.allowJoinAfterStart = body.allowJoinAfterStart;
     game.webhookUrl = body.webhookUrl;
