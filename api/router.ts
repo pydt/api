@@ -88,7 +88,8 @@ const mockApp: any = {
 RegisterRoutes(mockApp);
 
 export const handler = loggingHandler((event: LambdaProxyEvent) => {
-  pydtLogger.info(`handling ${event.httpMethod} ${event.path} (${event.requestContext.identity.sourceIp})`);
+  const http = event.requestContext.http;
+  pydtLogger.info(`handling ${http.method} ${http.path} (${http.sourceIp})`);
 
   return new Promise((resolve, reject) => {
     const callback = (err, resp) => {
@@ -103,7 +104,7 @@ export const handler = loggingHandler((event: LambdaProxyEvent) => {
     const resp = new HttpResponse(callback, req);
 
     (router as any).handle(req, resp, () => {
-      pydtLogger.info(`404 for ${event.httpMethod} ${event.path}`);
+      pydtLogger.info(`404 for ${http.method} ${http.path}`);
       resp.status(404).json(new ErrorResponse('Not Found'));
     });
   });

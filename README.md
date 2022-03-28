@@ -5,7 +5,6 @@
 ## Dev Setup / Deployment
 
 * `npm install`
-* `npm install -g serverless@1.74.1`
 * Copy config.yml.template to config.yml and set the appropriate values.
 * `npm run debug`
 

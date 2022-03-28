@@ -31,9 +31,11 @@ export class HttpRequest extends EventEmitter {
       },
       {}
     );
-    this.method = event.httpMethod;
+
+    const http = event.requestContext.http;
+    this.method = http.method;
     this.params = event.pathParameters;
     this.query = event.queryStringParameters || {};
-    this.url = event.path;
+    this.url = http.path;
   }
 }

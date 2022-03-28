@@ -13,7 +13,7 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "1.74.1"
+frameworkVersion: "3"
 
 plugins:
   - serverless-prune-plugin
@@ -28,6 +28,18 @@ provider:
   tracing:
     lambda: true
   stage: dev
+  lambdaHashingVersion: "20200924"
+  apiGateway:
+    resourcePolicy:
+      - Effect: Allow
+        Principal: "*"
+        Action: execute-api:Invoke
+        Resource:
+          - execute-api:/*
+        Condition:
+          NotIpAddress:
+            aws:SourceIp:
+              - 54.219.136.29
   httpApi:
     cors:
       allowedOrigins:
@@ -42,16 +54,6 @@ provider:
         - Authorization
         - Metadata-Hash
       maxAge: 600
-  resourcePolicy:
-    - Effect: Allow
-      Principal: "*"
-      Action: execute-api:Invoke
-      Resource:
-        - execute-api:/*
-      Condition:
-        NotIpAddress:
-          aws:SourceIp:
-            - 54.219.136.29
   iamRoleStatements:
     - Effect: Allow
       Action: "dynamodb:*"

@@ -14,7 +14,6 @@ jobs:
           node-version: '12'
       - run: |
           npm install
-          npm install -g serverless@1.74.1
           npm run test
           docker-compose -f testdata/docker-compose.yml up -d
           npm run integration-test
