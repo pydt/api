@@ -96,19 +96,16 @@ export class GameTurnService implements IGameTurnService {
         });
 
         if (curPud && curPud.emailAddress) {
-          let desc = defeatedUser.displayName + ' has';
           const isDefeatedPlayer = player.steamId === defeatedPlayer.steamId;
-
-          if (isDefeatedPlayer) {
-            desc = 'You have';
-          }
+          const desc = isDefeatedPlayer ? 'You have' : `${defeatedUser.displayName} has`;
 
           if (GameUtil.playerIsHuman(player) || isDefeatedPlayer) {
             promises.push(
               this.ses.sendEmail(
                 `${desc} been defeated in ${game.displayName}!`,
                 'Player Defeated',
-                `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!`,
+                `<b>${desc}</b> been defeated in <b>${game.displayName}</b>!
+                <br /><br />Game URL: ${Config.webUrl}/game/${game.gameId}`,
                 curPud.emailAddress
               )
             );
