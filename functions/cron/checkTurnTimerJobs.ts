@@ -55,6 +55,10 @@ export class CheckTurnTimerJobs {
     if (game.turnTimerMinutes) {
       const turn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
 
+      if (!turn) {
+        throw new Error(`checkTurnTimer: Turn ${game.gameTurnRangeKey} for game ${game.gameId} not found`);
+      }
+
       if (!turn.endDate && new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000) {
         pydtLogger.info('Skipping turn due to timer in game ' + game.gameId);
         await this.gameTurnService.skipTurn(game, turn);
