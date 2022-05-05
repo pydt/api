@@ -240,9 +240,49 @@ resources:
         AttributeDefinitions:
           - AttributeName: gameId
             AttributeType: S
+          - AttributeName: inProgress
+            AttributeType: S
+          - AttributeName: completed
+            AttributeType: S
+          - AttributeName: discourseTopicId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: N
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: inProgressGlobalIndex
+            KeySchema:
+              - AttributeName: inProgress
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+              WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          #- IndexName: completedGlobalIndex
+          #  KeySchema:
+          #    - AttributeName: completed
+          #      KeyType: HASH
+          #    - AttributeName: createdAt
+          #      KeyType: RANGE
+          #  Projection:
+          #    ProjectionType: KEYS_ONLY
+          #  ProvisionedThroughput:
+          #    ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          #    WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          #- IndexName: discourseTopicIdGlobalIndex
+          #  KeySchema:
+          #    - AttributeName: discourseTopicId
+          #      KeyType: HASH
+          #  Projection:
+          #    ProjectionType: KEYS_ONLY
+          #  ProvisionedThroughput:
+          #    ReadCapacityUnits: 1
+          #    WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
           WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
@@ -260,9 +300,7 @@ resources:
             KeyType: HASH
           - AttributeName: turn
             KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
-          WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+        BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}game-turn
     ScheduledJobTable:
       Type: AWS::DynamoDB::Table
@@ -277,9 +315,7 @@ resources:
             KeyType: HASH
           - AttributeName: scheduledTime
             KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}scheduled-job
     PrivateUserDataTable:
       Type: AWS::DynamoDB::Table
@@ -290,9 +326,7 @@ resources:
         KeySchema:
           - AttributeName: steamId
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}private-user-data
     WebsocketConnectionTable:
       Type: AWS::DynamoDB::Table
@@ -303,7 +337,5 @@ resources:
         KeySchema:
           - AttributeName: connectionId
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}websocket-connection

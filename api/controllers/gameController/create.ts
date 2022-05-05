@@ -59,6 +59,8 @@ export class GameController_Create {
 
     const newGame: Game = {
       gameId: uuid(),
+      completed: false,
+      inProgress: false,
       createdBySteamId: user.steamId,
       currentPlayerSteamId: user.steamId,
       dlc: body.dlc,
