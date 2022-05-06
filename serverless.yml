@@ -244,8 +244,6 @@ resources:
             AttributeType: S
           - AttributeName: completed
             AttributeType: S
-          - AttributeName: discourseTopicId
-            AttributeType: S
           - AttributeName: createdAt
             AttributeType: N
         KeySchema:
@@ -263,17 +261,17 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
               WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
-          #- IndexName: completedGlobalIndex
-          #  KeySchema:
-          #    - AttributeName: completed
-          #      KeyType: HASH
-          #    - AttributeName: createdAt
-          #      KeyType: RANGE
-          #  Projection:
-          #    ProjectionType: KEYS_ONLY
-          #  ProvisionedThroughput:
-          #    ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
-          #    WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+          - IndexName: completedGlobalIndex
+            KeySchema:
+              - AttributeName: completed
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
+              WriteCapacityUnits: ${self:custom.DEFAULT_DYNAMO_CAPACITY}
           #- IndexName: discourseTopicIdGlobalIndex
           #  KeySchema:
           #    - AttributeName: discourseTopicId
