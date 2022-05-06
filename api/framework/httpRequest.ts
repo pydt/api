@@ -7,7 +7,7 @@ import { Subsegment } from 'aws-xray-sdk';
 export class HttpRequest extends EventEmitter {
   public body: any;
   public rawBody: any;
-  public headers: any;
+  public headers: Record<string, string>;
   public method: string;
   public params: any;
   public query: any;

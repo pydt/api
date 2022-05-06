@@ -29,17 +29,6 @@ provider:
     lambda: true
   stage: dev
   lambdaHashingVersion: "20200924"
-  apiGateway:
-    resourcePolicy:
-      - Effect: Allow
-        Principal: "*"
-        Action: execute-api:Invoke
-        Resource:
-          - execute-api:/*
-        Condition:
-          NotIpAddress:
-            aws:SourceIp:
-              - 54.219.136.29
   httpApi:
     cors:
       allowedOrigins:

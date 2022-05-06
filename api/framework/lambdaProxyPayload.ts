@@ -4,4 +4,5 @@ export interface LambdaProxyPayload {
   statusCode: number;
   headers?: any;
   body?: string;
+  isBase64Encoded?: boolean;
 }
