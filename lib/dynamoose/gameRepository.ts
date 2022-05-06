@@ -30,8 +30,20 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
         required: true
       },
       dlc: [String],
-      inProgress: Boolean,
-      completed: Boolean,
+      inProgress: {
+        type: Boolean,
+        index: {
+          global: true,
+          rangeKey: 'createdAt'
+        }
+      },
+      completed: {
+        type: Boolean,
+        index: {
+          global: true,
+          rangeKey: 'createdAt'
+        }
+      },
       hashedPassword: String,
       displayName: {
         type: String,
@@ -69,7 +81,12 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
           }
         }
       ],
-      discourseTopicId: Number,
+      discourseTopicId: {
+        type: Number,
+        index: {
+          global: true
+        }
+      },
       currentPlayerSteamId: {
         type: String,
         required: true
@@ -128,15 +145,15 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
   }
 
   async incompleteGames() {
-    const games = await this.getAllPaged(this.scan('completed').not().eq(true));
-    return games.map(g => this.setDefaults(g));
+    const games = await this.getAllPaged(this.query('completed').eq(false));
+    // Index is KEYS_ONLY, need to get full games
+    return this.batchGet(games.map(x => x.gameId));
   }
 
   async unstartedGames(daysOld: number) {
     const games = await this.getAllPaged(
-      this.scan('inProgress')
-        .not()
-        .eq(true)
+      this.query('inProgress')
+        .eq(false)
         .where('createdAt')
         .lt(
           moment()
@@ -145,17 +162,19 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
         )
     );
 
-    return games.map(g => this.setDefaults(g));
+    // Index is KEYS_ONLY, need to get full games
+    return this.batchGet(games.map(x => x.gameId));
   }
 
   async getByDiscourseTopicId(topicId: number) {
-    const topics = await this.getAllPaged(this.scan('discourseTopicId').eq(topicId));
+    const topics = await this.getAllPaged(this.query('discourseTopicId').eq(topicId));
 
     if (!topics) {
       return null;
     }
 
-    return this.setDefaults(topics[0]);
+    // Index is KEYS_ONLY, need to get full game
+    return this.get(topics[0].gameId, true);
   }
 
   private setDefaults(game: Game) {
