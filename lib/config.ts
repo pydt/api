@@ -2,7 +2,6 @@ import * as awssdk from 'aws-sdk';
 import * as AWSXRay from 'aws-xray-sdk';
 
 awssdk.config.update({ region: 'us-east-1' });
-export const AWS = AWSXRay.captureAWS(awssdk);
 
 class ConfigClass {
   public get activeStage() {
@@ -38,3 +37,5 @@ class ConfigClass {
 }
 
 export const Config = new ConfigClass();
+
+export const AWS = Config.runningLocal ? awssdk : AWSXRay.captureAWS(awssdk);

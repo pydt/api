@@ -52,7 +52,7 @@ export class HttpResponse extends EventEmitter {
 
   private compress(jsonString: string): { data: string; contentEncoding?: string } {
     // Don't waste time compressing small stuff
-    if (jsonString.length > 1024) {
+    if ((jsonString || '').length > 1024) {
       // Parse the acceptable encoding, if any
       const acceptEncodingHeader = this.req.headers['accept-encoding'] || '';
 

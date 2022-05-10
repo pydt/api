@@ -9,6 +9,7 @@
     "civ6-save-parser": "1.2.0",
     "dynamoose": "1.11.1",
     "express": "4.17.3",
+    "express-async-errors": "^3.1.1",
     "generate-password": "1.7.0",
     "inversify": "6.0.1",
     "inversify-binding-decorators": "4.0.0",

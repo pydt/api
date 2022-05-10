@@ -2,10 +2,12 @@
 
 import * as AWSXRay from 'aws-xray-sdk';
 import { Router } from 'express';
+require('express-async-errors');
 import { ValidateError } from 'tsoa';
 import { loggingHandler, pydtLogger } from '../lib/logging';
 import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
 import { RegisterRoutes } from './_gen/routes/routes';
+import { Config } from '../lib/config';
 
 const router = Router();
 
@@ -19,21 +21,23 @@ type middlewareExec = (request: HttpRequest, response: HttpResponse, next: any) 
 function methodHandler(method: string) {
   return function (route: string, ...routeExecs: middlewareExec[]) {
     router[method](route, (req: HttpRequest, res: HttpResponse) => {
-      const mainSegment = AWSXRay.getSegment(); //returns the facade segment
-      req.subSegment = mainSegment.addNewSubsegment(`${method} ${route}`);
-      const ird = new AWSXRay.middleware.IncomingRequestData(req as any);
-      ird.request.url = req.url;
-      (req.subSegment as any).http = ird;
+      if (!Config.runningLocal) {
+        const mainSegment = AWSXRay.getSegment(); //returns the facade segment
+        req.subSegment = mainSegment.addNewSubsegment(`${method} ${route}`);
+        const ird = new AWSXRay.middleware.IncomingRequestData(req as any);
+        ird.request.url = req.url;
+        (req.subSegment as any).http = ird;
 
-      const ns = AWSXRay.getNamespace();
-      ns.run(function () {
-        AWSXRay.setSegment(req.subSegment);
-      });
+        const ns = AWSXRay.getNamespace();
+        ns.run(function () {
+          AWSXRay.setSegment(req.subSegment);
+        });
 
-      res.on('finish', () => {
-        (req.subSegment as any).http.close(this);
-        req.subSegment.close();
-      });
+        res.on('finish', () => {
+          (req.subSegment as any).http.close(this);
+          req.subSegment.close();
+        });
+      }
 
       pydtLogger.info(`Found route ${route}`);
 

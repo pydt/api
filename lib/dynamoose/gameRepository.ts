@@ -169,7 +169,7 @@ export class GameRepository extends BaseDynamooseRepository<string, Game> implem
   async getByDiscourseTopicId(topicId: number) {
     const topics = await this.getAllPaged(this.query('discourseTopicId').eq(topicId));
 
-    if (!topics) {
+    if (!topics.length) {
       return null;
     }
 
