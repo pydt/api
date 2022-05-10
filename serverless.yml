@@ -82,7 +82,7 @@ custom:
   dev_DYNAMO_CAPACITY: 1
   prod_DYNAMO_CAPACITY: 5
   DEFAULT_DYNAMO_CAPACITY: ${self:custom.${self:custom.activeStage}_DYNAMO_CAPACITY}
-  DEFAULT_LAMBDA_MEMORY: 1024
+  DEFAULT_LAMBDA_MEMORY: 3072
   webpack:
     #packExternalModulesMaxBuffer: 512000
     includeModules:
