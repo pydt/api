@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as dynamoose from 'dynamoose';
+import { chunk } from 'lodash';
 import { injectable, unmanaged } from 'inversify';
 import { HttpResponseError } from '../../api/framework';
 import { AWS } from '../config';
@@ -78,10 +79,18 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     return this.model.delete(id);
   }
 
-  public batchGet(ids: TKey[], consistent?: boolean): Promise<TEntity[]> {
-    return this.model.batchGet(ids, {
-      consistent: !!consistent
-    } as any);
+  public async batchGet(ids: TKey[], consistent?: boolean): Promise<TEntity[]> {
+    const result = [];
+
+    for (const idChunk of chunk(ids, 100)) {
+      result.push(
+        ...(await this.model.batchGet(idChunk, {
+          consistent: !!consistent
+        } as any))
+      );
+    }
+
+    return result;
   }
 
   public batchDelete(entities: TEntity[]) {
