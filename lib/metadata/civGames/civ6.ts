@@ -1,5 +1,15 @@
 import { GameStore, Platform } from 'pydt-shared-models';
-import { BasePath, CivDefFactory, CivGame, DlcFactory, GameSpeedFactory, MapFactory, MapSizeFactory, RANDOM_CIV } from '../civGame';
+import {
+  BasePath,
+  CivDefFactory,
+  CivGame,
+  createProtonPath,
+  DlcFactory,
+  GameSpeedFactory,
+  MapFactory,
+  MapSizeFactory,
+  RANDOM_CIV
+} from '../civGame';
 
 export const CIV6_DLCS = [
   DlcFactory('02A8BDDE-67EA-4D38-9540-26E685E3156E', 'Aztec Civilization Pack'),
@@ -234,7 +244,8 @@ export const CIV6_GAME: CivGame = {
   saveLocations: {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
     [Platform.OSX]: { basePath: BasePath.APP_DATA, prefix: '' },
-    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' }
+    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' },
+    [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('289070') }
   },
   dataPaths: {
     [GameStore.Steam]: "/Sid Meier's Civilization VI",

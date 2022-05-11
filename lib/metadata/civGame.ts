@@ -48,6 +48,10 @@ function defaultDisplayName(str: string) {
   });
 }
 
+export function createProtonPath(steamId: string) {
+  return `/.local/share/Steam/steamapps/compatdata/${steamId}/pfx/drive_c/users/steamuser/documents/My Games`;
+}
+
 export function CivDefFactory(civKey: string, leaderKey: string, assetPrefix: string, options: CivDefOptions = {}): CivDef {
   const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
   const leaderDisplayName = options.leaderDisplayName || defaultDisplayName(leaderKey);

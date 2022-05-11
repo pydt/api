@@ -74,7 +74,7 @@ export const OLD_WORLD_GAME: CivGame = {
   saveLocations: {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
     [Platform.OSX]: { basePath: BasePath.APP_DATA, prefix: '' },
-    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/Aspyr' }
+    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/pydt_unknown' }
   },
   dataPaths: {
     [GameStore.Epic]: '/OldWorld'

@@ -20,7 +20,7 @@
     "passport": "0.5.2",
     "passport-steam": "1.0.17",
     "pydt-civ5-save-parser": "1.0.9",
-    "pydt-shared-models": "1.5.0",
+    "pydt-shared-models": "^1.7.7",
     "reflect-metadata": "0.1.13",
     "request": "2.88.2",
     "request-promise": "4.2.6",

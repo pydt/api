@@ -1,5 +1,15 @@
 import { GameStore, Platform } from 'pydt-shared-models';
-import { BasePath, CivDefFactory, CivGame, DlcFactory, GameSpeedFactory, MapFactory, MapSizeFactory, RANDOM_CIV } from '../civGame';
+import {
+  BasePath,
+  CivDefFactory,
+  CivGame,
+  createProtonPath,
+  DlcFactory,
+  GameSpeedFactory,
+  MapFactory,
+  MapSizeFactory,
+  RANDOM_CIV
+} from '../civGame';
 
 export const BEYOND_EARTH_DLCS = [
   DlcFactory('54df493fb668d144a930a168628faa59', 'Exoplanets Map Pack'),
@@ -89,7 +99,8 @@ export const BEYOND_EARTH_GAME: CivGame = {
   saveLocations: {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
     [Platform.OSX]: { basePath: BasePath.APP_DATA, prefix: '' },
-    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' }
+    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' },
+    [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('65980') }
   },
   dataPaths: {
     [GameStore.Steam]: "/Sid Meier's Civilization Beyond Earth"

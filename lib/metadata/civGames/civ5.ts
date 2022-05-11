@@ -1,5 +1,15 @@
 import { GameStore, Platform } from 'pydt-shared-models';
-import { BasePath, CivDefFactory, CivGame, DlcFactory, GameSpeedFactory, MapFactory, MapSizeFactory, RANDOM_CIV } from '../civGame';
+import {
+  BasePath,
+  CivDefFactory,
+  CivGame,
+  createProtonPath,
+  DlcFactory,
+  GameSpeedFactory,
+  MapFactory,
+  MapSizeFactory,
+  RANDOM_CIV
+} from '../civGame';
 
 export const CIV5_DLCS = [
   DlcFactory('e31e3c297611f644ac1f59663826de74', 'Mongolia'),
@@ -157,7 +167,8 @@ export const CIV5_GAME: CivGame = {
   saveLocations: {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
     [Platform.OSX]: { basePath: BasePath.APP_DATA, prefix: '' },
-    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/Aspyr' }
+    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/Aspyr' },
+    [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('8930') }
   },
   dataPaths: {
     [GameStore.Steam]: "/Sid Meier's Civilization 5"
