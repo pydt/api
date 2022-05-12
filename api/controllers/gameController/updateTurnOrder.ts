@@ -22,8 +22,8 @@ export class GameController_UpdateTurnOrder {
       throw new HttpResponseError(400, `You didn't create this game!`);
     }
 
-    if (!!game.inProgress) {
-      throw new HttpResponseError(400, `Can't update turn order after game start!`);
+    if ((game.gameTurnRangeKey || 0) > 1) {
+      throw new HttpResponseError(400, `Can't update turn order after the first turn!`);
     }
 
     if (game.players.length !== body.steamIds.length) {
