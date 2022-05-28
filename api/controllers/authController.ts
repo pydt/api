@@ -16,7 +16,7 @@ export class AuthController {
   constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {}
 
   @Get('steam')
-  public authenticate(): Promise<AuthenticateResponse> {
+  public authenticate(@Request() request: HttpRequest): Promise<AuthenticateResponse> {
     return new Promise((resolve, reject) => {
       let location = null;
 
@@ -39,7 +39,7 @@ export class AuthController {
         // Nothing to do here
       };
 
-      steamPassport.authenticate('steam', (err, user, info) => {
+      steamPassport(request).authenticate('steam', (err, user, info) => {
         if (err) {
           reject(err);
         } else {
@@ -73,7 +73,7 @@ export class AuthController {
         reject(new HttpResponseError(400, 'Bad Request'));
       };
 
-      steamPassport.authenticate('steam', (err, user) => {
+      steamPassport(request).authenticate('steam', (err, user) => {
         if (err) {
           reject(err);
         } else {
