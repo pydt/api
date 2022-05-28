@@ -66,7 +66,15 @@ export class HttpResponse extends EventEmitter {
 
       if (acceptableEncodings.has('br')) {
         return {
-          data: zlib.brotliCompressSync(jsonString).toString('base64'),
+          data: zlib
+            .brotliCompressSync(jsonString, {
+              params: {
+                [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+                [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MIN_QUALITY,
+                [zlib.constants.BROTLI_PARAM_SIZE_HINT]: jsonString.length
+              }
+            })
+            .toString('base64'),
           contentEncoding: 'br'
         };
       }
