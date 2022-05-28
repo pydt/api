@@ -43,7 +43,11 @@ export class AuthController {
         if (err) {
           reject(err);
         } else {
-          pydtLogger.info(`Callback called without error?  user: ${JSON.stringify(user)}, info: ${JSON.stringify(info)}`);
+          pydtLogger.info(
+            `Callback called without error?  user: ${JSON.stringify(user)}, info: ${JSON.stringify(
+              info
+            )}`
+          );
         }
       })(req, res, next);
     });

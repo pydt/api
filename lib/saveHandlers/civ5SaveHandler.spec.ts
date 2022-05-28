@@ -41,7 +41,10 @@ describe('Civ5SaveHandler', () => {
     expect(handler.gameTurn).to.eq(0);
     expect(handler.mapFile).to.eq('Assets\\Maps\\Protean.lua');
     expect(handler.mapSize).to.eq('WORLDSIZE_SMALL');
-    expect(handler.parsedDlcs).to.deep.equal(['54df493fb668d144a930a168628faa59', '57b2d25491c545408f17a69f033166c7']);
+    expect(handler.parsedDlcs).to.deep.equal([
+      '54df493fb668d144a930a168628faa59',
+      '57b2d25491c545408f17a69f033166c7'
+    ]);
 
     expect(handler.civData.length).to.eq(6);
     expect(handler.civData[1].isCurrentTurn).to.eq(true);

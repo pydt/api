@@ -16,9 +16,15 @@ export const CIV6_DLCS = [
   DlcFactory('3809975F-263F-40A2-A747-8BFB171D821A', 'Poland Civilization & Scenario Pack'),
   DlcFactory('2F6E858A-28EF-46B3-BEAC-B985E52E9BC1', 'Vikings Scenario Pack'),
   DlcFactory('E3F53C61-371C-440B-96CE-077D318B36C0', 'Australia Civilization & Scenario Pack'),
-  DlcFactory('E2749E9A-8056-45CD-901B-C368C8E83DEB', 'Persia and Macedon Civilization & Scenario Pack'),
+  DlcFactory(
+    'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+    'Persia and Macedon Civilization & Scenario Pack'
+  ),
   DlcFactory('643EA320-8E1A-4CF1-A01C-00D88DDD131A', 'Nubia Civilization & Scenario Pack'),
-  DlcFactory('1F367231-A040-4793-BDBB-088816853683', 'Khmer and Indonesia Civilization & Scenario Pack'),
+  DlcFactory(
+    '1F367231-A040-4793-BDBB-088816853683',
+    'Khmer and Indonesia Civilization & Scenario Pack'
+  ),
   DlcFactory('9DE86512-DE1A-400D-8C0A-AB46EBBF76B9', 'Maya and Gran Colombia Pack'),
   DlcFactory('1B394FE9-23DC-4868-8F0A-5220CB8FB427', 'Ethiopia Pack'),
   DlcFactory('113D9459-0A3B-4FCB-A49C-483F40303575', 'Teddy Roosevelt Persona Pack'),

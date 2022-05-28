@@ -52,7 +52,12 @@ export function createProtonPath(steamId: string) {
   return `/.local/share/Steam/steamapps/compatdata/${steamId}/pfx/drive_c/users/steamuser/Documents/My Games`;
 }
 
-export function CivDefFactory(civKey: string, leaderKey: string, assetPrefix: string, options: CivDefOptions = {}): CivDef {
+export function CivDefFactory(
+  civKey: string,
+  leaderKey: string,
+  assetPrefix: string,
+  options: CivDefOptions = {}
+): CivDef {
   const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
   const leaderDisplayName = options.leaderDisplayName || defaultDisplayName(leaderKey);
 
@@ -132,7 +137,12 @@ export interface Map {
   regex?: string;
 }
 
-export function MapFactory(file: string, displayName: string, mapSize?: MapSize, regex?: string): Map {
+export function MapFactory(
+  file: string,
+  displayName: string,
+  mapSize?: MapSize,
+  regex?: string
+): Map {
   return {
     file,
     displayName,

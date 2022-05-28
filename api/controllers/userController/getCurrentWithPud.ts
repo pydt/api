@@ -1,5 +1,8 @@
 import { Get, Request, Response, Route, Security, Tags } from 'tsoa';
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { ErrorResponse, HttpRequest } from '../../framework';

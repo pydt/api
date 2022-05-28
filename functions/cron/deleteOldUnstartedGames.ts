@@ -6,7 +6,10 @@ import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { GAME_SERVICE_SYMBOL, IGameService } from '../../lib/services/gameService';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../lib/dynamoose/privateUserDataRepository';
+import {
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
+  IPrivateUserDataRepository
+} from '../../lib/dynamoose/privateUserDataRepository';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const doug = iocContainer.resolve(DeleteOldUnstartedGames);

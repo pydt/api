@@ -17,7 +17,11 @@ export class Civ5CivData implements CivData {
   }
 
   set type(value: ActorType) {
-    this.handler.rawSave = civ5.changeCivType(this.handler.rawSave, this.index, ACTOR_TYPE_MAP.find(x => x.actorType === value).intVal);
+    this.handler.rawSave = civ5.changeCivType(
+      this.handler.rawSave,
+      this.index,
+      ACTOR_TYPE_MAP.find(x => x.actorType === value).intVal
+    );
     this.handler.reparse();
   }
 

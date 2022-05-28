@@ -19,7 +19,10 @@ export class GameController_StartSubmit {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/startSubmit')
-  public async startSubmit(@Request() request: HttpRequest, gameId: string): Promise<StartTurnSubmitResponse> {
+  public async startSubmit(
+    @Request() request: HttpRequest,
+    gameId: string
+  ): Promise<StartTurnSubmitResponse> {
     const game = await this.gameRepository.getOrThrow404(gameId);
     if (game.currentPlayerSteamId !== request.user) {
       throw new HttpResponseError(400, "It's not your turn!");

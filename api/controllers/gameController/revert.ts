@@ -1,6 +1,9 @@
 import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';

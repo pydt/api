@@ -15,7 +15,10 @@ export const JOB_TYPES = {
 };
 
 @provideSingleton(SCHEDULED_JOB_REPOSITORY_SYMBOL)
-export class ScheduledJobRepository extends BaseDynamooseRepository<ScheduledJobKey, ScheduledJob> implements IScheduledJobRepository {
+export class ScheduledJobRepository
+  extends BaseDynamooseRepository<ScheduledJobKey, ScheduledJob>
+  implements IScheduledJobRepository
+{
   constructor() {
     super(Config.resourcePrefix + 'scheduled-job', {
       jobType: {
@@ -31,6 +34,8 @@ export class ScheduledJobRepository extends BaseDynamooseRepository<ScheduledJob
   }
 
   getWaitingJobs(jobType: string) {
-    return this.getAllPaged(this.query('jobType').eq(jobType).where('scheduledTime').lt(new Date()));
+    return this.getAllPaged(
+      this.query('jobType').eq(jobType).where('scheduledTime').lt(new Date())
+    );
   }
 }

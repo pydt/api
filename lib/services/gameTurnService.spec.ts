@@ -57,7 +57,11 @@ describe('GameTurnService', () => {
     userRepositoryMock.setup(x => x.saveVersioned(It.isAny())).returns(u => Promise.resolve(u));
     userRepositoryMock
       .setup(x => x.getUsersForGame(It.isAny()))
-      .returns(g => Promise.resolve(g.players.map(x => ({ steamId: x.steamId, displayName: x.civType } as User))));
+      .returns(g =>
+        Promise.resolve(
+          g.players.map(x => ({ steamId: x.steamId, displayName: x.civType } as User))
+        )
+      );
 
     const pudRepositoryMock = Mock.ofType<IPrivateUserDataRepository>();
     pudRepositoryMock
@@ -73,10 +77,14 @@ describe('GameTurnService', () => {
         expect(fp.Key.indexOf('/000020')).to.be.greaterThan(0);
         return Promise.resolve({ Body: fs.readFileSync('testdata/saves/civ5/000020.Civ5Save') });
       });
-    s3ProviderMock.setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny())).callback((fp, data) => (skippedData = data));
+    s3ProviderMock
+      .setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny()))
+      .callback((fp, data) => (skippedData = data));
 
     const sesProviderMock = Mock.ofType<ISesProvider>();
-    sesProviderMock.setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny())).returns(() => Promise.resolve());
+    sesProviderMock
+      .setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()))
+      .returns(() => Promise.resolve());
 
     const snsProviderMock = Mock.ofType<ISnsProvider>();
     snsProviderMock.setup(x => x.turnSubmitted(It.isAny())).returns(() => Promise.resolve());

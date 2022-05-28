@@ -13,7 +13,10 @@ export class GameController_ResetGameStateOnNextUpload {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/resetGameStateOnNextUpload')
-  public async resetGameStateOnNextUpload(@Request() request: HttpRequest, gameId: string): Promise<Game> {
+  public async resetGameStateOnNextUpload(
+    @Request() request: HttpRequest,
+    gameId: string
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (!game.inProgress) {

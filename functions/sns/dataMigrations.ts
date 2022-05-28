@@ -1,7 +1,13 @@
 import { injectable } from 'inversify';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../lib/dynamoose/privateUserDataRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../lib/dynamoose/gameTurnRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
@@ -47,7 +53,9 @@ export class DataMigrations {
   }
 
   private async createPrivateUserData() {
-    const users = (await this.userRepository.allUsers()).filter(x => !x.dataVersion || x.dataVersion < 3).map(x => x as DeprecatedUser);
+    const users = (await this.userRepository.allUsers())
+      .filter(x => !x.dataVersion || x.dataVersion < 3)
+      .map(x => x as DeprecatedUser);
 
     for (const user of users) {
       const pud: PrivateUserData = {
@@ -122,7 +130,9 @@ export class DataMigrations {
       }
 
       const stats = UserUtil.getUserGameStats(user, game.gameType);
-      stats.activeGames += game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered) ? 1 : 0;
+      stats.activeGames += game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered)
+        ? 1
+        : 0;
       stats.totalGames++;
 
       // no need to update game at this time, should be OK

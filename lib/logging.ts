@@ -6,7 +6,9 @@ import { initContainer, iocContainer } from './ioc';
 let rollbar: Rollbar;
 
 function log(level: string, message, error?) {
-  console.log(`${message}${error ? ': ' + (error && error.stack ? error.stack : JSON.stringify(error)) : ''}`);
+  console.log(
+    `${message}${error ? ': ' + (error && error.stack ? error.stack : JSON.stringify(error)) : ''}`
+  );
 
   if (rollbar) {
     switch (level) {

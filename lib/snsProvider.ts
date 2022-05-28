@@ -17,11 +17,19 @@ export interface ISnsProvider {
 @provideSingleton(SNS_PROVIDER_SYMBOL)
 export class SnsProvider implements ISnsProvider {
   public async turnSubmitted(game: Game) {
-    await this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED, SNS_MESSAGES.TURN_SUBMITTED, game.gameId);
+    await this.sendMessage(
+      Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED,
+      SNS_MESSAGES.TURN_SUBMITTED,
+      game.gameId
+    );
   }
 
   public async gameUpdated(game: Game) {
-    await this.sendMessage(Config.resourcePrefix + SNS_MESSAGES.GAME_UPDATED, SNS_MESSAGES.GAME_UPDATED, game.gameId);
+    await this.sendMessage(
+      Config.resourcePrefix + SNS_MESSAGES.GAME_UPDATED,
+      SNS_MESSAGES.GAME_UPDATED,
+      game.gameId
+    );
   }
 
   public async userGameCacheUpdated(payload: UserGameCacheUpdatedPayload) {

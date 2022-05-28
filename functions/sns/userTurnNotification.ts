@@ -2,7 +2,10 @@ import { injectable } from 'inversify';
 import * as isUrl from 'is-url';
 import { Config } from '../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../lib/dynamoose/privateUserDataRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { HTTP_REQUEST_PROVIDER_SYMBOL, IHttpRequestProvider } from '../../lib/httpRequestProvider';

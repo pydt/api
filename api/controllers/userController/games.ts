@@ -26,7 +26,9 @@ export class UserController_Games {
 
     return {
       data: games,
-      pollUrl: `https://${Config.resourcePrefix}saves.s3.amazonaws.com/${UserUtil.createS3GameCacheKey(request.user)}`
+      pollUrl: `https://${
+        Config.resourcePrefix
+      }saves.s3.amazonaws.com/${UserUtil.createS3GameCacheKey(request.user)}`
     };
   }
 

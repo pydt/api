@@ -16,17 +16,25 @@ export class WebhookController {
   ) {}
 
   @Post('newDiscordPost')
-  public async newDiscordPost(@Request() request: HttpRequest, @Body() body: NewDiscordPostBody): Promise<void> {
+  public async newDiscordPost(
+    @Request() request: HttpRequest,
+    @Body() body: NewDiscordPostBody
+  ): Promise<void> {
     const headerSignature: string = request.headers['x-discourse-event-signature'];
 
     if (headerSignature.indexOf('sha256=') !== 0) {
       throw new Error('Signature not found or not sha256: ' + headerSignature);
     }
 
-    const computedSignature = crypto.createHmac('sha256', process.env.JWT_SECRET).update(request.rawBody).digest('hex');
+    const computedSignature = crypto
+      .createHmac('sha256', process.env.JWT_SECRET)
+      .update(request.rawBody)
+      .digest('hex');
 
     if (headerSignature.replace('sha256=', '') !== computedSignature) {
-      throw new Error(`Header signature ${headerSignature} does not match computed ${computedSignature}!`);
+      throw new Error(
+        `Header signature ${headerSignature} does not match computed ${computedSignature}!`
+      );
     }
 
     const game = await this.gameRepository.getByDiscourseTopicId(body.post.topic_id);

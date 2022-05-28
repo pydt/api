@@ -5,7 +5,8 @@ import { BaseDynamooseRepository, IRepository } from './common';
 
 export const WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL = Symbol('IWebsocketConnectionRepository');
 
-export interface IWebsocketConnectionRepository extends IRepository<WebsocketConnectionKey, WebsocketConnection> {
+export interface IWebsocketConnectionRepository
+  extends IRepository<WebsocketConnectionKey, WebsocketConnection> {
   getByConnectionId(connectionId: string): Promise<WebsocketConnection>;
 }
 

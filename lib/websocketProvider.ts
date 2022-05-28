@@ -1,5 +1,11 @@
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from './dynamoose/privateUserDataRepository';
-import { IWebsocketConnectionRepository, WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL } from './dynamoose/websocketConnectionRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from './dynamoose/privateUserDataRepository';
+import {
+  IWebsocketConnectionRepository,
+  WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL
+} from './dynamoose/websocketConnectionRepository';
 import { inject, provideSingleton } from './ioc';
 import { PrivateUserData } from './models';
 
@@ -14,7 +20,8 @@ export interface IWebsocketProvider {
 @provideSingleton(WEBSOCKET_PROVIDER_SYMBOL)
 export class WebsocketProvider implements IWebsocketProvider {
   constructor(
-    @inject(WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL) private wsRepository: IWebsocketConnectionRepository,
+    @inject(WEBSOCKET_CONNECTION_REPOSITORY_SYMBOL)
+    private wsRepository: IWebsocketConnectionRepository,
     @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
   ) {}
 
@@ -38,7 +45,9 @@ export class WebsocketProvider implements IWebsocketProvider {
       const pud = await this.pudRepository.get(connection.steamId);
 
       if (pud) {
-        pud.websocketConnectionIds = (pud.websocketConnectionIds || []).filter(x => x !== connectionId);
+        pud.websocketConnectionIds = (pud.websocketConnectionIds || []).filter(
+          x => x !== connectionId
+        );
         await this.pudRepository.saveVersioned(pud);
       }
 

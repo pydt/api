@@ -15,14 +15,21 @@ export class GameController_ChangeCiv {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/changeCiv')
-  public async changeCiv(@Request() request: HttpRequest, gameId: string, @Body() body: ChangeCivRequestBody): Promise<Game> {
+  public async changeCiv(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: ChangeCivRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.inProgress) {
       throw new HttpResponseError(400, 'Game in Progress');
     }
 
-    if (body.playerCiv !== RANDOM_CIV.leaderKey && game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0) {
+    if (
+      body.playerCiv !== RANDOM_CIV.leaderKey &&
+      game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0
+    ) {
       throw new HttpResponseError(400, 'Civ already in Game');
     }
 

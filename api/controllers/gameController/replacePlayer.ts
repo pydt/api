@@ -23,15 +23,26 @@ export class GameController_ReplacePlayer {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/turn/replacePlayer')
-  public async replacePlayer(@Request() request: HttpRequest, gameId: string, @Body() body: ReplacePlayerRequestBody): Promise<Game> {
+  public async replacePlayer(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: ReplacePlayerRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (!game.inProgress) {
       throw new HttpResponseError(400, 'Game must be in progress to replace!');
     }
 
-    if (request.user !== '76561197973299801' && game.createdBySteamId !== request.user && body.oldSteamId !== request.user) {
-      throw new HttpResponseError(400, "You don't have permission to replace a player in this game!");
+    if (
+      request.user !== '76561197973299801' &&
+      game.createdBySteamId !== request.user &&
+      body.oldSteamId !== request.user
+    ) {
+      throw new HttpResponseError(
+        400,
+        "You don't have permission to replace a player in this game!"
+      );
     }
 
     const oldPlayer = game.players.find(x => x.steamId === body.oldSteamId);
@@ -59,7 +70,8 @@ export class GameController_ReplacePlayer {
 
     if (
       request.user !== '76561197973299801' &&
-      (!newUser.willSubstituteForGameTypes || newUser.willSubstituteForGameTypes.indexOf(game.gameType) < 0)
+      (!newUser.willSubstituteForGameTypes ||
+        newUser.willSubstituteForGameTypes.indexOf(game.gameType) < 0)
     ) {
       throw new HttpResponseError(400, 'User to substitute has not given permission!');
     }

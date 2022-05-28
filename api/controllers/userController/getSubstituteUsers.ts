@@ -11,7 +11,10 @@ export class UserController_GetSubstituteUsers {
   constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {}
 
   @Get('getSubstituteUsers')
-  public async getSubstituteUsers(@Request() request: HttpRequest, @Query('gameType') gameType): Promise<User[]> {
+  public async getSubstituteUsers(
+    @Request() request: HttpRequest,
+    @Query('gameType') gameType
+  ): Promise<User[]> {
     const subUsers = await this.userRepository.substituteUsers();
     return subUsers.filter(x => x.willSubstituteForGameTypes.indexOf(gameType) >= 0);
   }

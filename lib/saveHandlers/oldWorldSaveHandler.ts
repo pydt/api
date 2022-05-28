@@ -33,7 +33,8 @@ export class OldWorldCivData implements CivData {
 
   set type(value: ActorType) {
     if (this.isReallyHuman) {
-      this.playerData.attributes.AIControlledToTurn = value === ActorType.AI ? AI_CONTROLLED_TURN : '0';
+      this.playerData.attributes.AIControlledToTurn =
+        value === ActorType.AI ? AI_CONTROLLED_TURN : '0';
     }
   }
 
@@ -50,7 +51,10 @@ export class OldWorldCivData implements CivData {
   }
 
   get isCurrentTurn() {
-    return +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'PlayerTurn').elements[0].text === this.index;
+    return (
+      +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'PlayerTurn')
+        .elements[0].text === this.index
+    );
   }
 
   get password() {
@@ -72,7 +76,10 @@ export class OldWorldSaveHandler implements SaveHandler {
     this.saveData = xml2js(entries[0].getData().toString('utf-8'));
 
     if (this.root.attributes.Version.indexOf('Play-Your-Damn-Turn-Support') < 0) {
-      throw new HttpResponseError(400, `To play Old World, the "Play Your Damn Turn Support" mod must be enabled!`);
+      throw new HttpResponseError(
+        400,
+        `To play Old World, the "Play Your Damn Turn Support" mod must be enabled!`
+      );
     }
   }
 
@@ -81,7 +88,9 @@ export class OldWorldSaveHandler implements SaveHandler {
   }
 
   get civData(): CivData[] {
-    return this.root.elements.filter(x => x.name === 'Player').map((p, i) => new OldWorldCivData(this.root, p, i));
+    return this.root.elements
+      .filter(x => x.name === 'Player')
+      .map((p, i) => new OldWorldCivData(this.root, p, i));
   }
 
   get gameSpeed(): string {
@@ -89,7 +98,8 @@ export class OldWorldSaveHandler implements SaveHandler {
   }
 
   get gameTurn(): number {
-    return +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'Turn').elements[0].text;
+    return +this.root.elements.find(x => x.name === 'Game').elements.find(x => x.name === 'Turn')
+      .elements[0].text;
   }
 
   get mapFile(): string {

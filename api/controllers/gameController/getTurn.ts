@@ -21,7 +21,11 @@ export class GameController_GetTurn {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('{gameId}/turn')
-  public async getTurn(@Request() request: HttpRequest, gameId: string, @Query() compressed = ''): Promise<GameTurnResponse> {
+  public async getTurn(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Query() compressed = ''
+  ): Promise<GameTurnResponse> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.currentPlayerSteamId !== request.user) {
@@ -48,7 +52,11 @@ export class GameController_GetTurn {
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     return {
-      downloadUrl: this.s3.signedGetUrl(fileParams, '(PYDT) Play This One!.' + civGame.saveExtension, 60)
+      downloadUrl: this.s3.signedGetUrl(
+        fileParams,
+        '(PYDT) Play This One!.' + civGame.saveExtension,
+        60
+      )
     };
   }
 }

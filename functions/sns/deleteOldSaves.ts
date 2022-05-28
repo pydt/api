@@ -26,7 +26,9 @@ export class DeleteOldSaves {
     if (resp.Contents.length > TURNS_TO_SAVE) {
       await this.s3.deleteObjects(
         Config.resourcePrefix + 'saves',
-        take(orderBy(resp.Contents, ['Key'], ['asc']), resp.Contents.length - TURNS_TO_SAVE).map(obj => obj.Key)
+        take(orderBy(resp.Contents, ['Key'], ['asc']), resp.Contents.length - TURNS_TO_SAVE).map(
+          obj => obj.Key
+        )
       );
     }
   }

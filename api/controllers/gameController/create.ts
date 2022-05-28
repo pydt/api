@@ -3,7 +3,10 @@ import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { v4 as uuid } from 'uuid';
 import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../../lib/discourseProvider';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
@@ -26,12 +29,18 @@ export class GameController_Create {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('create')
-  public async create(@Request() request: HttpRequest, @Body() body: CreateGameRequestBody): Promise<Game> {
+  public async create(
+    @Request() request: HttpRequest,
+    @Body() body: CreateGameRequestBody
+  ): Promise<Game> {
     const user = await this.userRepository.get(request.user);
     const pud = await this.pudRepository.get(request.user);
 
     if (!pud.emailAddress) {
-      throw new HttpResponseError(400, 'You need to set a notification email address before you can create a game.');
+      throw new HttpResponseError(
+        400,
+        'You need to set a notification email address before you can create a game.'
+      );
     }
 
     if (user.banned) {
@@ -43,7 +52,11 @@ export class GameController_Create {
 
     const games = await this.gameRepository.getGamesForUser(user);
     const hasFormingGame = games.some(game => {
-      return game.gameType === body.gameType && game.createdBySteamId === request.user && !game.inProgress;
+      return (
+        game.gameType === body.gameType &&
+        game.createdBySteamId === request.user &&
+        !game.inProgress
+      );
     });
 
     if (!user.canCreateMultipleGames && hasFormingGame) {

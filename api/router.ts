@@ -5,7 +5,13 @@ import { Router } from 'express';
 require('express-async-errors');
 import { ValidateError } from 'tsoa';
 import { loggingHandler, pydtLogger } from '../lib/logging';
-import { ErrorResponse, HttpRequest, HttpResponse, HttpResponseError, LambdaProxyEvent } from './framework';
+import {
+  ErrorResponse,
+  HttpRequest,
+  HttpResponse,
+  HttpResponseError,
+  LambdaProxyEvent
+} from './framework';
 import { RegisterRoutes } from './_gen/routes/routes';
 import { Config } from '../lib/config';
 
@@ -66,7 +72,10 @@ function methodHandler(method: string) {
 
             if (logError) {
               if (err instanceof ValidateError) {
-                pydtLogger.error(`Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`, err);
+                pydtLogger.error(
+                  `Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`,
+                  err
+                );
               } else {
                 pydtLogger.error(`Unhandled Exception from ${route}`, err);
               }

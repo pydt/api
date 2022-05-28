@@ -21,7 +21,11 @@ export class GameController_Edit {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/edit')
-  public async edit(@Request() request: HttpRequest, gameId: string, @Body() body: GameRequestBody): Promise<Game> {
+  public async edit(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: GameRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.createdBySteamId !== request.user) {
@@ -39,7 +43,10 @@ export class GameController_Edit {
 
     if (game.gameTurnRangeKey || 0 <= 1) {
       if (body.slots < game.players.length) {
-        throw new HttpResponseError(400, `You can't change the number of slots to less than the current number of players!`);
+        throw new HttpResponseError(
+          400,
+          `You can't change the number of slots to less than the current number of players!`
+        );
       }
 
       game.slots = body.slots;
@@ -50,7 +57,10 @@ export class GameController_Edit {
     }
 
     if (body.humans < game.players.filter(x => GameUtil.playerIsHuman(x)).length) {
-      throw new HttpResponseError(400, `You can't change the number of humans to less than the current number of humans!`);
+      throw new HttpResponseError(
+        400,
+        `You can't change the number of humans to less than the current number of humans!`
+      );
     }
 
     game.description = body.description;

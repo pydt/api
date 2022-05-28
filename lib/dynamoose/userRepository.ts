@@ -14,7 +14,10 @@ export interface IUserRepository extends IRepository<string, User> {
 }
 
 @provideSingleton(USER_REPOSITORY_SYMBOL)
-export class UserRepository extends BaseDynamooseRepository<string, User> implements IUserRepository {
+export class UserRepository
+  extends BaseDynamooseRepository<string, User>
+  implements IUserRepository
+{
   constructor() {
     super(Config.resourcePrefix + 'user', {
       steamId: {

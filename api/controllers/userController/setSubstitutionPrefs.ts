@@ -14,7 +14,10 @@ export class UserController_SetSubstitutionPrefs {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setSubstitutionPrefs')
-  public async setSubstitutionPrefs(@Request() request: HttpRequest, @Body() body: SetSubstitutionPrefsBody): Promise<User> {
+  public async setSubstitutionPrefs(
+    @Request() request: HttpRequest,
+    @Body() body: SetSubstitutionPrefsBody
+  ): Promise<User> {
     const user = await this.userRepository.get(request.user);
 
     if (user.turnsPlayed < 500) {

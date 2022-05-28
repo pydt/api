@@ -68,7 +68,13 @@ export class Civ6CivData implements CivData {
         this.slotHeaderVal--;
       }
     } else if (value) {
-      civ6.addChunk(this.wrapper.chunks, this.parsedCiv.LEADER_NAME, civ6.MARKERS.ACTOR_DATA[markerName], dataType, value);
+      civ6.addChunk(
+        this.wrapper.chunks,
+        this.parsedCiv.LEADER_NAME,
+        civ6.MARKERS.ACTOR_DATA[markerName],
+        dataType,
+        value
+      );
 
       this.slotHeaderVal++;
     }

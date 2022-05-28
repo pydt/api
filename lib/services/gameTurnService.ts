@@ -15,7 +15,10 @@ import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../snsProvider';
 import { UserUtil } from '../util/userUtil';
 import { GameUtil } from '../util/gameUtil';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
+import {
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
+  IPrivateUserDataRepository
+} from '../dynamoose/privateUserDataRepository';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -44,7 +47,10 @@ export class GameTurnService implements IGameTurnService {
   public async moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
     await Promise.all([this.closeGameTurn(game, gameTurn, user), this.createNextGameTurn(game)]);
 
-    await Promise.all([this.userRepository.saveVersioned(user), this.gameRepository.saveVersioned(game)]);
+    await Promise.all([
+      this.userRepository.saveVersioned(user),
+      this.gameRepository.saveVersioned(game)
+    ]);
 
     await this.sns.turnSubmitted(game);
   }
@@ -70,7 +76,10 @@ export class GameTurnService implements IGameTurnService {
     } catch (err) {
       // If error saving, delete the game turn and retry.  This is probably because
       // a previous save failed and the game turn already exists.
-      pydtLogger.warn(`Error saving game turn, deleting and trying again: ${JSON.stringify(nextTurn)}`, err);
+      pydtLogger.warn(
+        `Error saving game turn, deleting and trying again: ${JSON.stringify(nextTurn)}`,
+        err
+      );
 
       await this.gameTurnRepository.delete(nextTurn);
       await this.gameTurnRepository.saveVersioned(nextTurn);
@@ -245,7 +254,10 @@ export class GameTurnService implements IGameTurnService {
       return SaveHandlerFactory.getHandler(buffer, game);
     } catch (e) {
       // TODO: Should probably be a non-HTTP specific error type
-      throw new HttpResponseError(400, `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`);
+      throw new HttpResponseError(
+        400,
+        `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`
+      );
     }
   }
 

@@ -20,7 +20,10 @@ export class UserController_SetUserInformation {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('setUserInformation')
-  public async setUserInformation(@Request() request: HttpRequest, @Body() body: SetUserInformationBody): Promise<User> {
+  public async setUserInformation(
+    @Request() request: HttpRequest,
+    @Body() body: SetUserInformationBody
+  ): Promise<User> {
     const user = await this.userRepository.get(request.user);
     user.comments = (body.comments || '').substr(0, 50);
     user.timezone = body.timezone;

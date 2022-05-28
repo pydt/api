@@ -86,12 +86,18 @@ describe('GameController_FinishSubmit', () => {
           Body: zlib.gzipSync('Hello world')
         } as GetObjectResult)
       );
-    s3Mock.setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny())).returns(() => Promise.resolve());
+    s3Mock
+      .setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny()))
+      .returns(() => Promise.resolve());
     s3Mock.object.putObject({} as FileParams, 'asd', true);
 
     const sesMock = Mock.ofType<ISesProvider>();
-    sesMock.setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user1@email.com')).verifiable(Times.once());
-    sesMock.setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user2@email.com')).verifiable(Times.once());
+    sesMock
+      .setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user1@email.com'))
+      .verifiable(Times.once());
+    sesMock
+      .setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user2@email.com'))
+      .verifiable(Times.once());
 
     const gameTurnService = new GameTurnService(
       userRepository,
@@ -115,7 +121,13 @@ describe('GameController_FinishSubmit', () => {
       } as SaveHandler;
     };
 
-    const gcfs = new GameController_FinishSubmit(gameRepository, gameTurnRepository, userRepository, gameTurnService, s3Mock.object);
+    const gcfs = new GameController_FinishSubmit(
+      gameRepository,
+      gameTurnRepository,
+      userRepository,
+      gameTurnService,
+      s3Mock.object
+    );
 
     await gcfs.finishSubmit({ user: USER_1_ID } as HttpRequest, GAME_ID);
     sesMock.verifyAll();

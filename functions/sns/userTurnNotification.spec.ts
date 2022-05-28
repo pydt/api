@@ -137,7 +137,10 @@ describe('UserTurnNotification', () => {
     mocks.httpRequestMock.verifyAll();
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
     mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
-    mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.once());
+    mocks.emailMock.verify(
+      x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()),
+      Times.once()
+    );
   });
 
   it('should not try to call webhooks or send emails when not present on new turn', async () => {
@@ -150,7 +153,10 @@ describe('UserTurnNotification', () => {
     mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.never());
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
     mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
-    mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.never());
+    mocks.emailMock.verify(
+      x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()),
+      Times.never()
+    );
   });
 
   it('should send iot notify to all users when not in new turn mode', async () => {
@@ -170,6 +176,9 @@ describe('UserTurnNotification', () => {
         ),
       Times.once()
     );
-    mocks.emailMock.verify(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()), Times.never());
+    mocks.emailMock.verify(
+      x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), It.isAny()),
+      Times.never()
+    );
   });
 });

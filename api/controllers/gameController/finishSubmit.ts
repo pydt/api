@@ -3,7 +3,10 @@ import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import * as zlib from 'zlib';
 import { Config } from '../../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';
@@ -39,7 +42,10 @@ export class GameController_FinishSubmit {
       throw new HttpResponseError(400, `It's not your turn!`);
     }
 
-    const gameTurn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+    const gameTurn = await this.gameTurnRepository.get({
+      gameId: game.gameId,
+      turn: game.gameTurnRangeKey
+    });
     game.gameTurnRangeKey++;
 
     const users = await this.userRepository.getUsersForGame(game);
@@ -73,16 +79,28 @@ export class GameController_FinishSubmit {
     const gameDlc = game.dlc || [];
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
-    if (gameDlc.length !== saveHandler.parsedDlcs.length || difference(gameDlc, saveHandler.parsedDlcs).length) {
-      throw new HttpResponseError(400, `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`);
+    if (
+      gameDlc.length !== saveHandler.parsedDlcs.length ||
+      difference(gameDlc, saveHandler.parsedDlcs).length
+    ) {
+      throw new HttpResponseError(
+        400,
+        `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`
+      );
     }
 
     if (numCivs !== game.slots) {
-      throw new HttpResponseError(400, `Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`);
+      throw new HttpResponseError(
+        400,
+        `Invalid number of civs in save file! (actual: ${numCivs}, expected: ${game.slots})`
+      );
     }
 
     if (game.gameSpeed && game.gameSpeed !== saveHandler.gameSpeed) {
-      throw new HttpResponseError(400, `Invalid game speed in save file!  (actual: ${saveHandler.gameSpeed}, expected: ${game.gameSpeed})`);
+      throw new HttpResponseError(
+        400,
+        `Invalid game speed in save file!  (actual: ${saveHandler.gameSpeed}, expected: ${game.gameSpeed})`
+      );
     }
 
     if (game.mapFile) {
@@ -90,15 +108,24 @@ export class GameController_FinishSubmit {
 
       if (map && map.regex) {
         if (!new RegExp(map.regex).test(saveHandler.mapFile)) {
-          throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected regex: ${map.regex})`);
+          throw new HttpResponseError(
+            400,
+            `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected regex: ${map.regex})`
+          );
         }
       } else if (saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
-        throw new HttpResponseError(400, `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`);
+        throw new HttpResponseError(
+          400,
+          `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`
+        );
       }
     }
 
     if (game.mapSize && game.mapSize !== saveHandler.mapSize) {
-      throw new HttpResponseError(400, `Invalid map size in save file! (actual: ${saveHandler.mapSize}, expected: ${game.mapSize})`);
+      throw new HttpResponseError(
+        400,
+        `Invalid map size in save file! (actual: ${saveHandler.mapSize}, expected: ${game.mapSize})`
+      );
     }
 
     const newDefeatedPlayers = [];
@@ -113,7 +140,10 @@ export class GameController_FinishSubmit {
         if (!expectedCiv || expectedCiv === RANDOM_CIV.leaderKey) {
           game.players[i].civType = actualCiv;
         } else if (actualCiv !== expectedCiv) {
-          throw new HttpResponseError(400, `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`);
+          throw new HttpResponseError(
+            400,
+            `Incorrect civ type in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`
+          );
         }
 
         if (GameUtil.playerIsHuman(game.players[i])) {
@@ -177,7 +207,10 @@ export class GameController_FinishSubmit {
     }
 
     if (expectedRound !== parsedRound) {
-      throw new HttpResponseError(400, `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`);
+      throw new HttpResponseError(
+        400,
+        `Incorrect game turn in save file! (actual: ${parsedRound}, expected: ${expectedRound})`
+      );
     }
 
     game.currentPlayerSteamId = game.players[nextPlayerIndex].steamId;

@@ -1,6 +1,9 @@
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../../lib/ioc';
@@ -11,7 +14,10 @@ import { GameUtil } from '../../../lib/util/gameUtil';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { SurrenderBody } from './_models';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
+import {
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
+  IPrivateUserDataRepository
+} from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')
@@ -30,7 +36,11 @@ export class GameController_Surrender {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/surrender')
-  public async surrender(@Request() request: HttpRequest, gameId: string, @Body() body: SurrenderBody): Promise<Game> {
+  public async surrender(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: SurrenderBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
     let userId = request.user;
 
@@ -43,7 +53,10 @@ export class GameController_Surrender {
       const diffTime = new Date().getTime() - lastTurnTime;
 
       if (diffTime < 1000 * 60 * 60 * 24) {
-        throw new HttpResponseError(404, `You cannot kick a user if they haven't had 24 hours to play their turn.`);
+        throw new HttpResponseError(
+          404,
+          `You cannot kick a user if they haven't had 24 hours to play their turn.`
+        );
       }
 
       userId = body.kickUserId;
@@ -77,7 +90,10 @@ export class GameController_Surrender {
     const savePromises: Promise<User | Game | GameTurn | void>[] = [];
 
     if (game.players.filter(p => GameUtil.playerIsHuman(p)).length) {
-      const gameTurn = await this.gameTurnRepository.get({ gameId: gameId, turn: game.gameTurnRangeKey });
+      const gameTurn = await this.gameTurnRepository.get({
+        gameId: gameId,
+        turn: game.gameTurnRangeKey
+      });
 
       if (user.steamId === game.currentPlayerSteamId) {
         // Update the current player if it's the turn of the player who's surrendering
@@ -95,10 +111,16 @@ export class GameController_Surrender {
         gameTurn.startDate = new Date();
       }
 
-      savePromises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game), this.gameTurnRepository.saveVersioned(gameTurn));
+      savePromises.push(
+        this.gameTurnService.getAndUpdateSaveFileForGameState(game),
+        this.gameTurnRepository.saveVersioned(gameTurn)
+      );
     }
 
-    savePromises.push(this.userRepository.saveVersioned(user), this.gameRepository.saveVersioned(game));
+    savePromises.push(
+      this.userRepository.saveVersioned(user),
+      this.gameRepository.saveVersioned(game)
+    );
 
     await Promise.all(savePromises);
 

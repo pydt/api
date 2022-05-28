@@ -45,7 +45,9 @@ describe('GameController_FinishSubmit', () => {
       );
 
     const userRepositoryMock = Mock.ofType<IUserRepository>();
-    userRepositoryMock.setup(x => x.getUsersForGame(It.isAny())).returns(() => Promise.resolve<User[]>([]));
+    userRepositoryMock
+      .setup(x => x.getUsersForGame(It.isAny()))
+      .returns(() => Promise.resolve<User[]>([]));
 
     const s3Mock = Mock.ofType<IS3Provider>();
     s3Mock
@@ -65,7 +67,8 @@ describe('GameController_FinishSubmit', () => {
             civData: [{ isCurrentTurn: false }, { isCurrentTurn: true }],
             gameTurn: 5,
             parsedDlcs: [],
-            mapFile: '{4873eb62-8ccc-4574-b784-dda455e74e68}Maps/EarthMaps/EarthStandard_XP2.Civ6Map'
+            mapFile:
+              '{4873eb62-8ccc-4574-b784-dda455e74e68}Maps/EarthMaps/EarthStandard_XP2.Civ6Map'
           } as SaveHandler)
       );
 

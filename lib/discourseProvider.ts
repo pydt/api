@@ -32,7 +32,9 @@ export class DiscourseProvider implements IDiscourseProvider {
         json: true
       });
     } else {
-      pydtLogger.info(`Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`);
+      pydtLogger.info(
+        `Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`
+      );
     }
   }
 
@@ -48,7 +50,9 @@ export class DiscourseProvider implements IDiscourseProvider {
         json: true
       });
     } else {
-      pydtLogger.info(`Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`);
+      pydtLogger.info(
+        `Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`
+      );
     }
   }
 }

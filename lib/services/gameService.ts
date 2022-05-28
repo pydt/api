@@ -5,7 +5,10 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userReposi
 import { inject, provideSingleton } from '../ioc';
 import { Game } from '../models';
 import { UserUtil } from '../util/userUtil';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
+import {
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
+  IPrivateUserDataRepository
+} from '../dynamoose/privateUserDataRepository';
 
 export const GAME_SERVICE_SYMBOL = Symbol('IGameService');
 
@@ -44,7 +47,9 @@ export class GameService implements IGameService {
           message += ` by it's creator. :(`;
         }
 
-        promises.push(this.ses.sendEmail('Game Deleted', 'Game Deleted', message, pud.emailAddress));
+        promises.push(
+          this.ses.sendEmail('Game Deleted', 'Game Deleted', message, pud.emailAddress)
+        );
       }
     }
 

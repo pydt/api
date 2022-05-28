@@ -10,7 +10,10 @@ export const PYDT_METADATA: PydtMetadata = {
   randomCiv: RANDOM_CIV
 };
 
-export const PYDT_METADATA_HASH = crypto.createHash('md5').update(JSON.stringify(PYDT_METADATA)).digest('hex');
+export const PYDT_METADATA_HASH = crypto
+  .createHash('md5')
+  .update(JSON.stringify(PYDT_METADATA))
+  .digest('hex');
 
 export interface PydtMetadata {
   civGames: CivGame[];

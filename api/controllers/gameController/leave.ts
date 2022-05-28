@@ -7,7 +7,10 @@ import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
-import { PRIVATE_USER_DATA_REPOSITORY_SYMBOL, IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
+import {
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
+  IPrivateUserDataRepository
+} from '../../../lib/dynamoose/privateUserDataRepository';
 
 @Route('game')
 @Tags('game')
@@ -47,7 +50,10 @@ export class GameController_Leave {
 
     UserUtil.removeUserFromGame(user, game, false);
 
-    await Promise.all([this.gameRepository.saveVersioned(game), this.userRepository.saveVersioned(user)]);
+    await Promise.all([
+      this.gameRepository.saveVersioned(game),
+      this.userRepository.saveVersioned(user)
+    ]);
 
     const puds = await this.pudRepository.getUserDataForGame(game);
     const createdByUserData = puds.find(x => x.steamId === game.createdBySteamId);

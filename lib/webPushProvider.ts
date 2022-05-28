@@ -36,7 +36,8 @@ export class WebPushProvider implements IWebPushProvider {
       {
         vapidDetails: {
           subject: 'mailto:mike@playyourdamnturn.com',
-          publicKey: 'BJh1i7oz44uFwBjtIIN5B7AIyMlHvDt9LN8DbTl4xhgBIF2RrbLMF3B3ntlCK_3TaAL_AI0vK81E-pMCUWv8DO0',
+          publicKey:
+            'BJh1i7oz44uFwBjtIIN5B7AIyMlHvDt9LN8DbTl4xhgBIF2RrbLMF3B3ntlCK_3TaAL_AI0vK81E-pMCUWv8DO0',
           privateKey: Config.vapidPrivateKey
         }
       }

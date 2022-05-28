@@ -6,7 +6,11 @@ import { LambdaProxyEvent } from './framework';
 
 export const handler = loggingHandler(async (event: LambdaProxyEvent, context, iocContainer) => {
   const doug = iocContainer.resolve(WebsocketHandler);
-  return await doug.execute(event.requestContext.connectionId, event.requestContext.routeKey, event.body);
+  return await doug.execute(
+    event.requestContext.connectionId,
+    event.requestContext.routeKey,
+    event.body
+  );
 });
 
 @injectable()

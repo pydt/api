@@ -15,7 +15,11 @@ export class GameController_UpdateTurnOrder {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/updateTurnOrder')
-  public async updateTurnOrder(@Request() request: HttpRequest, gameId: string, @Body() body: UpdateTurnOrderRequestBody): Promise<Game> {
+  public async updateTurnOrder(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: UpdateTurnOrderRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.createdBySteamId !== request.user) {
@@ -31,7 +35,10 @@ export class GameController_UpdateTurnOrder {
     }
 
     if (game.createdBySteamId !== body.steamIds[0]) {
-      throw new HttpResponseError(400, `The player that created the game must be the first player!`);
+      throw new HttpResponseError(
+        400,
+        `The player that created the game must be the first player!`
+      );
     }
 
     const newPlayers = compact(

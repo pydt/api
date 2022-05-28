@@ -1,7 +1,10 @@
 import * as bcrypt from 'bcryptjs';
 import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
-import { IPrivateUserDataRepository, PRIVATE_USER_DATA_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/privateUserDataRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../../lib/ioc';
@@ -28,7 +31,11 @@ export class GameController_Join {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/join')
-  public async join(@Request() request: HttpRequest, gameId: string, @Body() body: JoinGameRequestBody): Promise<Game> {
+  public async join(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: JoinGameRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
     let targetPlayer: GamePlayer;
 
@@ -53,7 +60,10 @@ export class GameController_Join {
         throw new HttpResponseError(400, 'You can only join this game as a random civ!');
       }
 
-      if (body.playerCiv !== RANDOM_CIV.leaderKey && game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0) {
+      if (
+        body.playerCiv !== RANDOM_CIV.leaderKey &&
+        game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0
+      ) {
         throw new HttpResponseError(400, 'Civ already in Game');
       }
     }
@@ -87,7 +97,10 @@ export class GameController_Join {
     const pud = puds.find(x => x.steamId === request.user);
 
     if (!pud.emailAddress) {
-      throw new HttpResponseError(404, 'You need to set an email address for notifications before joining a game.');
+      throw new HttpResponseError(
+        404,
+        'You need to set an email address for notifications before joining a game.'
+      );
     }
 
     if (user.banned) {
@@ -99,7 +112,10 @@ export class GameController_Join {
 
     UserUtil.addUserToGame(user, game);
 
-    await Promise.all([this.gameRepository.saveVersioned(game), this.userRepository.saveVersioned(user)]);
+    await Promise.all([
+      this.gameRepository.saveVersioned(game),
+      this.userRepository.saveVersioned(user)
+    ]);
 
     const createdByUserData = puds.find(u => {
       return u.steamId === game.createdBySteamId;

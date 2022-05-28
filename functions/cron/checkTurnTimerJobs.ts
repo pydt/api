@@ -1,7 +1,14 @@
 import { injectable } from 'inversify';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
-import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../lib/dynamoose/gameTurnRepository';
+import {
+  IScheduledJobRepository,
+  JOB_TYPES,
+  SCHEDULED_JOB_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/scheduledJobRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
@@ -19,7 +26,8 @@ export class CheckTurnTimerJobs {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
+    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL)
+    private scheduledJobRepository: IScheduledJobRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
   ) {}
@@ -31,7 +39,9 @@ export class CheckTurnTimerJobs {
       await this.processJobs(jobs, this.checkTurnTimer);
     }
 
-    const vacationJobs = await this.scheduledJobRepository.getWaitingJobs(JOB_TYPES.TURN_TIMER_VACATION);
+    const vacationJobs = await this.scheduledJobRepository.getWaitingJobs(
+      JOB_TYPES.TURN_TIMER_VACATION
+    );
 
     if (vacationJobs && vacationJobs.length) {
       await this.processJobs(vacationJobs, this.checkVacation);
@@ -53,13 +63,21 @@ export class CheckTurnTimerJobs {
 
   private async checkTurnTimer(game: Game) {
     if (game.turnTimerMinutes) {
-      const turn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+      const turn = await this.gameTurnRepository.get({
+        gameId: game.gameId,
+        turn: game.gameTurnRangeKey
+      });
 
       if (!turn) {
-        throw new Error(`checkTurnTimer: Turn ${game.gameTurnRangeKey} for game ${game.gameId} not found`);
+        throw new Error(
+          `checkTurnTimer: Turn ${game.gameTurnRangeKey} for game ${game.gameId} not found`
+        );
       }
 
-      if (!turn.endDate && new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000) {
+      if (
+        !turn.endDate &&
+        new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000
+      ) {
         pydtLogger.info('Skipping turn due to timer in game ' + game.gameId);
         await this.gameTurnService.skipTurn(game, turn);
       }
@@ -70,7 +88,10 @@ export class CheckTurnTimerJobs {
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
     if (user.vacationMode) {
-      const turn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: game.gameTurnRangeKey });
+      const turn = await this.gameTurnRepository.get({
+        gameId: game.gameId,
+        turn: game.gameTurnRangeKey
+      });
       pydtLogger.info('Skipping turn due to vacation mode in game ' + game.gameId);
       await this.gameTurnService.skipTurn(game, turn);
     }

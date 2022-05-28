@@ -10,7 +10,10 @@ export interface IPrivateUserDataRepository extends IRepository<string, PrivateU
 }
 
 @provideSingleton(PRIVATE_USER_DATA_REPOSITORY_SYMBOL)
-export class PrivateUserDataRepository extends BaseDynamooseRepository<string, PrivateUserData> implements IPrivateUserDataRepository {
+export class PrivateUserDataRepository
+  extends BaseDynamooseRepository<string, PrivateUserData>
+  implements IPrivateUserDataRepository
+{
   constructor() {
     super(Config.resourcePrefix + 'private-user-data', {
       steamId: {

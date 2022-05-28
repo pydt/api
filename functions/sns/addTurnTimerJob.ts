@@ -1,7 +1,14 @@
 import { injectable } from 'inversify';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
-import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../../lib/dynamoose/gameTurnRepository';
-import { IScheduledJobRepository, JOB_TYPES, SCHEDULED_JOB_REPOSITORY_SYMBOL } from '../../lib/dynamoose/scheduledJobRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../lib/dynamoose/gameTurnRepository';
+import {
+  IScheduledJobRepository,
+  JOB_TYPES,
+  SCHEDULED_JOB_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/scheduledJobRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
@@ -18,7 +25,8 @@ export class AddTurnTimerJob {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL) private scheduledJobRepository: IScheduledJobRepository,
+    @inject(SCHEDULED_JOB_REPOSITORY_SYMBOL)
+    private scheduledJobRepository: IScheduledJobRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
   ) {}
 
