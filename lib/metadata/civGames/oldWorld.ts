@@ -77,11 +77,13 @@ export const OLD_WORLD_GAME: CivGame = {
     [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/pydt_unknown' }
   },
   dataPaths: {
+    [GameStore.Steam]: '/OldWorld',
     [GameStore.Epic]: '/OldWorld'
   },
   savePath: '/Saves/Multiplayer/',
   saveExtension: 'zip',
   runUrls: {
+    [GameStore.Steam]: 'steam://run/597180',
     [GameStore.Epic]: 'com.epicgames.launcher://apps/Nightjar?action=launch&silent=true'
   }
 };

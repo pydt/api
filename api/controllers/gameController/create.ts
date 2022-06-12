@@ -96,7 +96,13 @@ export class GameController_Create {
       turnTimerMinutes: body.turnTimerMinutes
     };
 
-    const topic = await this.discourse.addGameTopic(newGame);
+    const firstTimeHosting =
+      games.every(x => x.createdBySteamId !== user.steamId) &&
+      (await this.gameRepository.getCompletedGamesForUser(user)).every(
+        x => x.createdBySteamId !== user.steamId
+      );
+
+    const topic = await this.discourse.addGameTopic(newGame, firstTimeHosting);
 
     if (topic) {
       newGame.discourseTopicId = topic.topic_id;
