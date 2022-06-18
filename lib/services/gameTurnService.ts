@@ -253,11 +253,14 @@ export class GameTurnService implements IGameTurnService {
     try {
       return SaveHandlerFactory.getHandler(buffer, game);
     } catch (e) {
-      // TODO: Should probably be a non-HTTP specific error type
-      throw new HttpResponseError(
-        400,
-        `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`
-      );
+      if (e instanceof HttpResponseError) {
+        throw e;
+      } else {
+        throw new HttpResponseError(
+          400,
+          `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`
+        );
+      }
     }
   }
 
