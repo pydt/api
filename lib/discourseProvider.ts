@@ -17,7 +17,7 @@ export class DiscourseProvider implements IDiscourseProvider {
 
   public async addGameTopic(game: Game, firstTimeHosting?: boolean) {
     if (Config.activeStage === 'prod') {
-      return await this.http.request({
+      const topic = await this.http.request({
         method: 'POST',
         headers: {
           'Api-Key': Config.discourseApiKey,
@@ -26,16 +26,24 @@ export class DiscourseProvider implements IDiscourseProvider {
         uri: `https://discourse.playyourdamnturn.com/posts`,
         form: {
           title: `${game.displayName} (${game.gameId.substring(0, 8)})`,
-          raw: `Smack talk goes here for ${
-            game.displayName
-          }!  Game URL: https://playyourdamnturn.com/game/${game.gameId} ${
-            firstTimeHosting
-              ? `
+          raw: `Smack talk goes here for ${game.displayName}!  Game URL: https://playyourdamnturn.com/game/${game.gameId}`,
+          category: 5
+        },
+        json: true
+      });
 
----
-
-**It looks like this is your first time hosting a game, welcome!**
-
+      if (firstTimeHosting) {
+        await this.http.request({
+          method: 'POST',
+          headers: {
+            'Api-Key': Config.discourseApiKey,
+            'Api-Username': 'system'
+          },
+          uri: `https://discourse.playyourdamnturn.com/posts`,
+          form: {
+            topic_id: topic.topic_id,
+            raw: `**It looks like this is your first time hosting a game, welcome!**
+  
 :spiral_notepad: [How to create your PYDT game](https://discourse.playyourdamnturn.com/t/how-to-setup-a-game-with-pydt/6486)
 
 :tv: [See a quick youtube video of PYDT](https://www.youtube.com/watch?v=L4PeMesClTI)
@@ -43,12 +51,12 @@ export class DiscourseProvider implements IDiscourseProvider {
 :speaking_head: [Join our quiet discord. Help, News and New Games](https://discord.gg/CYhHSzv)
 
 **If you need help, [Post in Game Support](https://discourse.playyourdamnturn.com/c/game-support) or come to discord! :+1:**`
-              : ''
-          }`,
-          category: 5
-        },
-        json: true
-      });
+          },
+          json: true
+        });
+      }
+
+      return topic;
     } else {
       pydtLogger.info(
         `Ignoring request to create discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`
