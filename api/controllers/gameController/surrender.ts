@@ -18,6 +18,7 @@ import {
   PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
   IPrivateUserDataRepository
 } from '../../../lib/dynamoose/privateUserDataRepository';
+import { Config } from '../../../lib/config';
 
 @Route('game')
 @Tags('game')
@@ -147,7 +148,8 @@ export class GameController_Surrender {
             this.ses.sendEmail(
               `A player has ${desc} from ${game.displayName}!`,
               `A player has ${desc} from ${game.displayName}!`,
-              `<b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(`,
+              `<b>${user.displayName}</b> has ${desc} from <b>${game.displayName}</b>. :(
+              <br /><br />Game URL: ${Config.webUrl}/game/${game.gameId}`,
               curUserData.emailAddress
             )
           );
