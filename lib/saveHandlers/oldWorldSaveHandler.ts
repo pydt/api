@@ -118,6 +118,10 @@ export class OldWorldSaveHandler implements SaveHandler {
     // Not implemented...
   }
 
+  cleanupSave() {
+    // Not implemented...
+  }
+
   getData(): Buffer {
     const zip = new AdmZip();
     zip.addFile(

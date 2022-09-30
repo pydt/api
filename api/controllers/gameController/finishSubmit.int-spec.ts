@@ -116,6 +116,7 @@ describe('GameController_FinishSubmit', () => {
           { isCurrentTurn: true, type: ActorType.HUMAN, leaderName: 'two' }
         ],
         getData: () => Buffer.of(1, 2, 3, 4),
+        cleanupSave: (game: Game) => null,
         gameTurn: 5,
         parsedDlcs: []
       } as SaveHandler;

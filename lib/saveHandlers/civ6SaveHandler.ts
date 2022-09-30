@@ -1,6 +1,8 @@
 import * as civ6 from 'civ6-save-parser';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
 import { CIV6_DLCS } from '../metadata/civGames/civ6';
+import { Game } from '../models';
+import { GameUtil } from '../util/gameUtil';
 
 const ACTOR_TYPE_MAP = [
   { intVal: 1, actorType: ActorType.AI },
@@ -43,6 +45,10 @@ export class Civ6CivData implements CivData {
     return this.parsedCiv.IS_CURRENT_TURN && !!this.parsedCiv.IS_CURRENT_TURN.data;
   }
 
+  set isCurrentTurn(value: boolean) {
+    this.setValue('IS_CURRENT_TURN', civ6.DATA_TYPES.BOOLEAN, value);
+  }
+
   get password() {
     return (this.parsedCiv.PLAYER_PASSWORD || {}).data;
   }
@@ -61,13 +67,13 @@ export class Civ6CivData implements CivData {
 
   private setValue(markerName, dataType, value) {
     if (this.parsedCiv[markerName]) {
-      if (value) {
+      if (value || value === false) {
         civ6.modifyChunk(this.wrapper.chunks, this.parsedCiv[markerName], value);
       } else {
         civ6.deleteChunk(this.wrapper.chunks, this.parsedCiv[markerName]);
         this.slotHeaderVal--;
       }
-    } else if (value) {
+    } else if (value || value === false) {
       civ6.addChunk(
         this.wrapper.chunks,
         this.parsedCiv.LEADER_NAME,
@@ -122,6 +128,22 @@ export class Civ6SaveHandler implements SaveHandler {
 
   setCurrentTurnIndex() {
     // Not implemented...
+  }
+
+  cleanupSave(game: Game) {
+    const index = GameUtil.getCurrentPlayerIndex(game);
+
+    for (let i = 0; i < this.civData.length; i++) {
+      const curCiv = this.civData[i];
+
+      if (i !== index && curCiv.type === ActorType.HUMAN) {
+        if (curCiv.isCurrentTurn) {
+          // If current turn is set for a human and it's not their turn, remove the flag
+          // Fixes turn timer issue with civ 6!
+          curCiv.isCurrentTurn = false;
+        }
+      }
+    }
   }
 
   getData() {

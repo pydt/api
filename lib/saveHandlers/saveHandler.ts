@@ -1,3 +1,5 @@
+import { Game } from '../models';
+
 export interface SaveHandler {
   civData: CivData[];
 
@@ -8,6 +10,7 @@ export interface SaveHandler {
   mapSize: string;
 
   setCurrentTurnIndex(newIndex: number);
+  cleanupSave(game: Game);
   getData(): Buffer;
 }
 

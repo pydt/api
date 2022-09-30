@@ -103,6 +103,10 @@ export class Civ5SaveHandler implements SaveHandler {
     this.reparse();
   }
 
+  cleanupSave() {
+    // Not implemented...
+  }
+
   getData(): Buffer {
     return this.rawSave;
   }

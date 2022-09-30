@@ -228,6 +228,8 @@ export class GameTurnService implements IGameTurnService {
       }
     }
 
+    handler.cleanupSave(game);
+
     const saveKey = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
     const uncompressedBody = handler.getData();
 
@@ -303,7 +305,7 @@ export class GameTurnService implements IGameTurnService {
     }
 
     if (humanCount < 3) {
-      pydtLogger.warn(`Need at least 2 human players to skip!`);
+      pydtLogger.warn(`Need at least 3 human players to skip!`);
       return;
     }
 

@@ -240,7 +240,7 @@ export const CIV6_MAPS = [
 export const CIV6_GAME: CivGame = {
   id: 'CIV6',
   displayName: 'Civilization 6',
-  turnTimerSupported: false,
+  turnTimerSupported: true,
   assetPrefix: ASSET_PREFIX,
   dlcs: CIV6_DLCS,
   gameSpeeds: CIV6_GAME_SPEEDS,
