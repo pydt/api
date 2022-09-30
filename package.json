@@ -7,7 +7,7 @@
     "aws-xray-sdk": "3.3.4",
     "bcryptjs": "2.4.3",
     "civ6-save-parser": "^1.2.2",
-    "dynamoose": "1.11.1",
+    "dynamoose": "3.1.0",
     "express": "4.17.3",
     "express-async-errors": "^3.1.1",
     "generate-password": "1.7.0",
