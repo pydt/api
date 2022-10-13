@@ -87,7 +87,7 @@ export class CheckTurnTimerJobs {
   private async checkVacation(game: Game) {
     const user = await this.userRepository.get(game.currentPlayerSteamId);
 
-    if (user.vacationMode) {
+    if (user.vacationMode && game.turnTimerMinutes) {
       const turn = await this.gameTurnRepository.get({
         gameId: game.gameId,
         turn: game.gameTurnRangeKey
