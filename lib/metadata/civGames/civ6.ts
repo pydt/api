@@ -33,6 +33,7 @@ export const CIV6_DLCS = [
   DlcFactory('8424840C-92EF-4426-A9B4-B4E0CB818049', 'Babylon Pack'),
   DlcFactory('A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C', 'Vietnam and Kublai Khan Pack'),
   DlcFactory('FFDF4E79-DEE2-47BB-919B-F5739106627A', 'Portugal Pack'),
+  DlcFactory('7A66DB58-B354-4061-8C80-95B638DD6F6C', 'Great Negotiators'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -41,6 +42,9 @@ const ASSET_PREFIX = '';
 
 export const CIV6_LEADERS = [
   RANDOM_CIV,
+  CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_ABRAHAM_LINCOLN', ASSET_PREFIX, {
+    dlcId: '7A66DB58-B354-4061-8C80-95B638DD6F6C'
+  }),
   CivDefFactory('CIVILIZATION_MACEDON', 'LEADER_ALEXANDER', ASSET_PREFIX, {
     dlcId: 'E2749E9A-8056-45CD-901B-C368C8E83DEB'
   }),
@@ -151,6 +155,9 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_KONGO', 'LEADER_MVEMBA', ASSET_PREFIX, {
     leaderDisplayName: 'Mvemba a Nzinga'
   }),
+  CivDefFactory('CIVILIZATION_KONGO', 'LEADER_NZINGA_MBANDE', ASSET_PREFIX, {
+    dlcId: '7A66DB58-B354-4061-8C80-95B638DD6F6C'
+  }),
   CivDefFactory('CIVILIZATION_INCA', 'LEADER_PACHACUTI', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
   }),
@@ -173,7 +180,13 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_SCOTLAND', 'LEADER_ROBERT_THE_BRUCE', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
-  CivDefFactory('CIVILIZATION_ARABIA', 'LEADER_SALADIN', ASSET_PREFIX),
+  CivDefFactory('CIVILIZATION_ARABIA', 'LEADER_SALADIN', ASSET_PREFIX, {
+    leaderDisplayName: 'Saladin (Vizier)'
+  }),
+  CivDefFactory('CIVILIZATION_ARABIA', 'LEADER_SALADIN_ALT', ASSET_PREFIX, {
+    leaderDisplayName: 'Saladin (Sultan)',
+    dlcId: '7A66DB58-B354-4061-8C80-95B638DD6F6C'
+  }),
   CivDefFactory('CIVILIZATION_KOREA', 'LEADER_SEONDEOK', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
