@@ -33,7 +33,13 @@ export const CIV6_DLCS = [
   DlcFactory('8424840C-92EF-4426-A9B4-B4E0CB818049', 'Babylon Pack'),
   DlcFactory('A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C', 'Vietnam and Kublai Khan Pack'),
   DlcFactory('FFDF4E79-DEE2-47BB-919B-F5739106627A', 'Portugal Pack'),
-  DlcFactory('7A66DB58-B354-4061-8C80-95B638DD6F6C', 'Great Negotiators'),
+  DlcFactory('7A66DB58-B354-4061-8C80-95B638DD6F6C', 'Great Negotiators Leader Pack'),
+  DlcFactory(
+    '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+    'Julius Caesar Leader Pack',
+    false,
+    'You must link your 2K account to get this DLC!'
+  ),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -112,6 +118,9 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_KHMER', 'LEADER_JAYAVARMAN', ASSET_PREFIX, {
     dlcId: '1F367231-A040-4793-BDBB-088816853683'
+  }),
+  CivDefFactory('CIVILIZATION_ROME', 'LEADER_JULIUS_CAESAR', ASSET_PREFIX, {
+    dlcId: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2'
   }),
   CivDefFactory('CIVILIZATION_PORTUGAL', 'LEADER_JOAO_III', ASSET_PREFIX, {
     dlcId: 'FFDF4E79-DEE2-47BB-919B-F5739106627A'

@@ -89,13 +89,20 @@ export interface DLC {
   id: string;
   displayName: string;
   major: boolean;
+  extraInfo?: string;
 }
 
-export function DlcFactory(id: string, displayName: string, major = false): DLC {
+export function DlcFactory(
+  id: string,
+  displayName: string,
+  major = false,
+  extraInfo?: string
+): DLC {
   return {
     id,
     displayName,
-    major
+    major,
+    extraInfo
   };
 }
 
