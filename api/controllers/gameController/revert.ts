@@ -46,7 +46,7 @@ export class GameController_Revert {
         return p.steamId === curGameTurn.playerSteamId;
       });
 
-      if (GameUtil.playerIsHuman(player)) {
+      if (player && GameUtil.playerIsHuman(player)) {
         lastTurn = curGameTurn;
       }
     } while (!lastTurn);
