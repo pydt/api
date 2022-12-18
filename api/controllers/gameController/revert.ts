@@ -37,17 +37,20 @@ export class GameController_Revert {
 
     let turn = game.gameTurnRangeKey;
     let lastTurn: GameTurn;
+    let prevPlayerIndex = -1;
 
     do {
       turn--;
       const curGameTurn = await this.gameTurnRepository.get({ gameId: game.gameId, turn: turn });
 
-      const player = game.players.find(p => {
+      prevPlayerIndex = game.players.findIndex(p => {
         return p.steamId === curGameTurn.playerSteamId;
       });
 
-      if (player && GameUtil.playerIsHuman(player)) {
-        lastTurn = curGameTurn;
+      if (prevPlayerIndex >= 0) {
+        if (GameUtil.playerIsHuman(game.players[prevPlayerIndex])) {
+          lastTurn = curGameTurn;
+        }
       }
     } while (!lastTurn);
 
@@ -69,7 +72,6 @@ export class GameController_Revert {
 
     // Update game record
     const curPlayerIndex = GameUtil.getCurrentPlayerIndex(game);
-    const prevPlayerIndex = GameUtil.getPreviousPlayerIndex(game);
 
     if (prevPlayerIndex >= curPlayerIndex) {
       game.round--;
