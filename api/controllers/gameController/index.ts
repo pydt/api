@@ -8,6 +8,7 @@ export * from './getTurns';
 export * from './join';
 export * from './leave';
 export * from './listOpen';
+export * from './refreshState';
 export * from './replacePlayer';
 export * from './resetGameStateOnNextUpload';
 export * from './revert';
