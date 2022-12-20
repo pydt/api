@@ -40,6 +40,7 @@ export const CIV6_DLCS = [
     false,
     'You must link your 2K account to get this DLC!'
   ),
+  DlcFactory('F48213B4-56F5-45DD-92F7-AC78E49BDA49', 'Great Commanders Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -164,6 +165,9 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_KONGO', 'LEADER_MVEMBA', ASSET_PREFIX, {
     leaderDisplayName: 'Mvemba a Nzinga'
   }),
+  CivDefFactory('CIVILIZATION_PERSIA', 'LEADER_NADER_SHAH', ASSET_PREFIX, {
+    dlcId: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49'
+  }),
   CivDefFactory('CIVILIZATION_KONGO', 'LEADER_NZINGA_MBANDE', ASSET_PREFIX, {
     dlcId: '7A66DB58-B354-4061-8C80-95B638DD6F6C'
   }),
@@ -206,7 +210,12 @@ export const CIV6_LEADERS = [
     dlcId: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9'
   }),
   CivDefFactory('CIVILIZATION_OTTOMAN', 'LEADER_SULEIMAN', ASSET_PREFIX, {
-    dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
+    dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68',
+    civDisplayName: 'Suleiman (Kanuni)'
+  }),
+  CivDefFactory('CIVILIZATION_OTTOMAN', 'LEADER_SULEIMAN_ALT', ASSET_PREFIX, {
+    dlcId: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+    leaderDisplayName: 'Suleiman (Muhteşem)'
   }),
   CivDefFactory('CIVILIZATION_GEORGIA', 'LEADER_TAMAR', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
@@ -217,6 +226,9 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT_ROUGHRIDER', ASSET_PREFIX, {
     leaderDisplayName: 'Teddy Roosevelt (Rough Rider)',
     dlcId: '113D9459-0A3B-4FCB-A49C-483F40303575'
+  }),
+  CivDefFactory('CIVILIZATION_JAPAN', 'LEADER_TOKUGAWA', ASSET_PREFIX, {
+    dlcId: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49'
   }),
   CivDefFactory('CIVILIZATION_SCYTHIA', 'LEADER_TOMYRIS', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_ROME', 'LEADER_TRAJAN', ASSET_PREFIX),
