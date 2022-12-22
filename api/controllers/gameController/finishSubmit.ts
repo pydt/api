@@ -94,14 +94,27 @@ export class GameController_FinishSubmit {
     const gameDlc = game.dlc || [];
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
-    if (
-      gameDlc.length !== saveHandler.parsedDlcs.length ||
-      difference(gameDlc, saveHandler.parsedDlcs).length ||
-      difference(saveHandler.parsedDlcs, gameDlc).length
-    ) {
+    const notInSave = difference(gameDlc, saveHandler.parsedDlcs);
+    const notInGame = difference(saveHandler.parsedDlcs, gameDlc);
+
+    if (notInSave.length || notInGame.length) {
       throw new HttpResponseError(
         400,
-        `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!`
+        `DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!${
+          notInSave.length
+            ? `
+Enabled but not in save: ${notInSave
+                .map(x => civGame.dlcs.find(y => y.id === x)?.displayName)
+                .join(', ')}`
+            : ''
+        }${
+          notInGame.length
+            ? `
+In save but not enabled: ${notInGame
+                .map(x => civGame.dlcs.find(y => y.id === x)?.displayName)
+                .join(', ')}`
+            : ''
+        }`
       );
     }
 
