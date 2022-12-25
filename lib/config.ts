@@ -29,7 +29,7 @@ class ConfigClass {
     return process.env.COMMIT_HASH as string;
   }
   public get runningLocal() {
-    return !!process.env.RUNNING_LOCAL;
+    return !!process.env.IS_OFFLINE;
   }
   public get vapidPrivateKey() {
     return process.env.VAPID_PRIVATE_KEY as string;

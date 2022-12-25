@@ -2,7 +2,7 @@
 import { reduce } from 'lodash';
 import { LambdaProxyEvent } from './lambdaProxyEvent';
 import { EventEmitter } from 'events';
-import { Subsegment } from 'aws-xray-sdk';
+import type { Subsegment } from 'aws-xray-sdk';
 
 export class HttpRequest extends EventEmitter {
   public body: any;
