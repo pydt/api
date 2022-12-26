@@ -28,7 +28,6 @@ provider:
   tracing:
     lambda: true
   stage: dev
-  lambdaHashingVersion: "20200924"
   httpApi:
     cors:
       allowedOrigins:
@@ -43,28 +42,30 @@ provider:
         - Authorization
         - Metadata-Hash
       maxAge: 600
-  iamRoleStatements:
-    - Effect: Allow
-      Action: "dynamodb:*"
-      Resource: "arn:aws:dynamodb:*:*:table/${self:custom.resourcePrefix}*"
-    - Effect: Allow
-      Action: "iot:*"
-      Resource: "*"
-    - Effect: Allow
-      Action: "kms:*"
-      Resource: "*"
-    - Effect: Allow
-      Action: "s3:*"
-      Resource: "arn:aws:s3:::${self:custom.resourcePrefix}saves*"
-    - Effect: Allow
-      Action: "sns:*"
-      Resource: "*"
-    - Effect: Allow
-      Action: "ses:*"
-      Resource: "*"
-    - Effect: Allow
-      Action: "sts:*"
-      Resource: "*"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: "dynamodb:*"
+          Resource: "arn:aws:dynamodb:*:*:table/${self:custom.resourcePrefix}*"
+        - Effect: Allow
+          Action: "iot:*"
+          Resource: "*"
+        - Effect: Allow
+          Action: "kms:*"
+          Resource: "*"
+        - Effect: Allow
+          Action: "s3:*"
+          Resource: "arn:aws:s3:::${self:custom.resourcePrefix}saves*"
+        - Effect: Allow
+          Action: "sns:*"
+          Resource: "*"
+        - Effect: Allow
+          Action: "ses:*"
+          Resource: "*"
+        - Effect: Allow
+          Action: "sts:*"
+          Resource: "*"
   environment:
     SERVERLESS_STAGE: ${self:custom.activeStage}
     RESOURCE_PREFIX: ${self:custom.resourcePrefix}
