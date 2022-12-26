@@ -1,7 +1,8 @@
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { BaseDynamooseRepository, IRepository } from './common';
-import { PrivateUserData, Game } from '../models';
+import { PrivateUserData, Game, WebPushSubscription } from '../models';
+import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
 
 export const PRIVATE_USER_DATA_REPOSITORY_SYMBOL = Symbol('IPrivateUserDataRepository');
 
@@ -20,11 +21,11 @@ export class PrivateUserDataRepository
         type: String,
         hashKey: true
       },
-      websocketConnectionIds: [String],
+      websocketConnectionIds: legacyStringSet(),
       emailAddress: String,
-      newTurnEmails: Boolean,
+      newTurnEmails: legacyBoolean(),
       webhookUrl: String,
-      webPushSubscriptions: {
+      /* webPushSubscriptions: {
         type: Array,
         schema: {
           endpoint: String,
@@ -33,6 +34,12 @@ export class PrivateUserDataRepository
             auth: String
           }
         }
+      } */
+      webPushSubscriptions: {
+        // Legacy complex array, see above
+        type: String,
+        get: (value: string) => JSON.parse(value),
+        pydtSet: (value: WebPushSubscription[]) => JSON.stringify(value)
       }
     });
   }

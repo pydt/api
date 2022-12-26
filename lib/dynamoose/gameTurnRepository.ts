@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { GameTurn, GameTurnKey } from '../models';
+import { legacyBoolean } from '../util/dynamooseLegacy';
 import { BaseDynamooseRepository, IRepository } from './common';
 
 export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
@@ -41,7 +42,7 @@ export class GameTurnRepository
         }
       },
       endDate: Date,
-      skipped: Boolean
+      skipped: legacyBoolean()
     });
   }
 

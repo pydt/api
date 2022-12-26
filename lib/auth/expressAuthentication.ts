@@ -1,4 +1,5 @@
 import { HttpRequest, HttpResponseError } from '../../api/framework/index';
+import { Config } from '../config';
 import { pydtLogger } from '../logging';
 import { JwtUtil } from './jwtUtil';
 
@@ -12,7 +13,9 @@ export async function expressAuthentication(
     try {
       if (request.headers && request.headers['authorization']) {
         const steamId = JwtUtil.parseToken(request.headers['authorization']);
-        request.subSegment.addAnnotation('user', steamId);
+        if (!Config.runningLocal) {
+          request.subSegment.addAnnotation('user', steamId);
+        }
         return steamId;
       }
     } catch (e) {

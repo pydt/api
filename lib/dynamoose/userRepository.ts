@@ -2,7 +2,8 @@ import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { User, DeprecatedUser } from '../models/user';
 import { BaseDynamooseRepository, IRepository } from './common';
-import { Game } from '../models';
+import { Game, GameTypeTurnData } from '../models';
+import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
 
 export const USER_REPOSITORY_SYMBOL = Symbol('IUserRepository');
 
@@ -33,9 +34,9 @@ export class UserRepository
       avatarFull: String,
       steamProfileUrl: String,
       emailAddress: String, // Obsolete
-      activeGameIds: [String],
-      inactiveGameIds: [String],
-      vacationMode: Boolean,
+      activeGameIds: legacyStringSet(),
+      inactiveGameIds: legacyStringSet(),
+      vacationMode: legacyBoolean(),
       timezone: String,
       comments: String,
       lastTurnEndDate: Date,
@@ -61,7 +62,7 @@ export class UserRepository
         type: Number,
         default: 0
       },
-      statsByGameType: [
+      /*statsByGameType: [
         {
           gameType: String,
           lastTurnEndDate: Date,
@@ -94,11 +95,30 @@ export class UserRepository
             default: 0
           }
         }
-      ],
-      willSubstituteForGameTypes: [String],
+      ],*/
+      statsByGameType: {
+        // Legacy complex array, see above
+        type: String,
+        get: (value: string) => JSON.parse(value),
+        pydtSet: (value: GameTypeTurnData[]) => {
+          return JSON.stringify(
+            value.map(x => ({
+              ...x,
+              activeGames: x.turnsPlayed || 0,
+              totalGames: x.turnsPlayed || 0,
+              turnsPlayed: x.turnsPlayed || 0,
+              turnsSkipped: x.turnsSkipped || 0,
+              timeTaken: x.timeTaken || 0,
+              fastTurns: x.fastTurns || 0,
+              slowTurns: x.slowTurns || 0
+            }))
+          );
+        }
+      },
+      willSubstituteForGameTypes: legacyStringSet(),
       dataVersion: Number,
-      banned: Boolean,
-      canCreateMultipleGames: Boolean
+      banned: legacyBoolean(),
+      canCreateMultipleGames: legacyBoolean()
     });
   }
 
@@ -116,7 +136,7 @@ export class UserRepository
 
   substituteUsers() {
     return this.scanAllUsers(true, () => {
-      return this.scan().where('willSubstituteForGameTypes').not().null();
+      return this.scan().where('willSubstituteForGameTypes').exists();
     });
   }
 

@@ -5,10 +5,13 @@ import { injectable, unmanaged } from 'inversify';
 import { HttpResponseError } from '../../api/framework';
 import { AWS } from '../config';
 import { Entity } from '../models/shared';
+import { AnyDocument } from 'dynamoose/dist/Document';
+import { ModelType } from 'dynamoose/dist/General';
+import { Query, Scan } from 'dynamoose/dist/DocumentRetriever';
 
-(dynamoose.AWS as any) = AWS;
+dynamoose.aws.sdk = AWS;
 
-dynamoose.setDefaults({
+dynamoose.model.defaults.set({
   create: false
 });
 
@@ -21,13 +24,13 @@ export interface IRepository<TKey, TEntity> {
   saveVersioned(model: TEntity): Promise<TEntity>;
 }
 
-interface PydtModelConstructor<TKey, TEntity> extends dynamoose.ModelConstructor<TEntity, TKey> {
-  saveVersioned(model: dynamoose.Model<TEntity>): Promise<dynamoose.Model<TEntity>>;
-}
+export type PydtModelType<TEntity> = ModelType<AnyDocument> & {
+  saveVersioned: (model: TEntity) => Promise<TEntity>;
+};
 
 @injectable()
 export abstract class BaseDynamooseRepository<TKey, TEntity> implements IRepository<TKey, TEntity> {
-  private model: PydtModelConstructor<TKey, TEntity>;
+  private model: PydtModelType<TEntity>;
 
   constructor(@unmanaged() name, @unmanaged() schema) {
     schema.version = {
@@ -38,31 +41,33 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
       }
     };
 
-    this.model = dynamoose.model(
+    const model = dynamoose.model(
       name,
       new dynamoose.Schema(schema, {
-        timestamps: true,
-        useNativeBooleans: false,
-        useDocumentTypes: false
+        timestamps: true
       })
     ) as any;
 
-    this.model.saveVersioned = m => {
+    model.saveVersioned = m => {
       if (!(m instanceof this.model)) {
         m = new this.model(m as any);
       }
 
       return m.save({
-        condition: 'attribute_not_exists(version) OR version = :version',
-        conditionValues: { version: ((m as Entity).version || 0) - 1 }
+        condition: new dynamoose.Condition()
+          .parenthesis(new dynamoose.Condition('version').not().exists())
+          .or()
+          .parenthesis(new dynamoose.Condition('version').eq((m as Entity).version || 0))
       });
     };
+
+    this.model = model;
   }
 
-  public get(id: TKey, consistent?: boolean): Promise<TEntity> {
-    return this.model.get(id, {
+  public async get(id: TKey, consistent?: boolean): Promise<TEntity> {
+    return (await this.model.get(id as any, {
       consistent: !!consistent
-    } as any);
+    })) as TEntity;
   }
 
   async getOrThrow404(id: TKey) {
@@ -75,38 +80,41 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     return result;
   }
 
-  public delete(id: TKey) {
-    return this.model.delete(id);
+  public async delete(id: TKey) {
+    await this.model.delete(id as any);
   }
 
   public async batchGet(ids: TKey[], consistent?: boolean): Promise<TEntity[]> {
     const result = [];
 
     for (const idChunk of chunk(ids, 100)) {
-      result.push(
-        ...(await this.model.batchGet(idChunk, {
-          consistent: !!consistent
-        } as any))
-      );
+      const results = await Promise.all(idChunk.map(id => this.get(id, consistent)));
+      result.push(...results.filter(x => Boolean(x)));
     }
 
     return result;
   }
 
-  public batchDelete(entities: TEntity[]) {
-    return this.model.batchDelete(entities as any);
+  public async batchDelete(entities: TEntity[]) {
+    await this.model.batchDelete(entities as any);
   }
 
   public saveVersioned(model: TEntity): Promise<TEntity> {
+    for (const [key, value] of Object.entries(this.model.schemas[0].schemaObject)) {
+      const pydtSet = (value as any).pydtSet;
+      if (pydtSet) {
+        model[key] = pydtSet(model[key]);
+      }
+    }
     return this.model.saveVersioned(model as any) as any;
   }
 
   protected scan(column?: string) {
-    return this.model.scan(column);
+    return this.model.scan(column) as Scan<TEntity>;
   }
 
   protected query(column?: string) {
-    return this.model.query(column);
+    return this.model.query(column) as Query<TEntity>;
   }
 
   protected async getAllPaged(scanOrQuery): Promise<TEntity[]> {

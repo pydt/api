@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import * as dynamoose from 'dynamoose';
 
-dynamoose.AWS.config.update({
+dynamoose.aws.sdk.config.update({
   region: 'us-east-1'
 });
-dynamoose.local();
+dynamoose.aws.ddb.local();
 
 import { describe, it } from 'mocha';
 import { It, Mock, Times } from 'typemoq';
@@ -24,7 +24,7 @@ import { ISnsProvider } from '../../../lib/snsProvider';
 import { ISesProvider } from '../../../lib/email/sesProvider';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 
-dynamoose.setDefaults({
+dynamoose.model.defaults.set({
   create: true
 });
 

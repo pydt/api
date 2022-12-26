@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { ScheduledJob, ScheduledJobKey } from '../models';
+import { legacyStringSet } from '../util/dynamooseLegacy';
 import { BaseDynamooseRepository, IRepository } from './common';
 
 export const SCHEDULED_JOB_REPOSITORY_SYMBOL = Symbol('IScheduledJobRepository');
@@ -29,13 +30,13 @@ export class ScheduledJobRepository
         type: Date,
         rangeKey: true
       },
-      gameIds: [String]
+      gameIds: legacyStringSet()
     });
   }
 
   getWaitingJobs(jobType: string) {
     return this.getAllPaged(
-      this.query('jobType').eq(jobType).where('scheduledTime').lt(new Date())
+      this.query('jobType').eq(jobType).where('scheduledTime').lt(new Date().getTime())
     );
   }
 }

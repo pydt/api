@@ -2,9 +2,10 @@ import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
-import { Game, User } from '../models';
+import { Game, GamePlayer, User } from '../models';
 import { BaseDynamooseRepository, IRepository } from './common';
 import { CIV6_GAME } from '../metadata/civGames/civ6';
+import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
@@ -32,31 +33,19 @@ export class GameRepository
         type: String,
         required: true
       },
-      dlc: [String],
-      inProgress: {
-        type: Boolean,
-        index: {
-          global: true,
-          rangeKey: 'createdAt'
-        }
-      },
-      completed: {
-        type: Boolean,
-        index: {
-          global: true,
-          rangeKey: 'createdAt'
-        }
-      },
+      dlc: legacyStringSet(),
+      inProgress: legacyBoolean('createdAt'),
+      completed: legacyBoolean('createdAt'),
       hashedPassword: String,
       displayName: {
         type: String,
         required: true
       },
-      allowJoinAfterStart: Boolean,
+      allowJoinAfterStart: legacyBoolean(),
       description: String,
       slots: Number,
       humans: Number,
-      players: [
+      /* players: [
         {
           steamId: String,
           civType: String,
@@ -83,7 +72,24 @@ export class GameRepository
             default: 0
           }
         }
-      ],
+      ], */
+      players: {
+        // Legacy complex array, see above
+        type: String,
+        get: (value: string) => JSON.parse(value),
+        pydtSet: (value: GamePlayer[]) => {
+          return JSON.stringify(
+            value.map(x => ({
+              ...x,
+              turnsPlayed: x.turnsPlayed || 0,
+              turnsSkipped: x.turnsSkipped || 0,
+              timeTaken: x.timeTaken || 0,
+              fastTurns: x.fastTurns || 0,
+              slowTurns: x.slowTurns || 0
+            }))
+          );
+        }
+      },
       discourseTopicId: {
         type: Number,
         index: {
@@ -112,9 +118,9 @@ export class GameRepository
       latestDiscoursePostNumber: Number,
       latestDiscoursePostUser: String,
       lastTurnEndDate: Date,
-      randomOnly: Boolean,
+      randomOnly: legacyBoolean(),
       webhookUrl: String,
-      resetGameStateOnNextUpload: Boolean
+      resetGameStateOnNextUpload: legacyBoolean()
     });
   }
 
@@ -148,7 +154,7 @@ export class GameRepository
   }
 
   async incompleteGames() {
-    const games = await this.getAllPaged(this.query('completed').eq(false));
+    const games = await this.getAllPaged(this.query('completed').eq('false'));
     // Index is KEYS_ONLY, need to get full games
     return this.batchGet(games.map(x => x.gameId));
   }
@@ -156,7 +162,7 @@ export class GameRepository
   async unstartedGames(daysOld: number) {
     const games = await this.getAllPaged(
       this.query('inProgress')
-        .eq(false)
+        .eq('false')
         .where('createdAt')
         .lt(
           moment()
