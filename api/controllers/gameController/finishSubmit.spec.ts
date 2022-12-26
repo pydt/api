@@ -157,7 +157,6 @@ describe('GameController_FinishSubmit', () => {
       await gcfs.finishSubmit({ user: USER_ID } as HttpRequest, GAME_ID);
       expect(false).to.be.true;
     } catch (e) {
-      console.log(e.message);
       expect(e.message).to
         .eq(`DLC mismatch!  Please ensure that you have the correct DLC enabled (or disabled)!
 Enabled but not in save: Poland Civilization & Scenario Pack

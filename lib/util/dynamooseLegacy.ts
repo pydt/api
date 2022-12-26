@@ -1,3 +1,5 @@
+import * as dynamoose from 'dynamoose';
+
 export const legacyBoolean = (indexRangeKey?: string) => ({
   type: String,
   get: value => value === 'true',
@@ -15,6 +17,6 @@ export const legacyBoolean = (indexRangeKey?: string) => ({
 export const legacyStringSet = () => ({
   type: Set,
   schema: [String],
-  get: (value: Set<string>) => [...value],
-  pydtSet: (value: string[]) => new Set(value)
+  get: (value: Set<string>) => [...(value || [])],
+  pydtSet: (value: string[]) => (value && value.length ? new Set(value) : dynamoose.UNDEFINED)
 });

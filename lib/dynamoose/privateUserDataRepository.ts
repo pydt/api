@@ -38,8 +38,8 @@ export class PrivateUserDataRepository
       webPushSubscriptions: {
         // Legacy complex array, see above
         type: String,
-        get: (value: string) => JSON.parse(value),
-        pydtSet: (value: WebPushSubscription[]) => JSON.stringify(value)
+        get: (value: string) => (value ? JSON.parse(value) : []),
+        pydtSet: (value: WebPushSubscription[]) => JSON.stringify(value || [])
       }
     });
   }

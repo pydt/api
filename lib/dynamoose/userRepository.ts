@@ -99,10 +99,10 @@ export class UserRepository
       statsByGameType: {
         // Legacy complex array, see above
         type: String,
-        get: (value: string) => JSON.parse(value),
+        get: (value: string) => (value ? JSON.parse(value) : []),
         pydtSet: (value: GameTypeTurnData[]) => {
           return JSON.stringify(
-            value.map(x => ({
+            (value || []).map(x => ({
               ...x,
               activeGames: x.turnsPlayed || 0,
               totalGames: x.turnsPlayed || 0,

@@ -76,10 +76,10 @@ export class GameRepository
       players: {
         // Legacy complex array, see above
         type: String,
-        get: (value: string) => JSON.parse(value),
+        get: (value: string) => (value ? JSON.parse(value) : []),
         pydtSet: (value: GamePlayer[]) => {
           return JSON.stringify(
-            value.map(x => ({
+            (value || []).map(x => ({
               ...x,
               turnsPlayed: x.turnsPlayed || 0,
               turnsSkipped: x.turnsSkipped || 0,

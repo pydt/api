@@ -99,14 +99,24 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
     await this.model.batchDelete(entities as any);
   }
 
-  public saveVersioned(model: TEntity): Promise<TEntity> {
+  public async saveVersioned(model: TEntity): Promise<TEntity> {
+    const finalModel = {
+      ...model
+    };
+
     for (const [key, value] of Object.entries(this.model.schemas[0].schemaObject)) {
       const pydtSet = (value as any).pydtSet;
       if (pydtSet) {
-        model[key] = pydtSet(model[key]);
+        finalModel[key] = pydtSet(finalModel[key]);
       }
     }
-    return this.model.saveVersioned(model as any) as any;
+
+    const savedModel = await this.model.saveVersioned(finalModel);
+
+    // Make sure updated version is copied to the input model
+    (model as any).version = (savedModel as any).version;
+
+    return savedModel;
   }
 
   protected scan(column?: string) {
