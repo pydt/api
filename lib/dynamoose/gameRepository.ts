@@ -10,6 +10,7 @@ import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
+  getByClonedFromGameId(gameId: string): Promise<Game | undefined>;
   getGamesForUser(user: User): Promise<Game[]>;
   getCompletedGamesForUser(user: User): Promise<Game[]>;
   incompleteGames(): Promise<Game[]>;
@@ -118,6 +119,7 @@ export class GameRepository
       latestDiscoursePostNumber: Number,
       latestDiscoursePostUser: String,
       lastTurnEndDate: Date,
+      clonedFromGameId: String,
       randomOnly: legacyBoolean(),
       webhookUrl: String,
       resetGameStateOnNextUpload: legacyBoolean()
@@ -184,6 +186,14 @@ export class GameRepository
 
     // Index is KEYS_ONLY, need to get full game
     return this.get(topics[0].gameId, true);
+  }
+
+  // TODO: Add index?  Not sure if this is a big enough deal to index yet
+  async getByClonedFromGameId(gameId: string) {
+    const clonedGames = await this.getAllPaged(
+      this.scan().where('clonedFromGameId').eq(gameId).limit(1)
+    );
+    return clonedGames[0];
   }
 
   private setDefaults(game: Game) {

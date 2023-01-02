@@ -21,6 +21,7 @@ export interface Game extends Entity, BaseGame {
   hashedPassword?: string;
   players: GamePlayer[];
   discourseTopicId?: number;
+  clonedFromGameId?: string;
   currentPlayerSteamId: string;
   round?: number;
   gameTurnRangeKey?: number;

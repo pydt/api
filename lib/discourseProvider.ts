@@ -9,11 +9,30 @@ export const DISCOURSE_PROVIDER_SYMBOL = Symbol('IDiscourseProvider');
 export interface IDiscourseProvider {
   addGameTopic(game: Game, firstTimeHosting?: boolean): Promise<DiscourseTopic>;
   deleteGameTopic(game: Game): Promise<void>;
+  postToSmack(topicId: number, message: string): Promise<void>;
 }
 
 @provideSingleton(DISCOURSE_PROVIDER_SYMBOL)
 export class DiscourseProvider implements IDiscourseProvider {
   constructor(@inject(HTTP_REQUEST_PROVIDER_SYMBOL) private http: IHttpRequestProvider) {}
+
+  public async postToSmack(topicId: number, message: string) {
+    if (Config.activeStage === 'prod') {
+      await this.http.request({
+        method: 'POST',
+        headers: {
+          'Api-Key': Config.discourseApiKey,
+          'Api-Username': 'system'
+        },
+        uri: `https://discourse.playyourdamnturn.com/posts`,
+        form: {
+          topic_id: topicId,
+          raw: message
+        },
+        json: true
+      });
+    }
+  }
 
   public async addGameTopic(game: Game, firstTimeHosting?: boolean) {
     if (Config.activeStage === 'prod') {
@@ -33,16 +52,9 @@ export class DiscourseProvider implements IDiscourseProvider {
       });
 
       if (firstTimeHosting) {
-        await this.http.request({
-          method: 'POST',
-          headers: {
-            'Api-Key': Config.discourseApiKey,
-            'Api-Username': 'system'
-          },
-          uri: `https://discourse.playyourdamnturn.com/posts`,
-          form: {
-            topic_id: topic.topic_id,
-            raw: `**It looks like this is your first time hosting a game, welcome!**
+        await this.postToSmack(
+          topic.topic_id,
+          `**It looks like this is your first time hosting a game, welcome!**
   
 :spiral_notepad: [How to create your PYDT game](https://discourse.playyourdamnturn.com/t/how-to-setup-a-game-with-pydt/6486)
 
@@ -51,9 +63,7 @@ export class DiscourseProvider implements IDiscourseProvider {
 :speaking_head: [Join our quiet discord. Help, News and New Games](https://discord.gg/CYhHSzv)
 
 **If you need help, [Post in Game Support](https://discourse.playyourdamnturn.com/c/game-support) or come to discord! :+1:**`
-          },
-          json: true
-        });
+        );
       }
 
       return topic;

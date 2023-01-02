@@ -1,4 +1,5 @@
 export * from './changeCiv';
+export * from './clone';
 export * from './create';
 export * from './delete';
 export * from './edit';
@@ -11,6 +12,7 @@ export * from './listOpen';
 export * from './refreshState';
 export * from './replacePlayer';
 export * from './resetGameStateOnNextUpload';
+export * from './restart';
 export * from './revert';
 export * from './start';
 export * from './startSubmit';
