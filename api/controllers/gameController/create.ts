@@ -66,8 +66,12 @@ export class GameController_Create {
       );
     }
 
-    if (body.randomOnly && body.player1Civ !== RANDOM_CIV.leaderKey) {
+    if (body.randomOnly === 'FORCE_RANDOM' && body.player1Civ !== RANDOM_CIV.leaderKey) {
       throw new HttpResponseError(400, 'Hey, you made the rules, random civs only!');
+    }
+
+    if (body.randomOnly === 'FORCE_LEADER' && body.player1Civ === RANDOM_CIV.leaderKey) {
+      throw new HttpResponseError(400, 'Hey, you made the rules, you must choose a leader!');
     }
 
     const newGame: Game = {
@@ -93,6 +97,8 @@ export class GameController_Create {
       mapFile: body.mapFile,
       mapSize: body.mapSize,
       randomOnly: body.randomOnly,
+      allowDuplicateLeaders: body.allowDuplicateLeaders,
+      allowJoinAfterStart: body.allowJoinAfterStart,
       turnTimerMinutes: body.turnTimerMinutes
     };
 
@@ -111,6 +117,8 @@ export class GameController_Create {
     if (body.password) {
       const salt = await bcrypt.genSalt(10);
       newGame.hashedPassword = await bcrypt.hash(body.password, salt);
+    } else {
+      body.password = '';
     }
 
     UserUtil.addUserToGame(user, newGame);

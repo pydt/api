@@ -1,15 +1,19 @@
-import { SharedGame } from 'pydt-shared-models';
 import { GamePlayer } from './gamePlayer';
 import { Entity } from './shared';
 
-export interface BaseGame extends SharedGame {
+export interface BaseGame {
+  gameSpeed?: string;
+  mapFile?: string;
+  mapSize?: string;
+  gameType: string;
   displayName: string;
   description?: string;
   webhookUrl?: string;
   dlc: string[];
   slots: number;
   humans: number;
-  randomOnly?: boolean;
+  allowDuplicateLeaders?: boolean;
+  randomOnly?: 'EITHER' | 'FORCE_RANDOM' | 'FORCE_LEADER';
   allowJoinAfterStart?: boolean;
   turnTimerMinutes?: number;
 }

@@ -120,7 +120,19 @@ export class GameRepository
       latestDiscoursePostUser: String,
       lastTurnEndDate: Date,
       clonedFromGameId: String,
-      randomOnly: legacyBoolean(),
+      allowDuplicateLeaders: Boolean,
+      randomOnly: {
+        type: String,
+        get: value => {
+          if (value === 'true') {
+            return 'FORCE_RANDOM';
+          } else if (value === 'false') {
+            return 'EITHER';
+          }
+
+          return value;
+        }
+      },
       webhookUrl: String,
       resetGameStateOnNextUpload: legacyBoolean()
     });

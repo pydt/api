@@ -26,19 +26,28 @@ export class GameController_ChangeCiv {
       throw new HttpResponseError(400, 'Game in Progress');
     }
 
+    if (game.createdBySteamId !== request.user && body.steamId) {
+      throw new HttpResponseError(400, `Only admin can change civ for another player!`);
+    }
+
     if (
+      !game.allowDuplicateLeaders &&
       body.playerCiv !== RANDOM_CIV.leaderKey &&
       game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0
     ) {
       throw new HttpResponseError(400, 'Civ already in Game');
     }
 
-    if (game.randomOnly && body.playerCiv !== RANDOM_CIV.leaderKey) {
+    if (game.randomOnly === 'FORCE_RANDOM' && body.playerCiv !== RANDOM_CIV.leaderKey) {
       throw new HttpResponseError(400, 'Only random civs allowed!');
     }
 
+    if (game.randomOnly === 'FORCE_LEADER' && body.playerCiv === RANDOM_CIV.leaderKey) {
+      throw new HttpResponseError(400, 'You must select a leader, not random!');
+    }
+
     const player = game.players.find(p => {
-      return p.steamId === request.user;
+      return p.steamId === body.steamId || request.user;
     });
 
     if (!player) {

@@ -1,7 +1,12 @@
 import { BaseGame, Game } from '../../../lib/models';
 
 export interface ChangeCivRequestBody {
+  steamId?: string;
   playerCiv: string;
+}
+
+export interface LeaveRequestBody {
+  steamId?: string;
 }
 
 export interface SurrenderBody {

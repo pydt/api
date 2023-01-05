@@ -1,5 +1,5 @@
 import { remove } from 'lodash';
-import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
+import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
@@ -11,6 +11,7 @@ import {
   PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
   IPrivateUserDataRepository
 } from '../../../lib/dynamoose/privateUserDataRepository';
+import { LeaveRequestBody } from './_models';
 
 @Route('game')
 @Tags('game')
@@ -26,11 +27,19 @@ export class GameController_Leave {
   @Security('api_key')
   @Response<ErrorResponse>(401, 'Unauthorized')
   @Post('{gameId}/leave')
-  public async leave(@Request() request: HttpRequest, gameId: string): Promise<Game> {
+  public async leave(
+    @Request() request: HttpRequest,
+    gameId: string,
+    @Body() body: LeaveRequestBody
+  ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (game.createdBySteamId === request.user) {
       throw new HttpResponseError(400, `You can't leave, you created the game!`);
+    }
+
+    if (game.createdBySteamId !== request.user && body.steamId) {
+      throw new HttpResponseError(400, `Only admin can change civ for another player!`);
     }
 
     if (game.inProgress && game.gameTurnRangeKey > 1) {
@@ -42,7 +51,7 @@ export class GameController_Leave {
     }
 
     const users = await this.userRepository.getUsersForGame(game);
-    const user = users.find(x => x.steamId === request.user);
+    const user = users.find(x => x.steamId === body.steamId || request.user);
 
     remove(game.players, player => {
       return player.steamId === request.user;
@@ -58,7 +67,7 @@ export class GameController_Leave {
     const puds = await this.pudRepository.getUserDataForGame(game);
     const createdByUserData = puds.find(x => x.steamId === game.createdBySteamId);
 
-    if (createdByUserData.emailAddress) {
+    if (createdByUserData.emailAddress && !body.steamId) {
       await this.ses.sendEmail(
         'A user has left your game.',
         'A user has left your game.',

@@ -34,11 +34,6 @@ export class GameController_Edit {
 
     if (!game.inProgress) {
       game.displayName = body.displayName;
-      game.randomOnly = body.randomOnly;
-
-      if (game.randomOnly) {
-        game.players.forEach(x => (x.civType = RANDOM_CIV.leaderKey));
-      }
     }
 
     if (game.gameTurnRangeKey || 0 <= 1) {
@@ -54,6 +49,12 @@ export class GameController_Edit {
       game.gameSpeed = body.gameSpeed;
       game.mapFile = body.mapFile;
       game.mapSize = body.mapSize;
+      game.randomOnly = body.randomOnly;
+      game.allowDuplicateLeaders = body.allowDuplicateLeaders;
+
+      if (game.randomOnly === 'FORCE_RANDOM') {
+        game.players.forEach(x => (x.civType = RANDOM_CIV.leaderKey));
+      }
     }
 
     if (body.humans < game.players.filter(x => GameUtil.playerIsHuman(x)).length) {
@@ -75,7 +76,7 @@ export class GameController_Edit {
         game.hashedPassword = await bcrypt.hash(body.password, salt);
       }
     } else {
-      game.hashedPassword = null;
+      game.hashedPassword = '';
     }
 
     const retVal = await this.gameRepository.saveVersioned(game);

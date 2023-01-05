@@ -56,11 +56,16 @@ export class GameController_Join {
         throw new HttpResponseError(400, 'Slot already assigned.');
       }
     } else {
-      if (game.randomOnly && body.playerCiv !== RANDOM_CIV.leaderKey) {
+      if (game.randomOnly === 'FORCE_RANDOM' && body.playerCiv !== RANDOM_CIV.leaderKey) {
         throw new HttpResponseError(400, 'You can only join this game as a random civ!');
       }
 
+      if (game.randomOnly === 'FORCE_LEADER' && body.playerCiv === RANDOM_CIV.leaderKey) {
+        throw new HttpResponseError(400, 'You can only join this game as a non-random leader!');
+      }
+
       if (
+        !game.allowDuplicateLeaders &&
         body.playerCiv !== RANDOM_CIV.leaderKey &&
         game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0
       ) {
