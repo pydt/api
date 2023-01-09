@@ -30,6 +30,8 @@ export class GameController_ChangeCiv {
       throw new HttpResponseError(400, `Only admin can change civ for another player!`);
     }
 
+    const steamId = body.steamId || request.user;
+
     if (
       !game.allowDuplicateLeaders &&
       body.playerCiv !== RANDOM_CIV.leaderKey &&
@@ -46,9 +48,7 @@ export class GameController_ChangeCiv {
       throw new HttpResponseError(400, 'You must select a leader, not random!');
     }
 
-    const player = game.players.find(p => {
-      return p.steamId === body.steamId || request.user;
-    });
+    const player = game.players.find(p => p.steamId === steamId);
 
     if (!player) {
       throw new HttpResponseError(400, 'Player not in Game');

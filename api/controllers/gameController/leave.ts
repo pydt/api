@@ -42,19 +42,21 @@ export class GameController_Leave {
       throw new HttpResponseError(400, `Only admin can change civ for another player!`);
     }
 
+    const steamId = body.steamId || request.user;
+
     if (game.inProgress && game.gameTurnRangeKey > 1) {
       throw new HttpResponseError(400, 'You can only leave a game before it starts.');
     }
 
-    if (game.players.map(x => x.steamId).indexOf(request.user) < 0) {
+    if (game.players.map(x => x.steamId).indexOf(steamId) < 0) {
       throw new HttpResponseError(400, 'Player not in Game');
     }
 
     const users = await this.userRepository.getUsersForGame(game);
-    const user = users.find(x => x.steamId === body.steamId || request.user);
+    const user = users.find(x => x.steamId === steamId);
 
     remove(game.players, player => {
-      return player.steamId === request.user;
+      return player.steamId === steamId;
     });
 
     UserUtil.removeUserFromGame(user, game, false);
