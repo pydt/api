@@ -53,14 +53,16 @@ export class AddTurnTimerJob {
       pydtLogger.info('creating vacation timer');
       jobKey = {
         jobType: JOB_TYPES.TURN_TIMER_VACATION,
-        scheduledTime: new Date()
+        scheduledTime: new Date().getTime()
       };
     } else if (game.turnTimerMinutes) {
       pydtLogger.info('creating turn timer');
       const latestTurn = await this.gameTurnRepository.get({ gameId, turn: game.gameTurnRangeKey });
       jobKey = {
         jobType: JOB_TYPES.TURN_TIMER,
-        scheduledTime: new Date(latestTurn.startDate.getTime() + game.turnTimerMinutes * 60000)
+        scheduledTime: new Date(
+          latestTurn.startDate.getTime() + game.turnTimerMinutes * 60000
+        ).getTime()
       };
     } else {
       pydtLogger.info('aborting...');

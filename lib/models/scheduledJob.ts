@@ -1,6 +1,6 @@
 export interface ScheduledJobKey {
   jobType: string;
-  scheduledTime: Date;
+  scheduledTime: number;
 }
 
 export interface ScheduledJob extends ScheduledJobKey {

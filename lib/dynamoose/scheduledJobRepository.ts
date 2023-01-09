@@ -27,7 +27,7 @@ export class ScheduledJobRepository
         hashKey: true
       },
       scheduledTime: {
-        type: Date,
+        type: Number,
         rangeKey: true
       },
       gameIds: legacyStringSet()
