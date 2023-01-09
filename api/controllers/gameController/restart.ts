@@ -29,7 +29,7 @@ export class GameController_Restart {
       throw new HttpResponseError(400, "You don't have permission to restart this game!");
     }
 
-    if (!game.inProgress) {
+    if (!game.inProgress || game.gameTurnRangeKey <= 1) {
       throw new HttpResponseError(400, 'Game must be in progress to restart!');
     }
 
@@ -49,15 +49,14 @@ export class GameController_Restart {
     game.gameTurnRangeKey = 1;
     game.currentPlayerSteamId = game.createdBySteamId;
     game.lastTurnEndDate = undefined;
-    game.players = game.players.map(x => ({
-      ...x,
-      // DON'T REVIVE SURRENDEDERED PLAYERS!
-      fastTurns: undefined,
-      slowTurns: undefined,
-      timeTaken: undefined,
-      turnsPlayed: undefined,
-      turnsSkipped: undefined
-    }));
+    game.players = game.players
+      .filter(x => !!x.steamId)
+      // DON'T REVIVE SURRENDEDERED PLAYERS FOR A RESTART
+      .filter(x => !x.hasSurrendered)
+      .map(x => ({
+        civType: x.civType,
+        steamId: x.steamId
+      }));
     await this.gameRepository.saveVersioned(game);
 
     // Recreate initial turn

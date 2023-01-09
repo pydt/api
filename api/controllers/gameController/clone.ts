@@ -52,10 +52,12 @@ export class GameController_Clone {
       gameTurnRangeKey: undefined,
       currentPlayerSteamId: game.createdBySteamId,
       lastTurnEndDate: undefined,
-      players: game.players.map(x => ({
-        civType: x.civType,
-        steamId: x.steamId
-      })),
+      players: game.players
+        .filter(x => x.steamId)
+        .map(x => ({
+          civType: x.civType,
+          steamId: x.steamId
+        })),
       createdAt: undefined,
       updatedAt: undefined,
       discourseTopicId: undefined,
