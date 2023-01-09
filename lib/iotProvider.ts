@@ -13,7 +13,7 @@ export class IotProvider implements IIotProvider {
   private iotData: AWS.IotData;
 
   constructor() {
-    this.iotData = new AWS.IotData({ endpoint: 'a21s639tnrshxf.iot.us-east-1.amazonaws.com' });
+    this.iotData = new AWS.IotData({ endpoint: 'a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com' });
   }
 
   public async notifyUserClient(user: HasSteamId) {
