@@ -233,22 +233,7 @@ export class GameTurnService implements IGameTurnService {
     const saveKey = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
     const uncompressedBody = handler.getData();
 
-    await Promise.all([
-      this.s3.putObject(
-        {
-          Bucket: Config.resourcePrefix + 'saves',
-          Key: saveKey
-        },
-        uncompressedBody
-      ),
-      this.s3.putObject(
-        {
-          Bucket: Config.resourcePrefix + 'saves',
-          Key: saveKey + '.gz'
-        },
-        zlib.gzipSync(uncompressedBody)
-      )
-    ]);
+    await this.storeSave(saveKey, uncompressedBody);
   }
 
   public parseSaveFile(buffer, game: Game): SaveHandler {
@@ -313,11 +298,8 @@ export class GameTurnService implements IGameTurnService {
     saveHandler.setCurrentTurnIndex(nextPlayerIndex);
     this.updateSaveFileForGameState(game, users, saveHandler, false);
 
-    await this.s3.putObject(
-      {
-        Bucket: Config.resourcePrefix + 'saves',
-        Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
-      },
+    await this.storeSave(
+      GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey),
       saveHandler.getData()
     );
 
@@ -333,5 +315,24 @@ export class GameTurnService implements IGameTurnService {
         pud.emailAddress
       );
     }
+  }
+
+  private async storeSave(key: string, buffer: Buffer) {
+    await Promise.all([
+      this.s3.putObject(
+        {
+          Bucket: Config.resourcePrefix + 'saves',
+          Key: key
+        },
+        buffer
+      ),
+      this.s3.putObject(
+        {
+          Bucket: Config.resourcePrefix + 'saves',
+          Key: key + '.gz'
+        },
+        zlib.gzipSync(buffer)
+      )
+    ]);
   }
 }
