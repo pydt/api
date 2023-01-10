@@ -117,6 +117,9 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
       savedModel[key] = value;
     }
 
+    // Make sure updated version is copied to the input model
+    (model as any).version = (savedModel as any).version;
+
     return savedModel;
   }
 

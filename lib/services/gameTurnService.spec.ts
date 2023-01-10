@@ -79,7 +79,11 @@ describe('GameTurnService', () => {
       });
     s3ProviderMock
       .setup(x => x.putObject(It.isAny(), It.isAny(), It.isAny()))
-      .callback((fp, data) => (skippedData = data));
+      .callback((fp, data) => {
+        if (!fp.Key.endsWith('.gz')) {
+          skippedData = data;
+        }
+      });
 
     const sesProviderMock = Mock.ofType<ISesProvider>();
     sesProviderMock
