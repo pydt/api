@@ -66,9 +66,9 @@ export class NotifyNewGames {
         await this.ses.sendEmail(
           `${gamesToNotifyAbout.length} New Games on Play Your Damn Turn!`,
           'The following new games match your notification criteria:',
-          `<ul>${gamesToNotifyAbout.map(
-            x => `<li><a href="${Config.webUrl}/game/${x.gameId}">${x.displayName}</a></li>`
-          )}</ul>`,
+          `<ul>${gamesToNotifyAbout
+            .map(x => `<li><a href="${Config.webUrl}/game/${x.gameId}">${x.displayName}</a></li>`)
+            .join('\n')}</ul>`,
           pud.emailAddress
         );
       }
