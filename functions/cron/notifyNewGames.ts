@@ -57,9 +57,9 @@ export class NotifyNewGames {
               continue;
             }
           }
-        }
 
-        gamesToNotifyAbout.push(game);
+          gamesToNotifyAbout.push(game);
+        }
       }
 
       if (gamesToNotifyAbout.length) {
