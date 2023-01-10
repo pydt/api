@@ -4,6 +4,7 @@ import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../../lib/disc
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
@@ -55,7 +56,7 @@ export class GameController_Clone {
       players: game.players
         .filter(x => x.steamId)
         .map(x => ({
-          civType: x.civType,
+          civType: game.randomOnly === 'FORCE_RANDOM' ? RANDOM_CIV.leaderKey : x.civType,
           steamId: x.steamId
         })),
       createdAt: undefined,

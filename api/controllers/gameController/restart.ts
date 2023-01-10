@@ -6,6 +6,7 @@ import {
   IGameTurnRepository
 } from '../../../lib/dynamoose/gameTurnRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
+import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game, GameTurn } from '../../../lib/models';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 
@@ -54,7 +55,7 @@ export class GameController_Restart {
       // DON'T REVIVE SURRENDEDERED PLAYERS FOR A RESTART
       .filter(x => !x.hasSurrendered)
       .map(x => ({
-        civType: x.civType,
+        civType: game.randomOnly === 'FORCE_RANDOM' ? RANDOM_CIV.leaderKey : x.civType,
         steamId: x.steamId
       }));
     await this.gameRepository.saveVersioned(game);
