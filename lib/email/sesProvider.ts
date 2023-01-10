@@ -13,6 +13,10 @@ export interface ISesProvider {
 @provideSingleton(SES_PROVIDER_SYMBOL)
 export class SesProvider implements ISesProvider {
   public async sendEmail(subject: string, bodyTitle: string, bodyHtml: string, toAddress: string) {
+    if (!toAddress.trim()) {
+      return;
+    }
+
     const email = {
       Destination: {
         ToAddresses: [toAddress]

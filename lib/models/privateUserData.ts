@@ -5,6 +5,10 @@ export interface PrivateUserData {
   newTurnEmails?: boolean;
   webhookUrl?: string;
   webPushSubscriptions?: WebPushSubscription[];
+  newGameEmails?: boolean;
+  newGameEmailsWithPasswords?: boolean;
+  newGameEmailTypes?: string[];
+  newGameEmailFilter?: string;
 }
 
 export interface WebPushSubscription {

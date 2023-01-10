@@ -156,6 +156,12 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: cron(23 */6 * * ? *)
+  cronNotifyNewGames:
+    handler: functions/cron/notifyNewGames.handler
+    timeout: 120
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - schedule: cron(31 * * * ? *)
   snsAddTurnTimer:
     handler: functions/sns/addTurnTimerJob.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}

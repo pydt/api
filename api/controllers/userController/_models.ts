@@ -13,6 +13,10 @@ export interface CurrentUserDataWithPud {
 export interface SetNotificationEmailBody {
   emailAddress: string;
   newTurnEmails: boolean;
+  newGameEmails: boolean;
+  newGameEmailsWithPasswords: boolean;
+  newGameEmailTypes: string[];
+  newGameEmailFilter: string;
 }
 
 export interface SetWebhookUrlBody {

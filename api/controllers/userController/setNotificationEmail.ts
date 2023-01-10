@@ -24,8 +24,7 @@ export class UserController_SetNotificationEmail {
     @Body() body: SetNotificationEmailBody
   ): Promise<PrivateUserData> {
     const pud = await this.pudRepository.get(request.user);
-    pud.emailAddress = body.emailAddress;
-    pud.newTurnEmails = body.newTurnEmails;
+    Object.assign(pud, body);
     return this.pudRepository.saveVersioned(pud);
   }
 }

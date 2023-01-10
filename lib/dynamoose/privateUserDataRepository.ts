@@ -8,6 +8,7 @@ export const PRIVATE_USER_DATA_REPOSITORY_SYMBOL = Symbol('IPrivateUserDataRepos
 
 export interface IPrivateUserDataRepository extends IRepository<string, PrivateUserData> {
   getUserDataForGame(game: Game): Promise<PrivateUserData[]>;
+  getAllWithNewGameNotificationData(): Promise<PrivateUserData[]>;
 }
 
 @provideSingleton(PRIVATE_USER_DATA_REPOSITORY_SYMBOL)
@@ -40,7 +41,14 @@ export class PrivateUserDataRepository
         type: String,
         get: (value: string) => (value ? JSON.parse(value) : []),
         pydtSet: (value: WebPushSubscription[]) => JSON.stringify(value || [])
-      }
+      },
+      newGameEmails: Boolean,
+      newGameEmailsWithPasswords: Boolean,
+      newGameEmailTypes: {
+        type: Array,
+        schema: [String]
+      },
+      newGameEmailFilter: String
     });
   }
 
@@ -53,9 +61,8 @@ export class PrivateUserDataRepository
       };
     }
 
-    if (result.newTurnEmails === null || result.newTurnEmails === undefined) {
-      result.newTurnEmails = true;
-    }
+    result.newTurnEmails ??= true;
+    result.newGameEmailTypes ??= [];
 
     return result;
   }
@@ -74,5 +81,9 @@ export class PrivateUserDataRepository
         });
       });
     });
+  }
+
+  public async getAllWithNewGameNotificationData(): Promise<PrivateUserData[]> {
+    return this.getAllPaged(this.scan().where('newGameEmails').eq(true));
   }
 }
