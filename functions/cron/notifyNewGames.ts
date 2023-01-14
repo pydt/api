@@ -9,6 +9,7 @@ import {
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../lib/email/sesProvider';
 import { inject } from '../../lib/ioc';
 import { loggingHandler } from '../../lib/logging';
+import { PYDT_METADATA } from '../../lib/metadata/metadata';
 import { Game } from '../../lib/models';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
@@ -63,11 +64,24 @@ export class NotifyNewGames {
       }
 
       if (gamesToNotifyAbout.length) {
+        const uniqueGameTypes = new Intl.ListFormat('en').format(
+          [...new Set(gamesToNotifyAbout.map(x => x.gameType))].map(
+            gameType => PYDT_METADATA.civGames.find(x => x.id === gameType)?.displayName
+          )
+        );
+
         await this.ses.sendEmail(
-          `${gamesToNotifyAbout.length} New Games on Play Your Damn Turn!`,
+          `${gamesToNotifyAbout.length} New ${uniqueGameTypes} Game${
+            gamesToNotifyAbout.length > 1 ? 's' : ''
+          } on Play Your Damn Turn!`,
           'The following new games match your notification criteria:',
           `<ul>${gamesToNotifyAbout
-            .map(x => `<li><a href="${Config.webUrl}/game/${x.gameId}">${x.displayName}</a></li>`)
+            .map(
+              x =>
+                `<li><a href="${Config.webUrl}/game/${x.gameId}">${x.displayName}</a> (${
+                  PYDT_METADATA.civGames.find(y => y.id === x.gameType)?.displayName
+                })</li>`
+            )
             .join('\n')}</ul>`,
           pud.emailAddress
         );

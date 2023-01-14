@@ -5,10 +5,10 @@
     "noUnusedLocals": true,
     "module": "commonjs",
     "lib": [
-      "es6"
+      "es2021"
     ],
     "sourceMap": true,
-    "target": "es6",
+    "target": "es2021",
     "types": [
       "node",
       "reflect-metadata",
