@@ -134,18 +134,19 @@ In save but not enabled: ${notInGame
 
     if (game.mapFile) {
       const map = civGame.maps.find(x => x.file === game.mapFile);
+      const saveMap = saveHandler.mapFile || '';
 
       if (map && map.regex) {
-        if (!new RegExp(map.regex).test(saveHandler.mapFile)) {
+        if (!new RegExp(map.regex).test(saveMap)) {
           throw new HttpResponseError(
             400,
-            `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected regex: ${map.regex})`
+            `Invalid map file in save file! (actual: ${saveMap}, expected regex: ${map.regex})`
           );
         }
-      } else if (saveHandler.mapFile.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
+      } else if (saveMap.toLowerCase().indexOf(game.mapFile.toLowerCase()) < 0) {
         throw new HttpResponseError(
           400,
-          `Invalid map file in save file! (actual: ${saveHandler.mapFile}, expected: ${game.mapFile})`
+          `Invalid map file in save file! (actual: ${saveMap}, expected: ${game.mapFile})`
         );
       }
     }
