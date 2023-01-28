@@ -40,6 +40,7 @@ export const CIV6_DLCS = [
     false,
     'You must link your 2K account to get this DLC!'
   ),
+  DlcFactory('7D27831B-BAA6-4A8B-A39C-94243BAD3F47', 'Rulers of China Leader Pack'),
   DlcFactory('F48213B4-56F5-45DD-92F7-AC78E49BDA49', 'Great Commanders Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
@@ -188,7 +189,11 @@ export const CIV6_LEADERS = [
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
   CivDefFactory('CIVILIZATION_CHINA', 'LEADER_QIN', ASSET_PREFIX, {
-    leaderDisplayName: 'Qin Shi Huang'
+    leaderDisplayName: 'Qin (Mandate of Heaven)'
+  }),
+  CivDefFactory('CIVILIZATION_CHINA', 'LEADER_QIN_ALT', ASSET_PREFIX, {
+    dlcId: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+    leaderDisplayName: 'Qin (Unifier)'
   }),
   CivDefFactory('CIVILIZATION_SCOTLAND', 'LEADER_ROBERT_THE_BRUCE', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
@@ -236,10 +241,16 @@ export const CIV6_LEADERS = [
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68',
     leaderDisplayName: 'Wilfrid Laurier'
   }),
+  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_VICTORIA', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_NETHERLANDS', 'LEADER_WILHELMINA', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
-  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_VICTORIA', ASSET_PREFIX)
+  CivDefFactory('CIVILIZATION_CHINA', 'LEADER_WU_ZETIAN', ASSET_PREFIX, {
+    dlcId: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47'
+  }),
+  CivDefFactory('CIVILIZATION_CHINA', 'LEADER_YONGLE', ASSET_PREFIX, {
+    dlcId: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47'
+  })
 ];
 
 export const CIV6_GAME_SPEEDS = [
