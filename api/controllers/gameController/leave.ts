@@ -33,16 +33,15 @@ export class GameController_Leave {
     @Body() body: LeaveRequestBody
   ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
+    const steamId = body.steamId || request.user;
 
-    if (game.createdBySteamId === request.user) {
+    if (game.createdBySteamId === steamId) {
       throw new HttpResponseError(400, `You can't leave, you created the game!`);
     }
 
     if (game.createdBySteamId !== request.user && body.steamId) {
       throw new HttpResponseError(400, `Only admin can change civ for another player!`);
     }
-
-    const steamId = body.steamId || request.user;
 
     if (game.inProgress && game.gameTurnRangeKey > 1) {
       throw new HttpResponseError(400, 'You can only leave a game before it starts.');
