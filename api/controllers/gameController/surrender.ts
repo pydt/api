@@ -50,14 +50,18 @@ export class GameController_Surrender {
         throw new HttpResponseError(400, 'You must be the game creator to kick a user!');
       }
 
-      const lastTurnTime = (game.lastTurnEndDate || game.updatedAt).getTime();
-      const diffTime = new Date().getTime() - lastTurnTime;
+      const kickUser = await this.userRepository.get(body.kickUserId);
 
-      if (diffTime < 1000 * 60 * 60 * 24) {
-        throw new HttpResponseError(
-          404,
-          `You cannot kick a user if they haven't had 24 hours to play their turn.`
-        );
+      if (!kickUser.banned) {
+        const lastTurnTime = (game.lastTurnEndDate || game.updatedAt).getTime();
+        const diffTime = new Date().getTime() - lastTurnTime;
+
+        if (diffTime < 1000 * 60 * 60 * 24) {
+          throw new HttpResponseError(
+            404,
+            `You cannot kick a user if they haven't had 24 hours to play their turn.`
+          );
+        }
       }
 
       userId = body.kickUserId;
