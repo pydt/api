@@ -42,6 +42,7 @@ export const CIV6_DLCS = [
   ),
   DlcFactory('7D27831B-BAA6-4A8B-A39C-94243BAD3F47', 'Rulers of China Leader Pack'),
   DlcFactory('F48213B4-56F5-45DD-92F7-AC78E49BDA49', 'Great Commanders Pack'),
+  DlcFactory('82AE6F24-930F-4640-833C-FCDFD4845757', 'Rulers of the Sahara Leader Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -78,7 +79,13 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_INDIA', 'LEADER_CHANDRAGUPTA', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
-  CivDefFactory('CIVILIZATION_EGYPT', 'LEADER_CLEOPATRA', ASSET_PREFIX),
+  CivDefFactory('CIVILIZATION_EGYPT', 'LEADER_CLEOPATRA', ASSET_PREFIX, {
+    leaderDisplayName: 'Cleopatra (Egyptian)'
+  }),
+  CivDefFactory('CIVILIZATION_EGYPT', 'LEADER_CLEOPATRA_ALT', ASSET_PREFIX, {
+    leaderDisplayName: 'Cleopatra (Ptolemaic)',
+    dlcId: '82AE6F24-930F-4640-833C-FCDFD4845757'
+  }),
   CivDefFactory('CIVILIZATION_PERSIA', 'LEADER_CYRUS', ASSET_PREFIX, {
     dlcId: 'E2749E9A-8056-45CD-901B-C368C8E83DEB'
   }),
@@ -195,6 +202,10 @@ export const CIV6_LEADERS = [
     dlcId: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
     leaderDisplayName: 'Qin (Unifier)'
   }),
+  CivDefFactory('CIVILIZATION_EGYPT', 'LEADER_RAMSES', ASSET_PREFIX, {
+    leaderDisplayName: 'Ramses II',
+    dlcId: '82AE6F24-930F-4640-833C-FCDFD4845757'
+  }),
   CivDefFactory('CIVILIZATION_SCOTLAND', 'LEADER_ROBERT_THE_BRUCE', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
@@ -221,6 +232,9 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_OTTOMAN', 'LEADER_SULEIMAN_ALT', ASSET_PREFIX, {
     dlcId: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
     leaderDisplayName: 'Suleiman (Muhteşem)'
+  }),
+  CivDefFactory('CIVILIZATION_MALI', 'LEADER_SUNDIATA_KEITA', ASSET_PREFIX, {
+    dlcId: '82AE6F24-930F-4640-833C-FCDFD4845757'
   }),
   CivDefFactory('CIVILIZATION_GEORGIA', 'LEADER_TAMAR', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
