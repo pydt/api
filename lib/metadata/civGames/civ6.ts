@@ -43,6 +43,7 @@ export const CIV6_DLCS = [
   DlcFactory('7D27831B-BAA6-4A8B-A39C-94243BAD3F47', 'Rulers of China Leader Pack'),
   DlcFactory('F48213B4-56F5-45DD-92F7-AC78E49BDA49', 'Great Commanders Pack'),
   DlcFactory('82AE6F24-930F-4640-833C-FCDFD4845757', 'Rulers of the Sahara Leader Pack'),
+  DlcFactory('249D9276-0832-48E4-B370-14531FA4E33C', 'Great Builders Leader Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -160,6 +161,10 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_MALI', 'LEADER_MANSA_MUSA', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
   }),
+  CivDefFactory('CIVILIZATION_GERMANY', 'LEADER_LUDWIG', ASSET_PREFIX, {
+    dlcId: '249D9276-0832-48E4-B370-14531FA4E33C',
+    leaderDisplayName: 'Ludwig II'
+  }),
   CivDefFactory('CIVILIZATION_HUNGARY', 'LEADER_MATTHIAS_CORVINUS', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
   }),
@@ -216,6 +221,9 @@ export const CIV6_LEADERS = [
     leaderDisplayName: 'Saladin (Sultan)',
     dlcId: '7A66DB58-B354-4061-8C80-95B638DD6F6C'
   }),
+  CivDefFactory('CIVILIZATION_KOREA', 'LEADER_SEJONG', ASSET_PREFIX, {
+    dlcId: '249D9276-0832-48E4-B370-14531FA4E33C'
+  }),
   CivDefFactory('CIVILIZATION_KOREA', 'LEADER_SEONDEOK', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
@@ -245,6 +253,9 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_AMERICA', 'LEADER_T_ROOSEVELT_ROUGHRIDER', ASSET_PREFIX, {
     leaderDisplayName: 'Teddy Roosevelt (Rough Rider)',
     dlcId: '113D9459-0A3B-4FCB-A49C-483F40303575'
+  }),
+  CivDefFactory('CIVILIZATION_BYZANTIUM', 'LEADER_THEODORA', ASSET_PREFIX, {
+    dlcId: '249D9276-0832-48E4-B370-14531FA4E33C'
   }),
   CivDefFactory('CIVILIZATION_JAPAN', 'LEADER_TOKUGAWA', ASSET_PREFIX, {
     dlcId: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49'
