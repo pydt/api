@@ -14,6 +14,7 @@ export class HttpRequest extends EventEmitter {
   public user: string;
   public url: string;
   public subSegment: Subsegment;
+  public sourceIp: string;
 
   constructor(event: LambdaProxyEvent) {
     super();
@@ -37,5 +38,6 @@ export class HttpRequest extends EventEmitter {
     this.params = event.pathParameters;
     this.query = event.queryStringParameters || {};
     this.url = http.path;
+    this.sourceIp = http.sourceIp;
   }
 }

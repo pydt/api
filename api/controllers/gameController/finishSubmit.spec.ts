@@ -13,6 +13,7 @@ import { SaveHandler } from '../../../lib/saveHandlers/saveHandler';
 import { IGameTurnService } from '../../../lib/services/gameTurnService';
 import { HttpRequest } from '../../framework';
 import { GameController_FinishSubmit } from './finishSubmit';
+import { IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
 
 describe('GameController_FinishSubmit', () => {
   it('should be able to handle weird new EarthStandard map name', async () => {
@@ -72,12 +73,22 @@ describe('GameController_FinishSubmit', () => {
           } as SaveHandler)
       );
 
+    const pudMock = Mock.ofType<IPrivateUserDataRepository>();
+    pudMock
+      .setup(x => x.get(It.isAny(), It.isAny()))
+      .returns(() =>
+        Promise.resolve({
+          steamId: '1'
+        })
+      );
+
     const gcfs = new GameController_FinishSubmit(
       gameRepositoryMock.object,
       gameTurnRepositoryMock.object,
       userRepositoryMock.object,
       gameTurnServiceMock.object,
-      s3Mock.object
+      s3Mock.object,
+      pudMock.object
     );
 
     const game = await gcfs.finishSubmit({ user: USER_ID } as HttpRequest, GAME_ID);
@@ -150,7 +161,8 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepositoryMock.object,
       userRepositoryMock.object,
       gameTurnServiceMock.object,
-      s3Mock.object
+      s3Mock.object,
+      Mock.ofType<IPrivateUserDataRepository>().object
     );
 
     try {

@@ -9,6 +9,7 @@ export interface PrivateUserData {
   newGameEmailsWithPasswords?: boolean;
   newGameEmailTypes?: string[];
   newGameEmailFilter?: string;
+  lastTurnIpAddress?: string;
 }
 
 export interface WebPushSubscription {

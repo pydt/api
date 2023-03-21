@@ -128,7 +128,8 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepository,
       userRepository,
       gameTurnService,
-      s3Mock.object
+      s3Mock.object,
+      pudRepository
     );
 
     await gcfs.finishSubmit({ user: USER_1_ID } as HttpRequest, GAME_ID);

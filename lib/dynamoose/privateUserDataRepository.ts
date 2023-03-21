@@ -48,7 +48,8 @@ export class PrivateUserDataRepository
         type: Array,
         schema: [String]
       },
-      newGameEmailFilter: String
+      newGameEmailFilter: String,
+      lastTurnIpAddress: String
     });
   }
 

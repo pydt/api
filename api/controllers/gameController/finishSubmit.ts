@@ -7,6 +7,10 @@ import {
   GAME_TURN_REPOSITORY_SYMBOL,
   IGameTurnRepository
 } from '../../../lib/dynamoose/gameTurnRepository';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';
@@ -29,7 +33,8 @@ export class GameController_FinishSubmit {
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
   ) {}
 
   @Security('api_key')
@@ -253,6 +258,10 @@ In save but not enabled: ${notInGame
     if (newDefeatedPlayers.length) {
       await this.gameTurnService.defeatPlayers(game, users, newDefeatedPlayers);
     }
+
+    const pud = await this.pudRepository.get(request.user);
+    pud.lastTurnIpAddress = request.sourceIp;
+    await this.pudRepository.saveVersioned(pud);
 
     return game;
   }
