@@ -44,6 +44,7 @@ export const CIV6_DLCS = [
   DlcFactory('F48213B4-56F5-45DD-92F7-AC78E49BDA49', 'Great Commanders Pack'),
   DlcFactory('82AE6F24-930F-4640-833C-FCDFD4845757', 'Rulers of the Sahara Leader Pack'),
   DlcFactory('249D9276-0832-48E4-B370-14531FA4E33C', 'Great Builders Leader Pack'),
+  DlcFactory('258EF3CA-890B-4863-8A52-982822EFF7BD', 'Rulers of England Leader Pack'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -104,6 +105,10 @@ export const CIV6_LEADERS = [
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68',
     leaderDisplayName: 'Eleanor of Aquitaine'
   }),
+  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_ELIZABETH', ASSET_PREFIX, {
+    dlcId: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+    leaderDisplayName: 'Elizabeth I'
+  }),
   CivDefFactory('CIVILIZATION_INDIA', 'LEADER_GANDHI', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_MONGOLIA', 'LEADER_GENGHIS_KHAN', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
@@ -114,7 +119,11 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_GREECE', 'LEADER_GORGO', ASSET_PREFIX),
   CivDefFactory('CIVILIZATION_NORWAY', 'LEADER_HARDRADA', ASSET_PREFIX, {
-    leaderDisplayName: 'Harald Hardrada'
+    leaderDisplayName: 'Harald Hardrada (Konge)'
+  }),
+  CivDefFactory('CIVILIZATION_NORWAY', 'LEADER_HARALD_ALT', ASSET_PREFIX, {
+    dlcId: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+    leaderDisplayName: 'Harald Hardrada (Varangian)'
   }),
   CivDefFactory('CIVILIZATION_BABYLON_STK', 'LEADER_HAMMURABI', ASSET_PREFIX, {
     civDisplayName: 'Babylon',
@@ -266,7 +275,13 @@ export const CIV6_LEADERS = [
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68',
     leaderDisplayName: 'Wilfrid Laurier'
   }),
-  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_VICTORIA', ASSET_PREFIX),
+  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_VICTORIA', ASSET_PREFIX, {
+    leaderDisplayName: 'Victoria (Age of Empire)'
+  }),
+  CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_VICTORIA_ALT', ASSET_PREFIX, {
+    dlcId: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+    leaderDisplayName: 'Victoria (Age of Steam)'
+  }),
   CivDefFactory('CIVILIZATION_NETHERLANDS', 'LEADER_WILHELMINA', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
   }),
