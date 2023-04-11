@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as dynamoose from 'dynamoose';
+import { aws as dynamooseAws, Condition, model as dynamooseModel, Schema, Table } from 'dynamoose';
 import { chunk } from 'lodash';
 import { injectable, unmanaged } from 'inversify';
 import { HttpResponseError } from '../../api/framework';
-import { AWS } from '../config';
-import { Entity } from '../models/shared';
-import { AnyDocument } from 'dynamoose/dist/Document';
 import { ModelType } from 'dynamoose/dist/General';
-import { Query, Scan } from 'dynamoose/dist/DocumentRetriever';
+import { AnyItem } from 'dynamoose/dist/Item';
+import { Query, Scan } from 'dynamoose/dist/ItemRetriever';
+import { Config } from '../config';
 
-dynamoose.aws.sdk = AWS;
+dynamooseAws.ddb.set(
+  new dynamooseAws.ddb.DynamoDB({
+    region: Config.region
+  })
+);
 
-dynamoose.model.defaults.set({
+Table.defaults.set({
   create: false
 });
 
@@ -24,26 +27,26 @@ export interface IRepository<TKey, TEntity> {
   saveVersioned(model: TEntity): Promise<TEntity>;
 }
 
-export type PydtModelType<TEntity> = ModelType<AnyDocument> & {
+export type PydtModelType<TEntity> = ModelType<AnyItem> & {
   saveVersioned: (model: TEntity) => Promise<TEntity>;
 };
 
 @injectable()
 export abstract class BaseDynamooseRepository<TKey, TEntity> implements IRepository<TKey, TEntity> {
   private model: PydtModelType<TEntity>;
+  private rawSchema: unknown;
 
   constructor(@unmanaged() name, @unmanaged() schema) {
     schema.version = {
       type: Number,
-      default: 0,
-      set: function (value) {
-        return value + 1;
-      }
+      default: 0
     };
 
-    const model = dynamoose.model(
+    this.rawSchema = schema;
+
+    const model = dynamooseModel(
       name,
-      new dynamoose.Schema(schema, {
+      new Schema(schema, {
         timestamps: true
       })
     ) as any;
@@ -53,11 +56,14 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
         m = new this.model(m as any);
       }
 
+      const oldVersion = m.version || 0;
+      m.version = oldVersion + 1;
+
       return m.save({
-        condition: new dynamoose.Condition()
-          .parenthesis(new dynamoose.Condition('version').not().exists())
+        condition: new Condition()
+          .parenthesis(new Condition('version').not().exists())
           .or()
-          .parenthesis(new dynamoose.Condition('version').eq((m as Entity).version || 0))
+          .parenthesis(new Condition('version').eq(oldVersion))
       });
     };
 
@@ -102,7 +108,7 @@ export abstract class BaseDynamooseRepository<TKey, TEntity> implements IReposit
   public async saveVersioned(model: TEntity): Promise<TEntity> {
     const oldValues = {};
 
-    for (const [key, value] of Object.entries(this.model.schemas[0].schemaObject)) {
+    for (const [key, value] of Object.entries(this.rawSchema)) {
       const pydtSet = (value as any).pydtSet;
       if (pydtSet) {
         oldValues[key] = model[key];

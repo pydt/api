@@ -1,8 +1,12 @@
-import { AWS } from '../config';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
 import templateHtml from './email.html';
-const ses = new AWS.SES();
+import { Config } from '../config';
+
+const ses = new SESClient({
+  region: Config.region
+});
 
 export const SES_PROVIDER_SYMBOL = Symbol('ISesProvider');
 
@@ -17,7 +21,7 @@ export class SesProvider implements ISesProvider {
       return;
     }
 
-    const email = {
+    const email = new SendEmailCommand({
       Destination: {
         ToAddresses: [toAddress]
       },
@@ -32,12 +36,12 @@ export class SesProvider implements ISesProvider {
         }
       },
       Source: 'Play Your Damn Turn <noreply@playyourdamnturn.com>'
-    };
+    });
 
     pydtLogger.info(`Sending email ${subject} to ${toAddress}...`);
 
     try {
-      const result = await ses.sendEmail(email).promise();
+      const result = await ses.send(email);
       pydtLogger.info(`Email send succeeded with message ID: ${result.MessageId}`);
     } catch (err) {
       pydtLogger.error(`Email send failed!`, err);

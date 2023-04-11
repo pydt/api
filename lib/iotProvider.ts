@@ -1,6 +1,10 @@
+import {
+  IoTDataPlaneClient,
+  PayloadFormatIndicator,
+  PublishCommand
+} from '@aws-sdk/client-iot-data-plane';
 import { provideSingleton } from './ioc';
 import { HasSteamId } from './models';
-import { AWS } from './config';
 
 export const IOT_PROVIDER_SYMBOL = Symbol('IIotProvider');
 
@@ -10,19 +14,22 @@ export interface IIotProvider {
 
 @provideSingleton(IOT_PROVIDER_SYMBOL)
 export class IotProvider implements IIotProvider {
-  private iotData: AWS.IotData;
+  private iotData: IoTDataPlaneClient;
 
   constructor() {
-    this.iotData = new AWS.IotData({ endpoint: 'a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com' });
+    this.iotData = new IoTDataPlaneClient({
+      endpoint: 'a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com'
+    });
   }
 
   public async notifyUserClient(user: HasSteamId) {
-    await this.iotData
-      .publish({
+    await this.iotData.send(
+      new PublishCommand({
         topic: `/pydt/${process.env.SERVERLESS_STAGE}/user/${user.steamId}/gameupdate`,
-        payload: 'Hello!',
+        payload: Buffer.from('Hello!'),
+        payloadFormatIndicator: PayloadFormatIndicator.UTF8_DATA,
         qos: 0
       })
-      .promise();
+    );
   }
 }

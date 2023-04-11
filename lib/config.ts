@@ -1,7 +1,4 @@
-import * as awssdk from 'aws-sdk';
 import * as AWSXRay from 'aws-xray-sdk';
-
-awssdk.config.update({ region: 'us-east-1' });
 
 class ConfigClass {
   public get activeStage() {
@@ -34,8 +31,13 @@ class ConfigClass {
   public get vapidPrivateKey() {
     return process.env.VAPID_PRIVATE_KEY as string;
   }
+  public get region() {
+    return 'us-east-1';
+  }
 }
 
 export const Config = new ConfigClass();
 
-export const AWS = Config.runningLocal ? awssdk : AWSXRay.captureAWS(awssdk);
+AWSXRay.setContextMissingStrategy(() => {
+  // Ignore missing context (context will be set up by lambda)
+});

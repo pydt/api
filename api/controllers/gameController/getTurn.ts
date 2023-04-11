@@ -52,7 +52,7 @@ export class GameController_GetTurn {
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     return {
-      downloadUrl: this.s3.signedGetUrl(
+      downloadUrl: await this.s3.signedGetUrl(
         fileParams,
         '(PYDT) Play This One!.' + civGame.saveExtension,
         60

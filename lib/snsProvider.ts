@@ -1,10 +1,16 @@
-import { AWS } from './config';
+import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { provideSingleton } from './ioc';
 import { Config } from './config';
 import { Game } from './models';
 import { SNS_MESSAGES, UserGameCacheUpdatedPayload } from './models/sns';
-const sns = new AWS.SNS();
-const sts = new AWS.STS();
+
+const sns = new SNSClient({
+  region: Config.region
+});
+const sts = new STSClient({
+  region: Config.region
+});
 
 export const SNS_PROVIDER_SYMBOL = Symbol('ISnsProvider');
 
@@ -41,14 +47,14 @@ export class SnsProvider implements ISnsProvider {
   }
 
   private async sendMessage(topic: string, subject: string, message: string) {
-    const identity = await sts.getCallerIdentity({}).promise();
+    const identity = await sts.send(new GetCallerIdentityCommand({}));
 
-    const params = {
-      Message: message,
-      Subject: subject,
-      TopicArn: 'arn:aws:sns:us-east-1:' + identity.Account + ':' + topic
-    };
-
-    return sns.publish(params).promise();
+    return sns.send(
+      new PublishCommand({
+        Message: message,
+        Subject: subject,
+        TopicArn: 'arn:aws:sns:us-east-1:' + identity.Account + ':' + topic
+      })
+    );
   }
 }

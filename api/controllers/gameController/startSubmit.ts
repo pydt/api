@@ -29,7 +29,7 @@ export class GameController_StartSubmit {
     }
 
     return {
-      putUrl: this.s3.signedPutUrl(
+      putUrl: await this.s3.signedPutUrl(
         {
           Bucket: Config.resourcePrefix + 'saves',
           Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)

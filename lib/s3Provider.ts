@@ -1,8 +1,18 @@
+import {
+  S3Client,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { merge } from 'lodash';
 import { provideSingleton } from './ioc';
-import { AWS } from './config';
+import { Config } from './config';
 
-const s3 = new AWS.S3({
+const s3 = new S3Client({
+  region: Config.region,
   useAccelerateEndpoint: true
 });
 
@@ -14,8 +24,12 @@ export interface IS3Provider {
   headObject(fileParams: FileParams): Promise<void>;
   listObjects(bucket: string, prefix: string): Promise<ListObjectsResult>;
   putObject(fileParams: FileParams, data: string | Buffer, isPublic?: boolean): Promise<void>;
-  signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number): string;
-  signedPutUrl(fileParams: FileParams, contentType: string, expiration: number): string;
+  signedGetUrl(
+    fileParams: FileParams,
+    downloadAsFilename: string,
+    expiration: number
+  ): Promise<string>;
+  signedPutUrl(fileParams: FileParams, contentType: string, expiration: number): Promise<string>;
 }
 
 @provideSingleton(S3_PROVIDER_SYMBOL)
@@ -28,18 +42,18 @@ export class S3Provider implements IS3Provider {
       });
     }
 
-    await s3
-      .putObject(
+    await s3.send(
+      new PutObjectCommand(
         merge(fileParams, {
           Body: data
         })
       )
-      .promise();
+    );
   }
 
   async deleteObjects(bucket: string, keys: string[]) {
-    await s3
-      .deleteObjects({
+    await s3.send(
+      new DeleteObjectsCommand({
         Bucket: bucket,
         Delete: {
           Objects: keys.map(key => {
@@ -49,54 +63,60 @@ export class S3Provider implements IS3Provider {
           })
         }
       })
-      .promise();
+    );
   }
 
   listObjects(bucket: string, prefix: string) {
-    return s3
-      .listObjectsV2({
+    return s3.send(
+      new ListObjectsV2Command({
         Bucket: bucket,
         Prefix: prefix
-      })
-      .promise() as Promise<ListObjectsResult>;
-  }
-
-  async getObject(fileParams: FileParams) {
-    return (await s3.getObject(fileParams).promise()) as GetObjectResult;
-  }
-
-  async headObject(fileParams: FileParams) {
-    await s3.headObject(fileParams).promise();
-  }
-
-  signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number) {
-    return s3.getSignedUrl(
-      'getObject',
-      merge(fileParams, {
-        ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`,
-        Expires: expiration
       })
     );
   }
 
+  async getObject(fileParams: FileParams) {
+    return {
+      Body: await (await s3.send(new GetObjectCommand(fileParams))).Body.transformToByteArray()
+    };
+  }
+
+  async headObject(fileParams: FileParams) {
+    await s3.send(new HeadObjectCommand(fileParams));
+  }
+
+  signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number) {
+    return getSignedUrl(
+      s3,
+      new GetObjectCommand(
+        merge(fileParams, {
+          ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`,
+          Expires: expiration
+        })
+      )
+    );
+  }
+
   signedPutUrl(fileParams: FileParams, contentType: string, expiration: number) {
-    return s3.getSignedUrl(
-      'putObject',
-      merge(fileParams, {
-        Expires: expiration,
-        ContentType: contentType
-      })
+    return getSignedUrl(
+      s3,
+      new PutObjectCommand(
+        merge(fileParams, {
+          Expires: new Date(expiration),
+          ContentType: contentType
+        })
+      )
     );
   }
 }
 
 export interface GetObjectResult {
-  Body: Buffer;
+  Body: Uint8Array;
 }
 
 export interface ListObjectsResult {
-  Contents: Array<{
-    Key: string;
+  Contents?: Array<{
+    Key?: string;
   }>;
 }
 

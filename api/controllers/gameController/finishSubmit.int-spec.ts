@@ -1,11 +1,5 @@
 import 'reflect-metadata';
-import * as dynamoose from 'dynamoose';
-
-dynamoose.aws.sdk.config.update({
-  region: 'us-east-1'
-});
-dynamoose.aws.ddb.local();
-
+import { aws as dynamooseAws, Table } from 'dynamoose';
 import { describe, it } from 'mocha';
 import { It, Mock, Times } from 'typemoq';
 import { v4 as uuid } from 'uuid';
@@ -23,8 +17,16 @@ import { PrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDat
 import { ISnsProvider } from '../../../lib/snsProvider';
 import { ISesProvider } from '../../../lib/email/sesProvider';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
+import { Config } from '../../../lib/config';
 
-dynamoose.model.defaults.set({
+dynamooseAws.ddb.set(
+  new dynamooseAws.ddb.DynamoDB({
+    endpoint: 'http://localhost:8000',
+    region: Config.region
+  })
+);
+
+Table.defaults.set({
   create: true
 });
 
