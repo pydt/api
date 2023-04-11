@@ -1,7 +1,7 @@
 import { join } from 'lodash';
 import * as passport from 'passport';
 import * as passportSteam from 'passport-steam';
-import * as rp from 'request-promise';
+import fetch from 'node-fetch';
 import { HttpRequest } from '../api/framework';
 import { Config } from './config';
 import { SteamProfile } from './models';
@@ -38,12 +38,11 @@ export const steamPassport = (request: HttpRequest) => {
 };
 
 export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfile[]> {
-  const resp = await rp({
-    uri: `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${
+  const resp = await fetch(
+    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${
       Config.steamApiKey
-    }&steamids=${join(steamIds)}`,
-    json: true
-  });
+    }&steamids=${join(steamIds)}`
+  );
 
-  return resp.response.players;
+  return ((await resp.json()) as any).response.players;
 }

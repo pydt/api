@@ -1,24 +1,16 @@
 import { provideSingleton } from './ioc';
-import * as request from 'request';
-import * as rp from 'request-promise';
+import fetch, { RequestInit } from 'node-fetch';
 
 export const HTTP_REQUEST_PROVIDER_SYMBOL = Symbol('IHttpRequestProvider');
 
 export interface IHttpRequestProvider {
-  request(
-    options:
-      | (request.UriOptions & rp.RequestPromiseOptions)
-      | (request.UrlOptions & rp.RequestPromiseOptions)
-  ): rp.RequestPromise;
+  fetch<T>(url: string, options: RequestInit): Promise<T>;
 }
 
 @provideSingleton(HTTP_REQUEST_PROVIDER_SYMBOL)
 export class HttpRequestProvider implements IHttpRequestProvider {
-  request(
-    options:
-      | (request.UriOptions & rp.RequestPromiseOptions)
-      | (request.UrlOptions & rp.RequestPromiseOptions)
-  ): rp.RequestPromise {
-    return rp(options);
+  async fetch<T>(url: string, options: RequestInit) {
+    const resp = await fetch(url, options);
+    return (await resp.json()) as T;
   }
 }

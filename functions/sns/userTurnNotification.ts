@@ -57,10 +57,10 @@ export class UserTurnNotification {
               const gameData = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
               const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
 
-              await this.http.request({
+              await this.http.fetch(webhook, {
                 method: 'POST',
-                uri: webhook,
-                body: {
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                   gameName: game.displayName,
                   userName: user.displayName,
                   round: game.round,
@@ -72,9 +72,7 @@ export class UserTurnNotification {
                   value3: game.round,
                   // Discourse webhook "content" field
                   content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
-                },
-                json: true,
-                timeout: 2000
+                })
               });
             } catch (e) {
               pydtLogger.info('Error sending webhook to ' + webhook, e);

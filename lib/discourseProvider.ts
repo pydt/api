@@ -18,38 +18,39 @@ export class DiscourseProvider implements IDiscourseProvider {
 
   public async postToSmack(topicId: number, message: string) {
     if (Config.activeStage === 'prod') {
-      await this.http.request({
+      await this.http.fetch(`https://discourse.playyourdamnturn.com/posts`, {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Api-Key': Config.discourseApiKey,
           'Api-Username': 'system'
         },
-        uri: `https://discourse.playyourdamnturn.com/posts`,
-        form: {
+        body: JSON.stringify({
           topic_id: topicId,
           raw: message
-        },
-        json: true
+        })
       });
     }
   }
 
   public async addGameTopic(game: Game, firstTimeHosting?: boolean) {
     if (Config.activeStage === 'prod') {
-      const topic = await this.http.request({
-        method: 'POST',
-        headers: {
-          'Api-Key': Config.discourseApiKey,
-          'Api-Username': 'system'
-        },
-        uri: `https://discourse.playyourdamnturn.com/posts`,
-        form: {
-          title: `${game.displayName} (${game.gameId.substring(0, 8)})`,
-          raw: `Smack talk goes here for ${game.displayName}!  Game URL: https://playyourdamnturn.com/game/${game.gameId}`,
-          category: 5
-        },
-        json: true
-      });
+      const topic = await this.http.fetch<{ topic_id: number }>(
+        `https://discourse.playyourdamnturn.com/posts`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Key': Config.discourseApiKey,
+            'Api-Username': 'system'
+          },
+          body: JSON.stringify({
+            title: `${game.displayName} (${game.gameId.substring(0, 8)})`,
+            raw: `Smack talk goes here for ${game.displayName}!  Game URL: https://playyourdamnturn.com/game/${game.gameId}`,
+            category: 5
+          })
+        }
+      );
 
       if (firstTimeHosting) {
         await this.postToSmack(
@@ -76,15 +77,16 @@ export class DiscourseProvider implements IDiscourseProvider {
 
   public async deleteGameTopic(game: Game) {
     if (Config.activeStage === 'prod') {
-      return await this.http.request({
-        method: 'DELETE',
-        headers: {
-          'Api-Key': Config.discourseApiKey,
-          'Api-Username': 'system'
-        },
-        uri: `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}`,
-        json: true
-      });
+      return await this.http.fetch<void>(
+        `https://discourse.playyourdamnturn.com/t/${game.discourseTopicId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Api-Key': Config.discourseApiKey,
+            'Api-Username': 'system'
+          }
+        }
+      );
     } else {
       pydtLogger.info(
         `Ignoring request to delete discourse topic for game ${game.displayName}, stage is ${Config.activeStage}`

@@ -93,24 +93,24 @@ describe('UserTurnNotification', () => {
   it('should send notifications correctly on new turn', async () => {
     const mocks = createMocks('http://gamehook.com', 'http://userhook.com', 'wat@whoa.com');
 
-    const expectedRequestBody = {
+    const expectedRequestBody = JSON.stringify({
       gameName: 'Test Game',
       userName: 'Test User',
       round: 10,
-      content: `It's Test User's turn in Test Game (Round 10)`,
       civName: 'Macedon',
       leaderName: 'Alexander',
       // Duplicate "play by cloud" format
       value1: 'Test Game',
       value2: 'Test User',
-      value3: 10
-    };
+      value3: 10,
+      content: `It's Test User's turn in Test Game (Round 10)`
+    });
 
     mocks.httpRequestMock
       .setup(x =>
-        x.request(
+        x.fetch(
+          It.isValue('http://gamehook.com'),
           It.isObjectWith({
-            uri: 'http://gamehook.com',
             body: expectedRequestBody
           })
         )
@@ -119,9 +119,9 @@ describe('UserTurnNotification', () => {
 
     mocks.httpRequestMock
       .setup(x =>
-        x.request(
+        x.fetch(
+          It.isValue('http://userhook.com'),
           It.isObjectWith({
-            uri: 'http://userhook.com',
             body: expectedRequestBody
           })
         )
@@ -133,7 +133,7 @@ describe('UserTurnNotification', () => {
       newTurn: true
     });
 
-    mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.exactly(2));
+    mocks.httpRequestMock.verify(x => x.fetch(It.isAny(), It.isAny()), Times.exactly(2));
     mocks.httpRequestMock.verifyAll();
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
     mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
@@ -150,7 +150,7 @@ describe('UserTurnNotification', () => {
       newTurn: true
     });
 
-    mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.never());
+    mocks.httpRequestMock.verify(x => x.fetch(It.isAny(), It.isAny()), Times.never());
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
     mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
     mocks.emailMock.verify(
@@ -166,7 +166,7 @@ describe('UserTurnNotification', () => {
       newTurn: false
     });
 
-    mocks.httpRequestMock.verify(x => x.request(It.isAny()), Times.never());
+    mocks.httpRequestMock.verify(x => x.fetch(It.isAny(), It.isAny()), Times.never());
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.exactly(3));
     mocks.websocketMock.verify(
       x =>
