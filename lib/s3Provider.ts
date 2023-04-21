@@ -85,27 +85,31 @@ export class S3Provider implements IS3Provider {
     await s3.send(new HeadObjectCommand(fileParams));
   }
 
-  signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiration: number) {
+  signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiresIn: number) {
     return getSignedUrl(
       s3,
       new GetObjectCommand(
         merge(fileParams, {
-          ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`,
-          Expires: expiration
+          ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`
         })
-      )
+      ),
+      {
+        expiresIn
+      }
     );
   }
 
-  signedPutUrl(fileParams: FileParams, contentType: string, expiration: number) {
+  signedPutUrl(fileParams: FileParams, contentType: string, expiresIn: number) {
     return getSignedUrl(
       s3,
       new PutObjectCommand(
         merge(fileParams, {
-          Expires: new Date(expiration),
           ContentType: contentType
         })
-      )
+      ),
+      {
+        expiresIn
+      }
     );
   }
 }
