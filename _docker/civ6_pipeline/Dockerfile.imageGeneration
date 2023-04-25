@@ -1,0 +1,52 @@
+FROM ubuntu:jammy
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# need curl to get node
+RUN apt update && apt install -y curl && rm -rf /var/lib/apt/lists/*
+
+# lambda runtime environment only supports node 14???
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash && \
+  apt update && apt install -y \
+  autoconf cmake default-jdk git imagemagick libtool nodejs \
+  # R/tidyverse deps
+  r-base libxml2-dev libssl-dev libcurl4-openssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+# tidyverse
+RUN Rscript -e 'install.packages("tidyverse")'
+RUN Rscript -e 'install.packages("devtools")'
+RUN Rscript -e 'install.packages("cowplot")'
+RUN Rscript -e 'install.packages("ggnewscale")'
+RUN Rscript -e 'library(devtools);install_github("rcannood/civ6saves")'
+
+RUN git clone https://github.com/pydt/civ6_pipeline
+
+# install node modules
+RUN mkdir -p /home/node
+WORKDIR /home/node
+RUN npm install civ6-save-parser
+
+WORKDIR /civ6_pipeline
+RUN bin/init
+RUN bin/viash_build
+
+# need to tweak the imagemagick pdf policy
+# https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
+COPY policy.xml /etc/ImageMagick-6/policy.xml
+
+# Run pipeline once to get dependencies and make sure everything's kosher
+RUN workflows/civ6_pipeline/run_images-native.sh && rm data/* && rm output/*
+
+RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -L --output aws-lambda-rie && chmod a+x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin
+
+RUN mkdir /node_handler
+WORKDIR /node_handler
+COPY node_handler/package.json /node_handler
+COPY node_handler/package-lock.json /node_handler
+RUN npm install
+COPY node_handler/index.js /node_handler
+COPY node_handler/entry_script.sh /node_handler
+
+ENTRYPOINT ["./entry_script.sh"]
+CMD ["index.handler"]
