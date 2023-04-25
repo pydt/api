@@ -1,14 +1,10 @@
-const {
-  S3Client,
-  GetObjectCommand,
-  PutObjectCommand
-} = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { execSync } = require('child_process');
 const fs = require('fs/promises');
 const path = require('path');
 
 const s3 = new S3Client({
-  region: 'us-east-1',
+  region: 'us-east-1'
 });
 
 let callNum = 0;
@@ -27,15 +23,18 @@ exports.handler = async function (event, context) {
 
   await fs.writeFile(inputFile, Buffer.from(await input.Body.transformToByteArray()));
 
-  execSync(`export NXF_VER=22.04.5
+  execSync(
+    `export NXF_VER=22.04.5
 
   bin/nextflow \
     run . \
     -main-script workflows/civ6_pipeline/main_images-only.nf \
     --input ${inputFile} \
-    --publishDir ${outputDir}`, {
+    --publishDir ${outputDir}`,
+    {
       cwd: '/civ6_pipeline'
-    });
+    }
+  );
 
   const outputFiles = await fs.readdir(outputDir);
 

@@ -191,6 +191,11 @@ functions:
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - sns: ${self:custom.resourcePrefix}turn-submitted  
+  snsCiv6GameStateImage:
+    image: 583172113704.dkr.ecr.us-east-1.amazonaws.com/civ6_pipeline:latest
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    events:
+      - sns: ${self:custom.resourcePrefix}civ-6-game-state-image 
   websockets:
     handler: api/websocket.handler
     events:

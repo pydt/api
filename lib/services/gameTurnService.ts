@@ -52,7 +52,7 @@ export class GameTurnService implements IGameTurnService {
       this.gameRepository.saveVersioned(game)
     ]);
 
-    await this.sns.turnSubmitted(game);
+    await this.sns.turnSubmitted(game, true);
   }
 
   private async closeGameTurn(game: Game, gameTurn: GameTurn, user: User) {

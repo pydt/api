@@ -2,7 +2,12 @@ import { Game, GamePlayer } from '../models';
 
 export class GameUtil {
   public static createS3SaveKey(gameId: string, turn: number) {
-    return gameId + '/' + ('000000' + turn).slice(-6) + '.CivXSave';
+    return `${gameId}/${('000000' + turn).slice(-6)}.CivXSave`;
+  }
+
+  public static createS3ImageKey(game: Game) {
+    // overwrite with latest image for round
+    return `${game.gameId}_images/${('000000' + game.round).slice(-6)}.png`;
   }
 
   public static calculateIsCompleted(game: Game) {

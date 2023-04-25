@@ -3,7 +3,8 @@ import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { provideSingleton } from './ioc';
 import { Config } from './config';
 import { Game } from './models';
-import { SNS_MESSAGES, UserGameCacheUpdatedPayload } from './models/sns';
+import { GAME_STATE_IMAGE_MESSAGES, SNS_MESSAGES, UserGameCacheUpdatedPayload } from './models/sns';
+import { GameUtil } from './util/gameUtil';
 
 const sns = new SNSClient({
   region: Config.region
@@ -15,19 +16,40 @@ const sts = new STSClient({
 export const SNS_PROVIDER_SYMBOL = Symbol('ISnsProvider');
 
 export interface ISnsProvider {
-  turnSubmitted(game: Game): Promise<void>;
+  turnSubmitted(game: Game, createTurnImage?: boolean): Promise<void>;
   gameUpdated(game: Game): Promise<void>;
   userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<void>;
 }
 
 @provideSingleton(SNS_PROVIDER_SYMBOL)
 export class SnsProvider implements ISnsProvider {
-  public async turnSubmitted(game: Game) {
+  public async turnSubmitted(game: Game, createTurnImage?: boolean) {
     await this.sendMessage(
       Config.resourcePrefix + SNS_MESSAGES.TURN_SUBMITTED,
       SNS_MESSAGES.TURN_SUBMITTED,
       game.gameId
     );
+
+    if (createTurnImage) {
+      const topic = GAME_STATE_IMAGE_MESSAGES[game.gameType];
+
+      if (topic) {
+        await this.sendMessage(
+          Config.resourcePrefix + topic,
+          topic,
+          JSON.stringify({
+            inputParams: {
+              Bucket: Config.resourcePrefix + 'saves',
+              Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+            },
+            outputParams: {
+              Bucket: Config.resourcePrefix + 'saves',
+              Key: GameUtil.createS3ImageKey(game)
+            }
+          })
+        );
+      }
+    }
   }
 
   public async gameUpdated(game: Game) {
