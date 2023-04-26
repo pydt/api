@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.319.0",
-    "aws-lambda-ric": "^2.0.0"
+    "aws-lambda-ric": "^2.0.0",
+    "fs-extra": "^11.1.1"
   }
 }

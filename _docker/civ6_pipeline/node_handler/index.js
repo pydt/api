@@ -1,6 +1,6 @@
 const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { execSync } = require('child_process');
-const fs = require('fs/promises');
+const fs = require('fs-extra');
 const path = require('path');
 
 const s3 = new S3Client({
@@ -10,6 +10,12 @@ const s3 = new S3Client({
 let callNum = 0;
 
 exports.handler = async function (event, context) {
+  // copy files from staging to tmp if not there already
+  if (!fs.pathExistsSync('/tmp/nxf-tmp')) {
+    console.log('copying staging to tmp')
+    fs.copySync('/staging', '/tmp');
+  }
+
   const baseDir = `/tmp/${callNum++}`;
 
   const { inputParams, outputParams } = JSON.parse(event.Records[0].Sns.Message);
@@ -25,6 +31,9 @@ exports.handler = async function (event, context) {
 
   execSync(
     `export NXF_VER=22.04.5
+    export NXF_HOME=/tmp/.nextflow
+    export NXF_TEMP=/tmp/nxf-tmp
+    export NXF_WORK=/tmp/nxf-work
 
   bin/nextflow \
     run . \

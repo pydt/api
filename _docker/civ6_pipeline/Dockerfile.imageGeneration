@@ -31,12 +31,16 @@ WORKDIR /civ6_pipeline
 RUN bin/init
 RUN bin/viash_build
 
+# make sure all files are readable globally for lambda
+RUN chmod -R a+r /civ6_pipeline
+
 # need to tweak the imagemagick pdf policy
 # https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
 COPY policy.xml /etc/ImageMagick-6/policy.xml
 
 # Run pipeline once to get dependencies and make sure everything's kosher
-RUN workflows/civ6_pipeline/run_images-native.sh && rm data/* && rm output/*
+RUN mkdir -p /staging/nxf-tmp && mkdir -p /staging/nxf-work
+RUN NXF_HOME=/staging/.nextflow NXF_TEMP=/staging/nxf-tmp NXF_WORK=/staging/nxf-work workflows/civ6_pipeline/run_images-native.sh && rm data/* && rm output/* && chmod -R a+r /staging
 
 RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -L --output aws-lambda-rie && chmod a+x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin
 
