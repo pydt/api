@@ -31,6 +31,9 @@ WORKDIR /civ6_pipeline
 RUN bin/init
 RUN bin/viash_build
 
+# make sure all files are readable globally for lambda
+RUN chmod -R a+r /civ6_pipeline
+
 # need to tweak the imagemagick pdf policy
 # https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
 COPY policy.xml /etc/ImageMagick-6/policy.xml

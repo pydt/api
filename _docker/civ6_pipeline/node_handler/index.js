@@ -25,6 +25,7 @@ exports.handler = async function (event, context) {
 
   execSync(
     `export NXF_VER=22.04.5
+    export NXF_HOME=/tmp/.nextflow
 
   bin/nextflow \
     run . \
