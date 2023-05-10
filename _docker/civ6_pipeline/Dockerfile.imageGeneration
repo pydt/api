@@ -1,52 +1,47 @@
-FROM ubuntu:jammy
+FROM public.ecr.aws/lambda/nodejs:18
 
-ENV DEBIAN_FRONTEND=noninteractive
+RUN yum install -y ImageMagick amazon-linux-extras git make cmake3 tar && yum clean all && rm -rf /var/cache/yum
 
-# need curl to get node
-RUN apt update && apt install -y curl && rm -rf /var/lib/apt/lists/*
+RUN amazon-linux-extras install -y R4 && yum clean all && rm -rf /var/cache/yum
 
-# lambda runtime environment only supports node 14???
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash && \
-  apt update && apt install -y \
-  autoconf cmake default-jdk git imagemagick libtool nodejs \
-  # R/tidyverse deps
-  r-base libxml2-dev libssl-dev libcurl4-openssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
-  && rm -rf /var/lib/apt/lists/*
+# R/tidyverse deps
+RUN yum install -y openssl-devel libssh2-devel libxml2-devel libcurl-devel harfbuzz-devel fribidi-devel freetype-devel libpng-devel libtiff-devel libjpeg-turbo-devel && yum clean all && rm -rf /var/cache/yum
 
-# tidyverse
-RUN Rscript -e 'install.packages("tidyverse")'
-RUN Rscript -e 'install.packages("devtools")'
-RUN Rscript -e 'install.packages("cowplot")'
-RUN Rscript -e 'install.packages("ggnewscale")'
+RUN git clone --depth=1 -b v1.0.0 https://github.com/libgit2/libgit2.git ~/libgit2_src \
+    && cd ~/libgit2_src \
+    && cmake3 . -DBUILD_CLAR=OFF -DCMAKE_BUILD_TYPE=Release -DEMBED_SSH_PATH=~/libssh2_src -DCMAKE_INSTALL_PREFIX=~/libgit2 \
+    && cmake3 --build . --target install \
+    && cp -r ~/libgit2/* /usr/bin \
+    && cp -r ~/libgit2/* /usr/local \
+    && cp -r /usr/local/lib64/* /lib64 \
+    && cd && rm -rf libgit*
+
+RUN Rscript -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
+RUN Rscript -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
+RUN Rscript -e 'install.packages("cowplot", repos = "http://cran.us.r-project.org")'
+RUN Rscript -e 'install.packages("ggnewscale", repos = "http://cran.us.r-project.org")'
 RUN Rscript -e 'library(devtools);install_github("rcannood/civ6saves")'
 
-RUN git clone https://github.com/pydt/civ6_pipeline
+WORKDIR /
+RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout 4a335538702e68aea542f0bf3c7b9ec35619d6f7
 
 # install node modules
 RUN mkdir -p /home/node
 WORKDIR /home/node
 RUN npm install civ6-save-parser
 
+RUN curl -fsSL http://dl.viash.io | bash; mv viash /usr/local/bin
+
 WORKDIR /civ6_pipeline
-RUN bin/init
-RUN bin/viash_build
+RUN viash ns build --parallel -p native
 
 # make sure all files are readable globally for lambda
 RUN chmod -R a+r /civ6_pipeline
 
-# need to tweak the imagemagick pdf policy
-# https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-COPY policy.xml /etc/ImageMagick-6/policy.xml
-
-RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -L --output aws-lambda-rie && chmod a+x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin
-
-RUN mkdir /node_handler
-WORKDIR /node_handler
-COPY node_handler/package.json /node_handler
-COPY node_handler/package-lock.json /node_handler
+WORKDIR ${LAMBDA_TASK_ROOT}
+COPY node_handler/package.json .
+COPY node_handler/package-lock.json .
 RUN npm install
-COPY node_handler/index.js /node_handler
-COPY node_handler/entry_script.sh /node_handler
+COPY node_handler/index.js .
 
-ENTRYPOINT ["./entry_script.sh"]
 CMD ["index.handler"]
