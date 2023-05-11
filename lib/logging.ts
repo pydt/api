@@ -67,16 +67,16 @@ export function loggingHandler(handler: (event, context, iocContainer: Container
     try {
       return await handler(event, context, iocContainer);
     } catch (err) {
-      pydtLogger.error('Handler threw unhandled exception...', err);
       const exposedError = new Error('Service Unavailable');
 
       if (rollbar) {
-        rollbar.wait(() => {
-          throw exposedError;
+        rollbar.error('Handler threw unhandled exception...', err, { event });
+        await new Promise(resolve => {
+          rollbar.wait(resolve as any);
         });
-      } else {
-        throw exposedError;
       }
+
+      throw exposedError;
     }
   };
 }

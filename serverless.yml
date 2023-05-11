@@ -90,7 +90,6 @@ custom:
       forceInclude:
         - reflect-metadata
         - source-map-support
-        - pydt-shared
       forceExclude:
         - aws-sdk
   domain:

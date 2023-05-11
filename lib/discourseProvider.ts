@@ -82,10 +82,12 @@ export class DiscourseProvider implements IDiscourseProvider {
         {
           method: 'DELETE',
           headers: {
+            'Content-Type': 'application/json',
             'Api-Key': Config.discourseApiKey,
             'Api-Username': 'system'
           }
-        }
+        },
+        true
       );
     } else {
       pydtLogger.info(
