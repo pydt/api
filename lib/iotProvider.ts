@@ -18,7 +18,7 @@ export class IotProvider implements IIotProvider {
 
   constructor() {
     this.iotData = new IoTDataPlaneClient({
-      endpoint: 'a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com'
+      endpoint: 'https://a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com'
     });
   }
 

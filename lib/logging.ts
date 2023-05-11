@@ -72,6 +72,7 @@ export function loggingHandler(handler: (event, context, iocContainer: Container
       if (rollbar) {
         rollbar.error('Handler threw unhandled exception...', err, { event });
         await new Promise(resolve => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           rollbar.wait(resolve as any);
         });
       }
