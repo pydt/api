@@ -192,7 +192,7 @@ functions:
       - sns: ${self:custom.resourcePrefix}turn-submitted  
   snsCiv6GameStateImage:
     image: 583172113704.dkr.ecr.us-east-1.amazonaws.com/civ6_pipeline:latest
-    memorySize: 1024
+    memorySize: 768
     timeout: 120
     events:
       - sns: ${self:custom.resourcePrefix}civ-6-game-state-image 
