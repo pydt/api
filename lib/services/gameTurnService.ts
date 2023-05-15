@@ -243,6 +243,8 @@ export class GameTurnService implements IGameTurnService {
       if (e instanceof HttpResponseError) {
         throw e;
       } else {
+        pydtLogger.error(`Error parsing file from game ${game.gameId}`, e);
+
         throw new HttpResponseError(
           400,
           `Could not parse uploaded file!  If you continue to have trouble please post on the PYDT forums.`

@@ -77,7 +77,9 @@ export class S3Provider implements IS3Provider {
 
   async getObject(fileParams: FileParams) {
     return {
-      Body: await (await s3.send(new GetObjectCommand(fileParams))).Body.transformToByteArray()
+      Body: Buffer.from(
+        await (await s3.send(new GetObjectCommand(fileParams))).Body.transformToByteArray()
+      )
     };
   }
 
@@ -115,7 +117,7 @@ export class S3Provider implements IS3Provider {
 }
 
 export interface GetObjectResult {
-  Body: Uint8Array;
+  Body: Buffer;
 }
 
 export interface ListObjectsResult {
