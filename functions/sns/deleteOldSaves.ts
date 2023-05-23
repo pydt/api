@@ -17,7 +17,9 @@ export class DeleteOldSaves {
   constructor(@inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider) {}
 
   public async execute(gameId: string) {
-    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', gameId);
+    // Now that we're saving images, the images are being included in the delete check!!!
+    // Make sure we're only looking at the pure save folder!!!111
+    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', `${gameId}/`);
 
     if (!resp || !resp.Contents) {
       throw new Error(`No data returned for listObjectsV2, prefix: ${gameId}`);
