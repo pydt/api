@@ -151,7 +151,7 @@ functions:
       - schedule: cron(0 7 * * ? *)
   cronUpdateUserInfo:
     handler: functions/cron/updateUserInfo.handler
-    timeout: 30
+    timeout: 900
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
       - schedule: cron(23 */6 * * ? *)

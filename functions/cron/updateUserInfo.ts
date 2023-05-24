@@ -17,9 +17,9 @@ export class UpdateUserInfo {
 
   public async execute(): Promise<void> {
     const users = await this.userRepository.allUsers();
+    const usersToUpdate: User[] = [];
 
     for (const curChunk of chunk(users, 75)) {
-      const usersToUpdate: User[] = [];
       const players = await getPlayerSummaries(curChunk.map(x => x.steamId));
 
       for (const user of curChunk) {
@@ -36,18 +36,29 @@ export class UpdateUserInfo {
             this.possiblyUpdateValue(user, 'avatarFull', curPlayer.avatarfull);
 
           if (isDirty) {
-            console.log(`Updating ${user.displayName}...`);
             usersToUpdate.push(user);
           }
         } else {
           console.log(`Couldn't find steamId ${user.steamId}!`);
         }
       }
+    }
 
-      for (const user of usersToUpdate) {
+    console.log(`${usersToUpdate.length} users to update...`);
+
+    for (const curChunk of chunk(usersToUpdate, 75)) {
+      for (const user of curChunk) {
+        console.log(`Updating ${user.steamId} (${user.displayName})...`);
         await this.userRepository.saveVersioned(user);
       }
+
+      if (curChunk.length === 75) {
+        // Give dynamo some rest
+        await new Promise(resolve => setTimeout(resolve, 2500));
+      }
     }
+
+    console.log(`Update complete!`);
   }
 
   private possiblyUpdateValue(source, sourceProp, newValue) {
