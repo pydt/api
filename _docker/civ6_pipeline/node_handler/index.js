@@ -58,7 +58,8 @@ exports.handler = async function (event) {
       await s3.send(
         new PutObjectCommand({
           ...outputParams,
-          Body: await fs.readFile(`${outputDir}/map.png`)
+          Body: await fs.readFile(`${outputDir}/map.png`),
+          StorageClass: 'INTELLIGENT_TIERING'
         })
       );
     } finally {

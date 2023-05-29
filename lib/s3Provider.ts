@@ -45,7 +45,8 @@ export class S3Provider implements IS3Provider {
     await s3.send(
       new PutObjectCommand(
         merge(fileParams, {
-          Body: data
+          Body: data,
+          StorageClass: 'INTELLIGENT_TIERING'
         })
       )
     );
@@ -106,7 +107,8 @@ export class S3Provider implements IS3Provider {
       s3,
       new PutObjectCommand(
         merge(fileParams, {
-          ContentType: contentType
+          ContentType: contentType,
+          StorageClass: 'INTELLIGENT_TIERING'
         })
       ),
       {
