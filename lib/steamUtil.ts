@@ -44,6 +44,10 @@ export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfi
     }&steamids=${join(steamIds)}`
   );
 
+  if (!resp.ok) {
+    throw new Error(`Bad Response (${resp.status}): ${await resp.text()}`);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return ((await resp.json()) as any).response.players;
 }

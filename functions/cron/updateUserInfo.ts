@@ -42,6 +42,9 @@ export class UpdateUserInfo {
           console.log(`Couldn't find steamId ${user.steamId}!`);
         }
       }
+
+      // Try not to get steam mad at us
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     console.log(`${usersToUpdate.length} users to update...`);
