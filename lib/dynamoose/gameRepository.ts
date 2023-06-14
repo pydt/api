@@ -134,7 +134,9 @@ export class GameRepository
         }
       },
       webhookUrl: String,
-      resetGameStateOnNextUpload: legacyBoolean()
+      resetGameStateOnNextUpload: legacyBoolean(),
+      finalized: Boolean,
+      gameVideoUrl: String
     });
   }
 

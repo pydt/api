@@ -19,6 +19,7 @@ export interface ISnsProvider {
   turnSubmitted(game: Game, createTurnImage?: boolean): Promise<void>;
   gameUpdated(game: Game): Promise<void>;
   userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<void>;
+  gameFinalized(game: Game): Promise<void>;
 }
 
 @provideSingleton(SNS_PROVIDER_SYMBOL)
@@ -77,6 +78,14 @@ export class SnsProvider implements ISnsProvider {
         Subject: subject,
         TopicArn: 'arn:aws:sns:us-east-1:' + identity.Account + ':' + topic
       })
+    );
+  }
+
+  public async gameFinalized(game: Game) {
+    await this.sendMessage(
+      Config.resourcePrefix + SNS_MESSAGES.GAME_FINALIZED,
+      SNS_MESSAGES.GAME_FINALIZED,
+      game.gameId
     );
   }
 }

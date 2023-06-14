@@ -14,6 +14,7 @@ import { IGameTurnService } from '../../../lib/services/gameTurnService';
 import { HttpRequest } from '../../framework';
 import { GameController_FinishSubmit } from './finishSubmit';
 import { IPrivateUserDataRepository } from '../../../lib/dynamoose/privateUserDataRepository';
+import { ISnsProvider } from '../../../lib/snsProvider';
 
 describe('GameController_FinishSubmit', () => {
   it('should be able to handle weird new EarthStandard map name', async () => {
@@ -88,7 +89,8 @@ describe('GameController_FinishSubmit', () => {
       userRepositoryMock.object,
       gameTurnServiceMock.object,
       s3Mock.object,
-      pudMock.object
+      pudMock.object,
+      Mock.ofType<ISnsProvider>().object
     );
 
     const game = await gcfs.finishSubmit({ user: USER_ID } as HttpRequest, GAME_ID);
@@ -162,7 +164,8 @@ describe('GameController_FinishSubmit', () => {
       userRepositoryMock.object,
       gameTurnServiceMock.object,
       s3Mock.object,
-      Mock.ofType<IPrivateUserDataRepository>().object
+      Mock.ofType<IPrivateUserDataRepository>().object,
+      Mock.ofType<ISnsProvider>().object
     );
 
     try {

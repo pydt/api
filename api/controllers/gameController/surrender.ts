@@ -87,6 +87,8 @@ export class GameController_Surrender {
     player.surrenderDate = new Date();
 
     game.completed = GameUtil.calculateIsCompleted(game);
+    const sendFinalizedMessage = game.completed && !game.finalized;
+    game.finalized = game.completed;
 
     const user = await this.userRepository.get(userId);
 
@@ -132,6 +134,10 @@ export class GameController_Surrender {
     await Promise.all(savePromises);
 
     await this.sns.turnSubmitted(game);
+
+    if (sendFinalizedMessage) {
+      await this.sns.gameFinalized(game);
+    }
 
     // Send an email to everyone else left in the game....
     const emailPromises = [];

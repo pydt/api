@@ -131,7 +131,8 @@ describe('GameController_FinishSubmit', () => {
       userRepository,
       gameTurnService,
       s3Mock.object,
-      pudRepository
+      pudRepository,
+      Mock.ofType<ISnsProvider>().object
     );
 
     await gcfs.finishSubmit({ user: USER_1_ID } as HttpRequest, GAME_ID);

@@ -189,13 +189,22 @@ functions:
     handler: functions/sns/deleteOldSaves.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
     events:
-      - sns: ${self:custom.resourcePrefix}turn-submitted  
+      - sns: ${self:custom.resourcePrefix}turn-submitted
   snsCiv6GameStateImage:
     image: 583172113704.dkr.ecr.us-east-1.amazonaws.com/civ6_pipeline:latest
     memorySize: 768
     timeout: 120
     events:
-      - sns: ${self:custom.resourcePrefix}civ-6-game-state-image 
+      - sns: ${self:custom.resourcePrefix}civ-6-game-state-image
+  snsGameStateVideo:
+    handler: functions/sns/createGameVideo.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 120
+    ephemeralStorageSize: 2048
+    events:
+      - sns: ${self:custom.resourcePrefix}game-finalized
+    layers:
+      - arn:aws:lambda:us-east-1:583172113704:layer:ffmpeg_06142023:1
   websockets:
     handler: api/websocket.handler
     events:

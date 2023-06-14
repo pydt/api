@@ -23,6 +23,7 @@ import { ActorType } from '../../../lib/saveHandlers/saveHandler';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../../lib/snsProvider';
 
 @Route('game')
 @Tags('game')
@@ -34,7 +35,8 @@ export class GameController_FinishSubmit {
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
-    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {}
 
   @Security('api_key')
@@ -251,6 +253,8 @@ In save but not enabled: ${notInGame
     game.currentPlayerSteamId = game.players[nextPlayerIndex].steamId;
     game.round = expectedRound;
     game.completed = GameUtil.calculateIsCompleted(game);
+    const sendFinalizedMessage = game.completed && !game.finalized;
+    game.finalized = game.completed;
 
     GameUtil.possiblyUpdateAdmin(game);
 
@@ -259,6 +263,10 @@ In save but not enabled: ${notInGame
 
     if (newDefeatedPlayers.length) {
       await this.gameTurnService.defeatPlayers(game, users, newDefeatedPlayers);
+    }
+
+    if (sendFinalizedMessage) {
+      await this.sns.gameFinalized(game);
     }
 
     const pud = await this.pudRepository.get(request.user);

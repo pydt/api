@@ -5,6 +5,7 @@ export * from './delete';
 export * from './edit';
 export * from './finishSubmit';
 export * from './getTurn';
+export * from './getTurnById';
 export * from './getTurns';
 export * from './join';
 export * from './leave';
