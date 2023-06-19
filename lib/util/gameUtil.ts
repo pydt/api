@@ -71,4 +71,13 @@ export class GameUtil {
   public static playerIsHuman(player: GamePlayer) {
     return player.steamId && !player.hasSurrendered;
   }
+
+  public static possiblyUpdateAdmin(game: Game) {
+    const firstHuman = game.players.find(GameUtil.playerIsHuman);
+
+    if (firstHuman && firstHuman.steamId !== game.createdBySteamId) {
+      // If game creator has been defeated, transfer admin to first available player
+      game.createdBySteamId = firstHuman.steamId;
+    }
+  }
 }

@@ -252,6 +252,8 @@ In save but not enabled: ${notInGame
     game.round = expectedRound;
     game.completed = GameUtil.calculateIsCompleted(game);
 
+    GameUtil.possiblyUpdateAdmin(game);
+
     await this.gameTurnService.updateSaveFileForGameState(game, users, saveHandler);
     await this.gameTurnService.moveToNextTurn(game, gameTurn, user);
 

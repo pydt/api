@@ -122,12 +122,7 @@ export class GameController_Surrender {
       );
     }
 
-    const firstHuman = game.players.find(GameUtil.playerIsHuman);
-
-    if (firstHuman && firstHuman.steamId !== game.createdBySteamId) {
-      // If game creator has surrendered, transfer admin to first available player
-      game.createdBySteamId = firstHuman.steamId;
-    }
+    GameUtil.possiblyUpdateAdmin(game);
 
     savePromises.push(
       this.userRepository.saveVersioned(user),
