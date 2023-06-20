@@ -67,7 +67,7 @@ stderr: ${err.stderr.toString()}`);
             true
           );
 
-          game.gameVideoUrl = `https://${Config.resourcePrefix}saves.s3.amazonaws.com/${videoKey}`;
+          game.gameVideoUrl = `https://${Config.resourcePrefix}saves.s3-accelerate.amazonaws.com/${videoKey}`;
           await this.gameRepository.saveVersioned(game);
         } finally {
           await fs.rm(baseDir, { recursive: true, force: true });

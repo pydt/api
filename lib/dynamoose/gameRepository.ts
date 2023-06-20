@@ -10,6 +10,7 @@ import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
 export interface IGameRepository extends IRepository<string, Game> {
+  allGames(): Promise<Game[]>;
   getByClonedFromGameId(gameId: string): Promise<Game | undefined>;
   getGamesForUser(user: User): Promise<Game[]>;
   getCompletedGamesForUser(user: User): Promise<Game[]>;
@@ -142,6 +143,10 @@ export class GameRepository
 
   async get(id: string, consistent?: boolean) {
     return this.setDefaults(await super.get(id, consistent));
+  }
+
+  allGames(): Promise<Game[]> {
+    return this.getAllPaged(this.scan());
   }
 
   public getGamesForUser(user: User): Promise<Game[]> {
