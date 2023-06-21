@@ -6,6 +6,11 @@ import { injectable } from 'inversify';
 import { execSync } from 'child_process';
 import * as fs from 'fs/promises';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
+import {
+  GAME_TURN_REPOSITORY_SYMBOL,
+  IGameTurnRepository
+} from '../../lib/dynamoose/gameTurnRepository';
+import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const dos = iocContainer.resolve(CreateGameVideo);
@@ -18,13 +23,35 @@ let callNum = 0;
 export class CreateGameVideo {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
+    @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {}
 
   public async execute(gameId: string) {
+    const game = await this.gameRepository.get(gameId.replace('REGENERATE_IMAGES:', ''));
+
+    if (gameId.startsWith('REGENERATE_IMAGES:')) {
+      const turns = await this.gameTurnRepository.getTurnsForGame(
+        game.gameId,
+        game.gameTurnRangeKey - 20,
+        game.gameTurnRangeKey
+      );
+
+      let round = -1;
+
+      for (const turn of turns) {
+        if (turn.round !== round) {
+          round = turn.round;
+          await this.sns.createTurnImage(game, turn.turn, turn.round);
+        }
+      }
+
+      return;
+    }
+
     const Bucket = Config.resourcePrefix + 'saves';
     const baseDir = `/tmp/${callNum++}`;
-    const game = await this.gameRepository.get(gameId);
 
     if (game.finalized) {
       const resp = await this.s3.listObjects(Bucket, `${gameId}_images/`);

@@ -20,6 +20,7 @@ export interface ISnsProvider {
   gameUpdated(game: Game): Promise<void>;
   userGameCacheUpdated(payload: UserGameCacheUpdatedPayload): Promise<void>;
   gameFinalized(game: Game): Promise<void>;
+  createTurnImage(game: Game, gameTurnRangeKey?: number, round?: number): Promise<void>;
 }
 
 @provideSingleton(SNS_PROVIDER_SYMBOL)
@@ -32,24 +33,28 @@ export class SnsProvider implements ISnsProvider {
     );
 
     if (createTurnImage) {
-      const topic = GAME_STATE_IMAGE_MESSAGES[game.gameType];
+      await this.createTurnImage(game);
+    }
+  }
 
-      if (topic) {
-        await this.sendMessage(
-          Config.resourcePrefix + topic,
-          topic,
-          JSON.stringify({
-            inputParams: {
-              Bucket: Config.resourcePrefix + 'saves',
-              Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
-            },
-            outputParams: {
-              Bucket: Config.resourcePrefix + 'saves',
-              Key: GameUtil.createS3ImageKey(game)
-            }
-          })
-        );
-      }
+  public async createTurnImage(game: Game, gameTurnRangeKey?: number, round?: number) {
+    const topic = GAME_STATE_IMAGE_MESSAGES[game.gameType];
+
+    if (topic) {
+      await this.sendMessage(
+        Config.resourcePrefix + topic,
+        topic,
+        JSON.stringify({
+          inputParams: {
+            Bucket: Config.resourcePrefix + 'saves',
+            Key: GameUtil.createS3SaveKey(game.gameId, gameTurnRangeKey || game.gameTurnRangeKey)
+          },
+          outputParams: {
+            Bucket: Config.resourcePrefix + 'saves',
+            Key: GameUtil.createS3ImageKey(game.gameId, round || game.round)
+          }
+        })
+      );
     }
   }
 

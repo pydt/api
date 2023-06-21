@@ -5,9 +5,9 @@ export class GameUtil {
     return `${gameId}/${('000000' + turn).slice(-6)}.CivXSave`;
   }
 
-  public static createS3ImageKey(game: Game) {
+  public static createS3ImageKey(gameId: string, round: number) {
     // overwrite with latest image for round
-    return `${game.gameId}_images/${('000000' + game.round).slice(-6)}.png`;
+    return `${gameId}_images/${('000000' + round).slice(-6)}.png`;
   }
 
   public static calculateIsCompleted(game: Game) {
