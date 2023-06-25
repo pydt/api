@@ -23,7 +23,7 @@ RUN Rscript -e 'install.packages("ggnewscale", repos = "http://cran.us.r-project
 RUN Rscript -e 'library(devtools);install_github("rcannood/civ6saves")'
 
 WORKDIR /
-RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout bf71b3f11ef5db71fffbcba36523fb2ac54183b5
+RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout f9b5835460f06cd959a5a16df239ec7c628afa3b
 
 # install node modules
 RUN mkdir -p /home/node
@@ -41,7 +41,7 @@ RUN chmod -R a+r /civ6_pipeline
 WORKDIR ${LAMBDA_TASK_ROOT}
 COPY node_handler/package.json .
 COPY node_handler/package-lock.json .
-RUN npm install
+RUN npm install --omit=dev
 COPY node_handler/index.js .
 
 CMD ["index.handler"]

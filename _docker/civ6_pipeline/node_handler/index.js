@@ -21,12 +21,24 @@ const s3 = new S3Client({
 let callNum = 0;
 
 exports.handler = async function (event) {
+  let inputParams;
+
   try {
     const baseDir = `/tmp/${callNum++}`;
 
-    const { inputParams, outputParams } = JSON.parse(event.Records[0].Sns.Message);
+    const message = JSON.parse(event.Records[0].Sns.Message);
+    inputParams = message.inputParams;
+    const outputParams = message.outputParams;
 
-    const input = await s3.send(new GetObjectCommand(inputParams));
+    let input;
+
+    if (inputParams.Bucket === 'test') {
+      input = await fs.readFile(inputParams.Key);
+    } else {
+      const s3Resp = await s3.send(new GetObjectCommand(inputParams));
+      input = Buffer.from(await s3Resp.Body.transformToByteArray());
+    }
+
     const inputFile = `${baseDir}/${inputParams.Key}`;
     const outputDir = `${baseDir}/output`;
 
@@ -34,7 +46,7 @@ exports.handler = async function (event) {
     await fs.mkdir(outputDir, { recursive: true });
 
     try {
-      await fs.writeFile(inputFile, Buffer.from(await input.Body.transformToByteArray()));
+      await fs.writeFile(inputFile, input);
 
       try {
         execSync(
@@ -55,21 +67,42 @@ exports.handler = async function (event) {
   stderr: ${err.stderr.toString()}`);
       }
 
-      await s3.send(
-        new PutObjectCommand({
-          ...outputParams,
-          Body: await fs.readFile(`${outputDir}/map.png`),
-          StorageClass: 'INTELLIGENT_TIERING'
-        })
-      );
+      if (outputParams.Bucket === 'test') {
+        await fs.rm(outputParams.Key, { recursive: true, force: true });
+        await fs.mkdir(outputParams.Key, { recursive: true });
+
+        await fs.writeFile(
+          `${outputParams.Key}/header.yaml`,
+          await fs.readFile(`${outputDir}/header.yaml`)
+        );
+        await fs.writeFile(
+          `${outputParams.Key}/map.tsv`,
+          await fs.readFile(`${outputDir}/map.tsv`)
+        );
+        await fs.writeFile(
+          `${outputParams.Key}/map.png`,
+          await fs.readFile(`${outputDir}/map.png`)
+        );
+      } else {
+        await s3.send(
+          new PutObjectCommand({
+            ...outputParams,
+            Body: await fs.readFile(`${outputDir}/map.png`),
+            StorageClass: 'INTELLIGENT_TIERING'
+          })
+        );
+      }
     } finally {
       await fs.rm(baseDir, { recursive: true, force: true });
     }
   } catch (err) {
-    rollbar.error(err, { inputParams });
-    await new Promise(resolve => {
-      rollbar.wait(resolve);
-    });
+    if (inputParams.Bucket !== 'test') {
+      rollbar.error(err, { inputParams });
+      await new Promise(resolve => {
+        rollbar.wait(resolve);
+      });
+    }
+
     throw err;
   }
 };

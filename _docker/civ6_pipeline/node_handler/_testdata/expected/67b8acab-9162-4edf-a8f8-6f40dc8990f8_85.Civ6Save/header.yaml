@@ -1,0 +1,720 @@
+{
+  ACTORS: [
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_LAHORE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_LAHORE'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_AUCKLAND',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_AUCKLAND'
+    },
+    {
+      START_ACTOR: 4159575459,
+      ACTOR_NAME: 'CIVILIZATION_FREE_CITIES',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FREE_CITIES',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_FREE_CITIES'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_HUNZA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_HUNZA'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_WOLIN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_WOLIN'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_CARDIFF',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CARDIFF'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_ARMAGH',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_ARMAGH'
+    },
+    {
+      START_ACTOR: 1467968654,
+      ACTOR_NAME: 'CIVILIZATION_SINGAPORE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_SINGAPORE'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_ZANZIBAR',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_ZANZIBAR'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_NAZCA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_NAZCA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_SAMARKAND',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_SAMARKAND'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_JOHANNESBURG',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_JOHANNESBURG'
+    },
+    {
+      START_ACTOR: 3258379874,
+      ACTOR_NAME: 'CIVILIZATION_RAPA_NUI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_RAPA_NUI'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_TARUGA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_TARUGA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_HONG_KONG',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_HONG_KONG'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_AKKAD',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_AKKAD'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_KANDY',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_KANDY'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_GENEVA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_GENEVA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_AYUTTHAYA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_AYUTTHAYA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_ANTANANARIVO',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_ANTANANARIVO'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_JERUSALEM',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_JERUSALEM'
+    },
+    {
+      START_ACTOR: 2536204835,
+      ACTOR_NAME: 'CIVILIZATION_BARBARIAN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_TRIBE',
+      ACTOR_AI_HUMAN: 1
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_FEZ',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_FEZ'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_BUENOS_AIRES',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_BUENOS_AIRES'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_MOHENJO_DARO',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_MOHENJO_DARO'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_KABUL',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_KABUL'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_VALLETTA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_VALLETTA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_PRESLAV',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_PRESLAV'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_JAKARTA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_JAKARTA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_BABYLON',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_BABYLON'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_CAGUANA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CAGUANA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_BRUSSELS',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_BRUSSELS'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_NAN_MADOL',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_NAN_MADOL'
+    },
+    {
+      START_ACTOR: 2700425908,
+      ACTOR_NAME: 'CIVILIZATION_LA_VENTA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_LA_VENTA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_YEREVAN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_YEREVAN'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_LISBON',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_LISBON'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_CHINGUETTI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CHINGUETTI'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_KUMASI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_KUMASI'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_ANTIOCH',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_ANTIOCH'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_BOLOGNA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_BOLOGNA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_NGAZARGAMU',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_NGAZARGAMU'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_GRANADA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_GRANADA'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_VATICAN_CITY',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_VATICAN_CITY'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_MUSCAT',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_MUSCAT'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_MEXICO_CITY',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_MEXICO_CITY'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_HATTUSA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_HATTUSA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_PALENQUE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_PALENQUE'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_CAHOKIA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CAHOKIA'
+    },
+    {
+      START_ACTOR: 4294967295,
+      ACTOR_NAME: 'CIVILIZATION_VILNIUS',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 5,
+      LEADER_NAME: 'LEADER_MINOR_CIV_VILNIUS'
+    },
+    {
+      SLOT_HEADER: 26,
+      ACTOR_NAME: 'CIVILIZATION_NALANDA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_NALANDA'
+    },
+    {
+      SLOT_HEADER: 25,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_ROME',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 2,
+      PLAYER_NAME: 'Игрок 1',
+      LEADER_NAME: 'LEADER_JULIUS_CAESAR'
+    }
+  ],
+  CIVS: [
+    {
+      SLOT_HEADER: 32,
+      PLAYER_ALIVE: true,
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_ROME',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 1,
+      PLAYER_NAME: 'gviner2015',
+      LEADER_NAME: 'LEADER_JULIUS_CAESAR'
+    },
+    {
+      SLOT_HEADER: 31,
+      PLAYER_ALIVE: true,
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_PERSIA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'gviner',
+      LEADER_NAME: 'LEADER_CYRUS'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_MAPUCHE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_LAUTARO'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_HUNGARY',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MATTHIAS_CORVINUS'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_INDIA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_GANDHI'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_AZTEC',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MONTEZUMA'
+    }
+  ],
+  GAME_SPEED: 'GAMESPEED_ONLINE',
+  MAP_SIZE: 'MAPSIZE_SMALL',
+  MOD_BLOCK_1: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    },
+    {
+      MOD_ID: 'c88cba8b-8311-4d35-90c3-51a4a5d66550',
+      MOD_TITLE: '{"LOC_BBS_TITLE":[{"locale":"en_US", "text":"Better Balanced Starts 2.2.0"}, {"locale":"fr_FR", "text":"Better Balanced Starts 2.2.0"}]}'
+    },
+    {
+      MOD_ID: 'cb84075d-5007-4207-b662-c35a5f7be260',
+      MOD_TITLE: '{"Better Balanced Game 5.3.2":[]}'
+    }
+  ],
+  GAME_TURN: 43,
+  MAP_FILE: 'Pangaea.lua',
+  MOD_BLOCK_2: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1d44b5e7-753e-405b-af24-5ee634ec8a01',
+      MOD_TITLE: '{"Community Quick User Interface (CQUI)":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '382a187f-c8ba-4094-a6a7-0d5315661f32',
+      MOD_TITLE: '{"Extended Diplomacy Ribbon":[]}'
+    },
+    {
+      MOD_ID: '382a187f-c8ba-4094-a6a7-0d5315661f33',
+      MOD_TITLE: '{"Extended Policy Cards":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '4ecfcc62-5471-4435-b295-590df213e8d8',
+      MOD_TITLE: '{"Detailed Map Tacks":[]}'
+    },
+    {
+      MOD_ID: '5aceed03-8639-4a81-8cbf-03f54d543502',
+      MOD_TITLE: '{"Quick Deals":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6f2888d4-79dc-415f-a8ff-f9d81d7afb53',
+      MOD_TITLE: '{"Better Report Screen (UI)":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    },
+    {
+      MOD_ID: 'c88cba8b-8311-4d35-90c3-51a4a5d66550',
+      MOD_TITLE: '{"LOC_BBS_TITLE":[{"locale":"en_US", "text":"Better Balanced Starts 2.2.0"}, {"locale":"fr_FR", "text":"Better Balanced Starts 2.2.0"}]}'
+    },
+    {
+      MOD_ID: 'cb84075d-5007-4207-b662-c35a5f7be260',
+      MOD_TITLE: '{"Better Balanced Game 5.3.2":[]}'
+    },
+    {
+      MOD_ID: 'e345f57b-9ae2-45ab-8985-499c69d1e98e',
+      MOD_TITLE: '{"No Combat Random":[]}'
+    },
+    {
+      MOD_ID: 'f20c69ca-8602-4286-b91a-002dedc72314',
+      MOD_TITLE: '{"Tech and Civic Progress":[]}'
+    }
+  ],
+  MOD_BLOCK_3: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    },
+    {
+      MOD_ID: 'c88cba8b-8311-4d35-90c3-51a4a5d66550',
+      MOD_TITLE: '{"LOC_BBS_TITLE":[{"locale":"en_US", "text":"Better Balanced Starts 2.2.0"}, {"locale":"fr_FR", "text":"Better Balanced Starts 2.2.0"}]}'
+    },
+    {
+      MOD_ID: 'cb84075d-5007-4207-b662-c35a5f7be260',
+      MOD_TITLE: '{"Better Balanced Game 5.3.2":[]}'
+    }
+  ]
+}
