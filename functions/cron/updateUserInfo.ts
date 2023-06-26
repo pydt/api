@@ -1,10 +1,11 @@
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { getPlayerSummaries } from '../../lib/steamUtil';
-import { loggingHandler } from '../../lib/logging';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { User } from '../../lib/models/user';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
-import { chunk } from 'lodash';
+import { chunk, shuffle } from 'lodash';
+import { SteamProfile } from '../../lib/models';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uui = iocContainer.resolve(UpdateUserInfo);
@@ -16,11 +17,24 @@ export class UpdateUserInfo {
   constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {}
 
   public async execute(): Promise<void> {
-    const users = await this.userRepository.allUsers();
+    const allUsers = shuffle(await this.userRepository.allUsers());
     const usersToUpdate: User[] = [];
+    let loadedCount = 0;
 
-    for (const curChunk of chunk(users, 75)) {
-      const players = await getPlayerSummaries(curChunk.map(x => x.steamId));
+    for (const curChunk of chunk(allUsers, 75)) {
+      let players: SteamProfile[] = [];
+
+      try {
+        players = await getPlayerSummaries(curChunk.map(x => x.steamId));
+      } catch (e) {
+        pydtLogger.error('Error loading users from steam...', e);
+        // Exit loop and update any successful users
+        break;
+      }
+
+      loadedCount += players.length;
+
+      pydtLogger.info(`Loaded ${loadedCount} users from steam...`);
 
       for (const user of curChunk) {
         const curPlayer = players.find(player => {
@@ -39,19 +53,19 @@ export class UpdateUserInfo {
             usersToUpdate.push(user);
           }
         } else {
-          console.log(`Couldn't find steamId ${user.steamId}!`);
+          pydtLogger.info(`Couldn't find steamId ${user.steamId}!`);
         }
       }
 
       // Try not to get steam mad at us
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 4000));
     }
 
-    console.log(`${usersToUpdate.length} users to update...`);
+    pydtLogger.info(`${usersToUpdate.length} users to update...`);
 
     for (const curChunk of chunk(usersToUpdate, 75)) {
       for (const user of curChunk) {
-        console.log(`Updating ${user.steamId} (${user.displayName})...`);
+        pydtLogger.info(`Updating ${user.steamId} (${user.displayName})...`);
         await this.userRepository.saveVersioned(user);
       }
 
@@ -61,7 +75,7 @@ export class UpdateUserInfo {
       }
     }
 
-    console.log(`Update complete!`);
+    pydtLogger.info(`Update complete!`);
   }
 
   private possiblyUpdateValue(source, sourceProp, newValue) {

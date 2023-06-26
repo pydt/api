@@ -152,7 +152,7 @@ functions:
   cronUpdateUserInfo:
     handler: functions/cron/updateUserInfo.handler
     timeout: 900
-    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    memorySize: 1024
     events:
       - schedule: cron(23 */6 * * ? *)
   cronNotifyNewGames:
