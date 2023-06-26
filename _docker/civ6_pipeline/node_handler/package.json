@@ -8,12 +8,23 @@
   },
   "author": "",
   "license": "ISC",
+  "jest": {
+    "reporters": [
+      [
+        "jest-summary-reporter",
+        {
+          "failuresOnly": false
+        }
+      ]
+    ]
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.319.0",
     "rollbar": "^2.26.1"
   },
   "devDependencies": {
     "jest": "^29.5.0",
+    "jest-summary-reporter": "^0.0.2",
     "node-fetch": "^2.6.11"
   }
 }
