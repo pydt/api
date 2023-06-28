@@ -34,7 +34,7 @@ export class GameController_GetTurnById {
     const game = await this.gameRepository.getOrThrow404(gameId);
     const gameTurn = await this.gameTurnRepository.getOrThrow404({ gameId, turn });
 
-    if (!game.finalized && gameTurn.playerSteamId !== request.user) {
+    if (!GameUtil.canDownloadTurn(game, gameTurn, request.user)) {
       throw new HttpResponseError(400, `You can't download this damn turn.`);
     }
 

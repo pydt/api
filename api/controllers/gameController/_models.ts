@@ -1,4 +1,4 @@
-import { BaseGame, Game } from '../../../lib/models';
+import { BaseGame, Game, GameTurn } from '../../../lib/models';
 
 export interface ChangeCivRequestBody {
   steamId?: string;
@@ -45,4 +45,8 @@ export interface GameTurnResponse {
 
 export interface StartTurnSubmitResponse {
   putUrl: string;
+}
+
+export interface GameTurnListItem extends GameTurn {
+  hasSave: boolean;
 }

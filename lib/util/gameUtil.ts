@@ -1,13 +1,17 @@
-import { Game, GamePlayer } from '../models';
+import { Game, GamePlayer, GameTurn } from '../models';
 
 export class GameUtil {
+  public static padGameTurn(turn: number) {
+    return ('' + turn).padStart(6, '0');
+  }
+
   public static createS3SaveKey(gameId: string, turn: number) {
-    return `${gameId}/${('000000' + turn).slice(-6)}.CivXSave`;
+    return `${gameId}/${GameUtil.padGameTurn(turn)}.CivXSave`;
   }
 
   public static createS3ImageKey(gameId: string, round: number) {
     // overwrite with latest image for round
-    return `${gameId}_images/${('000000' + round).slice(-6)}.png`;
+    return `${gameId}_images/${GameUtil.padGameTurn(round)}.png`;
   }
 
   public static calculateIsCompleted(game: Game) {
@@ -20,6 +24,10 @@ export class GameUtil {
         return player.steamId === game.currentPlayerSteamId;
       })
     );
+  }
+
+  public static canDownloadTurn(game: Game, gameTurn: GameTurn, steamId: string) {
+    return game.finalized || gameTurn.playerSteamId === steamId;
   }
 
   public static getNextPlayerIndex(game: Game) {

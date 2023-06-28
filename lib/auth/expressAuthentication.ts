@@ -9,6 +9,8 @@ export async function expressAuthentication(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   scopes?: string[]
 ): Promise<string> {
+  const allowAnonymous = scopes?.includes('ALLOW_ANONYMOUS');
+
   if (securityName === 'api_key') {
     try {
       if (request.headers && request.headers['authorization']) {
@@ -23,8 +25,12 @@ export async function expressAuthentication(
       throw HttpResponseError.createUnauthorized();
     }
 
-    pydtLogger.info('No Authorization header in request!');
+    if (!allowAnonymous) {
+      pydtLogger.info('No Authorization header in request!');
+    }
   }
 
-  throw HttpResponseError.createUnauthorized();
+  if (!allowAnonymous) {
+    throw HttpResponseError.createUnauthorized();
+  }
 }
