@@ -49,10 +49,10 @@ export class AddTurnTimerJob {
     pydtLogger.info('User vacation mode: ' + user.vacationMode);
     pydtLogger.info('turn timer minutes: ' + game.turnTimerMinutes);
 
-    if (user.vacationMode) {
-      pydtLogger.info('creating vacation timer');
+    if (user.vacationMode && game.turnTimerVacationHandling === 'SKIP_IMMEDIATELY') {
+      pydtLogger.info('creating immediate vacation timer');
       jobKey = {
-        jobType: JOB_TYPES.TURN_TIMER_VACATION,
+        jobType: JOB_TYPES.TURN_TIMER,
         scheduledTime: new Date().getTime()
       };
     } else if (game.turnTimerMinutes) {

@@ -11,8 +11,7 @@ export interface IScheduledJobRepository extends IRepository<ScheduledJobKey, Sc
 }
 
 export const JOB_TYPES = {
-  TURN_TIMER: 'TURN_TIMER',
-  TURN_TIMER_VACATION: 'TURN_TIMER_VACATION'
+  TURN_TIMER: 'TURN_TIMER'
 };
 
 @provideSingleton(SCHEDULED_JOB_REPOSITORY_SYMBOL)

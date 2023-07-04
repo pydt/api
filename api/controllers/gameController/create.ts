@@ -99,7 +99,8 @@ export class GameController_Create {
       randomOnly: body.randomOnly,
       allowDuplicateLeaders: body.allowDuplicateLeaders,
       allowJoinAfterStart: body.allowJoinAfterStart,
-      turnTimerMinutes: body.turnTimerMinutes
+      turnTimerMinutes: body.turnTimerMinutes,
+      turnTimerVacationHandling: body.turnTimerVacationHandling
     };
 
     const firstTimeHosting =

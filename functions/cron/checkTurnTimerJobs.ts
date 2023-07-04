@@ -38,14 +38,6 @@ export class CheckTurnTimerJobs {
     if (jobs && jobs.length) {
       await this.processJobs(jobs, this.checkTurnTimer);
     }
-
-    const vacationJobs = await this.scheduledJobRepository.getWaitingJobs(
-      JOB_TYPES.TURN_TIMER_VACATION
-    );
-
-    if (vacationJobs && vacationJobs.length) {
-      await this.processJobs(vacationJobs, this.checkVacation);
-    }
   }
 
   private async processJobs(jobs: ScheduledJob[], callback: (game: Game) => Promise<void>) {
@@ -74,26 +66,42 @@ export class CheckTurnTimerJobs {
         );
       }
 
-      if (
-        !turn.endDate &&
-        new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000
-      ) {
-        pydtLogger.info('Skipping turn due to timer in game ' + game.gameId);
-        await this.gameTurnService.skipTurn(game, turn);
+      if (!turn.endDate) {
+        let skipTurn =
+          new Date().getTime() - turn.startDate.getTime() > game.turnTimerMinutes * 60000;
+        let reason = 'normal timer';
+
+        const user = await this.userRepository.get(game.currentPlayerSteamId);
+
+        if (user?.vacationMode) {
+          reason = `vacation: ${game.turnTimerVacationHandling}`;
+
+          switch (game.turnTimerVacationHandling) {
+            case 'PAUSE':
+              skipTurn = false;
+              pydtLogger.info(`Not skipping turn because of PAUSE mode in ${game.gameId}`);
+              break;
+
+            case 'SKIP_AFTER_TIMER':
+              // Do nothing, skip if timer expires
+              break;
+
+            case 'SKIP_IMMEDIATELY':
+              skipTurn = true;
+              break;
+
+            default:
+              throw new Error(
+                `Unrecognized turnTimerVacationHandling: ${game.turnTimerVacationHandling} in game ${game.gameId}`
+              );
+          }
+        }
+
+        if (skipTurn) {
+          pydtLogger.info(`Skipping turn due to ${reason} in game ${game.gameId}`);
+          await this.gameTurnService.skipTurn(game, turn);
+        }
       }
-    }
-  }
-
-  private async checkVacation(game: Game) {
-    const user = await this.userRepository.get(game.currentPlayerSteamId);
-
-    if (user.vacationMode && game.turnTimerMinutes) {
-      const turn = await this.gameTurnRepository.get({
-        gameId: game.gameId,
-        turn: game.gameTurnRangeKey
-      });
-      pydtLogger.info('Skipping turn due to vacation mode in game ' + game.gameId);
-      await this.gameTurnService.skipTurn(game, turn);
     }
   }
 }

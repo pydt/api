@@ -16,6 +16,7 @@ export interface BaseGame {
   randomOnly?: 'EITHER' | 'FORCE_RANDOM' | 'FORCE_LEADER';
   allowJoinAfterStart?: boolean;
   turnTimerMinutes?: number;
+  turnTimerVacationHandling?: 'PAUSE' | 'SKIP_AFTER_TIMER' | 'SKIP_IMMEDIATELY';
 }
 
 export interface Game extends Entity, BaseGame {

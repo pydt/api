@@ -137,7 +137,8 @@ export class GameRepository
       webhookUrl: String,
       resetGameStateOnNextUpload: legacyBoolean(),
       finalized: Boolean,
-      gameVideoUrl: String
+      gameVideoUrl: String,
+      turnTimerVacationHandling: String
     });
   }
 
@@ -218,6 +219,7 @@ export class GameRepository
   private setDefaults(game: Game) {
     if (game) {
       game.gameType = game.gameType || CIV6_GAME.id;
+      game.turnTimerVacationHandling = game.turnTimerVacationHandling || 'SKIP_AFTER_TIMER';
     }
 
     return game;

@@ -69,6 +69,7 @@ export class GameController_Edit {
     game.allowJoinAfterStart = body.allowJoinAfterStart;
     game.webhookUrl = body.webhookUrl;
     game.turnTimerMinutes = body.turnTimerMinutes;
+    game.turnTimerVacationHandling = body.turnTimerVacationHandling;
 
     if (body.password) {
       if (body.password !== game.hashedPassword) {
