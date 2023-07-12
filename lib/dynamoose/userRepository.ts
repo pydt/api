@@ -104,8 +104,8 @@ export class UserRepository
           return JSON.stringify(
             (value || []).map(x => ({
               ...x,
-              activeGames: x.turnsPlayed || 0,
-              totalGames: x.turnsPlayed || 0,
+              activeGames: x.activeGames || 0,
+              totalGames: x.totalGames || 0,
               turnsPlayed: x.turnsPlayed || 0,
               turnsSkipped: x.turnsSkipped || 0,
               timeTaken: x.timeTaken || 0,
