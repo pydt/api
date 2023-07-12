@@ -31,68 +31,93 @@ export class DataMigrations {
   ) {}
 
   public async execute(message: string) {
-    if (message === 'privateuserdata') {
-      await this.createPrivateUserData();
-    }
-
     if (message.startsWith('userstats')) {
       let users: User[];
       const userId = message.replace('userstats:', '');
 
       if (userId === 'all') {
         users = await this.userRepository.allUsers();
-        users = users.filter(x => x.dataVersion < 2);
       } else if (userId) {
         users = [await this.userRepository.get(userId)];
       } else {
         throw new Error('userId or all must be provided');
       }
 
-      await this.calculateUserStats(users);
+      await this.calculateUserPerGameStats(users);
     }
   }
 
-  private async createPrivateUserData() {
-    const users = (await this.userRepository.allUsers())
-      .filter(x => !x.dataVersion || x.dataVersion < 3)
-      .map(x => x as DeprecatedUser);
+  // @ts-ignore: not currently used
+  private async createPrivateUserData(users: User[]) {
+    for (const user of users as DeprecatedUser[]) {
+      if ((user.dataVersion || 0) < 3) {
+        const pud: PrivateUserData = {
+          emailAddress: user.emailAddress,
+          steamId: user.steamId,
+          webhookUrl: user.webhookUrl
+        };
+
+        user.dataVersion = 3;
+        delete user.emailAddress;
+        delete user.webhookUrl;
+
+        await this.pudRepository.saveVersioned(pud);
+        await this.userRepository.saveVersioned(user);
+        console.log(`Created private user data for user ${user.displayName} (${user.steamId})`);
+      }
+    }
+  }
+
+  private async calculateUserPerGameStats(users: User[]) {
+    let allGames: Game[];
 
     for (const user of users) {
-      const pud: PrivateUserData = {
-        emailAddress: user.emailAddress,
-        steamId: user.steamId,
-        webhookUrl: user.webhookUrl
-      };
+      if ((user.dataVersion || 0) < 4) {
+        if (!allGames) {
+          allGames = await this.gameRepository.allGames();
+        }
 
-      user.dataVersion = 3;
-      delete user.emailAddress;
-      delete user.webhookUrl;
+        const userGames = allGames.filter(
+          x => user.activeGameIds?.includes(x.gameId) || user.inactiveGameIds?.includes(x.gameId)
+        );
 
-      await this.pudRepository.saveVersioned(pud);
-      await this.userRepository.saveVersioned(user);
-      console.log(`Created private user data for user ${user.displayName} (${user.steamId})`);
+        for (const gameStats of user.statsByGameType || []) {
+          const typeGames = userGames.filter(x => x.gameType === gameStats.gameType);
+
+          gameStats.activeGames = typeGames.filter(x =>
+            user.activeGameIds?.includes(x.gameId)
+          ).length;
+          gameStats.totalGames = typeGames.length;
+        }
+
+        user.dataVersion = 4;
+
+        await this.userRepository.saveVersioned(user);
+        console.log(`Recalculated per=-game stats for user ${user.displayName} (${user.steamId})`);
+      }
     }
   }
 
+  // @ts-ignore: not currently used
   private async calculateUserStats(users: User[]) {
     for (const user of users) {
-      this.resetStatistics(user);
+      if ((user.dataVersion || 0) < 2) {
+        this.resetStatistics(user);
 
-      const allGameIds = (user.activeGameIds || []).concat(user.inactiveGameIds || []);
+        const allGameIds = (user.activeGameIds || []).concat(user.inactiveGameIds || []);
 
-      pydtLogger.info(`Processing user ${user.displayName}`);
+        pydtLogger.info(`Processing user ${user.displayName}`);
 
-      if (allGameIds.length) {
-        const games = await this.gameRepository.batchGet(allGameIds);
-        await this.calculateGameStats(games, user);
-      }
+        if (allGameIds.length) {
+          const games = await this.gameRepository.batchGet(allGameIds);
+          await this.calculateGameStats(games, user);
+        }
 
-      if (user.dataVersion < 2) {
         user.dataVersion = 2;
-      }
 
-      await this.userRepository.saveVersioned(user);
-      console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
+        await this.userRepository.saveVersioned(user);
+        console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
+      }
     }
   }
 
