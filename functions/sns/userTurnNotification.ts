@@ -57,23 +57,30 @@ export class UserTurnNotification {
               const gameData = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
               const leader = gameData.leaders.find(x => x.leaderKey === currentPlayer.civType);
 
-              await this.http.fetch(webhook, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  gameName: game.displayName,
-                  userName: user.displayName,
-                  round: game.round,
-                  civName: leader ? leader.civDisplayName : null,
-                  leaderName: leader ? leader.leaderDisplayName : null,
-                  // Duplicate "play by cloud" format
-                  value1: game.displayName,
-                  value2: user.displayName,
-                  value3: game.round,
-                  // Discourse webhook "content" field
-                  content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
-                })
-              });
+              await this.http.fetch(
+                webhook,
+                {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  // will need to fix this if we move to standard fetch...
+                  // https://stackoverflow.com/questions/54204342/node-fetch-why-is-signal-recommended-over-timeout
+                  timeout: 5000,
+                  body: JSON.stringify({
+                    gameName: game.displayName,
+                    userName: user.displayName,
+                    round: game.round,
+                    civName: leader ? leader.civDisplayName : null,
+                    leaderName: leader ? leader.leaderDisplayName : null,
+                    // Duplicate "play by cloud" format
+                    value1: game.displayName,
+                    value2: user.displayName,
+                    value3: game.round,
+                    // Discourse webhook "content" field
+                    content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
+                  })
+                },
+                true
+              );
             } catch (e) {
               pydtLogger.info('Error sending webhook to ' + webhook, e);
             }

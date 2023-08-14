@@ -112,7 +112,8 @@ describe('UserTurnNotification', () => {
           It.isValue('http://gamehook.com'),
           It.isObjectWith({
             body: expectedRequestBody
-          })
+          }),
+          It.isValue(true)
         )
       )
       .verifiable(Times.once(), ExpectedCallType.InSequence);
@@ -123,7 +124,8 @@ describe('UserTurnNotification', () => {
           It.isValue('http://userhook.com'),
           It.isObjectWith({
             body: expectedRequestBody
-          })
+          }),
+          It.isValue(true)
         )
       )
       .verifiable(Times.once(), ExpectedCallType.InSequence);
@@ -133,7 +135,10 @@ describe('UserTurnNotification', () => {
       newTurn: true
     });
 
-    mocks.httpRequestMock.verify(x => x.fetch(It.isAny(), It.isAny()), Times.exactly(2));
+    mocks.httpRequestMock.verify(
+      x => x.fetch(It.isAny(), It.isAny(), It.isAny()),
+      Times.exactly(2)
+    );
     mocks.httpRequestMock.verifyAll();
     mocks.iotMock.verify(x => x.notifyUserClient(It.isAny()), Times.once());
     mocks.websocketMock.verify(x => x.sendMessage(It.isAny(), It.isAny()), Times.once());
