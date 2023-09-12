@@ -45,15 +45,11 @@ export class GameController_Join {
       }
 
       targetPlayer = game.players.find(player => {
-        return player.civType === body.playerCiv;
+        return player.civType === body.playerCiv && !player.steamId;
       });
 
       if (!targetPlayer) {
         throw new HttpResponseError(400, 'Requested civ not found.');
-      }
-
-      if (targetPlayer.steamId) {
-        throw new HttpResponseError(400, 'Slot already assigned.');
       }
     } else {
       if (game.randomOnly === 'FORCE_RANDOM' && body.playerCiv !== RANDOM_CIV.leaderKey) {
