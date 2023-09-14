@@ -514,9 +514,320 @@
       MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
     }
   ],
+  MOD_BLOCK_4: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '35f33319-ad93-4d6b-bf27-406fac382d06',
+      MOD_TITLE: '{"More Lenses":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '38C7FAFB-58EB-0C14-7377-92A810E9860B',
+      MOD_TITLE: '{"Better Loading Screen (UI)":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '805cc499-c534-4e0a-bdce-32fb3c53ba38',
+      MOD_TITLE: `{"Sukritact's Simple UI Adjustments":[]}`
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '8d4fa23a-ef43-440c-8422-2bec11f8f5d7',
+      MOD_TITLE: '{"Better Trade Screen":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    },
+    {
+      MOD_ID: 'af0e9409-35b0-4cc8-8965-e2c844c99e3b',
+      MOD_TITLE: '{"Resources At A Glance":[]}'
+    },
+    {
+      MOD_ID: 'd0003fe4-77cf-49f7-8b57-c98f25d50c14',
+      MOD_TITLE: `{"Sukritact's More City and Unit Info Stack":[]}`
+    },
+    {
+      MOD_ID: 'ebdf2824-352e-49c3-90c1-743a89180da8',
+      MOD_TITLE: '{"Better Espionage Screen":[]}'
+    }
+  ],
   GAME_TURN: 186,
   MAP_FILE: 'Shuffle.lua',
   MOD_BLOCK_2: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '35f33319-ad93-4d6b-bf27-406fac382d06',
+      MOD_TITLE: '{"More Lenses":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '38C7FAFB-58EB-0C14-7377-92A810E9860B',
+      MOD_TITLE: '{"Better Loading Screen (UI)":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '805cc499-c534-4e0a-bdce-32fb3c53ba38',
+      MOD_TITLE: `{"Sukritact's Simple UI Adjustments":[]}`
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '8d4fa23a-ef43-440c-8422-2bec11f8f5d7',
+      MOD_TITLE: '{"Better Trade Screen":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    },
+    {
+      MOD_ID: 'af0e9409-35b0-4cc8-8965-e2c844c99e3b',
+      MOD_TITLE: '{"Resources At A Glance":[]}'
+    },
+    {
+      MOD_ID: 'd0003fe4-77cf-49f7-8b57-c98f25d50c14',
+      MOD_TITLE: `{"Sukritact's More City and Unit Info Stack":[]}`
+    },
+    {
+      MOD_ID: 'ebdf2824-352e-49c3-90c1-743a89180da8',
+      MOD_TITLE: '{"Better Espionage Screen":[]}'
+    }
+  ],
+  MOD_BLOCK_3: [
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'FFDF4E79-DEE2-47BB-919B-F5739106627A',
+      MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
+    }
+  ],
+  MAP_FILE_2: 'Shuffle.lua',
+  MOD_BLOCK_2_2: [
     {
       MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
       MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
@@ -602,7 +913,7 @@
       MOD_TITLE: '{"LOC_PORTUGAL_MOD_TITLE":[{"locale":"de_DE", "text":"Portugal-Paket"}, {"locale":"en_US", "text":"Portugal Pack"}, {"locale":"es_ES", "text":"Pack de Portugal"}, {"locale":"fr_FR", "text":"Pack Portugal"}, {"locale":"it_IT", "text":"Pacchetto Portogallo"}, {"locale":"ja_JP", "text":"ポルトガルパック"}, {"locale":"ko_KR", "text":"포르투갈 팩"}, {"locale":"pl_PL", "text":"Pakiet Portugalii"}, {"locale":"pt_BR", "text":"Pacote Portugal"}, {"locale":"ru_RU", "text":"Набор «Португалия»"}, {"locale":"zh_Hans_CN", "text":"葡萄牙包"}, {"locale":"zh_Hant_HK", "text":"葡萄牙包"}]}'
     }
   ],
-  MOD_BLOCK_3: [
+  MOD_BLOCK_3_2: [
     {
       MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
       MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'

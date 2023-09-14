@@ -277,5 +277,6 @@
   GAME_SPEED: 'GAMESPEED_ONLINE',
   MAP_SIZE: 'MAPSIZE_SMALL',
   GAME_TURN: 130,
-  MAP_FILE: 'Continents.lua'
+  MAP_FILE: 'Continents.lua',
+  MAP_FILE_2: 'Continents.lua'
 }

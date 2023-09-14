@@ -23,7 +23,7 @@ RUN Rscript -e 'install.packages("ggnewscale", repos = "http://cran.us.r-project
 RUN Rscript -e 'library(devtools);install_github("rcannood/civ6saves")'
 
 WORKDIR /
-RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout 7f9a00867f592623f63b62ef43a75a69457819af
+RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout aef2c5045da392924b8f52f80b2f5826d6a96a6b
 
 # install node modules
 RUN mkdir -p /home/node
