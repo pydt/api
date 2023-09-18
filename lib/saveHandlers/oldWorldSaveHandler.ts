@@ -75,7 +75,10 @@ export class OldWorldSaveHandler implements SaveHandler {
     const entries = zip.getEntries();
     this.saveData = xml2js(entries[0].getData().toString('utf-8'));
 
-    if (this.root.attributes.Version.indexOf('Play-Your-Damn-Turn-Support') < 0) {
+    if (
+      this.root.attributes.Version.indexOf('Play-Your-Damn-Turn-Support') < 0 &&
+      this.root.attributes.Version.indexOf('Play Your Damn Turn Support') < 0
+    ) {
       throw new HttpResponseError(
         400,
         `To play Old World, the "Play Your Damn Turn Support" mod must be enabled!`
