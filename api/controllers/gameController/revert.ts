@@ -62,14 +62,6 @@ export class GameController_Revert {
     delete lastTurn.endDate;
     game.lastTurnEndDate = lastTurn.startDate = new Date();
 
-    const promises = [];
-
-    // Delete turns between the old turn and the turn to revert to
-    for (let i = lastTurn.turn + 1; i <= game.gameTurnRangeKey; i++) {
-      pydtLogger.info(`deleting ${gameId}/${i}`);
-      promises.push(this.gameTurnRepository.delete({ gameId: gameId, turn: i }));
-    }
-
     // Update game record
     const curPlayerIndex = GameUtil.getCurrentPlayerIndex(game);
 
@@ -78,12 +70,27 @@ export class GameController_Revert {
     }
 
     game.currentPlayerSteamId = game.players[prevPlayerIndex].steamId;
+    const origRangeKey = game.gameTurnRangeKey;
     game.gameTurnRangeKey = lastTurn.turn;
+
+    // Try updating save first to make sure it exists...
+    try {
+      await this.gameTurnService.getAndUpdateSaveFileForGameState(game);
+    } catch {
+      throw new HttpResponseError(400, `There are no more turns to revert back to!`);
+    }
+
+    const promises = [];
+
+    // Delete turns between the old turn and the turn to revert to
+    for (let i = lastTurn.turn + 1; i <= origRangeKey; i++) {
+      pydtLogger.info(`deleting ${gameId}/${i}`);
+      promises.push(this.gameTurnRepository.delete({ gameId: gameId, turn: i }));
+    }
 
     promises.push(this.gameTurnRepository.saveVersioned(lastTurn));
     promises.push(this.gameRepository.saveVersioned(game));
     promises.push(this.userRepository.saveVersioned(user));
-    promises.push(this.gameTurnService.getAndUpdateSaveFileForGameState(game));
 
     await Promise.all(promises);
 
