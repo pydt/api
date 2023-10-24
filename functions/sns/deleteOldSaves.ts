@@ -21,10 +21,6 @@ export class DeleteOldSaves {
     // Make sure we're only looking at the pure save folder!!!111
     const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', `${gameId}/`);
 
-    if (!resp || !resp.Contents) {
-      throw new Error(`No data returned for listObjectsV2, prefix: ${gameId}`);
-    }
-
     if (resp.Contents.length > TURNS_TO_SAVE) {
       await this.s3.deleteObjects(
         Config.resourcePrefix + 'saves',

@@ -67,13 +67,19 @@ export class S3Provider implements IS3Provider {
     );
   }
 
-  listObjects(bucket: string, prefix: string) {
-    return s3.send(
+  async listObjects(bucket: string, prefix: string) {
+    const resp = await s3.send(
       new ListObjectsV2Command({
         Bucket: bucket,
         Prefix: prefix
       })
     );
+
+    if (!resp || !resp.Contents) {
+      throw new Error(`No data returned for listObjectsV2, prefix: ${prefix}`);
+    }
+
+    return resp;
   }
 
   async getObject(fileParams: FileParams) {

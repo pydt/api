@@ -9,6 +9,8 @@ import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game, GameTurn } from '../../../lib/models';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
+import { Config } from '../../../lib/config';
+import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../../lib/s3Provider';
 
 @Route('game')
 @Tags('game')
@@ -17,7 +19,8 @@ export class GameController_Restart {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
+    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider,
+    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider
   ) {}
 
   @Security('api_key')
@@ -69,6 +72,14 @@ export class GameController_Restart {
     };
 
     await this.gameTurnRepository.saveVersioned(firstTurn);
+
+    // Delete ALL saves
+    const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', `${gameId}/`);
+
+    await this.s3.deleteObjects(
+      Config.resourcePrefix + 'saves',
+      resp.Contents.map(obj => obj.Key)
+    );
 
     // Post reset notification to smack
     await this.discourse.postToSmack(
