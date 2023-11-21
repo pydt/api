@@ -101,7 +101,6 @@ custom:
   customDomain:
     http:
       domainName: ${self:custom.domain.${self:custom.activeStage}}
-      stage: ${self:custom.activeStage}
       basePath: ''
       certificateName: "playyourdamnturn.com"
       createRoute53Record: true
@@ -109,7 +108,6 @@ custom:
       securityPolicy: tls_1_2
     websocket:
       domainName: ${self:custom.wsDomain.${self:custom.activeStage}}
-      stage: ${self:custom.activeStage}
       basePath: ''
       certificateName: "playyourdamnturn.com"
       createRoute53Record: true
