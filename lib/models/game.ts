@@ -20,7 +20,7 @@ export interface BaseGame {
   turnTimerVacationHandling?: 'PAUSE' | 'SKIP_AFTER_TIMER' | 'SKIP_IMMEDIATELY';
 }
 
-export interface Game extends Entity, BaseGame, TurnData {
+export interface Game extends Entity, BaseGame, Partial<TurnData> {
   gameId: string;
   createdBySteamId: string;
   inProgress?: boolean;

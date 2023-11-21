@@ -10,7 +10,11 @@ const ACTOR_TYPE_MAP = [
 ];
 
 export class Civ5CivData implements CivData {
-  constructor(private civ, private index: number, private handler: Civ5SaveHandler) {}
+  constructor(
+    private civ,
+    private index: number,
+    private handler: Civ5SaveHandler
+  ) {}
 
   get type() {
     return ACTOR_TYPE_MAP.find(x => x.intVal === this.civ.type).actorType;

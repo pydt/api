@@ -78,9 +78,9 @@ export class NotifyNewGames {
           `<ul>${gamesToNotifyAbout
             .map(
               x =>
-                `<li><a href="${Config.webUrl}/game/${x.gameId}">${x.displayName}</a> (${
-                  PYDT_METADATA.civGames.find(y => y.id === x.gameType)?.displayName
-                })</li>`
+                `<li><a href="${Config.webUrl}/game/${x.gameId}">${
+                  x.displayName
+                }</a> (${PYDT_METADATA.civGames.find(y => y.id === x.gameType)?.displayName})</li>`
             )
             .join('\n')}</ul>`,
           pud.emailAddress

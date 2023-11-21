@@ -6,7 +6,11 @@ import { HttpResponseError } from './../../api/framework/httpResponseError';
 const AI_CONTROLLED_TURN = '99999999';
 
 export class OldWorldCivData implements CivData {
-  constructor(private root, private playerData, private index: number) {}
+  constructor(
+    private root,
+    private playerData,
+    private index: number
+  ) {}
 
   get isReallyHuman() {
     return this.root.elements

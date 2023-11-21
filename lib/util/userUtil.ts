@@ -44,7 +44,11 @@ export class UserUtil {
         slowTurns: 0,
         timeTaken: 0,
         turnsPlayed: 0,
-        turnsSkipped: 0
+        turnsSkipped: 0,
+        dayOfWeekQueue: '',
+        hourOfDayQueue: '',
+        turnLengthBuckets: {},
+        yearBuckets: {}
       };
 
       user.statsByGameType.push(gameStats);

@@ -12,7 +12,10 @@ export class HttpResponse extends EventEmitter {
     'Metadata-Hash': PYDT_METADATA_HASH
   };
 
-  constructor(private callback: LambdaProxyCallback, public req: HttpRequest) {
+  constructor(
+    private callback: LambdaProxyCallback,
+    public req: HttpRequest
+  ) {
     super();
   }
 

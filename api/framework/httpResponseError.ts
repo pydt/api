@@ -3,7 +3,10 @@ export class HttpResponseError extends Error {
     return new HttpResponseError(401, 'Unauthorized');
   }
 
-  constructor(public statusCode: number, message: string) {
+  constructor(
+    public statusCode: number,
+    message: string
+  ) {
     super(message);
 
     // Set the prototype explicitly:

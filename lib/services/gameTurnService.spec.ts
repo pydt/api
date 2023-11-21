@@ -59,7 +59,7 @@ describe('GameTurnService', () => {
       .setup(x => x.getUsersForGame(It.isAny()))
       .returns(g =>
         Promise.resolve(
-          g.players.map(x => ({ steamId: x.steamId, displayName: x.civType } as User))
+          g.players.map(x => ({ steamId: x.steamId, displayName: x.civType }) as User)
         )
       );
 

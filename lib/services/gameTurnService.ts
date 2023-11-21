@@ -155,7 +155,7 @@ export class GameTurnService implements IGameTurnService {
     GameTurnService.updateTurnData(gameTurn, game, !!undo);
   }
 
-  private static updateTurnData(gameTurn: GameTurn, turnData: TurnData, undo: boolean) {
+  private static updateTurnData(gameTurn: GameTurn, turnData: Partial<TurnData>, undo: boolean) {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
@@ -213,7 +213,7 @@ export class GameTurnService implements IGameTurnService {
         Number.MAX_SAFE_INTEGER
       ];
 
-      for (let bucket of turnBuckets) {
+      for (const bucket of turnBuckets) {
         if (timeTaken < bucket) {
           turnData.turnLengthBuckets[bucket] = (turnData.turnLengthBuckets[bucket] || 0) + undoInc;
         }

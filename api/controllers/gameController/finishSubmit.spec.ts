@@ -71,7 +71,7 @@ describe('GameController_FinishSubmit', () => {
             parsedDlcs: [],
             mapFile:
               '{4873eb62-8ccc-4574-b784-dda455e74e68}Maps/EarthMaps/EarthStandard_XP2.Civ6Map'
-          } as SaveHandler)
+          }) as SaveHandler
       );
 
     const pudMock = Mock.ofType<IPrivateUserDataRepository>();
@@ -155,7 +155,7 @@ describe('GameController_FinishSubmit', () => {
             ],
             mapFile:
               '{4873eb62-8ccc-4574-b784-dda455e74e68}Maps/EarthMaps/EarthStandard_XP2.Civ6Map'
-          } as SaveHandler)
+          }) as SaveHandler
       );
 
     const gcfs = new GameController_FinishSubmit(

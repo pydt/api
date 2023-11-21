@@ -84,8 +84,8 @@ export class DataMigrations {
         for (const gameStats of user.statsByGameType || []) {
           const typeGames = userGames.filter(x => x.gameType === gameStats.gameType);
 
-          gameStats.activeGames = typeGames.filter(x =>
-            user.activeGameIds?.includes(x.gameId)
+          gameStats.activeGames = typeGames.filter(
+            x => user.activeGameIds?.includes(x.gameId)
           ).length;
           gameStats.totalGames = typeGames.length;
         }

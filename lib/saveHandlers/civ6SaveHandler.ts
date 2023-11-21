@@ -10,7 +10,10 @@ const ACTOR_TYPE_MAP = [
 ];
 
 export class Civ6CivData implements CivData {
-  constructor(private wrapper, private parsedCiv) {}
+  constructor(
+    private wrapper,
+    private parsedCiv
+  ) {}
 
   get type() {
     if (this.parsedCiv.PLAYER_ALIVE && !this.parsedCiv.PLAYER_ALIVE.data) {

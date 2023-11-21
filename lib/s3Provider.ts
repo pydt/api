@@ -4,7 +4,8 @@ import {
   GetObjectCommand,
   HeadObjectCommand,
   ListObjectsV2Command,
-  PutObjectCommand
+  PutObjectCommand,
+  StorageClass
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { merge } from 'lodash';
@@ -46,7 +47,7 @@ export class S3Provider implements IS3Provider {
       new PutObjectCommand(
         merge(fileParams, {
           Body: data,
-          StorageClass: 'INTELLIGENT_TIERING'
+          StorageClass: StorageClass.INTELLIGENT_TIERING
         })
       )
     );
@@ -114,7 +115,7 @@ export class S3Provider implements IS3Provider {
       new PutObjectCommand(
         merge(fileParams, {
           ContentType: contentType,
-          StorageClass: 'INTELLIGENT_TIERING'
+          StorageClass: StorageClass.INTELLIGENT_TIERING
         })
       ),
       {
