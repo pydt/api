@@ -119,7 +119,40 @@ export class GameRepository
       mapSize: String,
       latestDiscoursePostNumber: Number,
       latestDiscoursePostUser: String,
+      firstTurnEndDate: Date,
       lastTurnEndDate: Date,
+      turnsPlayed: {
+        type: Number,
+        default: 0
+      },
+      turnsSkipped: {
+        type: Number,
+        default: 0
+      },
+      timeTaken: {
+        type: Number,
+        default: 0
+      },
+      fastTurns: {
+        type: Number,
+        default: 0
+      },
+      slowTurns: {
+        type: Number,
+        default: 0
+      },
+      hourOfDayQueue: {
+        type: String
+      },
+      dayOfWeekQueue: {
+        type: String
+      },
+      turnLengthBuckets: {
+        type: Object
+      },
+      yearBuckets: {
+        type: Object
+      },
       clonedFromGameId: String,
       allowDuplicateLeaders: Boolean,
       randomOnly: {

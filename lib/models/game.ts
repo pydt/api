@@ -1,5 +1,6 @@
 import { GamePlayer } from './gamePlayer';
 import { Entity } from './shared';
+import { TurnData } from './user';
 
 export interface BaseGame {
   gameSpeed?: string;
@@ -19,7 +20,7 @@ export interface BaseGame {
   turnTimerVacationHandling?: 'PAUSE' | 'SKIP_AFTER_TIMER' | 'SKIP_IMMEDIATELY';
 }
 
-export interface Game extends Entity, BaseGame {
+export interface Game extends Entity, BaseGame, TurnData {
   gameId: string;
   createdBySteamId: string;
   inProgress?: boolean;

@@ -8,7 +8,7 @@ import { GAME_TURN_REPOSITORY_SYMBOL, IGameTurnRepository } from '../dynamoose/g
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../dynamoose/userRepository';
 import { inject, provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
-import { Game, GamePlayer, GameTurn, User } from '../models';
+import { Game, GamePlayer, GameTurn, TurnData, User } from '../models';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../s3Provider';
 import { ActorType, SaveHandler } from '../saveHandlers/saveHandler';
 import { SaveHandlerFactory } from '../saveHandlers/saveHandlerFactory';
@@ -142,49 +142,81 @@ export class GameTurnService implements IGameTurnService {
   }
 
   public updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean) {
+    const player =
+      game.players.find(p => {
+        return p.steamId === user.steamId;
+      }) || ({} as GamePlayer);
+
+    const gameStats = UserUtil.getUserGameStats(user, game.gameType);
+
+    GameTurnService.updateTurnData(gameTurn, player, !!undo);
+    GameTurnService.updateTurnData(gameTurn, user, !!undo);
+    GameTurnService.updateTurnData(gameTurn, gameStats, !!undo);
+    GameTurnService.updateTurnData(gameTurn, game, !!undo);
+  }
+
+  private static updateTurnData(gameTurn: GameTurn, turnData: TurnData, undo: boolean) {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
-      const player =
-        game.players.find(p => {
-          return p.steamId === user.steamId;
-        }) || ({} as GamePlayer);
-
-      const gameStats = UserUtil.getUserGameStats(user, game.gameType);
-
-      if (!user.lastTurnEndDate || gameTurn.endDate > user.lastTurnEndDate) {
-        user.lastTurnEndDate = gameTurn.endDate;
+      if (!turnData.firstTurnEndDate || gameTurn.endDate < turnData.firstTurnEndDate) {
+        turnData.firstTurnEndDate = gameTurn.endDate;
       }
-
-      if (!gameStats.lastTurnEndDate || gameTurn.endDate > gameStats.lastTurnEndDate) {
-        gameStats.lastTurnEndDate = gameTurn.endDate;
+      if (!turnData.lastTurnEndDate || gameTurn.endDate > turnData.lastTurnEndDate) {
+        turnData.lastTurnEndDate = gameTurn.endDate;
       }
 
       if (gameTurn.skipped) {
-        player.turnsSkipped = (player.turnsSkipped || 0) + 1 * undoInc;
-        user.turnsSkipped = (user.turnsSkipped || 0) + 1 * undoInc;
-        gameStats.turnsSkipped = (gameStats.turnsSkipped || 0) + 1 * undoInc;
+        turnData.turnsSkipped = (turnData.turnsSkipped || 0) + undoInc;
       } else {
-        player.turnsPlayed = (player.turnsPlayed || 0) + 1 * undoInc;
-        user.turnsPlayed = (user.turnsPlayed || 0) + 1 * undoInc;
-        gameStats.turnsPlayed = (gameStats.turnsPlayed || 0) + 1 * undoInc;
+        turnData.turnsPlayed = (turnData.turnsPlayed || 0) + undoInc;
       }
 
       const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
-      player.timeTaken = (player.timeTaken || 0) + timeTaken * undoInc;
-      user.timeTaken = (user.timeTaken || 0) + timeTaken * undoInc;
-      gameStats.timeTaken = (gameStats.timeTaken || 0) + timeTaken * undoInc;
+      turnData.timeTaken = (turnData.timeTaken || 0) + timeTaken * undoInc;
 
-      if (!gameTurn.skipped && timeTaken < 1000 * 60 * 60) {
-        user.fastTurns = (user.fastTurns || 0) + 1 * undoInc;
-        player.fastTurns = (player.fastTurns || 0) + 1 * undoInc;
-        gameStats.fastTurns = (gameStats.fastTurns || 0) + 1 * undoInc;
+      const ONE_HOUR = 1000 * 60 * 60;
+      const ONE_DAY = 1000 * 60 * 60 * 24;
+
+      if (!gameTurn.skipped && timeTaken < ONE_HOUR) {
+        turnData.fastTurns = (turnData.fastTurns || 0) + undoInc;
       }
 
-      if (timeTaken > 1000 * 60 * 60 * 6) {
-        user.slowTurns = (user.slowTurns || 0) + 1 * undoInc;
-        player.slowTurns = (player.slowTurns || 0) + 1 * undoInc;
-        gameStats.slowTurns = (gameStats.slowTurns || 0) + 1 * undoInc;
+      if (timeTaken > ONE_HOUR * 6) {
+        turnData.slowTurns = (turnData.slowTurns || 0) + undoInc;
+      }
+
+      const hourKey = 'ABCDEFGHIJKLMNOPQRSTUVWX';
+
+      // Not sure undoing these queues will make sense in all scenarios...
+      if (!undo) {
+        turnData.hourOfDayQueue =
+          (turnData.hourOfDayQueue || '') + hourKey[gameTurn.endDate.getUTCHours()];
+        turnData.dayOfWeekQueue = (turnData.dayOfWeekQueue || '') + gameTurn.endDate.getUTCDay();
+      }
+
+      turnData.turnLengthBuckets = turnData.turnLengthBuckets || {};
+      turnData.yearBuckets = turnData.yearBuckets || {};
+      turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] =
+        (turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] || 0) + undoInc;
+
+      const turnBuckets = [
+        ONE_HOUR,
+        ONE_HOUR * 2,
+        ONE_HOUR * 3,
+        ONE_HOUR * 6,
+        ONE_HOUR * 12,
+        ONE_DAY,
+        ONE_DAY * 2,
+        ONE_DAY * 4,
+        ONE_DAY * 7,
+        Number.MAX_SAFE_INTEGER
+      ];
+
+      for (let bucket of turnBuckets) {
+        if (timeTaken < bucket) {
+          turnData.turnLengthBuckets[bucket] = (turnData.turnLengthBuckets[bucket] || 0) + undoInc;
+        }
       }
     }
   }

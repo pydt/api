@@ -3,12 +3,17 @@ export interface HasSteamId {
 }
 
 export interface TurnData {
+  firstTurnEndDate?: Date;
   lastTurnEndDate?: Date;
   turnsPlayed: number;
   turnsSkipped: number;
   timeTaken: number;
   fastTurns: number;
   slowTurns: number;
+  hourOfDayQueue: string;
+  dayOfWeekQueue: string;
+  turnLengthBuckets: Record<number, number>;
+  yearBuckets: Record<number, number>;
 }
 
 export interface GameTypeTurnData extends TurnData {

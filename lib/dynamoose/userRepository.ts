@@ -39,9 +39,10 @@ export class UserRepository
       vacationMode: legacyBoolean(),
       timezone: String,
       comments: String,
-      lastTurnEndDate: Date,
       webhookUrl: String, // Obsolete
       forumUsername: String,
+      firstTurnEndDate: Date,
+      lastTurnEndDate: Date,
       turnsPlayed: {
         type: Number,
         default: 0
@@ -61,6 +62,18 @@ export class UserRepository
       slowTurns: {
         type: Number,
         default: 0
+      },
+      hourOfDayQueue: {
+        type: String
+      },
+      dayOfWeekQueue: {
+        type: String
+      },
+      turnLengthBuckets: {
+        type: Object
+      },
+      yearBuckets: {
+        type: Object
       },
       /*statsByGameType: [
         {
