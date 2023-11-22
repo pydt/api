@@ -28,6 +28,11 @@ describe('GameTurnService_updateTurnStatistics', () => {
     const USER_1_ID = uuid();
     const USER_2_ID = uuid();
 
+    const DEFAULT_HOUR_QUEUE =
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+    const DEFAULT_DAY_QUEUE =
+      '111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111';
+
     let game = {
       gameId: GAME_ID,
       displayName: 'test',
@@ -40,7 +45,9 @@ describe('GameTurnService_updateTurnStatistics', () => {
       players: [
         { steamId: USER_1_ID, civType: 'one' },
         { steamId: USER_2_ID, civType: 'two' }
-      ]
+      ],
+      hourOfDayQueue: DEFAULT_HOUR_QUEUE,
+      dayOfWeekQueue: DEFAULT_DAY_QUEUE
     } as Game;
 
     const turn1: GameTurn = {
@@ -87,8 +94,15 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.timeTaken).to.equal(1000 * 60 * 60 * 5);
       expect(data.turnsPlayed).to.equal(1);
       expect(data.turnsSkipped).to.equal(0);
-      expect(data.dayOfWeekQueue).to.equal('4');
-      expect(data.hourOfDayQueue).to.equal('J');
+
+      if (data === game) {
+        expect(data.dayOfWeekQueue).to.equal(DEFAULT_DAY_QUEUE + '4');
+        expect(data.hourOfDayQueue).to.equal(DEFAULT_HOUR_QUEUE + 'J');
+      } else {
+        expect(data.dayOfWeekQueue).to.equal('4');
+        expect(data.hourOfDayQueue).to.equal('J');
+      }
+
       expect(data.turnLengthBuckets).to.deep.equal({
         [1000 * 60 * 60 * 6]: 1
       });
@@ -113,8 +127,15 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(0);
-      expect(data.dayOfWeekQueue).to.equal('44');
-      expect(data.hourOfDayQueue).to.equal('JX');
+
+      if (data === game) {
+        expect(data.dayOfWeekQueue).to.equal(DEFAULT_DAY_QUEUE.substring(1) + '44');
+        expect(data.hourOfDayQueue).to.equal(DEFAULT_HOUR_QUEUE.substring(1) + 'JX');
+      } else {
+        expect(data.dayOfWeekQueue).to.equal('44');
+        expect(data.hourOfDayQueue).to.equal('JX');
+      }
+
       expect(data.turnLengthBuckets).to.deep.equal({
         [1000 * 60 * 60 * 6]: 1,
         [1000 * 60 * 60 * 24]: 1
@@ -140,8 +161,15 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(1);
-      expect(data.dayOfWeekQueue).to.equal('44');
-      expect(data.hourOfDayQueue).to.equal('JX');
+
+      if (data === game) {
+        expect(data.dayOfWeekQueue).to.equal(DEFAULT_DAY_QUEUE.substring(1) + '44');
+        expect(data.hourOfDayQueue).to.equal(DEFAULT_HOUR_QUEUE.substring(1) + 'JX');
+      } else {
+        expect(data.dayOfWeekQueue).to.equal('44');
+        expect(data.hourOfDayQueue).to.equal('JX');
+      }
+
       expect(data.turnLengthBuckets).to.deep.equal({
         [1000 * 60 * 60 * 6]: 1,
         [1000 * 60 * 60 * 24]: 1
@@ -167,8 +195,15 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(0);
-      expect(data.dayOfWeekQueue).to.equal('44');
-      expect(data.hourOfDayQueue).to.equal('JX');
+
+      if (data === game) {
+        expect(data.dayOfWeekQueue).to.equal(DEFAULT_DAY_QUEUE.substring(1) + '44');
+        expect(data.hourOfDayQueue).to.equal(DEFAULT_HOUR_QUEUE.substring(1) + 'JX');
+      } else {
+        expect(data.dayOfWeekQueue).to.equal('44');
+        expect(data.hourOfDayQueue).to.equal('JX');
+      }
+
       expect(data.turnLengthBuckets).to.deep.equal({
         [1000 * 60 * 60 * 6]: 1,
         [1000 * 60 * 60 * 24]: 1
@@ -194,8 +229,15 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.timeTaken).to.equal(1000 * 60 * 60 * 5);
       expect(data.turnsPlayed).to.equal(1);
       expect(data.turnsSkipped).to.equal(0);
-      expect(data.dayOfWeekQueue).to.equal('44');
-      expect(data.hourOfDayQueue).to.equal('JX');
+
+      if (data === game) {
+        expect(data.dayOfWeekQueue).to.equal(DEFAULT_DAY_QUEUE.substring(1) + '44');
+        expect(data.hourOfDayQueue).to.equal(DEFAULT_HOUR_QUEUE.substring(1) + 'JX');
+      } else {
+        expect(data.dayOfWeekQueue).to.equal('44');
+        expect(data.hourOfDayQueue).to.equal('JX');
+      }
+
       expect(data.turnLengthBuckets).to.deep.equal({
         [1000 * 60 * 60 * 6]: 1,
         [1000 * 60 * 60 * 24]: 0

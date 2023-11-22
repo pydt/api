@@ -189,12 +189,22 @@ export class GameTurnService implements IGameTurnService {
         }
 
         const hourKey = 'ABCDEFGHIJKLMNOPQRSTUVWX';
+        const MAX_QUEUE_LENGTH = 100;
 
         // Not sure undoing these queues will make sense in all scenarios...
         if (!undo) {
           turnData.hourOfDayQueue =
             (turnData.hourOfDayQueue || '') + hourKey[gameTurn.endDate.getUTCHours()];
+
+          if (turnData.hourOfDayQueue.length > MAX_QUEUE_LENGTH) {
+            turnData.hourOfDayQueue = turnData.hourOfDayQueue.substring(1);
+          }
+
           turnData.dayOfWeekQueue = (turnData.dayOfWeekQueue || '') + gameTurn.endDate.getUTCDay();
+
+          if (turnData.dayOfWeekQueue.length > MAX_QUEUE_LENGTH) {
+            turnData.dayOfWeekQueue = turnData.dayOfWeekQueue.substring(1);
+          }
         }
 
         turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] =
