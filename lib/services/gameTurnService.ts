@@ -24,7 +24,6 @@ export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
 export interface IGameTurnService {
   getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<void>;
-  updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean): void;
   updateSaveFileForGameState(game: Game, users: User[], handler: SaveHandler): Promise<void>;
   parseSaveFile(buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
@@ -58,7 +57,7 @@ export class GameTurnService implements IGameTurnService {
   private async closeGameTurn(game: Game, gameTurn: GameTurn, user: User) {
     game.lastTurnEndDate = gameTurn.endDate = new Date();
 
-    this.updateTurnStatistics(game, gameTurn, user);
+    GameTurnService.updateTurnStatistics(game, gameTurn, user);
 
     await this.gameTurnRepository.saveVersioned(gameTurn);
   }
@@ -141,7 +140,7 @@ export class GameTurnService implements IGameTurnService {
     await this.updateSaveFileForGameState(game, users, this.parseSaveFile(data.Body, game));
   }
 
-  public updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean) {
+  public static updateTurnStatistics(game: Game, gameTurn: GameTurn, user: User, undo?: boolean) {
     const player =
       game.players.find(p => {
         return p.steamId === user.steamId;
@@ -162,60 +161,64 @@ export class GameTurnService implements IGameTurnService {
       if (!turnData.firstTurnEndDate || gameTurn.endDate < turnData.firstTurnEndDate) {
         turnData.firstTurnEndDate = gameTurn.endDate;
       }
+
       if (!turnData.lastTurnEndDate || gameTurn.endDate > turnData.lastTurnEndDate) {
         turnData.lastTurnEndDate = gameTurn.endDate;
       }
+
+      turnData.turnLengthBuckets = turnData.turnLengthBuckets || {};
+      turnData.yearBuckets = turnData.yearBuckets || {};
 
       if (gameTurn.skipped) {
         turnData.turnsSkipped = (turnData.turnsSkipped || 0) + undoInc;
       } else {
         turnData.turnsPlayed = (turnData.turnsPlayed || 0) + undoInc;
-      }
 
-      const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
-      turnData.timeTaken = (turnData.timeTaken || 0) + timeTaken * undoInc;
+        const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
+        turnData.timeTaken = (turnData.timeTaken || 0) + timeTaken * undoInc;
 
-      const ONE_HOUR = 1000 * 60 * 60;
-      const ONE_DAY = 1000 * 60 * 60 * 24;
+        const ONE_HOUR = 1000 * 60 * 60;
+        const ONE_DAY = 1000 * 60 * 60 * 24;
 
-      if (!gameTurn.skipped && timeTaken < ONE_HOUR) {
-        turnData.fastTurns = (turnData.fastTurns || 0) + undoInc;
-      }
+        if (timeTaken < ONE_HOUR) {
+          turnData.fastTurns = (turnData.fastTurns || 0) + undoInc;
+        }
 
-      if (timeTaken > ONE_HOUR * 6) {
-        turnData.slowTurns = (turnData.slowTurns || 0) + undoInc;
-      }
+        if (timeTaken > ONE_HOUR * 6) {
+          turnData.slowTurns = (turnData.slowTurns || 0) + undoInc;
+        }
 
-      const hourKey = 'ABCDEFGHIJKLMNOPQRSTUVWX';
+        const hourKey = 'ABCDEFGHIJKLMNOPQRSTUVWX';
 
-      // Not sure undoing these queues will make sense in all scenarios...
-      if (!undo) {
-        turnData.hourOfDayQueue =
-          (turnData.hourOfDayQueue || '') + hourKey[gameTurn.endDate.getUTCHours()];
-        turnData.dayOfWeekQueue = (turnData.dayOfWeekQueue || '') + gameTurn.endDate.getUTCDay();
-      }
+        // Not sure undoing these queues will make sense in all scenarios...
+        if (!undo) {
+          turnData.hourOfDayQueue =
+            (turnData.hourOfDayQueue || '') + hourKey[gameTurn.endDate.getUTCHours()];
+          turnData.dayOfWeekQueue = (turnData.dayOfWeekQueue || '') + gameTurn.endDate.getUTCDay();
+        }
 
-      turnData.turnLengthBuckets = turnData.turnLengthBuckets || {};
-      turnData.yearBuckets = turnData.yearBuckets || {};
-      turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] =
-        (turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] || 0) + undoInc;
+        turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] =
+          (turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] || 0) + undoInc;
 
-      const turnBuckets = [
-        ONE_HOUR,
-        ONE_HOUR * 2,
-        ONE_HOUR * 3,
-        ONE_HOUR * 6,
-        ONE_HOUR * 12,
-        ONE_DAY,
-        ONE_DAY * 2,
-        ONE_DAY * 4,
-        ONE_DAY * 7,
-        Number.MAX_SAFE_INTEGER
-      ];
+        const turnBuckets = [
+          ONE_HOUR,
+          ONE_HOUR * 2,
+          ONE_HOUR * 3,
+          ONE_HOUR * 6,
+          ONE_HOUR * 12,
+          ONE_DAY,
+          ONE_DAY * 2,
+          ONE_DAY * 4,
+          ONE_DAY * 7,
+          Number.MAX_SAFE_INTEGER
+        ];
 
-      for (const bucket of turnBuckets) {
-        if (timeTaken < bucket) {
-          turnData.turnLengthBuckets[bucket] = (turnData.turnLengthBuckets[bucket] || 0) + undoInc;
+        for (const bucket of turnBuckets) {
+          if (timeTaken < bucket) {
+            turnData.turnLengthBuckets[bucket] =
+              (turnData.turnLengthBuckets[bucket] || 0) + undoInc;
+            break;
+          }
         }
       }
     }

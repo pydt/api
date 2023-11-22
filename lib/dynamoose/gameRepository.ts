@@ -78,7 +78,12 @@ export class GameRepository
       players: {
         // Legacy complex array, see above
         type: String,
-        get: (value: string) => (value ? JSON.parse(value) : []),
+        get: (value: string) =>
+          (value ? JSON.parse(value) : []).map(x => ({
+            ...x,
+            firstTurnEndDate: x.firstTurnEndDate ? new Date(x.firstTurnEndDate) : undefined,
+            lastTurnEndDate: x.lastTurnEndDate ? new Date(x.lastTurnEndDate) : undefined
+          })),
         pydtSet: (value: GamePlayer[]) => {
           return JSON.stringify(
             (value || []).map(x => ({
@@ -148,10 +153,14 @@ export class GameRepository
         type: String
       },
       turnLengthBuckets: {
-        type: Object
+        type: String,
+        get: (value: string) => (value ? JSON.parse(value) : {}),
+        pydtSet: (value: Record<number, number>) => JSON.stringify(value)
       },
       yearBuckets: {
-        type: Object
+        type: String,
+        get: (value: string) => (value ? JSON.parse(value) : {}),
+        pydtSet: (value: Record<number, number>) => JSON.stringify(value)
       },
       clonedFromGameId: String,
       allowDuplicateLeaders: Boolean,

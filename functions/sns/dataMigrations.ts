@@ -12,7 +12,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/use
 import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { DeprecatedUser, Game, PrivateUserData, User } from '../../lib/models';
-import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
+import { GameTurnService } from '../../lib/services/gameTurnService';
 import { UserUtil } from '../../lib/util/userUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
@@ -26,8 +26,7 @@ export class DataMigrations {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
-    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
   ) {}
 
   public async execute(message: string) {
@@ -151,7 +150,7 @@ export class DataMigrations {
       }
 
       for (const turn of turns) {
-        this.gameTurnService.updateTurnStatistics(game, turn, user);
+        GameTurnService.updateTurnStatistics(game, turn, user);
       }
 
       const stats = UserUtil.getUserGameStats(user, game.gameType);

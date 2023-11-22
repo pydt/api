@@ -70,10 +70,14 @@ export class UserRepository
         type: String
       },
       turnLengthBuckets: {
-        type: Object
+        type: String,
+        get: (value: string) => (value ? JSON.parse(value) : {}),
+        pydtSet: (value: Record<number, number>) => JSON.stringify(value)
       },
       yearBuckets: {
-        type: Object
+        type: String,
+        get: (value: string) => (value ? JSON.parse(value) : {}),
+        pydtSet: (value: Record<number, number>) => JSON.stringify(value)
       },
       /*statsByGameType: [
         {
@@ -112,7 +116,12 @@ export class UserRepository
       statsByGameType: {
         // Legacy complex array, see above
         type: String,
-        get: (value: string) => (value ? JSON.parse(value) : []),
+        get: (value: string) =>
+          (value ? JSON.parse(value) : []).map(x => ({
+            ...x,
+            firstTurnEndDate: x.firstTurnEndDate ? new Date(x.firstTurnEndDate) : undefined,
+            lastTurnEndDate: x.lastTurnEndDate ? new Date(x.lastTurnEndDate) : undefined
+          })),
         pydtSet: (value: GameTypeTurnData[]) => {
           return JSON.stringify(
             (value || []).map(x => ({

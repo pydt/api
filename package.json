@@ -76,6 +76,7 @@
   },
   "scripts": {
     "test": "mocha -r ts-node/register {api,functions,lib}/**/*.spec.ts",
+    "start-dynamo-docker": "docker-compose -f testdata/docker-compose.yml up -d",
     "integration-test": "bash -c \"IS_OFFLINE=true RESOURCE_PREFIX=civx-integration- mocha -r ts-node/register {api,functions,lib}/**/*.int-spec.ts --timeout 20000\"",
     "clean": "rimraf api/_gen .webpack",
     "swagger-gen": "tsoa spec",
