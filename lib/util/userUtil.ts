@@ -1,4 +1,4 @@
-import { User, Game } from '../models';
+import { User, Game, GameTypeTurnData } from '../models';
 
 export class UserUtil {
   public static createS3GameCacheKey(steamId: string): string {
@@ -31,7 +31,7 @@ export class UserUtil {
     }
   }
 
-  public static getUserGameStats(user: User, gameType: string) {
+  public static getUserGameStats(user: { statsByGameType: GameTypeTurnData[] }, gameType: string) {
     user.statsByGameType = user.statsByGameType || [];
     let gameStats = user.statsByGameType.find(x => x.gameType === gameType);
 

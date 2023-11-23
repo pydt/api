@@ -38,4 +38,5 @@ export interface Game extends Entity, BaseGame, Partial<TurnData> {
   resetGameStateOnNextUpload?: boolean;
   finalized?: boolean;
   gameVideoUrl?: string;
+  dataVersion?: number;
 }

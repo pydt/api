@@ -61,6 +61,9 @@ provider:
           Action: "sns:*"
           Resource: "*"
         - Effect: Allow
+          Action: "sqs:*"
+          Resource: "*"
+        - Effect: Allow
           Action: "ses:*"
           Resource: "*"
         - Effect: Allow
@@ -202,7 +205,15 @@ functions:
     events:
       - sns: ${self:custom.resourcePrefix}game-finalized
     layers:
-      - arn:aws:lambda:us-east-1:583172113704:layer:ffmpeg_06142023:1
+      - arn:aws:lambda:us-east-1:${aws:accountId}:layer:ffmpeg_06142023:1
+  sqsGlobalStatsUpdate:
+    handler: functions/sqs/globalStatsUpdate.handler
+    memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
+    timeout: 10
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:${aws:accountId}:${self:custom.resourcePrefix}global-stats-update.fifo
+          batchSize: 10
   websockets:
     handler: api/websocket.handler
     events:
@@ -347,3 +358,20 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}websocket-connection
+    MiscDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.resourcePrefix}misc-data
+    GlobalStatsUpdateQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.resourcePrefix}global-stats-update.fifo
+        FifoQueue: true
+        ContentBasedDeduplication: true

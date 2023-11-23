@@ -19,6 +19,7 @@ import {
   PRIVATE_USER_DATA_REPOSITORY_SYMBOL,
   IPrivateUserDataRepository
 } from '../dynamoose/privateUserDataRepository';
+import { ISqsProvider, SQS_PROVIDER_SYMBOL } from '../sqsProvider';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -40,7 +41,8 @@ export class GameTurnService implements IGameTurnService {
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
-    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider,
+    @inject(SQS_PROVIDER_SYMBOL) private sqs: ISqsProvider
   ) {}
 
   public async moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
@@ -52,6 +54,12 @@ export class GameTurnService implements IGameTurnService {
     ]);
 
     await this.sns.turnSubmitted(game, true);
+
+    await this.sqs.queueTurnForGlobalData({
+      turn: gameTurn,
+      undo: false,
+      gameType: game.gameType
+    });
   }
 
   private async closeGameTurn(game: Game, gameTurn: GameTurn, user: User) {
@@ -154,7 +162,7 @@ export class GameTurnService implements IGameTurnService {
     GameTurnService.updateTurnData(gameTurn, game, !!undo);
   }
 
-  private static updateTurnData(gameTurn: GameTurn, turnData: Partial<TurnData>, undo: boolean) {
+  public static updateTurnData(gameTurn: GameTurn, turnData: Partial<TurnData>, undo: boolean) {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {

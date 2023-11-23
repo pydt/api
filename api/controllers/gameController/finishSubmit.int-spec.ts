@@ -18,6 +18,7 @@ import { ISnsProvider } from '../../../lib/snsProvider';
 import { ISesProvider } from '../../../lib/email/sesProvider';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { Config } from '../../../lib/config';
+import { ISqsProvider } from '../../../lib/sqsProvider';
 
 dynamooseAws.ddb.set(
   new dynamooseAws.ddb.DynamoDB({
@@ -108,7 +109,8 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepository,
       s3Mock.object,
       sesMock.object,
-      Mock.ofType<ISnsProvider>().object
+      Mock.ofType<ISnsProvider>().object,
+      Mock.ofType<ISqsProvider>().object
     );
 
     gameTurnService.parseSaveFile = () => {

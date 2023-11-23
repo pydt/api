@@ -14,6 +14,7 @@ import { Civ5SaveHandler } from '../saveHandlers/civ5SaveHandler';
 import { ActorType } from '../saveHandlers/saveHandler';
 import { Mock, It } from 'typemoq';
 import { IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
+import { ISqsProvider } from '../sqsProvider';
 
 describe('GameTurnService', () => {
   it('should skip turn correctly', async () => {
@@ -93,6 +94,11 @@ describe('GameTurnService', () => {
     const snsProviderMock = Mock.ofType<ISnsProvider>();
     snsProviderMock.setup(x => x.turnSubmitted(It.isAny())).returns(() => Promise.resolve());
 
+    const sqsProviderMock = Mock.ofType<ISqsProvider>();
+    sqsProviderMock
+      .setup(x => x.queueTurnForGlobalData(It.isAny()))
+      .returns(() => Promise.resolve());
+
     const gts = new GameTurnService(
       userRepositoryMock.object,
       pudRepositoryMock.object,
@@ -100,7 +106,8 @@ describe('GameTurnService', () => {
       gameTurnRepositoryMock.object,
       s3ProviderMock.object,
       sesProviderMock.object,
-      snsProviderMock.object
+      snsProviderMock.object,
+      sqsProviderMock.object
     );
     await gts.skipTurn(game, turn);
     expect(skippedData).to.not.be.null;

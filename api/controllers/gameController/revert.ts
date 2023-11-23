@@ -16,6 +16,7 @@ import {
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../../lib/snsProvider';
 import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
+import { ISqsProvider, SQS_PROVIDER_SYMBOL } from '../../../lib/sqsProvider';
 
 @Route('game')
 @Tags('game')
@@ -26,7 +27,8 @@ export class GameController_Revert {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
+    @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider,
+    @inject(SQS_PROVIDER_SYMBOL) private sqs: ISqsProvider
   ) {}
 
   @Security('api_key')
@@ -99,6 +101,12 @@ export class GameController_Revert {
     await Promise.all(promises);
 
     await this.sns.turnSubmitted(game);
+
+    await this.sqs.queueTurnForGlobalData({
+      turn: lastTurn,
+      undo: true,
+      gameType: game.gameType
+    });
 
     return game;
   }

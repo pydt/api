@@ -8,6 +8,8 @@ export const GAME_TURN_REPOSITORY_SYMBOL = Symbol('IGameTurnRepository');
 
 export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> {
   getTurnsForGame(gameId: string, startTurn: number, endTurn: number): Promise<GameTurn[]>;
+  getAllTurnsForGame(userId: string): Promise<GameTurn[]>;
+  getAllTurnsForUser(userId: string): Promise<GameTurn[]>;
   getPlayerTurnsForGame(gameId: string, steamId: string): Promise<GameTurn[]>;
 }
 
@@ -32,7 +34,12 @@ export class GameTurnRepository
       },
       playerSteamId: {
         type: String,
-        required: true
+        required: true,
+        index: {
+          global: true,
+          name: 'playerSteamId-updatedAt-index',
+          rangeKey: 'updatedAt'
+        }
       },
       startDate: {
         type: Date,
@@ -48,6 +55,14 @@ export class GameTurnRepository
 
   getTurnsForGame(gameId: string, startTurn, endTurn) {
     return this.query('gameId').eq(gameId).where('turn').between(startTurn, endTurn).exec();
+  }
+
+  getAllTurnsForGame(gameId: string) {
+    return this.getAllPaged(this.query('gameId').eq(gameId));
+  }
+
+  getAllTurnsForUser(userId: string) {
+    return this.getAllPaged(this.query('playerSteamId').eq(userId));
   }
 
   getPlayerTurnsForGame(gameId: string, steamId: string) {

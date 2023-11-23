@@ -4,16 +4,17 @@ import {
   GAME_TURN_REPOSITORY_SYMBOL,
   IGameTurnRepository
 } from '../../lib/dynamoose/gameTurnRepository';
-import {
-  IPrivateUserDataRepository,
-  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
-} from '../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
-import { loggingHandler, pydtLogger } from '../../lib/logging';
-import { DeprecatedUser, Game, PrivateUserData, User } from '../../lib/models';
+import { loggingHandler } from '../../lib/logging';
+import { Game, TurnData, User } from '../../lib/models';
 import { GameTurnService } from '../../lib/services/gameTurnService';
+import {
+  IMiscDataRepository,
+  MISC_DATA_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/miscDataRepository';
 import { UserUtil } from '../../lib/util/userUtil';
+import { GameUtil } from '../../lib/util/gameUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const rus = iocContainer.resolve(DataMigrations);
@@ -26,7 +27,7 @@ export class DataMigrations {
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
+    @inject(MISC_DATA_REPOSITORY_SYMBOL) private miscDataRepository: IMiscDataRepository
   ) {}
 
   public async execute(message: string) {
@@ -38,141 +39,165 @@ export class DataMigrations {
         users = await this.userRepository.allUsers();
       } else if (userId) {
         users = [await this.userRepository.get(userId)];
+
+        if (!users[0]) {
+          throw new Error(`user ${userId} not found`);
+        }
       } else {
         throw new Error('userId or all must be provided');
       }
 
       await this.calculateUserPerGameStats(users);
     }
-  }
 
-  // @ts-ignore: not currently used
-  private async createPrivateUserData(users: User[]) {
-    for (const user of users as DeprecatedUser[]) {
-      if ((user.dataVersion || 0) < 3) {
-        const pud: PrivateUserData = {
-          emailAddress: user.emailAddress,
-          steamId: user.steamId,
-          webhookUrl: user.webhookUrl
-        };
+    if (message.startsWith('gamestats')) {
+      let games: Game[];
+      const gameId = message.replace('gamestats:', '');
 
-        user.dataVersion = 3;
-        delete user.emailAddress;
-        delete user.webhookUrl;
+      if (gameId === 'all') {
+        games = await this.gameRepository.allGames();
+      } else if (gameId) {
+        games = [await this.gameRepository.get(gameId)];
 
-        await this.pudRepository.saveVersioned(pud);
-        await this.userRepository.saveVersioned(user);
-        console.log(`Created private user data for user ${user.displayName} (${user.steamId})`);
+        if (!games[0]) {
+          throw new Error(`game ${gameId} not found`);
+        }
+      } else {
+        throw new Error('gameId or all must be provided');
       }
+
+      await this.calculateGameStats(games);
     }
   }
 
+  private resetStats(stats: Partial<TurnData>) {
+    delete stats.dayOfWeekQueue;
+    delete stats.fastTurns;
+    delete stats.firstTurnEndDate;
+    delete stats.hourOfDayQueue;
+    delete stats.lastTurnEndDate;
+    delete stats.slowTurns;
+    delete stats.timeTaken;
+    delete stats.turnLengthBuckets;
+    delete stats.turnsPlayed;
+    delete stats.turnsSkipped;
+    delete stats.yearBuckets;
+  }
+
   private async calculateUserPerGameStats(users: User[]) {
-    let allGames: Game[];
+    const allGames: Record<string, Game> = {};
 
     for (const user of users) {
-      if ((user.dataVersion || 0) < 4) {
-        if (!allGames) {
-          allGames = await this.gameRepository.allGames();
+      if ((user.dataVersion || 0) < 5) {
+        const allTurns = await this.gameTurnRepository.getAllTurnsForUser(user.steamId);
+        const userGameIds = [...new Set(allTurns.map(x => x.gameId))];
+        const missingGameIds = userGameIds.filter(x => !allGames[x]);
+
+        if (missingGameIds.length) {
+          const missingGames = await this.gameRepository.batchGet(missingGameIds);
+
+          for (const game of missingGames) {
+            allGames[game.gameId] = game;
+          }
         }
 
-        const userGames = allGames.filter(
-          x => user.activeGameIds?.includes(x.gameId) || user.inactiveGameIds?.includes(x.gameId)
-        );
+        this.resetStats(user);
+        user.statsByGameType = [];
 
-        for (const gameStats of user.statsByGameType || []) {
-          const typeGames = userGames.filter(x => x.gameType === gameStats.gameType);
+        for (const turn of allTurns) {
+          GameTurnService.updateTurnStatistics(
+            allGames[turn.gameId] ||
+              ({
+                players: []
+              } as Game),
+            turn,
+            user
+          );
+        }
 
-          gameStats.activeGames = typeGames.filter(
-            x => user.activeGameIds?.includes(x.gameId)
+        for (const gameStats of user.statsByGameType) {
+          const typeGames = userGameIds
+            .map(x => allGames[x])
+            .filter(x => !!x && x.gameType === gameStats.gameType);
+          gameStats.activeGames = typeGames.filter(x =>
+            x.players.some(y => y.steamId === user.steamId && GameUtil.playerIsHuman(y))
           ).length;
           gameStats.totalGames = typeGames.length;
         }
 
-        user.dataVersion = 4;
+        user.dataVersion = 5;
 
         await this.userRepository.saveVersioned(user);
-        console.log(`Recalculated per=-game stats for user ${user.displayName} (${user.steamId})`);
+
+        console.log(`Recalculated all turn stats for user ${user.displayName} (${user.steamId})`);
       }
     }
   }
 
-  // @ts-ignore: not currently used
-  private async calculateUserStats(users: User[]) {
-    for (const user of users) {
-      if ((user.dataVersion || 0) < 2) {
-        this.resetStatistics(user);
-
-        const allGameIds = (user.activeGameIds || []).concat(user.inactiveGameIds || []);
-
-        pydtLogger.info(`Processing user ${user.displayName}`);
-
-        if (allGameIds.length) {
-          const games = await this.gameRepository.batchGet(allGameIds);
-          await this.calculateGameStats(games, user);
-        }
-
-        user.dataVersion = 2;
-
-        await this.userRepository.saveVersioned(user);
-        console.log(`Recalculated stats for user ${user.displayName} (${user.steamId})`);
-      }
-    }
-  }
-
-  private async calculateGameStats(games: Game[], user: User) {
+  private async calculateGameStats(games: Game[]) {
     for (const game of games) {
-      const player = game.players.find(player => {
-        return player.steamId === user.steamId;
-      });
+      if ((game.dataVersion || 0) < 1) {
+        this.resetStats(game);
 
-      if (player) {
-        this.resetStatistics(player);
-      }
-
-      const turns = await this.gameTurnRepository.getPlayerTurnsForGame(game.gameId, user.steamId);
-
-      if (!turns || !turns.length) {
-        continue;
-      }
-
-      const maxTurnDate = new Date(
-        Math.max.apply(
-          null,
-          turns.map(x => x.endDate)
-        )
-      );
-
-      if (!isNaN(maxTurnDate.getTime())) {
-        if (!game.lastTurnEndDate || maxTurnDate > game.lastTurnEndDate) {
-          game.lastTurnEndDate = maxTurnDate;
+        for (const player of game.players) {
+          this.resetStats(player);
         }
+
+        const turns = await this.gameTurnRepository.getAllTurnsForGame(game.gameId);
+
+        for (const turn of turns) {
+          GameTurnService.updateTurnStatistics(game, turn, {
+            steamId: turn.playerSteamId
+          } as User);
+        }
+
+        game.dataVersion = 1;
+
+        const globalStats = await this.miscDataRepository.getGlobalStats(true);
+
+        for (const curStats of [
+          globalStats.data,
+          UserUtil.getUserGameStats(globalStats.data, game.gameType)
+        ]) {
+          if (
+            !curStats.firstTurnEndDate ||
+            (game.firstTurnEndDate && game.firstTurnEndDate < curStats.firstTurnEndDate)
+          ) {
+            curStats.firstTurnEndDate = game.firstTurnEndDate;
+          }
+
+          if (
+            !curStats.lastTurnEndDate ||
+            (game.lastTurnEndDate && game.lastTurnEndDate > curStats.lastTurnEndDate)
+          ) {
+            curStats.lastTurnEndDate = game.lastTurnEndDate;
+          }
+
+          curStats.dayOfWeekQueue = '';
+          curStats.fastTurns = curStats.fastTurns || 0 + game.fastTurns || 0;
+          curStats.hourOfDayQueue = '';
+          curStats.slowTurns = curStats.slowTurns || 0 + game.slowTurns || 0;
+          curStats.timeTaken = curStats.timeTaken || 0 + game.timeTaken || 0;
+          curStats.turnsPlayed = curStats.turnsPlayed || 0 + game.turnsPlayed || 0;
+          curStats.turnsSkipped = curStats.turnsSkipped || 0 + game.turnsSkipped || 0;
+
+          for (const turnLengthKey of Object.keys(game.turnLengthBuckets || {})) {
+            curStats.turnLengthBuckets[turnLengthKey] =
+              (curStats.turnLengthBuckets[turnLengthKey] || 0) +
+              game.turnLengthBuckets[turnLengthKey];
+          }
+
+          for (const yearKey of Object.keys(game.yearBuckets || {})) {
+            curStats.yearBuckets[yearKey] =
+              (curStats.yearBuckets[yearKey] || 0) + game.yearBuckets[yearKey];
+          }
+        }
+
+        await this.gameRepository.saveVersioned(game);
+        await this.miscDataRepository.saveVersioned(globalStats);
+
+        console.log(`Recalculated game ${game.gameId} (${game.displayName})`);
       }
-
-      for (const turn of turns) {
-        GameTurnService.updateTurnStatistics(game, turn, user);
-      }
-
-      const stats = UserUtil.getUserGameStats(user, game.gameType);
-      stats.activeGames += game.players.some(x => x.steamId === user.steamId && !x.hasSurrendered)
-        ? 1
-        : 0;
-      stats.totalGames++;
-
-      // no need to update game at this time, should be OK
-      //await this.gameRepository.saveVersioned(game);
-    }
-  }
-
-  private resetStatistics(host) {
-    host.turnsPlayed = 0;
-    host.turnsSkipped = 0;
-    host.timeTaken = 0;
-    host.fastTurns = 0;
-    host.slowTurns = 0;
-
-    if (host.statsByGameType) {
-      host.statsByGameType = [];
     }
   }
 }

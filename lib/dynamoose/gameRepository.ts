@@ -180,7 +180,8 @@ export class GameRepository
       resetGameStateOnNextUpload: legacyBoolean(),
       finalized: Boolean,
       gameVideoUrl: String,
-      turnTimerVacationHandling: String
+      turnTimerVacationHandling: String,
+      dataVersion: Number
     });
   }
 
