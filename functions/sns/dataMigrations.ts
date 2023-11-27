@@ -136,7 +136,7 @@ export class DataMigrations {
 
   private async calculateGameStats(games: Game[]) {
     for (const game of games) {
-      if ((game.dataVersion || 0) < 1) {
+      if ((game.dataVersion || 0) < 2) {
         this.resetStats(game);
 
         for (const player of game.players) {
@@ -151,7 +151,7 @@ export class DataMigrations {
           } as User);
         }
 
-        game.dataVersion = 1;
+        game.dataVersion = 2;
 
         const globalStats = await this.miscDataRepository.getGlobalStats(true);
 
@@ -174,22 +174,22 @@ export class DataMigrations {
           }
 
           curStats.dayOfWeekQueue = '';
-          curStats.fastTurns = curStats.fastTurns || 0 + game.fastTurns || 0;
+          curStats.fastTurns = (curStats.fastTurns || 0) + (game.fastTurns || 0);
           curStats.hourOfDayQueue = '';
-          curStats.slowTurns = curStats.slowTurns || 0 + game.slowTurns || 0;
-          curStats.timeTaken = curStats.timeTaken || 0 + game.timeTaken || 0;
-          curStats.turnsPlayed = curStats.turnsPlayed || 0 + game.turnsPlayed || 0;
-          curStats.turnsSkipped = curStats.turnsSkipped || 0 + game.turnsSkipped || 0;
+          curStats.slowTurns = (curStats.slowTurns || 0) + (game.slowTurns || 0);
+          curStats.timeTaken = (curStats.timeTaken || 0) + (game.timeTaken || 0);
+          curStats.turnsPlayed = (curStats.turnsPlayed || 0) + (game.turnsPlayed || 0);
+          curStats.turnsSkipped = (curStats.turnsSkipped || 0) + (game.turnsSkipped || 0);
 
           for (const turnLengthKey of Object.keys(game.turnLengthBuckets || {})) {
             curStats.turnLengthBuckets[turnLengthKey] =
               (curStats.turnLengthBuckets[turnLengthKey] || 0) +
-              game.turnLengthBuckets[turnLengthKey];
+              (game.turnLengthBuckets[turnLengthKey] || 0);
           }
 
           for (const yearKey of Object.keys(game.yearBuckets || {})) {
             curStats.yearBuckets[yearKey] =
-              (curStats.yearBuckets[yearKey] || 0) + game.yearBuckets[yearKey];
+              (curStats.yearBuckets[yearKey] || 0) + (game.yearBuckets[yearKey] || 0);
           }
         }
 
