@@ -1,4 +1,5 @@
-import { User, Game, GameTypeTurnData } from '../models';
+import { User, Game } from '../models';
+import { StatsUtil } from './statsUtil';
 
 export class UserUtil {
   public static createS3GameCacheKey(steamId: string): string {
@@ -9,7 +10,7 @@ export class UserUtil {
     user.activeGameIds = user.activeGameIds || [];
     user.activeGameIds = [...new Set([...user.activeGameIds, game.gameId])];
 
-    const gameStats = this.getUserGameStats(user, game.gameType);
+    const gameStats = StatsUtil.getGameStats(user, game.gameType);
     gameStats.activeGames++;
     gameStats.totalGames++;
   }
@@ -23,37 +24,11 @@ export class UserUtil {
       user.inactiveGameIds = [...new Set([...user.inactiveGameIds, game.gameId])];
     }
 
-    const gameStats = this.getUserGameStats(user, game.gameType);
+    const gameStats = StatsUtil.getGameStats(user, game.gameType);
     gameStats.activeGames = user.activeGameIds.length;
 
     if (!addToInactiveGames) {
       gameStats.totalGames--;
     }
-  }
-
-  public static getUserGameStats(user: { statsByGameType: GameTypeTurnData[] }, gameType: string) {
-    user.statsByGameType = user.statsByGameType || [];
-    let gameStats = user.statsByGameType.find(x => x.gameType === gameType);
-
-    if (!gameStats) {
-      gameStats = {
-        gameType: gameType,
-        activeGames: 0,
-        totalGames: 0,
-        fastTurns: 0,
-        slowTurns: 0,
-        timeTaken: 0,
-        turnsPlayed: 0,
-        turnsSkipped: 0,
-        dayOfWeekQueue: '',
-        hourOfDayQueue: '',
-        turnLengthBuckets: {},
-        yearBuckets: {}
-      };
-
-      user.statsByGameType.push(gameStats);
-    }
-
-    return gameStats;
   }
 }

@@ -4,6 +4,7 @@ import { User, DeprecatedUser } from '../models/user';
 import { BaseDynamooseRepository, IRepository } from './common';
 import { Game, GameTypeTurnData } from '../models';
 import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
+import { StatsUtil } from '../util/statsUtil';
 
 export const USER_REPOSITORY_SYMBOL = Symbol('IUserRepository');
 
@@ -117,11 +118,7 @@ export class UserRepository
         // Legacy complex array, see above
         type: String,
         get: (value: string) =>
-          (value ? JSON.parse(value) : []).map(x => ({
-            ...x,
-            firstTurnEndDate: x.firstTurnEndDate ? new Date(x.firstTurnEndDate) : undefined,
-            lastTurnEndDate: x.lastTurnEndDate ? new Date(x.lastTurnEndDate) : undefined
-          })),
+          (value ? JSON.parse(value) : []).map(x => StatsUtil.fixTurnDataDates(x)),
         pydtSet: (value: GameTypeTurnData[]) => {
           return JSON.stringify(
             (value || []).map(x => ({

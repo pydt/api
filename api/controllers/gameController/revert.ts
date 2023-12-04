@@ -8,15 +8,12 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { pydtLogger } from '../../../lib/logging';
 import { Game, GameTurn } from '../../../lib/models';
-import {
-  GAME_TURN_SERVICE_SYMBOL,
-  GameTurnService,
-  IGameTurnService
-} from '../../../lib/services/gameTurnService';
+import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../../lib/snsProvider';
 import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { ISqsProvider, SQS_PROVIDER_SYMBOL } from '../../../lib/sqsProvider';
+import { StatsUtil } from '../../../lib/util/statsUtil';
 
 @Route('game')
 @Tags('game')
@@ -61,7 +58,7 @@ export class GameController_Revert {
     } while (!lastTurn);
 
     const user = await this.userRepository.get(lastTurn.playerSteamId);
-    GameTurnService.updateTurnStatistics(game, lastTurn, user, true);
+    StatsUtil.updateTurnStatistics(game, lastTurn, user, true);
 
     // Update previous turn data
     delete lastTurn.skipped;

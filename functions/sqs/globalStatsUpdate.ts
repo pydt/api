@@ -5,9 +5,8 @@ import {
   IMiscDataRepository,
   MISC_DATA_REPOSITORY_SYMBOL
 } from '../../lib/dynamoose/miscDataRepository';
-import { GameTurnService } from '../../lib/services/gameTurnService';
 import { GlobalStatsUpdateMessage } from '../../lib/sqsProvider';
-import { UserUtil } from '../../lib/util/userUtil';
+import { StatsUtil } from '../../lib/util/statsUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const uugc = iocContainer.resolve(GlobalStatsUpdate);
@@ -30,11 +29,11 @@ export class GlobalStatsUpdate {
         ? new Date(message.turn.startDate)
         : undefined;
 
-      GameTurnService.updateTurnData(message.turn, globalStats.data, message.undo);
+      StatsUtil.updateTurnData(message.turn, globalStats.data, message.undo);
 
-      GameTurnService.updateTurnData(
+      StatsUtil.updateTurnData(
         message.turn,
-        UserUtil.getUserGameStats(globalStats.data, message.gameType),
+        StatsUtil.getGameStats(globalStats.data, message.gameType),
         message.undo
       );
     }

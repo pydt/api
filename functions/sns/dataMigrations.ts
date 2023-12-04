@@ -8,13 +8,12 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/use
 import { inject } from '../../lib/ioc';
 import { loggingHandler } from '../../lib/logging';
 import { Game, TurnData, User } from '../../lib/models';
-import { GameTurnService } from '../../lib/services/gameTurnService';
 import {
   IMiscDataRepository,
   MISC_DATA_REPOSITORY_SYMBOL
 } from '../../lib/dynamoose/miscDataRepository';
-import { UserUtil } from '../../lib/util/userUtil';
 import { GameUtil } from '../../lib/util/gameUtil';
+import { StatsUtil } from '../../lib/util/statsUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const rus = iocContainer.resolve(DataMigrations);
@@ -105,7 +104,7 @@ export class DataMigrations {
         user.statsByGameType = [];
 
         for (const turn of allTurns) {
-          GameTurnService.updateTurnStatistics(
+          StatsUtil.updateTurnStatistics(
             allGames[turn.gameId] ||
               ({
                 players: []
@@ -146,7 +145,7 @@ export class DataMigrations {
         const turns = await this.gameTurnRepository.getAllTurnsForGame(game.gameId);
 
         for (const turn of turns) {
-          GameTurnService.updateTurnStatistics(game, turn, {
+          StatsUtil.updateTurnStatistics(game, turn, {
             steamId: turn.playerSteamId
           } as User);
         }
@@ -157,7 +156,7 @@ export class DataMigrations {
 
         for (const curStats of [
           globalStats.data,
-          UserUtil.getUserGameStats(globalStats.data, game.gameType)
+          StatsUtil.getGameStats(globalStats.data, game.gameType)
         ]) {
           if (
             !curStats.firstTurnEndDate ||

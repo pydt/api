@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { aws as dynamooseAws, Table } from 'dynamoose';
 import { describe, it } from 'mocha';
 import { v4 as uuid } from 'uuid';
-import { GameTurnService } from './gameTurnService';
 import { GameRepository } from '../dynamoose/gameRepository';
 import { CIV6_GAME } from '../metadata/civGames/civ6';
 import { Game, GameTurn, User } from '../models';
@@ -11,6 +10,7 @@ import { UserRepository } from '../dynamoose/userRepository';
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
 import { ONE_DAY, ONE_HOUR } from 'pydt-shared-models';
+import { StatsUtil } from '../util/statsUtil';
 
 dynamooseAws.ddb.set(
   new dynamooseAws.ddb.DynamoDB({
@@ -78,7 +78,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       displayName: 'player 1'
     } as User;
 
-    GameTurnService.updateTurnStatistics(game, turn1, user);
+    StatsUtil.updateTurnStatistics(game, turn1, user);
 
     const gameRepository = new GameRepository();
     const userRepository = new UserRepository();
@@ -114,7 +114,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-02T09:00:00.000Z'));
     }
 
-    GameTurnService.updateTurnStatistics(game, turn2, user);
+    StatsUtil.updateTurnStatistics(game, turn2, user);
 
     await gameRepository.saveVersioned(game);
     await userRepository.saveVersioned(user);
@@ -148,7 +148,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-02T23:00:00.000Z'));
     }
 
-    GameTurnService.updateTurnStatistics(game, turn3, user);
+    StatsUtil.updateTurnStatistics(game, turn3, user);
 
     await gameRepository.saveVersioned(game);
     await userRepository.saveVersioned(user);
@@ -182,7 +182,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-03T23:00:00.000Z'));
     }
 
-    GameTurnService.updateTurnStatistics(game, turn3, user, true);
+    StatsUtil.updateTurnStatistics(game, turn3, user, true);
 
     await gameRepository.saveVersioned(game);
     await userRepository.saveVersioned(user);
@@ -216,7 +216,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-03T23:00:00.000Z'));
     }
 
-    GameTurnService.updateTurnStatistics(game, turn2, user, true);
+    StatsUtil.updateTurnStatistics(game, turn2, user, true);
 
     await gameRepository.saveVersioned(game);
     await userRepository.saveVersioned(user);

@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { provideSingleton } from '../ioc';
 import { GlobalStats, MiscData } from '../models/miscData';
+import { StatsUtil } from '../util/statsUtil';
 import { BaseDynamooseRepository, IRepository } from './common';
 
 export const MISC_DATA_REPOSITORY_SYMBOL = Symbol('IMiscDataRepository');
@@ -37,12 +38,11 @@ export class MiscDataRepository
       }
     }) as GlobalStats;
 
-    result.data.firstTurnEndDate = result.data.firstTurnEndDate
-      ? new Date(result.data.firstTurnEndDate)
-      : undefined;
-    result.data.lastTurnEndDate = result.data.lastTurnEndDate
-      ? new Date(result.data.lastTurnEndDate)
-      : undefined;
+    StatsUtil.fixTurnDataDates(result.data);
+
+    for (const gameType of result.data.statsByGameType || []) {
+      StatsUtil.fixTurnDataDates(gameType);
+    }
 
     return result;
   }

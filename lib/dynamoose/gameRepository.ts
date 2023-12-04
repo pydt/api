@@ -6,6 +6,7 @@ import { Game, GamePlayer, User } from '../models';
 import { BaseDynamooseRepository, IRepository } from './common';
 import { CIV6_GAME } from '../metadata/civGames/civ6';
 import { legacyBoolean, legacyStringSet } from '../util/dynamooseLegacy';
+import { StatsUtil } from '../util/statsUtil';
 
 export const GAME_REPOSITORY_SYMBOL = Symbol('IGameRepository');
 
@@ -79,11 +80,7 @@ export class GameRepository
         // Legacy complex array, see above
         type: String,
         get: (value: string) =>
-          (value ? JSON.parse(value) : []).map(x => ({
-            ...x,
-            firstTurnEndDate: x.firstTurnEndDate ? new Date(x.firstTurnEndDate) : undefined,
-            lastTurnEndDate: x.lastTurnEndDate ? new Date(x.lastTurnEndDate) : undefined
-          })),
+          (value ? JSON.parse(value) : []).map(x => StatsUtil.fixTurnDataDates(x)),
         pydtSet: (value: GamePlayer[]) => {
           return JSON.stringify(
             (value || []).map(x => ({
