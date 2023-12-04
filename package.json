@@ -31,7 +31,7 @@
     "passport": "^0.6.0",
     "passport-steam": "1.0.18",
     "pydt-civ5-save-parser": "1.0.9",
-    "pydt-shared-models": "^1.8.3",
+    "pydt-shared-models": "^1.8.8",
     "reflect-metadata": "0.1.13",
     "rollbar": "^2.26.2",
     "source-map-support": "0.5.21",

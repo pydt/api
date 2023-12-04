@@ -5,9 +5,8 @@ export interface MiscData<T> {
   data: T;
 }
 
-export interface GlobalStats
-  extends MiscData<
-    TurnData & {
-      statsByGameType: GameTypeTurnData[];
-    }
-  > {}
+export interface GlobalStats extends MiscData<GlobalStatsData> {}
+
+export interface GlobalStatsData extends TurnData {
+  statsByGameType: GameTypeTurnData[];
+}

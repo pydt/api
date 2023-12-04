@@ -3,5 +3,6 @@ import './controllers/authController';
 import './controllers/gameController';
 import './controllers/userController';
 import './controllers/usersController';
+import './controllers/statsController';
 import './controllers/webhookController';
 import './controllers/metadataController';

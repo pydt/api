@@ -20,6 +20,7 @@ import {
   IPrivateUserDataRepository
 } from '../dynamoose/privateUserDataRepository';
 import { ISqsProvider, SQS_PROVIDER_SYMBOL } from '../sqsProvider';
+import { HOUR_OF_DAY_KEY, ONE_HOUR, TURN_BUCKETS } from 'pydt-shared-models';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -185,9 +186,6 @@ export class GameTurnService implements IGameTurnService {
         const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
         turnData.timeTaken = (turnData.timeTaken || 0) + timeTaken * undoInc;
 
-        const ONE_HOUR = 1000 * 60 * 60;
-        const ONE_DAY = 1000 * 60 * 60 * 24;
-
         if (timeTaken < ONE_HOUR) {
           turnData.fastTurns = (turnData.fastTurns || 0) + undoInc;
         }
@@ -196,13 +194,12 @@ export class GameTurnService implements IGameTurnService {
           turnData.slowTurns = (turnData.slowTurns || 0) + undoInc;
         }
 
-        const hourKey = 'ABCDEFGHIJKLMNOPQRSTUVWX';
         const MAX_QUEUE_LENGTH = 100;
 
         // Not sure undoing these queues will make sense in all scenarios...
         if (!undo) {
           turnData.hourOfDayQueue =
-            (turnData.hourOfDayQueue || '') + hourKey[gameTurn.endDate.getUTCHours()];
+            (turnData.hourOfDayQueue || '') + HOUR_OF_DAY_KEY[gameTurn.endDate.getUTCHours()];
 
           if (turnData.hourOfDayQueue.length > MAX_QUEUE_LENGTH) {
             turnData.hourOfDayQueue = turnData.hourOfDayQueue.substring(1);
@@ -218,20 +215,7 @@ export class GameTurnService implements IGameTurnService {
         turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] =
           (turnData.yearBuckets[gameTurn.endDate.getUTCFullYear()] || 0) + undoInc;
 
-        const turnBuckets = [
-          ONE_HOUR,
-          ONE_HOUR * 2,
-          ONE_HOUR * 3,
-          ONE_HOUR * 6,
-          ONE_HOUR * 12,
-          ONE_DAY,
-          ONE_DAY * 2,
-          ONE_DAY * 4,
-          ONE_DAY * 7,
-          Number.MAX_SAFE_INTEGER
-        ];
-
-        for (const bucket of turnBuckets) {
+        for (const bucket of TURN_BUCKETS) {
           if (timeTaken < bucket) {
             turnData.turnLengthBuckets[bucket] =
               (turnData.turnLengthBuckets[bucket] || 0) + undoInc;

@@ -10,6 +10,7 @@ import { Config } from '../config';
 import { UserRepository } from '../dynamoose/userRepository';
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
+import { ONE_DAY, ONE_HOUR } from 'pydt-shared-models';
 
 dynamooseAws.ddb.set(
   new dynamooseAws.ddb.DynamoDB({
@@ -91,7 +92,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
     for (const data of [game, user, game.players[0], user.statsByGameType[0]]) {
       expect(data.fastTurns).to.equal(0);
       expect(data.slowTurns).to.equal(0);
-      expect(data.timeTaken).to.equal(1000 * 60 * 60 * 5);
+      expect(data.timeTaken).to.equal(ONE_HOUR * 5);
       expect(data.turnsPlayed).to.equal(1);
       expect(data.turnsSkipped).to.equal(0);
 
@@ -104,7 +105,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
       }
 
       expect(data.turnLengthBuckets).to.deep.equal({
-        [1000 * 60 * 60 * 6]: 1
+        [ONE_HOUR * 6]: 1
       });
       expect(data.yearBuckets).to.deep.equal({
         '2023': 1
@@ -124,7 +125,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
     for (const data of [game, user, game.players[0], user.statsByGameType[0]]) {
       expect(data.fastTurns).to.equal(0);
       expect(data.slowTurns).to.equal(1);
-      expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
+      expect(data.timeTaken).to.equal(ONE_HOUR * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(0);
 
@@ -137,8 +138,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
       }
 
       expect(data.turnLengthBuckets).to.deep.equal({
-        [1000 * 60 * 60 * 6]: 1,
-        [1000 * 60 * 60 * 24]: 1
+        [ONE_HOUR * 6]: 1,
+        [ONE_DAY]: 1
       });
       expect(data.yearBuckets).to.deep.equal({
         '2023': 2
@@ -158,7 +159,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
     for (const data of [game, user, game.players[0], user.statsByGameType[0]]) {
       expect(data.fastTurns).to.equal(0);
       expect(data.slowTurns).to.equal(1);
-      expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
+      expect(data.timeTaken).to.equal(ONE_HOUR * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(1);
 
@@ -171,8 +172,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
       }
 
       expect(data.turnLengthBuckets).to.deep.equal({
-        [1000 * 60 * 60 * 6]: 1,
-        [1000 * 60 * 60 * 24]: 1
+        [ONE_HOUR * 6]: 1,
+        [ONE_DAY]: 1
       });
       expect(data.yearBuckets).to.deep.equal({
         '2023': 2
@@ -192,7 +193,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
     for (const data of [game, user, game.players[0], user.statsByGameType[0]]) {
       expect(data.fastTurns).to.equal(0);
       expect(data.slowTurns).to.equal(1);
-      expect(data.timeTaken).to.equal(1000 * 60 * 60 * 18);
+      expect(data.timeTaken).to.equal(ONE_HOUR * 18);
       expect(data.turnsPlayed).to.equal(2);
       expect(data.turnsSkipped).to.equal(0);
 
@@ -205,8 +206,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
       }
 
       expect(data.turnLengthBuckets).to.deep.equal({
-        [1000 * 60 * 60 * 6]: 1,
-        [1000 * 60 * 60 * 24]: 1
+        [ONE_HOUR * 6]: 1,
+        [ONE_DAY]: 1
       });
       expect(data.yearBuckets).to.deep.equal({
         '2023': 2
@@ -226,7 +227,7 @@ describe('GameTurnService_updateTurnStatistics', () => {
     for (const data of [game, user, game.players[0], user.statsByGameType[0]]) {
       expect(data.fastTurns).to.equal(0);
       expect(data.slowTurns).to.equal(0);
-      expect(data.timeTaken).to.equal(1000 * 60 * 60 * 5);
+      expect(data.timeTaken).to.equal(ONE_HOUR * 5);
       expect(data.turnsPlayed).to.equal(1);
       expect(data.turnsSkipped).to.equal(0);
 
@@ -239,8 +240,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
       }
 
       expect(data.turnLengthBuckets).to.deep.equal({
-        [1000 * 60 * 60 * 6]: 1,
-        [1000 * 60 * 60 * 24]: 0
+        [ONE_HOUR * 6]: 1,
+        [ONE_DAY]: 0
       });
       expect(data.yearBuckets).to.deep.equal({
         '2023': 1

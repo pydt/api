@@ -19,6 +19,7 @@ import {
   IPrivateUserDataRepository
 } from '../../../lib/dynamoose/privateUserDataRepository';
 import { Config } from '../../../lib/config';
+import { ONE_DAY } from 'pydt-shared-models';
 
 @Route('game')
 @Tags('game')
@@ -56,7 +57,7 @@ export class GameController_Surrender {
         const lastTurnTime = (game.lastTurnEndDate || game.updatedAt).getTime();
         const diffTime = new Date().getTime() - lastTurnTime;
 
-        if (diffTime < 1000 * 60 * 60 * 24) {
+        if (diffTime < ONE_DAY) {
           throw new HttpResponseError(
             404,
             `You cannot kick a user if they haven't had 24 hours to play their turn.`
