@@ -183,6 +183,9 @@ In save but not enabled: ${notInGame
           );
         }
 
+        // Keep track of dead civs so we don't have people join a dead civ
+        game.players[i].isDead = civ.type === ActorType.DEAD;
+
         if (GameUtil.playerIsHuman(game.players[i])) {
           if (civ.type === ActorType.DEAD) {
             // Player has been defeated!

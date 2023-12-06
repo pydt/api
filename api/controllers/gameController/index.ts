@@ -12,6 +12,7 @@ export * from './leave';
 export * from './listOpen';
 export * from './refreshState';
 export * from './replacePlayer';
+export * from './requestSubstitution';
 export * from './resetGameStateOnNextUpload';
 export * from './restart';
 export * from './revert';

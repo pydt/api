@@ -9,6 +9,10 @@ export interface LeaveRequestBody {
   steamId?: string;
 }
 
+export interface RequestSubstitutionBody {
+  steamId?: string;
+}
+
 export interface SurrenderBody {
   kickUserId?: string;
 }

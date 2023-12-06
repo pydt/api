@@ -15,30 +15,39 @@ import { GlobalStatsData } from '../../lib/models/miscData';
 @provideSingleton(StatsController)
 export class StatsController {
   private cachedUsers?: User[];
+  private cachedUsersDate?: Date;
 
   private cachedGlobalStats?: GlobalStatsData;
-
-  private userCacheDate?: Date;
+  private cachedGlobalStatsDate?: Date;
 
   constructor(
     @inject(MISC_DATA_REPOSITORY_SYMBOL) private miscDataRepository: IMiscDataRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
   ) {}
 
-  private async refreshCachedData() {
+  private async refreshUsers() {
     if (
-      !this.userCacheDate ||
-      moment(this.userCacheDate).isBefore(moment().subtract(5, 'minutes'))
+      !this.cachedUsersDate ||
+      moment(this.cachedUsersDate).isBefore(moment().subtract(5, 'minutes'))
     ) {
       this.cachedUsers = await this.userRepository.usersWithTurnsPlayed();
+      this.cachedUsersDate = new Date();
+    }
+  }
+
+  private async refreshGlobalStats() {
+    if (
+      !this.cachedGlobalStatsDate ||
+      moment(this.cachedGlobalStatsDate).isBefore(moment().subtract(5, 'minutes'))
+    ) {
       this.cachedGlobalStats = (await this.miscDataRepository.getGlobalStats(false)).data;
-      this.userCacheDate = new Date();
+      this.cachedGlobalStatsDate = new Date();
     }
   }
 
   @Get('users/{gameType}')
   public async users(gameType: string): Promise<UsersByGameTypeResponse> {
-    await this.refreshCachedData();
+    await Promise.all([this.refreshUsers(), this.refreshGlobalStats()]);
 
     const pickTurnData = (data: TurnData) =>
       pick(
@@ -88,7 +97,7 @@ export class StatsController {
 
   @Get('global')
   public async global(): Promise<GlobalStatsData> {
-    await this.refreshCachedData();
+    await this.refreshGlobalStats();
 
     return this.cachedGlobalStats;
   }

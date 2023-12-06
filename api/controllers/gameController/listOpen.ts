@@ -1,9 +1,8 @@
 import { orderBy } from 'lodash';
-import { Get, Response, Route, Tags } from 'tsoa';
+import { Get, Route, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
-import { ErrorResponse } from '../../framework';
 import { OpenGamesResponse } from './_models';
 
 @Route('game')
@@ -12,10 +11,9 @@ import { OpenGamesResponse } from './_models';
 export class GameController_ListOpen {
   constructor(@inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository) {}
 
-  @Response<ErrorResponse>(401, 'Unauthorized')
   @Get('listOpen')
   public async listOpen(): Promise<OpenGamesResponse> {
-    const games: Game[] = await this.gameRepository.incompleteGames();
+    const games = await this.gameRepository.incompleteGames();
     const orderedGames = orderBy(games, ['createdAt'], ['desc']);
 
     return {
@@ -37,5 +35,29 @@ export class GameController_ListOpen {
         );
       })
     };
+  }
+
+  @Get('notStarted')
+  public async notStarted(): Promise<Game[]> {
+    const games = await this.gameRepository.unstartedGames(0);
+    return orderBy(games, ['createdAt'], ['desc']);
+  }
+
+  @Get('openSlots')
+  public async openSlots(): Promise<Game[]> {
+    const games = await this.gameRepository.incompleteGames();
+    return orderBy(games, ['createdAt'], ['desc']).filter(game => {
+      const numHumans = game.players.filter(player => {
+        return !!player.steamId;
+      }).length;
+
+      return (
+        game.inProgress &&
+        game.allowJoinAfterStart &&
+        !game.completed &&
+        ((numHumans < game.players.length && numHumans < game.humans) ||
+          game.players.some(x => x.substitutionRequested))
+      );
+    });
   }
 }

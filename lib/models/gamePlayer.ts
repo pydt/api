@@ -5,4 +5,6 @@ export interface GamePlayer extends Partial<TurnData> {
   civType: string;
   hasSurrendered?: boolean;
   surrenderDate?: Date;
+  substitutionRequested?: boolean;
+  isDead?: boolean;
 }
