@@ -92,13 +92,17 @@ export class StatsUtil {
             (turnData.hourOfDayQueue || '') + HOUR_OF_DAY_KEY[gameTurn.endDate.getUTCHours()];
 
           if (turnData.hourOfDayQueue.length > MAX_QUEUE_LENGTH) {
-            turnData.hourOfDayQueue = turnData.hourOfDayQueue.substring(1);
+            turnData.hourOfDayQueue = turnData.hourOfDayQueue.substring(
+              turnData.hourOfDayQueue.length - MAX_QUEUE_LENGTH
+            );
           }
 
           turnData.dayOfWeekQueue = (turnData.dayOfWeekQueue || '') + gameTurn.endDate.getUTCDay();
 
           if (turnData.dayOfWeekQueue.length > MAX_QUEUE_LENGTH) {
-            turnData.dayOfWeekQueue = turnData.dayOfWeekQueue.substring(1);
+            turnData.dayOfWeekQueue = turnData.dayOfWeekQueue.substring(
+              turnData.dayOfWeekQueue.length - MAX_QUEUE_LENGTH
+            );
           }
         }
 
