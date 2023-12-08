@@ -37,6 +37,9 @@ export interface ReplacePlayerRequestBody {
   oldSteamId: string;
   newSteamId: string;
 }
+export interface ReplaceRequestedSubstitutionPlayerRequestBody extends ReplacePlayerRequestBody {
+  password?: string;
+}
 
 export interface OpenGamesResponse {
   notStarted: Game[];
@@ -53,4 +56,9 @@ export interface StartTurnSubmitResponse {
 
 export interface GameTurnListItem extends GameTurn {
   hasSave: boolean;
+}
+
+export interface OpenSlotsGame extends Game {
+  joinAfterStart: boolean;
+  substitutionRequested: boolean;
 }

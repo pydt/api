@@ -3,7 +3,7 @@ import { Get, Route, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
-import { OpenGamesResponse } from './_models';
+import { OpenGamesResponse, OpenSlotsGame } from './_models';
 
 @Route('game')
 @Tags('game')
@@ -44,20 +44,28 @@ export class GameController_ListOpen {
   }
 
   @Get('openSlots')
-  public async openSlots(): Promise<Game[]> {
+  public async openSlots(): Promise<OpenSlotsGame[]> {
     const games = await this.gameRepository.incompleteGames();
-    return orderBy(games, ['createdAt'], ['desc']).filter(game => {
-      const numHumans = game.players.filter(player => {
-        return !!player.steamId;
-      }).length;
+    return orderBy(games, ['createdAt'], ['desc'])
+      .filter(game => game.inProgress && !game.completed)
+      .map(game => {
+        const numHumans = game.players.filter(player => {
+          return !!player.steamId;
+        }).length;
 
-      return (
-        game.inProgress &&
-        game.allowJoinAfterStart &&
-        !game.completed &&
-        ((numHumans < game.players.length && numHumans < game.humans) ||
-          game.players.some(x => x.substitutionRequested))
-      );
-    });
+        const joinAfterStart =
+          game.allowJoinAfterStart &&
+          !game.hashedPassword &&
+          numHumans < game.players.length &&
+          numHumans < game.humans;
+        const substitutionRequested = game.players.some(x => x.substitutionRequested);
+
+        return {
+          ...game,
+          joinAfterStart,
+          substitutionRequested
+        };
+      })
+      .filter(x => x.joinAfterStart || x.substitutionRequested);
   }
 }
