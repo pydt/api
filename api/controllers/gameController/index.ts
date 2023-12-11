@@ -1,4 +1,5 @@
 export * from './changeCiv';
+export * from './civ6Mods';
 export * from './clone';
 export * from './create';
 export * from './delete';

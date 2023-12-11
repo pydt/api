@@ -27,10 +27,12 @@ export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 export interface IGameTurnService {
   getAndUpdateSaveFileForGameState(game: Game, users?: User[]): Promise<void>;
   updateSaveFileForGameState(game: Game, users: User[], handler: SaveHandler): Promise<void>;
-  parseSaveFile(buffer, game: Game): SaveHandler;
+  loadSaveFile(game: Game): Promise<Buffer>;
+  parseSaveFile(buffer: Buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
   defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]): Promise<void>;
   skipTurn(game: Game, turn: GameTurn): Promise<void>;
+  storeSave(game: Game, buffer: Buffer): Promise<void>;
 }
 
 @provideSingleton(GAME_TURN_SERVICE_SYMBOL)
@@ -190,13 +192,35 @@ export class GameTurnService implements IGameTurnService {
 
     handler.cleanupSave(game);
 
-    const saveKey = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
     const uncompressedBody = handler.getData();
 
-    await this.storeSave(saveKey, uncompressedBody);
+    await this.storeSave(game, uncompressedBody);
   }
 
-  public parseSaveFile(buffer, game: Game): SaveHandler {
+  public async loadSaveFile(game: Game) {
+    const data = await this.s3.getObject({
+      Bucket: Config.resourcePrefix + 'saves',
+      Key: GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey)
+    });
+
+    if (!data || !data.Body) {
+      throw new Error("File doesn't exist?");
+    }
+
+    let buffer = data.Body;
+
+    // Attempt to gunzip...
+    try {
+      buffer = zlib.unzipSync(data.Body as Buffer);
+    } catch (e) {
+      // If unzip fails, assume raw save file was uploaded...
+      pydtLogger.info('unzip failed :(', e);
+    }
+
+    return buffer;
+  }
+
+  public parseSaveFile(buffer: Buffer, game: Game): SaveHandler {
     try {
       return SaveHandlerFactory.getHandler(buffer, game);
     } catch (e) {
@@ -260,10 +284,7 @@ export class GameTurnService implements IGameTurnService {
     saveHandler.setCurrentTurnIndex(nextPlayerIndex);
     this.updateSaveFileForGameState(game, users, saveHandler, false);
 
-    await this.storeSave(
-      GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey),
-      saveHandler.getData()
-    );
+    await this.storeSave(game, saveHandler.getData());
 
     await this.moveToNextTurn(game, turn, oldUser);
 
@@ -279,7 +300,9 @@ export class GameTurnService implements IGameTurnService {
     }
   }
 
-  private async storeSave(key: string, buffer: Buffer) {
+  public async storeSave(game: Game, buffer: Buffer) {
+    const key = GameUtil.createS3SaveKey(game.gameId, game.gameTurnRangeKey);
+
     await Promise.all([
       this.s3.putObject(
         {

@@ -1,7 +1,5 @@
 import { difference } from 'lodash';
 import { Post, Request, Response, Route, Security, Tags } from 'tsoa';
-import * as zlib from 'zlib';
-import { Config } from '../../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import {
   GAME_TURN_REPOSITORY_SYMBOL,
@@ -13,12 +11,10 @@ import {
 } from '../../../lib/dynamoose/privateUserDataRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
-import { pydtLogger } from '../../../lib/logging';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game, GamePlayer } from '../../../lib/models';
-import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../../lib/s3Provider';
 import { ActorType } from '../../../lib/saveHandlers/saveHandler';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { GameUtil } from '../../../lib/util/gameUtil';
@@ -34,7 +30,6 @@ export class GameController_FinishSubmit {
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
     @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
     @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
-    @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository,
     @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider
   ) {}
@@ -60,25 +55,7 @@ export class GameController_FinishSubmit {
       return u.steamId === request.user;
     });
 
-    const data = await this.s3.getObject({
-      Bucket: Config.resourcePrefix + 'saves',
-      Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey)
-    });
-
-    if (!data || !data.Body) {
-      throw new Error("File doesn't exist?");
-    }
-
-    let buffer = data.Body;
-
-    // Attempt to gunzip...
-    try {
-      buffer = zlib.unzipSync(data.Body as Buffer);
-    } catch (e) {
-      // If unzip fails, assume raw save file was uploaded...
-      pydtLogger.info('unzip failed :(', e);
-    }
-
+    const buffer = await this.gameTurnService.loadSaveFile(game);
     const saveHandler = this.gameTurnService.parseSaveFile(buffer, game);
 
     // Temporary code to upgrade Caesar games

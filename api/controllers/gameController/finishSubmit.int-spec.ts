@@ -132,7 +132,6 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepository,
       userRepository,
       gameTurnService,
-      s3Mock.object,
       pudRepository,
       Mock.ofType<ISnsProvider>().object
     );

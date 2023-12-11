@@ -2,13 +2,11 @@ import 'reflect-metadata';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { It, Mock } from 'typemoq';
-import * as zlib from 'zlib';
 import { IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { IGameTurnRepository } from '../../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository } from '../../../lib/dynamoose/userRepository';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { Game, GameTurn, User } from '../../../lib/models';
-import { GetObjectResult, IS3Provider } from '../../../lib/s3Provider';
 import { SaveHandler } from '../../../lib/saveHandlers/saveHandler';
 import { IGameTurnService } from '../../../lib/services/gameTurnService';
 import { HttpRequest } from '../../framework';
@@ -51,15 +49,6 @@ describe('GameController_FinishSubmit', () => {
       .setup(x => x.getUsersForGame(It.isAny()))
       .returns(() => Promise.resolve<User[]>([]));
 
-    const s3Mock = Mock.ofType<IS3Provider>();
-    s3Mock
-      .setup(x => x.getObject(It.isAny()))
-      .returns(() =>
-        Promise.resolve<GetObjectResult>({
-          Body: zlib.gzipSync('Hello world')
-        } as GetObjectResult)
-      );
-
     const gameTurnServiceMock = Mock.ofType<IGameTurnService>();
     gameTurnServiceMock
       .setup(x => x.parseSaveFile(It.isAny(), It.isAny()))
@@ -88,7 +77,6 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepositoryMock.object,
       userRepositoryMock.object,
       gameTurnServiceMock.object,
-      s3Mock.object,
       pudMock.object,
       Mock.ofType<ISnsProvider>().object
     );
@@ -132,15 +120,6 @@ describe('GameController_FinishSubmit', () => {
       .setup(x => x.getUsersForGame(It.isAny()))
       .returns(() => Promise.resolve<User[]>([]));
 
-    const s3Mock = Mock.ofType<IS3Provider>();
-    s3Mock
-      .setup(x => x.getObject(It.isAny()))
-      .returns(() =>
-        Promise.resolve<GetObjectResult>({
-          Body: zlib.gzipSync('Hello world')
-        } as GetObjectResult)
-      );
-
     const gameTurnServiceMock = Mock.ofType<IGameTurnService>();
     gameTurnServiceMock
       .setup(x => x.parseSaveFile(It.isAny(), It.isAny()))
@@ -163,7 +142,6 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRepositoryMock.object,
       userRepositoryMock.object,
       gameTurnServiceMock.object,
-      s3Mock.object,
       Mock.ofType<IPrivateUserDataRepository>().object,
       Mock.ofType<ISnsProvider>().object
     );

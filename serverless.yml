@@ -38,6 +38,7 @@ provider:
       allowedMethods:
         - GET
         - POST
+        - DELETE
       exposedResponseHeaders:
         - Authorization
         - Metadata-Hash
@@ -132,6 +133,9 @@ functions:
           path: '/{proxy+}'
       - httpApi:
           method: POST
+          path: '/{proxy+}'
+      - httpApi:
+          method: DELETE
           path: '/{proxy+}'
   cronCheckTurnTimerJobs:
     handler: functions/cron/checkTurnTimerJobs.handler

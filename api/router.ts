@@ -95,7 +95,8 @@ function methodHandler(method: string) {
 
 const mockApp: any = {
   get: methodHandler('get'),
-  post: methodHandler('post')
+  post: methodHandler('post'),
+  delete: methodHandler('delete')
 };
 
 RegisterRoutes(mockApp);
