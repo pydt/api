@@ -14,7 +14,7 @@ import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { PYDT_METADATA } from '../../../lib/metadata/metadata';
-import { Game, GamePlayer } from '../../../lib/models';
+import { GAME_FLAG, Game, GamePlayer } from '../../../lib/models';
 import { ActorType } from '../../../lib/saveHandlers/saveHandler';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { GameUtil } from '../../../lib/util/gameUtil';
@@ -211,8 +211,11 @@ In save but not enabled: ${notInGame
       }
     } else if (nextPlayerIndex <= GameUtil.getCurrentPlayerIndex(game)) {
       // Allow round to stay the same on the turn for civ 6 world congress...
-      if (!(game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round)) {
+      if (game.gameType === CIV6_GAME.id && parsedRound === gameTurn.round) {
+        game.flags = [...new Set<GAME_FLAG>([...(game.flags || []), 'CIV6_CONGRESS_TURN'])];
+      } else {
         expectedRound++;
+        game.flags = (game.flags || []).filter(x => x !== 'CIV6_CONGRESS_TURN');
       }
     }
 

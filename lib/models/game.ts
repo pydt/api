@@ -20,6 +20,8 @@ export interface BaseGame {
   turnTimerVacationHandling?: 'PAUSE' | 'SKIP_AFTER_TIMER' | 'SKIP_IMMEDIATELY';
 }
 
+export type GAME_FLAG = 'CIV6_CONGRESS_TURN';
+
 export interface Game extends Entity, BaseGame, Partial<TurnData> {
   gameId: string;
   createdBySteamId: string;
@@ -39,4 +41,5 @@ export interface Game extends Entity, BaseGame, Partial<TurnData> {
   finalized?: boolean;
   gameVideoUrl?: string;
   dataVersion?: number;
+  flags?: GAME_FLAG[];
 }

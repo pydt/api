@@ -178,7 +178,11 @@ export class GameRepository
       finalized: Boolean,
       gameVideoUrl: String,
       turnTimerVacationHandling: String,
-      dataVersion: Number
+      dataVersion: Number,
+      flags: {
+        type: Array,
+        schema: [String]
+      }
     });
   }
 
