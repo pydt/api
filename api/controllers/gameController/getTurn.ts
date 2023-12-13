@@ -49,6 +49,8 @@ export class GameController_GetTurn {
       }
     }
 
+    const versionInfo = await this.s3.getLatestVersionInfo(fileParams);
+
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     return {
@@ -56,7 +58,9 @@ export class GameController_GetTurn {
         fileParams,
         '(PYDT) Play This One!.' + civGame.saveExtension,
         60
-      )
+      ),
+      version: versionInfo.VersionId,
+      size: versionInfo.Size
     };
   }
 }

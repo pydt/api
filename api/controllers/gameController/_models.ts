@@ -48,6 +48,8 @@ export interface OpenGamesResponse {
 
 export interface GameTurnResponse {
   downloadUrl: string;
+  version?: string;
+  size?: number;
 }
 
 export interface StartTurnSubmitResponse {

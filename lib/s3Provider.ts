@@ -5,7 +5,9 @@ import {
   HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
-  StorageClass
+  StorageClass,
+  ListObjectVersionsCommand,
+  ObjectVersion
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { merge } from 'lodash';
@@ -25,6 +27,7 @@ export interface IS3Provider {
   headObject(fileParams: FileParams): Promise<void>;
   listObjects(bucket: string, prefix: string): Promise<ListObjectsResult>;
   putObject(fileParams: FileParams, data: string | Buffer, isPublic?: boolean): Promise<void>;
+  getLatestVersionInfo(fileParams: FileParams): Promise<ObjectVersion>;
   signedGetUrl(
     fileParams: FileParams,
     downloadAsFilename: string,
@@ -93,6 +96,17 @@ export class S3Provider implements IS3Provider {
 
   async headObject(fileParams: FileParams) {
     await s3.send(new HeadObjectCommand(fileParams));
+  }
+
+  async getLatestVersionInfo(fileParams: FileParams) {
+    const versions = await s3.send(
+      new ListObjectVersionsCommand({
+        Bucket: fileParams.Bucket,
+        Prefix: fileParams.Key
+      })
+    );
+
+    return versions.Versions.find(x => x.IsLatest);
   }
 
   signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiresIn: number) {
