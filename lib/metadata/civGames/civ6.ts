@@ -334,7 +334,13 @@ export const CIV6_GAME: CivGame = {
   mapSizes: CIV6_MAP_SIZES,
   saveLocations: {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
-    [Platform.OSX]: { basePath: BasePath.APP_DATA, prefix: '' },
+    [Platform.OSX]: {
+      basePath: BasePath.APP_DATA,
+      prefix: '',
+      dataPathOverrides: {
+        [GameStore.Steam]: "/Sid Meier's Civilization VI/Sid Meier's Civilization VI"
+      }
+    },
     [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' },
     [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('289070') }
   },

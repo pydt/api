@@ -24,6 +24,7 @@ export enum BasePath {
 export interface PlatformSaveLocation {
   basePath: BasePath;
   prefix: string;
+  dataPathOverrides?: { [gameStore: string]: string };
 }
 
 export interface CivDef {
