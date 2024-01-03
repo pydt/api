@@ -179,7 +179,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
         '2023': 2
       });
       expect(data.firstTurnEndDate).to.deep.equal(new Date('2023-11-02T09:00:00.000Z'));
-      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-03T23:00:00.000Z'));
+      // Turn 3 was a skip, last turn date shouldn't be updated!
+      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-02T23:00:00.000Z'));
     }
 
     StatsUtil.updateTurnStatistics(game, turn3, user, true);
@@ -213,7 +214,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
         '2023': 2
       });
       expect(data.firstTurnEndDate).to.deep.equal(new Date('2023-11-02T09:00:00.000Z'));
-      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-03T23:00:00.000Z'));
+      // Don't update last turn date on undo!
+      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-02T23:00:00.000Z'));
     }
 
     StatsUtil.updateTurnStatistics(game, turn2, user, true);
@@ -247,7 +249,8 @@ describe('GameTurnService_updateTurnStatistics', () => {
         '2023': 1
       });
       expect(data.firstTurnEndDate).to.deep.equal(new Date('2023-11-02T09:00:00.000Z'));
-      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-03T23:00:00.000Z'));
+      // Don't update last turn date on undo!
+      expect(data.lastTurnEndDate).to.deep.equal(new Date('2023-11-02T23:00:00.000Z'));
     }
   });
 });

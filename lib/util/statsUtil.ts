@@ -57,20 +57,22 @@ export class StatsUtil {
     const undoInc = undo ? -1 : 1;
 
     if (gameTurn.endDate) {
-      if (!turnData.firstTurnEndDate || gameTurn.endDate < turnData.firstTurnEndDate) {
-        turnData.firstTurnEndDate = gameTurn.endDate;
-      }
-
-      if (!turnData.lastTurnEndDate || gameTurn.endDate > turnData.lastTurnEndDate) {
-        turnData.lastTurnEndDate = gameTurn.endDate;
-      }
-
       turnData.turnLengthBuckets = turnData.turnLengthBuckets || {};
       turnData.yearBuckets = turnData.yearBuckets || {};
 
       if (gameTurn.skipped) {
         turnData.turnsSkipped = (turnData.turnsSkipped || 0) + undoInc;
       } else {
+        if (!undo) {
+          if (!turnData.firstTurnEndDate || gameTurn.endDate < turnData.firstTurnEndDate) {
+            turnData.firstTurnEndDate = gameTurn.endDate;
+          }
+
+          if (!turnData.lastTurnEndDate || gameTurn.endDate > turnData.lastTurnEndDate) {
+            turnData.lastTurnEndDate = gameTurn.endDate;
+          }
+        }
+
         turnData.turnsPlayed = (turnData.turnsPlayed || 0) + undoInc;
 
         const timeTaken = gameTurn.endDate.getTime() - gameTurn.startDate.getTime();
