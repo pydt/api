@@ -3,7 +3,7 @@ import { loggingHandler } from '../../lib/logging';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
-import { orderBy, take } from 'lodash';
+import { drop, orderBy, take } from 'lodash';
 
 const TURNS_TO_SAVE = 40;
 
@@ -21,12 +21,14 @@ export class DeleteOldSaves {
     // Make sure we're only looking at the pure save folder!!!111
     const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', `${gameId}/`);
 
-    if (resp.Contents.length > TURNS_TO_SAVE) {
+    if (resp.Contents.length > TURNS_TO_SAVE + 1) {
       await this.s3.deleteObjects(
         Config.resourcePrefix + 'saves',
-        take(orderBy(resp.Contents, ['Key'], ['asc']), resp.Contents.length - TURNS_TO_SAVE).map(
-          obj => obj.Key
-        )
+        take(
+          // drop to always keep the first save
+          drop(orderBy(resp.Contents, ['Key'], ['asc'])),
+          resp.Contents.length - TURNS_TO_SAVE
+        ).map(obj => obj.Key)
       );
     }
   }
