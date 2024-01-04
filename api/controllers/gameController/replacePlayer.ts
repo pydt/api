@@ -103,6 +103,10 @@ export class GameController_ReplacePlayer {
       throw new HttpResponseError(400, 'Old player not found');
     }
 
+    if (oldPlayer.isDead) {
+      throw new HttpResponseError(400, `Can't replace dead player :(`);
+    }
+
     if (game.players.find(x => x.steamId === body.newSteamId)) {
       throw new HttpResponseError(400, 'New player is already in this game!?!');
     }
@@ -128,6 +132,8 @@ export class GameController_ReplacePlayer {
     UserUtil.addUserToGame(newUser, game);
 
     oldPlayer.steamId = body.newSteamId;
+    delete oldPlayer.surrenderDate;
+    delete oldPlayer.hasSurrendered;
 
     let turn: GameTurn;
 

@@ -36,6 +36,10 @@ export class GameController_RequestSubstitution {
       throw new HttpResponseError(400, 'Player not in Game');
     }
 
+    if (player.isDead) {
+      throw new HttpResponseError(400, `Can't replace dead player :(`);
+    }
+
     player.substitutionRequested = !player.substitutionRequested;
 
     await this.gameRepository.saveVersioned(game);
