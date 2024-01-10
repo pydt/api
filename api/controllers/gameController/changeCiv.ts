@@ -22,7 +22,7 @@ export class GameController_ChangeCiv {
   ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
-    if (game.inProgress) {
+    if ((game.gameTurnRangeKey || 0) > 1) {
       throw new HttpResponseError(400, 'Game in Progress');
     }
 
