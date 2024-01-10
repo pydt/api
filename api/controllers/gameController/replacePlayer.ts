@@ -160,7 +160,7 @@ export class GameController_ReplacePlayer {
     ]);
 
     await this.gameTurnService.getAndUpdateSaveFileForGameState(game, users);
-    await this.sns.turnSubmitted(game);
+    await this.sns.gameUpdated(game);
 
     return game;
   }
