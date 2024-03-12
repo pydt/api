@@ -204,7 +204,7 @@ functions:
   snsGameStateVideo:
     handler: functions/sns/createGameVideo.handler
     memorySize: ${self:custom.DEFAULT_LAMBDA_MEMORY}
-    timeout: 120
+    timeout: 300
     ephemeralStorageSize: 2048
     events:
       - sns: ${self:custom.resourcePrefix}game-finalized
