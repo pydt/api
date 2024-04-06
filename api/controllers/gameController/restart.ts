@@ -37,8 +37,8 @@ export class GameController_Restart {
       throw new HttpResponseError(400, 'Game must be in progress to restart!');
     }
 
-    if (game.round > 2) {
-      throw new HttpResponseError(400, 'Cannot restart game after round 2!');
+    if (game.round > 10) {
+      throw new HttpResponseError(400, 'Cannot restart game after round 10!');
     }
 
     const turns = await this.gameTurnRepository.getTurnsForGame(gameId, 0, 1000);
