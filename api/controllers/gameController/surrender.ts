@@ -44,16 +44,17 @@ export class GameController_Surrender {
     @Body() body: SurrenderBody
   ): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
+    const isSiteAdmin = request.user === '76561197973299801';
     let userId = request.user;
 
     if (body.kickUserId) {
-      if (game.createdBySteamId !== request.user && request.user !== '76561197973299801') {
+      if (game.createdBySteamId !== request.user && !isSiteAdmin) {
         throw new HttpResponseError(400, 'You must be the game creator to kick a user!');
       }
 
       const kickUser = await this.userRepository.get(body.kickUserId);
 
-      if (!kickUser.banned) {
+      if (!isSiteAdmin && !kickUser.banned) {
         const lastTurnTime = (game.lastTurnEndDate || game.updatedAt).getTime();
         const diffTime = new Date().getTime() - lastTurnTime;
 
