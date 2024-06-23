@@ -5,7 +5,7 @@ import { inject } from '../../lib/ioc';
 import { injectable } from 'inversify';
 import { drop, orderBy, take } from 'lodash';
 
-const TURNS_TO_SAVE = 40;
+const TURNS_TO_SAVE = 60;
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const dos = iocContainer.resolve(DeleteOldSaves);
