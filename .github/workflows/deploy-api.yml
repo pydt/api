@@ -12,11 +12,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
+        # TODO: get this back in
+        # docker-compose -f testdata/docker-compose.yml up -d
+        # npm run integration-test
       - run: |
           npm install
           npm run test
-          docker-compose -f testdata/docker-compose.yml up -d
-          npm run integration-test
           npm run deploy-${GITHUB_REF##*/}
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}

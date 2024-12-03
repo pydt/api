@@ -14,7 +14,7 @@ import { inject } from '../../lib/ioc';
 import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { Game, ScheduledJob } from '../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../lib/services/gameTurnService';
-import { uniq, flatten } from 'lodash';
+import { uniq, flatten, chunk } from 'lodash';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
   const cttj = iocContainer.resolve(CheckTurnTimerJobs);
@@ -44,13 +44,18 @@ export class CheckTurnTimerJobs {
     const gameIds = uniq(flatten(jobs.map(x => x.gameIds)));
     const games = await this.gameRepository.batchGet(gameIds);
 
-    await Promise.all(
-      games.map(async game => {
+    for (const game of games) {
+      try {
         await callback.call(this, game);
-      })
-    );
+      } catch (err) {
+        pydtLogger.error(`Error running job in game ${game.gameId}`, err);
+      }
+    }
 
-    await this.scheduledJobRepository.batchDelete(jobs);
+    for (const curChunk of chunk(jobs, 10)) {
+      pydtLogger.info(`Deleting ${curChunk.length} jobs...`);
+      await this.scheduledJobRepository.batchDelete(curChunk);
+    }
   }
 
   private async checkTurnTimer(game: Game) {
