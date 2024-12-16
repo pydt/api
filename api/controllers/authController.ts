@@ -1,5 +1,5 @@
 import * as querystring from 'querystring';
-import { Get, Request, Route, Tags } from 'tsoa';
+import { Get, Request, Response, Route, Security, Tags } from 'tsoa';
 
 import { JwtUtil } from '../../lib/auth/jwtUtil';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
@@ -7,13 +7,20 @@ import { inject, provideSingleton } from '../../lib/ioc';
 import { pydtLogger } from '../../lib/logging';
 import { SteamProfile, User } from '../../lib/models';
 import { steamPassport } from '../../lib/steamUtil';
-import { HttpRequest, HttpResponseError } from '../framework';
+import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
+import {
+  IPrivateUserDataRepository,
+  PRIVATE_USER_DATA_REPOSITORY_SYMBOL
+} from '../../lib/dynamoose/privateUserDataRepository';
 
 @Route('auth')
 @Tags('auth')
 @provideSingleton(AuthController)
 export class AuthController {
-  constructor(@inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository) {}
+  constructor(
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
+    @inject(PRIVATE_USER_DATA_REPOSITORY_SYMBOL) private pudRepository: IPrivateUserDataRepository
+  ) {}
 
   @Get('steam')
   public authenticate(@Request() request: HttpRequest): Promise<AuthenticateResponse> {
@@ -50,6 +57,22 @@ export class AuthController {
           );
         }
       })(req, res, next);
+    });
+  }
+
+  @Get('auth/updateTokenNonce')
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  public async updateTokenNonce(@Request() request: HttpRequest): Promise<string> {
+    const pud = await this.pudRepository.get(request.user);
+
+    pud.tokenNonce = (pud.tokenNonce || 0) + 1;
+
+    await this.pudRepository.saveVersioned(pud);
+
+    return JwtUtil.createToken({
+      steamId: request.user,
+      nonce: pud.tokenNonce
     });
   }
 
@@ -96,8 +119,14 @@ export class AuthController {
               return this.userRepository.saveVersioned(dbUser);
             })
             .then(() => {
+              return this.pudRepository.get(user.profile.id);
+            })
+            .then(pud => {
               resolve({
-                token: JwtUtil.createToken(user.profile.id),
+                token: JwtUtil.createToken({
+                  steamId: user.profile.id,
+                  nonce: pud.tokenNonce
+                }),
                 steamProfile: user.profile._json
               });
             })
