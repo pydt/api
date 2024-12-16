@@ -10,6 +10,7 @@ export interface PrivateUserData {
   newGameEmailTypes?: string[];
   newGameEmailFilter?: string;
   lastTurnIpAddress?: string;
+  tokenNonce?: number;
 }
 
 export interface WebPushSubscription {

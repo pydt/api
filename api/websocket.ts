@@ -3,6 +3,7 @@ import { JwtUtil } from '../lib/auth/jwtUtil';
 import { loggingHandler, pydtLogger } from '../lib/logging';
 import { IWebsocketProvider, WEBSOCKET_PROVIDER_SYMBOL } from '../lib/websocketProvider';
 import { LambdaProxyEvent } from './framework';
+import { validateNonce } from '../lib/auth/expressAuthentication';
 
 export const handler = loggingHandler(async (event: LambdaProxyEvent, context, iocContainer) => {
   const doug = iocContainer.resolve(WebsocketHandler);
@@ -27,8 +28,11 @@ export class WebsocketHandler {
 
       case 'auth':
         // validate token and tie user to connection
-        const steamId = JwtUtil.parseToken(body);
-        await this.wsProvider.registerUser(steamId, connectionId);
+        const data = JwtUtil.parseToken(body);
+
+        await validateNonce(data);
+
+        await this.wsProvider.registerUser(data.steamId, connectionId);
         break;
 
       case '$disconnect':

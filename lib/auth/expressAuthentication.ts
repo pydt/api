@@ -1,7 +1,19 @@
 import { HttpRequest, HttpResponseError } from '../../api/framework/index';
 import { Config } from '../config';
+import { PrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
+import { iocContainer } from '../ioc';
 import { pydtLogger } from '../logging';
-import { JwtUtil } from './jwtUtil';
+import { JwtData, JwtUtil } from './jwtUtil';
+
+export async function validateNonce(data: JwtData) {
+  const pudRepo = iocContainer.resolve(PrivateUserDataRepository);
+  const pud = await pudRepo.get(data.steamId);
+
+  if ((pud.tokenNonce || -1) !== (data.nonce || -1)) {
+    pydtLogger.warn(`Nonce mismatch: ${pud.tokenNonce} vs ${data.nonce}`);
+    throw HttpResponseError.createUnauthorized();
+  }
+}
 
 export async function expressAuthentication(
   request: HttpRequest,
@@ -14,11 +26,14 @@ export async function expressAuthentication(
   if (securityName === 'api_key') {
     try {
       if (request.headers && request.headers['authorization']) {
-        const steamId = JwtUtil.parseToken(request.headers['authorization']);
+        const data = JwtUtil.parseToken(request.headers['authorization']);
+
+        await validateNonce(data);
+
         if (!Config.runningLocal) {
-          request.subSegment.addAnnotation('user', steamId);
+          request.subSegment.addAnnotation('user', data.steamId);
         }
-        return steamId;
+        return data.steamId;
       }
     } catch (e) {
       pydtLogger.warn('Error parsing JWT token', e);
