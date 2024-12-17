@@ -51,7 +51,7 @@ export class GameController_Create {
     }
 
     const games = await this.gameRepository.getGamesForUser(user);
-    const hasFormingGame = games.some(game => {
+    const userFormingGames = games.filter(game => {
       return (
         game.gameType === body.gameType &&
         game.createdBySteamId === request.user &&
@@ -59,10 +59,19 @@ export class GameController_Create {
       );
     });
 
-    if (!user.canCreateMultipleGames && hasFormingGame) {
+    const MAX_OPEN_GAMES = 10;
+    let openGameLimit = Math.floor(Math.max(user.turnsPlayed || 0, 500) / 500);
+
+    if (user.canCreateMultipleGames || openGameLimit > MAX_OPEN_GAMES) {
+      openGameLimit = MAX_OPEN_GAMES;
+    }
+
+    if (userFormingGames.length >= openGameLimit) {
       throw new HttpResponseError(
         400,
-        `You cannot create a new game at the moment because you already have one game that hasn't been started yet!`
+        `You cannot create a new game at the moment because you already have ${openGameLimit} game${
+          openGameLimit > 1 ? 's' : ''
+        } that ha${openGameLimit > 1 ? 's' : 'v'}en't been started yet!`
       );
     }
 
