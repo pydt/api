@@ -44,7 +44,7 @@ export class GameController_GetTurn {
 
       try {
         await this.s3.headObject(fileParams);
-      } catch (err) {
+      } catch {
         fileParams.Key = file;
       }
     }

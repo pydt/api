@@ -2,7 +2,7 @@
 
 import * as AWSXRay from 'aws-xray-sdk';
 import { Router } from 'express';
-require('express-async-errors');
+import 'express-async-errors';
 import { ValidateError } from 'tsoa';
 import { loggingHandler, pydtLogger } from '../lib/logging';
 import {

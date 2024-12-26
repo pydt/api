@@ -4,6 +4,7 @@ import { PrivateUserDataRepository } from '../dynamoose/privateUserDataRepositor
 import { iocContainer } from '../ioc';
 import { pydtLogger } from '../logging';
 import { JwtData, JwtUtil } from './jwtUtil';
+import { Request } from 'express';
 
 export async function validateNonce(data: JwtData) {
   const pudRepo = iocContainer.resolve(PrivateUserDataRepository);
@@ -16,22 +17,21 @@ export async function validateNonce(data: JwtData) {
 }
 
 export async function expressAuthentication(
-  request: HttpRequest,
+  req: Request,
   securityName: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   scopes?: string[]
 ): Promise<string> {
   const allowAnonymous = scopes?.includes('ALLOW_ANONYMOUS');
 
   if (securityName === 'api_key') {
     try {
-      if (request.headers && request.headers['authorization']) {
-        const data = JwtUtil.parseToken(request.headers['authorization']);
+      if (req.headers && req.headers['authorization']) {
+        const data = JwtUtil.parseToken(req.headers['authorization']);
 
         await validateNonce(data);
 
         if (!Config.runningLocal) {
-          request.subSegment.addAnnotation('user', data.steamId);
+          (req as unknown as HttpRequest).subSegment.addAnnotation('user', data.steamId);
         }
         return data.steamId;
       }

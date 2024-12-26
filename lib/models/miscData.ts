@@ -5,6 +5,7 @@ export interface MiscData<T> {
   data: T;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface GlobalStats extends MiscData<GlobalStatsData> {}
 
 export interface GlobalStatsData extends TurnData {
