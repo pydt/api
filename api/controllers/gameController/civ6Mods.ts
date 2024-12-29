@@ -25,7 +25,7 @@ export class GameController_Civ6Mods {
     @Request() request: HttpRequest,
     gameId: string
   ): Promise<RawCiv6Mods[]> {
-    const { buffer } = await this.core(request, gameId);
+    const { buffer } = await this.core(request, gameId, true);
 
     const wrapper = civ6.parse(buffer);
 
@@ -76,7 +76,7 @@ export class GameController_Civ6Mods {
     return this.getModsFromWrapper(civ6.parse(updatedBuffer));
   }
 
-  private async core(request: HttpRequest, gameId: string) {
+  private async core(request: HttpRequest, gameId: string, ignoreAdminCheck = false) {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
     if (!game.inProgress) {
@@ -87,7 +87,7 @@ export class GameController_Civ6Mods {
       throw new HttpResponseError(400, 'Game is not Civ 6');
     }
 
-    if (game.createdBySteamId !== request.user) {
+    if (!ignoreAdminCheck && game.createdBySteamId !== request.user) {
       throw new HttpResponseError(400, `Only admin can manage mods!`);
     }
 
