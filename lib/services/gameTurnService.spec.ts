@@ -15,6 +15,7 @@ import { ActorType } from '../saveHandlers/saveHandler';
 import { Mock, It } from 'typemoq';
 import { IPrivateUserDataRepository } from '../dynamoose/privateUserDataRepository';
 import { ISqsProvider } from '../sqsProvider';
+import { IDiscourseProvider } from '../discourseProvider';
 
 describe('GameTurnService', () => {
   it('should skip turn correctly', async () => {
@@ -107,7 +108,8 @@ describe('GameTurnService', () => {
       s3ProviderMock.object,
       sesProviderMock.object,
       snsProviderMock.object,
-      sqsProviderMock.object
+      sqsProviderMock.object,
+      Mock.ofType<IDiscourseProvider>().object
     );
     await gts.skipTurn(game, turn);
     expect(skippedData).to.not.be.null;

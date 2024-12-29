@@ -19,6 +19,7 @@ import { ISesProvider } from '../../../lib/email/sesProvider';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { Config } from '../../../lib/config';
 import { ISqsProvider } from '../../../lib/sqsProvider';
+import { IDiscourseProvider } from '../../../lib/discourseProvider';
 
 dynamooseAws.ddb.set(
   new dynamooseAws.ddb.DynamoDB({
@@ -47,6 +48,7 @@ describe('GameController_FinishSubmit', () => {
       gameTurnRangeKey: 10,
       gameType: CIV6_GAME.id,
       createdBySteamId: USER_1_ID,
+      discourseTopicId: 12345,
       players: [
         { steamId: USER_1_ID, civType: 'one' },
         { steamId: USER_2_ID, civType: 'two' }
@@ -96,10 +98,24 @@ describe('GameController_FinishSubmit', () => {
 
     const sesMock = Mock.ofType<ISesProvider>();
     sesMock
-      .setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user1@email.com'))
+      .setup(x =>
+        x.sendEmail('You have been defeated in test!', It.isAny(), It.isAny(), 'user1@email.com')
+      )
       .verifiable(Times.once());
     sesMock
-      .setup(x => x.sendEmail(It.isAny(), It.isAny(), It.isAny(), 'user2@email.com'))
+      .setup(x =>
+        x.sendEmail(
+          'player 1 has been defeated in test!',
+          It.isAny(),
+          It.isAny(),
+          'user2@email.com'
+        )
+      )
+      .verifiable(Times.once());
+
+    const discourseMock = Mock.ofType<IDiscourseProvider>();
+    discourseMock
+      .setup(x => x.postToSmack(12345, 'player 1 was defeated in round 5!'))
       .verifiable(Times.once());
 
     const gameTurnService = new GameTurnService(
@@ -110,7 +126,8 @@ describe('GameController_FinishSubmit', () => {
       s3Mock.object,
       sesMock.object,
       Mock.ofType<ISnsProvider>().object,
-      Mock.ofType<ISqsProvider>().object
+      Mock.ofType<ISqsProvider>().object,
+      discourseMock.object
     );
 
     gameTurnService.parseSaveFile = () => {
@@ -138,5 +155,6 @@ describe('GameController_FinishSubmit', () => {
 
     await gcfs.finishSubmit({ user: USER_1_ID } as HttpRequest, GAME_ID);
     sesMock.verifyAll();
+    discourseMock.verifyAll();
   });
 });

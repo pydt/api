@@ -52,20 +52,20 @@ export class DiscourseProvider implements IDiscourseProvider {
         }
       );
 
-      if (firstTimeHosting) {
-        await this.postToSmack(
-          topic.topic_id,
-          `**It looks like this is your first time hosting a game, welcome!**
-  
+      await this.postToSmack(
+        topic.topic_id,
+        `${firstTimeHosting ? '**It looks like this is your first time hosting a game, welcome!**' : ''}
+
+:thinking: [How to Play Your Damn Turn](https://discourse.playyourdamnturn.com/t/how-to-play-your-damn-turn/8723)
+
 :spiral_notepad: [How to create your PYDT game](https://discourse.playyourdamnturn.com/t/how-to-setup-a-game-with-pydt/6486)
 
 :tv: [See a quick youtube video of PYDT](https://www.youtube.com/watch?v=L4PeMesClTI)
 
 :speaking_head: [Join our quiet discord. Help, News and New Games](https://discord.gg/CYhHSzv)
 
-**If you need help, [Post in Game Support](https://discourse.playyourdamnturn.com/c/game-support) or come to discord! :+1:**`
-        );
-      }
+**If you need help, [Post in Game Support](https://discourse.playyourdamnturn.com/c/game-support) or come to [discord](https://discord.gg/CYhHSzv)! :+1:**`
+      );
 
       return topic;
     } else {

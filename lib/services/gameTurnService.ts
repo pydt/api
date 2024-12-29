@@ -21,6 +21,7 @@ import {
 } from '../dynamoose/privateUserDataRepository';
 import { ISqsProvider, SQS_PROVIDER_SYMBOL } from '../sqsProvider';
 import { StatsUtil } from '../util/statsUtil';
+import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../discourseProvider';
 
 export const GAME_TURN_SERVICE_SYMBOL = Symbol('IGameTurnService');
 
@@ -45,7 +46,8 @@ export class GameTurnService implements IGameTurnService {
     @inject(S3_PROVIDER_SYMBOL) private s3: IS3Provider,
     @inject(SES_PROVIDER_SYMBOL) private ses: ISesProvider,
     @inject(SNS_PROVIDER_SYMBOL) private sns: ISnsProvider,
-    @inject(SQS_PROVIDER_SYMBOL) private sqs: ISqsProvider
+    @inject(SQS_PROVIDER_SYMBOL) private sqs: ISqsProvider,
+    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {}
 
   public async moveToNextTurn(game: Game, gameTurn: GameTurn, user: User) {
@@ -108,6 +110,13 @@ export class GameTurnService implements IGameTurnService {
       UserUtil.removeUserFromGame(defeatedUser, game, true);
 
       promises.push(this.userRepository.saveVersioned(defeatedUser));
+
+      promises.push(
+        this.discourse.postToSmack(
+          game.discourseTopicId,
+          `${defeatedUser.displayName} was defeated in round ${game.round}!`
+        )
+      );
 
       for (const player of game.players) {
         const curPud = puds.find(pud => {

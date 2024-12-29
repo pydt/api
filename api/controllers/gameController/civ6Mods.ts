@@ -6,6 +6,7 @@ import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { CIV6_GAME } from '../../../lib/metadata/civGames/civ6';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { sortBy } from 'lodash';
+import { DISCOURSE_PROVIDER_SYMBOL, IDiscourseProvider } from '../../../lib/discourseProvider';
 
 @Route('game')
 @Tags('game')
@@ -13,7 +14,8 @@ import { sortBy } from 'lodash';
 export class GameController_Civ6Mods {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
-    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService
+    @inject(GAME_TURN_SERVICE_SYMBOL) private gameTurnService: IGameTurnService,
+    @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {}
 
   @Security('api_key')
@@ -44,6 +46,11 @@ export class GameController_Civ6Mods {
 
     await this.gameTurnService.storeSave(game, updatedBuffer);
 
+    await this.discourse.postToSmack(
+      game.discourseTopicId,
+      `A mod with id/title ${body.id}/${body.title} has been added by the admin.`
+    );
+
     return this.getModsFromWrapper(civ6.parse(updatedBuffer));
   }
 
@@ -60,6 +67,11 @@ export class GameController_Civ6Mods {
     const updatedBuffer = Buffer.concat(civ6.deleteMod(buffer, modId).chunks);
 
     await this.gameTurnService.storeSave(game, updatedBuffer);
+
+    await this.discourse.postToSmack(
+      game.discourseTopicId,
+      `A mod with id ${modId} has been deleted by the admin.`
+    );
 
     return this.getModsFromWrapper(civ6.parse(updatedBuffer));
   }
