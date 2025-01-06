@@ -25,6 +25,15 @@ export interface UpdateTurnOrderRequestBody {
   steamIds: string[];
 }
 
+export interface CanCreateGameRequestBody {
+  gameType: string;
+}
+
+export interface CanCreateGameResponseBody {
+  canCreate: boolean;
+  message?: string;
+}
+
 export interface CreateGameRequestBody extends GameRequestBody {
   player1Civ: string;
 }

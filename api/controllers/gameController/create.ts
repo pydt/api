@@ -10,10 +10,14 @@ import {
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
-import { Game } from '../../../lib/models';
+import { Game, PrivateUserData, User } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
-import { CreateGameRequestBody } from './_models';
+import {
+  CanCreateGameRequestBody,
+  CanCreateGameResponseBody,
+  CreateGameRequestBody
+} from './_models';
 
 @Route('game')
 @Tags('game')
@@ -26,35 +30,31 @@ export class GameController_Create {
     @inject(DISCOURSE_PROVIDER_SYMBOL) private discourse: IDiscourseProvider
   ) {}
 
-  @Security('api_key')
-  @Response<ErrorResponse>(401, 'Unauthorized')
-  @Post('create')
-  public async create(
-    @Request() request: HttpRequest,
-    @Body() body: CreateGameRequestBody
-  ): Promise<Game> {
-    const user = await this.userRepository.get(request.user);
-    const pud = await this.pudRepository.get(request.user);
-
+  private async calculateCanCreate(
+    user: User,
+    pud: PrivateUserData,
+    games: Game[],
+    body: CanCreateGameRequestBody
+  ): Promise<CanCreateGameResponseBody> {
     if (!pud.emailAddress) {
-      throw new HttpResponseError(
-        400,
-        'You need to set a notification email address before you can create a game.'
-      );
+      return {
+        canCreate: false,
+        message: 'You need to set a notification email address before you can create a game.'
+      };
     }
 
     if (user.banned) {
-      throw new HttpResponseError(
-        400,
-        'You have been banned from the site.  Please get in touch with us to state your case if you want reinstatement.'
-      );
+      return {
+        canCreate: false,
+        message:
+          'You have been banned from the site.  Please get in touch with us to state your case if you want reinstatement.'
+      };
     }
 
-    const games = await this.gameRepository.getGamesForUser(user);
     const userFormingGames = games.filter(game => {
       return (
         game.gameType === body.gameType &&
-        game.createdBySteamId === request.user &&
+        game.createdBySteamId === user.steamId &&
         !game.inProgress
       );
     });
@@ -67,12 +67,48 @@ export class GameController_Create {
     }
 
     if (userFormingGames.length >= openGameLimit) {
-      throw new HttpResponseError(
-        400,
-        `You cannot create a new game at the moment because you already have ${openGameLimit} game${
+      return {
+        canCreate: false,
+        message: `You cannot create a new game at the moment because you already have ${openGameLimit} game${
           openGameLimit > 1 ? 's' : ''
         } that ha${openGameLimit > 1 ? 's' : 'v'}en't been started yet!`
-      );
+      };
+    }
+
+    return {
+      canCreate: true
+    };
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('canCreate')
+  public async canCreate(
+    @Request() request: HttpRequest,
+    @Body() body: CanCreateGameRequestBody
+  ): Promise<CanCreateGameResponseBody> {
+    const user = await this.userRepository.get(request.user);
+    const pud = await this.pudRepository.get(request.user);
+    const games = await this.gameRepository.getGamesForUser(user);
+
+    return this.calculateCanCreate(user, pud, games, body);
+  }
+
+  @Security('api_key')
+  @Response<ErrorResponse>(401, 'Unauthorized')
+  @Post('create')
+  public async create(
+    @Request() request: HttpRequest,
+    @Body() body: CreateGameRequestBody
+  ): Promise<Game> {
+    const user = await this.userRepository.get(request.user);
+    const pud = await this.pudRepository.get(request.user);
+    const games = await this.gameRepository.getGamesForUser(user);
+
+    const canCreate = await this.calculateCanCreate(user, pud, games, body);
+
+    if (!canCreate.canCreate) {
+      throw new HttpResponseError(400, canCreate.message);
     }
 
     if (body.randomOnly === 'FORCE_RANDOM' && body.player1Civ !== RANDOM_CIV.leaderKey) {
