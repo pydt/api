@@ -111,4 +111,11 @@ describe('OldWorldSaveHandler', () => {
     expect(handler.civData[3].type).to.eq(ActorType.HUMAN);
     expect(handler.civData[4].type).to.eq(ActorType.HUMAN);
   });
+
+  it('parses new format saved by mod 1.03', () => {
+    const buffer = fs.readFileSync('testdata/saves/oldWorld/mod103format.zip');
+    const handler = new OldWorldSaveHandler(buffer);
+
+    expect(handler.civData.length).to.eq(4);
+  });
 });

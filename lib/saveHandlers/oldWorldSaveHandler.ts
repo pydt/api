@@ -91,7 +91,7 @@ export class OldWorldSaveHandler implements SaveHandler {
   }
 
   get root() {
-    return this.saveData.elements[0];
+    return this.saveData.elements.find(x => x.name === 'Root');
   }
 
   get civData(): CivData[] {
