@@ -11,7 +11,7 @@ export async function validateNonce(data: JwtData) {
   const pud = await pudRepo.get(data.steamId);
 
   if ((pud.tokenNonce || -1) !== (data.nonce || -1)) {
-    pydtLogger.warn(`Nonce mismatch: ${pud.tokenNonce} vs ${data.nonce}`);
+    pydtLogger.warn(`Nonce mismatch: ${pud.tokenNonce} vs ${data.nonce}, user ${data.steamId}`);
     throw HttpResponseError.createUnauthorized();
   }
 }
@@ -36,8 +36,12 @@ export async function expressAuthentication(
         return data.steamId;
       }
     } catch (e) {
-      pydtLogger.warn('Error parsing JWT token', e);
-      throw HttpResponseError.createUnauthorized();
+      if (!(e instanceof HttpResponseError)) {
+        pydtLogger.warn('Error parsing JWT token', e);
+        throw HttpResponseError.createUnauthorized();
+      }
+
+      throw e;
     }
 
     if (!allowAnonymous) {
