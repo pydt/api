@@ -6,12 +6,26 @@ import { pydtLogger } from '../logging';
 import { JwtData, JwtUtil } from './jwtUtil';
 import { Request } from 'express';
 
-export async function validateNonce(data: JwtData) {
-  const pudRepo = iocContainer.resolve(PrivateUserDataRepository);
-  const pud = await pudRepo.get(data.steamId);
+const cachedMinNonces: Record<string, number> = {};
 
-  if ((pud.tokenNonce || -1) !== (data.nonce || -1)) {
-    pydtLogger.warn(`Nonce mismatch: ${pud.tokenNonce} vs ${data.nonce}, user ${data.steamId}`);
+export async function validateNonce(data: JwtData) {
+  const tokenNonce = data.nonce || -1;
+  const pudRepo = iocContainer.resolve(PrivateUserDataRepository);
+
+  if (cachedMinNonces[data.steamId] && tokenNonce < cachedMinNonces[data.steamId]) {
+    // Save a database check / extra logging on known bad nonces, especially spammy ones
+    throw HttpResponseError.createUnauthorized();
+  }
+
+  const pud = await pudRepo.get(data.steamId);
+  const pudNonce = pud.tokenNonce || -1;
+
+  if (pudNonce > (cachedMinNonces[data.steamId] || -1)) {
+    cachedMinNonces[data.steamId] = pudNonce;
+  }
+
+  if (pudNonce !== tokenNonce) {
+    pydtLogger.warn(`Nonce mismatch: ${pudNonce} vs ${tokenNonce}, user ${data.steamId}`);
     throw HttpResponseError.createUnauthorized();
   }
 }
