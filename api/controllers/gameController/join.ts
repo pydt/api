@@ -45,7 +45,11 @@ export class GameController_Join {
       }
 
       targetPlayer = game.players.find(player => {
-        return player.civType === body.playerCiv && !player.steamId;
+        return (
+          player.civType === body.playerCiv &&
+          !player.isDead &&
+          (!player.steamId || player.hasSurrendered)
+        );
       });
 
       if (!targetPlayer) {
@@ -85,6 +89,9 @@ export class GameController_Join {
 
     if (targetPlayer) {
       targetPlayer.steamId = request.user;
+      targetPlayer.substitutionRequested = false;
+      delete targetPlayer.hasSurrendered;
+      delete targetPlayer.surrenderDate;
     } else {
       game.players.push({
         steamId: request.user,
