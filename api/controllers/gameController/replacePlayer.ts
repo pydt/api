@@ -107,7 +107,7 @@ export class GameController_ReplacePlayer {
       throw new HttpResponseError(400, `Can't replace dead player :(`);
     }
 
-    if (game.players.find(x => x.steamId === body.newSteamId)) {
+    if (game.players.find(x => x.steamId === body.newSteamId && !x.hasSurrendered)) {
       throw new HttpResponseError(400, 'New player is already in this game!?!');
     }
 
