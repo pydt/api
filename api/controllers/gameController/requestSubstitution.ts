@@ -22,7 +22,11 @@ export class GameController_RequestSubstitution {
     const game = await this.gameRepository.getOrThrow404(gameId);
     const steamId = body.steamId || request.user;
 
-    if (game.createdBySteamId !== request.user && body.steamId) {
+    if (
+      request.user !== '76561197973299801' &&
+      game.createdBySteamId !== request.user &&
+      body.steamId
+    ) {
       throw new HttpResponseError(400, `Only admin can request substitution for another player!`);
     }
 
