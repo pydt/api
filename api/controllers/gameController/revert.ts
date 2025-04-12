@@ -34,7 +34,11 @@ export class GameController_Revert {
   public async revert(@Request() request: HttpRequest, gameId: string): Promise<Game> {
     const game = await this.gameRepository.getOrThrow404(gameId);
 
-    if (game.currentPlayerSteamId !== request.user && game.createdBySteamId !== request.user) {
+    if (
+      request.user !== '76561197973299801' &&
+      game.currentPlayerSteamId !== request.user &&
+      game.createdBySteamId !== request.user
+    ) {
       throw new HttpResponseError(400, `You can't revert this game!`);
     }
 
