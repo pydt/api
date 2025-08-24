@@ -45,6 +45,7 @@ export const CIV6_DLCS = [
   DlcFactory('82AE6F24-930F-4640-833C-FCDFD4845757', 'Rulers of the Sahara Leader Pack'),
   DlcFactory('249D9276-0832-48E4-B370-14531FA4E33C', 'Great Builders Leader Pack'),
   DlcFactory('258EF3CA-890B-4863-8A52-982822EFF7BD', 'Rulers of England Leader Pack'),
+  DlcFactory('2A0AA96A-A31C-4CE2-87EC-09152F6F3E00', 'Better Balanced Game Expanded Mod', false, 'Community Mod'),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)
 ];
@@ -59,11 +60,17 @@ export const CIV6_LEADERS = [
   CivDefFactory('CIVILIZATION_MACEDON', 'LEADER_ALEXANDER', ASSET_PREFIX, {
     dlcId: 'E2749E9A-8056-45CD-901B-C368C8E83DEB'
   }),
+  CivDefFactory('CIVILIZATION_MACEDON', 'LEADER_JFD_OLYMPIAS', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
+  }),
   CivDefFactory('CIVILIZATION_NUBIA', 'LEADER_AMANITORE', ASSET_PREFIX, {
     dlcId: '643EA320-8E1A-4CF1-A01C-00D88DDD131A'
   }),
   CivDefFactory('CIVILIZATION_GAUL', 'LEADER_AMBIORIX', ASSET_PREFIX, {
     dlcId: 'A1100FC4-70F2-4129-AC27-2A65A685ED08'
+  }),
+  CivDefFactory('CIVILIZATION_GAUL', 'LEADER_SUK_VERCINGETORIX_DLC', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
   }),
   CivDefFactory('CIVILIZATION_BYZANTIUM', 'LEADER_BASIL', ASSET_PREFIX, {
     leaderDisplayName: 'Basil II',
@@ -96,6 +103,9 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_PHOENICIA', 'LEADER_DIDO', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68'
+  }),
+  CivDefFactory('CIVILIZATION_PHOENICIA', 'LEADER_LIME_PHOE_AHIRAM', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
   }),
   CivDefFactory('CIVILIZATION_ENGLAND', 'LEADER_ELEANOR_ENGLAND', ASSET_PREFIX, {
     dlcId: '4873eb62-8ccc-4574-b784-dda455e74e68',
@@ -163,6 +173,9 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_MAYA', 'LEADER_LADY_SIX_SKY', ASSET_PREFIX, {
     dlcId: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9'
+  }),
+  CivDefFactory('CIVILIZATION_MAYA', 'LEADER_LL_TEKINICH_II', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
   }),
   CivDefFactory('CIVILIZATION_MAPUCHE', 'LEADER_LAUTARO', ASSET_PREFIX, {
     dlcId: '1B28771A-C749-434B-9053-D1380C553DE9'
@@ -290,6 +303,18 @@ export const CIV6_LEADERS = [
   }),
   CivDefFactory('CIVILIZATION_CHINA', 'LEADER_YONGLE', ASSET_PREFIX, {
     dlcId: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47'
+  }),
+  CivDefFactory('CIVILIZATION_LIME_THULE', 'LEADER_LIME_THULE_DAVE', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
+  }),
+  CivDefFactory('CIVILIZATION_LIME_TEOTIHUACAN', 'LEADER_LIME_TEO_OWL', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
+  }),
+  CivDefFactory('CIVILIZATION_SUK_TIBET', 'LEADER_SUK_TRISONG_DETSEN', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
+  }),
+  CivDefFactory('CIVILIZATION_SUK_SWAHILI', 'LEADER_SUK_AL_HASAN', ASSET_PREFIX, {
+    dlcId: '2a0aa96a-a31c-4ce2-87ec-09152f6f3e00'
   })
 ];
 
