@@ -49,7 +49,8 @@ export const CIV6_DLCS = [
     '2A0AA96A-A31C-4CE2-87EC-09152F6F3E00',
     'Better Balanced Game Expanded Mod',
     false,
-    'Community Mod'
+    undefined,
+    true
   ),
   DlcFactory('1B28771A-C749-434B-9053-D1380C553DE9', 'Rise and Fall Expansion', true),
   DlcFactory('4873eb62-8ccc-4574-b784-dda455e74e68', 'Gathering Storm Expansion', true)

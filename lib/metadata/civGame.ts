@@ -91,19 +91,22 @@ export interface DLC {
   displayName: string;
   major: boolean;
   extraInfo?: string;
+  community: boolean;
 }
 
 export function DlcFactory(
   id: string,
   displayName: string,
   major = false,
-  extraInfo?: string
+  extraInfo?: string,
+  community?: boolean
 ): DLC {
   return {
     id,
     displayName,
     major,
-    extraInfo
+    extraInfo,
+    community
   };
 }
 
