@@ -52,4 +52,10 @@ describe('Civ6SaveHandler', () => {
     expect(handler.civData[0].playerName).to.eq('playerName');
     expect(handler.civData[0].type).to.eq(ActorType.AI);
   });
+
+  it('parses BBG expanded correctly', () => {
+    const buffer = fs.readFileSync('testdata/saves/civ6/VERCINGETORIX 1 4000 BC.Civ6Save');
+    const handler = new Civ6SaveHandler(buffer);
+    expect(handler.parsedDlcs).to.include('2A0AA96A-A31C-4CE2-87EC-09152F6F3E00');
+  });
 });

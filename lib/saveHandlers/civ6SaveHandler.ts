@@ -120,8 +120,16 @@ export class Civ6SaveHandler implements SaveHandler {
 
     if (this.wrapper.parsed.MOD_BLOCK_1) {
       for (const mod of this.wrapper.parsed.MOD_BLOCK_1.data) {
-        if (CIV6_DLCS.some(x => x.id === mod.MOD_ID.data)) {
+        if (CIV6_DLCS.some(x => !x.community && x.id === mod.MOD_ID.data)) {
           result.push(mod.MOD_ID.data);
+        }
+      }
+    }
+
+    if (this.wrapper.parsed.MOD_BLOCK_2) {
+      for (const mod of this.wrapper.parsed.MOD_BLOCK_2.data) {
+        if (CIV6_DLCS.some(x => !!x.community && x.id === mod.MOD_ID.data?.toUpperCase())) {
+          result.push(mod.MOD_ID.data?.toUpperCase());
         }
       }
     }

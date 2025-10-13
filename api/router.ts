@@ -67,7 +67,7 @@ function methodHandler(method: string) {
             if (err instanceof HttpResponseError) {
               status = err.statusCode;
               message = err.message;
-              logError = false;
+              logError = message.startsWith('DLC');
             }
 
             if (logError) {

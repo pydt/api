@@ -79,7 +79,12 @@ export class GameController_FinishSubmit {
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     const notInSave = difference(gameDlc, saveHandler.parsedDlcs);
-    const notInGame = difference(saveHandler.parsedDlcs, gameDlc);
+    const notInGame = difference(saveHandler.parsedDlcs, gameDlc).filter(x => {
+      const dlc = civGame.dlcs.find(d => d.id === x);
+
+      // Ignore community DLC in the save not in the game
+      return !dlc?.community;
+    });
 
     if (notInSave.length || notInGame.length) {
       throw new HttpResponseError(
