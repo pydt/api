@@ -73,8 +73,14 @@ export class GameController_Join {
       }
     }
 
-    if (game.players.map(x => x.steamId).indexOf(request.user) >= 0) {
-      throw new HttpResponseError(400, 'Player already in Game');
+    const curPlayer = game.players.find(x => x.steamId === request.user);
+
+    if (curPlayer) {
+      if (curPlayer.isDead) {
+        delete curPlayer.steamId;
+      } else {
+        throw new HttpResponseError(400, 'Player already in Game');
+      }
     }
 
     if (GameUtil.getHumans(game).length >= game.humans) {
