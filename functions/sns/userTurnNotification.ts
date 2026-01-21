@@ -76,7 +76,9 @@ export class UserTurnNotification {
                     value2: user.displayName,
                     value3: game.round,
                     // Discourse webhook "content" field
-                    content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`
+                    content: `It's ${user.displayName}'s turn in ${game.displayName} (Round ${game.round})`,
+                    // SteamId field included for use in custom webhooks
+                    steamId: user.steamId
                   })
                 },
                 true
