@@ -103,7 +103,8 @@ describe('UserTurnNotification', () => {
       value1: 'Test Game',
       value2: 'Test User',
       value3: 10,
-      content: `It's Test User's turn in Test Game (Round 10)`
+      content: `It's Test User's turn in Test Game (Round 10)`,
+      steamId: '1'
     });
 
     mocks.httpRequestMock
