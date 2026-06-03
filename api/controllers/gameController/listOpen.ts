@@ -3,6 +3,7 @@ import { Get, Route, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
+import { GameUtil } from '../../../lib/util/gameUtil';
 import { OpenGamesResponse, OpenSlotsGame } from './_models';
 
 @Route('game')
@@ -49,9 +50,7 @@ export class GameController_ListOpen {
     return orderBy(games, ['createdAt'], ['desc'])
       .filter(game => game.inProgress && !game.completed)
       .map(game => {
-        const numHumans = game.players.filter(player => {
-          return !!player.steamId;
-        }).length;
+        const numHumans = GameUtil.getHumans(game).length;
 
         const joinAfterStart =
           game.allowJoinAfterStart && numHumans < game.players.length && numHumans < game.humans;
