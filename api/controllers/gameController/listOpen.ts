@@ -3,7 +3,6 @@ import { Get, Route, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
-import { GameUtil } from '../../../lib/util/gameUtil';
 import { OpenGamesResponse, OpenSlotsGame } from './_models';
 
 @Route('game')
@@ -50,10 +49,18 @@ export class GameController_ListOpen {
     return orderBy(games, ['createdAt'], ['desc'])
       .filter(game => game.inProgress && !game.completed)
       .map(game => {
-        const numHumans = GameUtil.getHumans(game).length;
+        const activeOrDeadHumans = game.players.filter(player => {
+          // We want to count all human players who:
+          // - have a steamId (so not an open slot)
+          // AND
+          // - are either dead or still active (so not a human player who has surrendered)
+          return player.steamId && (player.isDead || !player.hasSurrendered);
+        }).length;
 
         const joinAfterStart =
-          game.allowJoinAfterStart && numHumans < game.players.length && numHumans < game.humans;
+          game.allowJoinAfterStart &&
+          activeOrDeadHumans < game.players.length &&
+          activeOrDeadHumans < game.humans;
         const substitutionRequested = game.players.some(x => x.substitutionRequested);
 
         return {
