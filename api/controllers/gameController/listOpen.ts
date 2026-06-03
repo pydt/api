@@ -54,10 +54,7 @@ export class GameController_ListOpen {
         }).length;
 
         const joinAfterStart =
-          game.allowJoinAfterStart &&
-          !game.hashedPassword &&
-          numHumans < game.players.length &&
-          numHumans < game.humans;
+          game.allowJoinAfterStart && numHumans < game.players.length && numHumans < game.humans;
         const substitutionRequested = game.players.some(x => x.substitutionRequested);
 
         return {
