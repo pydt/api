@@ -17,6 +17,7 @@
     "aws-xray-sdk": "^3.10.2",
     "bcryptjs": "2.4.3",
     "civ6-save-parser": "^1.2.3",
+    "civ7-save-parser": "^1.0.1",
     "dynamoose": "^4.0.1",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
