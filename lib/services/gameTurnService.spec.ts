@@ -22,7 +22,7 @@ describe('GameTurnService', () => {
     const turnTimerMinutes = 60;
     const turnStartDate = new Date(new Date().getTime() - (turnTimerMinutes + 1) * 60000);
 
-    const game = <Game>{
+    const game = {
       createdBySteamId: '1',
       currentPlayerSteamId: '4',
       displayName: 'Civ5 Test',
@@ -39,7 +39,7 @@ describe('GameTurnService', () => {
       ],
       round: 4,
       turnTimerMinutes
-    };
+    } as Game;
 
     const turn: GameTurn = {
       gameId: 'testGame',

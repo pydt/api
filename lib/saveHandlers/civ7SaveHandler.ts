@@ -1,5 +1,7 @@
 import * as civ7 from 'civ7-save-parser';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
+import { CIV7_DLCS } from '../metadata/civGames/civ7';
+import { orderBy } from 'lodash';
 
 /**
  * Whose-turn is not readable from a Civ7 save in any stable way (it lives only in
@@ -62,8 +64,18 @@ export class Civ7CivData implements CivData {
     return match ? match.actorType : ActorType.AI;
   }
 
-  set type(_value: ActorType) {
-    throw new Error('Writing Civ7 saves is not implemented yet');
+  set type(value: ActorType) {
+    // Used for turn-skipping: flipping a player to AI makes the game play their
+    // turn. PLAYER_TYPE is an in-place edit of the uncompressed group3 record
+    // (confirmed to work in-game). DEAD can't be written.
+    const match = ACTOR_TYPE_MAP.find(x => x.actorType === value);
+
+    if (!match) {
+      throw new Error(`Cannot set Civ7 player type to ${ActorType[value]}`);
+    }
+
+    this.handler.rawSave = civ7.setPlayerType(this.handler.rawSave, this.player.id, match.intVal);
+    this.handler.reparse();
   }
 
   get leaderName() {
@@ -77,7 +89,7 @@ export class Civ7CivData implements CivData {
   }
 
   set isCurrentTurn(_value: boolean) {
-    throw new Error('Writing Civ7 saves is not implemented yet');
+    // Not implemented
   }
 
   // Not available from a Civ7 save yet (would require decoding the compressed
@@ -88,7 +100,7 @@ export class Civ7CivData implements CivData {
   }
 
   set playerName(_value: string) {
-    throw new Error('Writing Civ7 saves is not implemented yet');
+    // Not implemented - no way to set this i can see?
   }
 
   get password() {
@@ -96,12 +108,12 @@ export class Civ7CivData implements CivData {
   }
 
   set password(_value: string) {
-    throw new Error('Writing Civ7 saves is not implemented yet');
+    // Not implemented - no way to set this i can see?
   }
 }
 
 export class Civ7SaveHandler implements SaveHandler {
-  private rawSave: Buffer;
+  rawSave: Buffer;
   parsed;
   pydtTurnData: PydtTurnData | undefined;
   civData: CivData[] = [];
@@ -114,7 +126,9 @@ export class Civ7SaveHandler implements SaveHandler {
   reparse() {
     this.parsed = civ7.parse(this.rawSave);
     this.pydtTurnData = parsePydtTurnData(this.rawSave);
-    this.civData = this.parsed.players.map(player => new Civ7CivData(player, this));
+    this.civData = orderBy(this.parsed.players, x => x.id).map(
+      player => new Civ7CivData(player, this)
+    );
   }
 
   get gameTurn() {
@@ -135,9 +149,15 @@ export class Civ7SaveHandler implements SaveHandler {
   }
 
   get parsedDlcs() {
-    // No CIV7 DLC metadata wired up yet; surface the enabled mod/DLC ids so the
-    // caller can match them. TODO: filter against a CIV7_DLCS list once it exists.
-    return this.parsed.mods.filter(mod => mod.enabled).map(mod => mod.id);
+    const result = [];
+
+    for (const mod of this.parsed.mods.filter(mod => mod.enabled).map(mod => mod.id)) {
+      if (CIV7_DLCS.some(x => x.id === mod)) {
+        result.push(mod);
+      }
+    }
+
+    return result;
   }
 
   setCurrentTurnIndex() {

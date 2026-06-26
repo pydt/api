@@ -1,16 +1,21 @@
 import { BEYOND_EARTH_GAME } from '../metadata/civGames/beyondEarth';
 import { CIV5_GAME } from '../metadata/civGames/civ5';
 import { CIV6_GAME } from '../metadata/civGames/civ6';
+import { CIV7_GAME } from '../metadata/civGames/civ7';
 import { OLD_WORLD_GAME } from '../metadata/civGames/oldWorld';
 import { Game } from '../models';
 import { Civ5SaveHandler } from './civ5SaveHandler';
 import { Civ6SaveHandler } from './civ6SaveHandler';
+import { Civ7SaveHandler } from './civ7SaveHandler';
 import { OldWorldSaveHandler } from './oldWorldSaveHandler';
 import { SaveHandler } from './saveHandler';
 
 export abstract class SaveHandlerFactory {
   public static getHandler(data: Buffer, game: Game): SaveHandler {
     switch (game.gameType) {
+      case CIV7_GAME.id:
+        return new Civ7SaveHandler(data);
+
       case CIV6_GAME.id:
         return new Civ6SaveHandler(data);
 
