@@ -6,43 +6,107 @@ import { orderBy } from 'lodash';
 /**
  * Whose-turn is not readable from a Civ7 save in any stable way (it lives only in
  * the compressed, hash-keyed game state — see the civ7-save-parser REVERSING.md).
- * Instead, the PYDT companion mod stamps it in on turn end via
- * `GameTutorial.setProperty("PYDT", "PYDT_TURN|player=<localPlayerID>|turn=<n>")`,
- * which persists as a plain UTF-8 chunk inside the compressed blob. We decompress
- * and match our own prefix — no reverse-engineering of the proprietary format.
+ * Instead, the PYDT companion mod stamps it via `GameTutorial.setProperty("PYDT", value)`,
+ * which persists as a UTF-8 string chunk inside the compressed blob.
+ *
+ * Value format (current): pure JSON  {"player":<id>,"turn":<n>,"names":{...}}
+ * Legacy value format:    pipe-delimited  PYDT_TURN|player=<id>|turn=<n>
+ *
+ * Locating the value: the property key "PYDT" is hashed (like every Civ7 field)
+ * into a stable 4-byte marker — there is NO literal "PYDT" / "PYDT\0" key in the
+ * blob. The value is a UTF-8 string chunk: 20 bytes of header (4B marker + 4B type
+ * + 4B pad + 2B u16 len + 2B flag + 4B key), then the null-terminated string. So
+ * the value starts 20 bytes after the marker and the chunk's u16 byte-length is 8
+ * bytes before it. NB: all offsets are BYTE offsets — the blob is binary, so
+ * toString('utf8') char indices don't line up and must never be used to splice.
  */
+const PYDT_PROPERTY_MARKER = Buffer.from([0x92, 0x25, 0xc8, 0x8e]); // hash of GameTutorial key "PYDT"
+
 interface PydtTurnData {
   currentPlayer?: number;
   turn?: number;
-  fields: Record<string, string>;
+  names?: Record<string, string>;
+}
+
+// On-disk JSON shape (key names match what the companion mod writes)
+interface PydtPayload {
+  player?: number;
+  turn?: number;
+  names?: Record<string, string>;
+}
+
+// Locate the PYDT property value chunk by its stable marker. Returns the value
+// string and the BYTE offsets where it starts/ends (the null), or undefined.
+function findPydtValue(buf: Buffer): { value: string; start: number; end: number } | undefined {
+  const markerIdx = buf.indexOf(PYDT_PROPERTY_MARKER);
+  if (markerIdx < 0) return undefined;
+  const start = markerIdx + 20;
+  const end = buf.indexOf(0, start);
+  if (end < 0) return undefined;
+  return { value: buf.subarray(start, end).toString('utf8'), start, end };
+}
+
+// Parse the value, which is either pure JSON {...} or legacy PYDT_TURN|player=..|turn=..
+function parsePydtValue(value: string): PydtTurnData {
+  if (value.startsWith('{')) {
+    try {
+      const payload = JSON.parse(value) as PydtPayload;
+      return { currentPlayer: payload.player, turn: payload.turn, names: payload.names };
+    } catch {
+      return {};
+    }
+  }
+
+  const fields: Record<string, string> = {};
+  for (const part of value.replace(/^PYDT_TURN\|/, '').split('|')) {
+    const eq = part.indexOf('=');
+    if (eq > 0) fields[part.slice(0, eq)] = part.slice(eq + 1);
+  }
+  const num = (s?: string) => (s !== undefined && /^\d+$/.test(s) ? Number(s) : undefined);
+  return { currentPlayer: num(fields.player), turn: num(fields.turn) };
 }
 
 function parsePydtTurnData(data: Buffer): PydtTurnData | undefined {
   const decompressed = civ7.decompress(data);
+  if (!decompressed) return undefined;
 
-  if (!decompressed) {
-    return undefined;
-  }
+  const found = findPydtValue(decompressed);
+  return found ? parsePydtValue(found.value) : undefined;
+}
 
-  // The value is a null-terminated UTF-8 string chunk; capture up to the null.
-  const match = decompressed.toString('latin1').match(/PYDT_TURN\|([^\0]*)/);
+/**
+ * Write player display names into the save for the hotseat curtain. Merges names
+ * into the PYDT companion mod's property and rewrites it as v2 JSON format
+ * (PYDT_TURN{...}), which the mod can decode with JSON.parse without needing atob.
+ *
+ * The value is a variable-length UTF-8 chunk in the compressed blob (the game
+ * tolerates length changes — verified in-game). We splice the new value in,
+ * update the chunk's u16 byte-length (8 bytes before the value), and recompress.
+ *
+ * Requires the companion mod to have stamped its property first (throws if not).
+ * Upgrades v1 pipe-delimited saves to v2 JSON on first write.
+ */
+export function setPydtPlayerNames(data: Buffer, names: Record<number, string>): Buffer {
+  const decompressed = civ7.decompress(data);
+  if (!decompressed) throw new Error('Save has no compressed section');
 
-  if (!match) {
-    return undefined;
-  }
+  const found = findPydtValue(decompressed);
+  if (!found) throw new Error('PYDT companion mod property not found in save');
 
-  const fields: Record<string, string> = {};
-  for (const part of match[1].split('|')) {
-    const eq = part.indexOf('=');
-    if (eq > 0) {
-      fields[part.slice(0, eq)] = part.slice(eq + 1);
-    }
-  }
+  // Preserve player/turn from the existing value (JSON or legacy), replace names,
+  // and always write pure JSON. All offsets are BYTE offsets into the blob.
+  const { currentPlayer, turn } = parsePydtValue(found.value);
+  const newValue = Buffer.from(JSON.stringify({ player: currentPlayer, turn, names }), 'utf8');
 
-  const num = (value?: string) =>
-    value !== undefined && /^\d+$/.test(value) ? Number(value) : undefined;
+  const result = Buffer.concat([
+    decompressed.subarray(0, found.start),
+    newValue,
+    Buffer.from([0]),
+    decompressed.subarray(found.end + 1)
+  ]);
+  result.writeUInt16LE(newValue.length + 1, found.start - 8); // chunk u16 byte-length
 
-  return { currentPlayer: num(fields.player), turn: num(fields.turn), fields };
+  return civ7.writeCompressedData(data, result);
 }
 
 const ACTOR_TYPE_MAP = [
@@ -92,15 +156,15 @@ export class Civ7CivData implements CivData {
     // Not implemented
   }
 
-  // Not available from a Civ7 save yet (would require decoding the compressed
-  // player records and/or write-back support). Returns undefined, like Civ6 does
-  // for civs without a stored player name / password.
+  // The game's own player-name field isn't writable, so instead we hand names to
+  // the companion mod to show on the hotseat curtain. Names set here are recorded
+  // and flushed in cleanupSave() (one decompress/recompress for all of them).
   get playerName() {
-    return this.player.playerName;
+    return this.handler.pendingNames[this.player.id];
   }
 
-  set playerName(_value: string) {
-    // Not implemented - no way to set this i can see?
+  set playerName(value: string) {
+    this.handler.pendingNames[this.player.id] = value;
   }
 
   get password() {
@@ -117,6 +181,8 @@ export class Civ7SaveHandler implements SaveHandler {
   parsed;
   pydtTurnData: PydtTurnData | undefined;
   civData: CivData[] = [];
+  // Player names (by id) set via civData[].playerName, flushed in cleanupSave().
+  pendingNames: Record<number, string> = {};
 
   constructor(data: Buffer) {
     this.rawSave = data;
@@ -166,7 +232,11 @@ export class Civ7SaveHandler implements SaveHandler {
   }
 
   cleanupSave() {
-    // Not implemented.
+    // Flush any names set via civData[].playerName into the save (for the
+    // companion mod to show on the hotseat curtain) — one batched recompress.
+    if (Object.keys(this.pendingNames).length) {
+      this.rawSave = setPydtPlayerNames(this.rawSave, this.pendingNames);
+    }
   }
 
   getData(): Buffer {
