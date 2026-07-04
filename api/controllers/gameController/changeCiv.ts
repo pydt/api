@@ -36,7 +36,10 @@ export class GameController_ChangeCiv {
     if (
       !game.allowDuplicateLeaders &&
       body.playerCiv !== RANDOM_CIV.leaderKey &&
-      game.players.map(x => x.civType).indexOf(body.playerCiv) >= 0
+      game.players
+        .filter(p => p.steamId !== steamId)
+        .map(x => x.civType)
+        .indexOf(body.playerCiv) >= 0
     ) {
       throw new HttpResponseError(400, 'Civ already in Game');
     }

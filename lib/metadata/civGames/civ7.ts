@@ -178,6 +178,7 @@ function AntiquityCiv(civKey: string, options: CivDefOptions = {}): CivDef {
   const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
 
   return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    ...options,
     civDisplayName: `${civDisplayName} (Antiquity)`
   });
 }
@@ -186,6 +187,7 @@ function ExplorationCiv(civKey: string, options: CivDefOptions = {}): CivDef {
   const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
 
   return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    ...options,
     civDisplayName: `${civDisplayName} (Exploration)`
   });
 }
@@ -194,6 +196,7 @@ function ModernCiv(civKey: string, options: CivDefOptions = {}): CivDef {
   const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
 
   return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    ...options,
     civDisplayName: `${civDisplayName} (Modern)`
   });
 }

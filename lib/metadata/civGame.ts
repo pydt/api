@@ -142,7 +142,7 @@ export const RANDOM_CIV = CivDefFactory('CIVILIZATION_RANDOM', 'LEADER_RANDOM', 
 
 export const RANDOM_ONLY_CIV = CivOnlyDefFactory('CIVILIZATION_RANDOM', '', {
   civDisplayName: 'Random Civilization',
-  imageFileName: 'RANDOM_CIV.svg'
+  imageFileName: 'RANDOM_CIV.png'
 });
 
 export interface GameSpeed {
