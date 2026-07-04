@@ -205,8 +205,10 @@ export const CIV7_CIVS = [
   // Antiquity Age
   AntiquityCiv('CIVILIZATION_PERSIA', { civDisplayName: 'Achaemenid Persian' }),
   AntiquityCiv('CIVILIZATION_AKSUM'),
-  AntiquityCiv('CIVILIZATION_ASSYRIA'),
-  AntiquityCiv('CIVILIZATION_CARTHAGE'),
+  AntiquityCiv('CIVILIZATION_ASSYRIA', { dlcId: 'genghis-khan' }),
+  AntiquityCiv('CIVILIZATION_CARTHAGE', {
+    dlcId: 'ada-lovelace'
+  }),
   AntiquityCiv('CIVILIZATION_EGYPT'),
   AntiquityCiv('CIVILIZATION_GREECE'),
   AntiquityCiv('CIVILIZATION_HAN'),
@@ -215,36 +217,45 @@ export const CIV7_CIVS = [
   AntiquityCiv('CIVILIZATION_MAYA'),
   AntiquityCiv('CIVILIZATION_MISSISSIPPIAN'),
   AntiquityCiv('CIVILIZATION_ROME'),
-  AntiquityCiv('CIVILIZATION_SILLA'),
-  AntiquityCiv('CIVILIZATION_TONGA'),
+  AntiquityCiv('CIVILIZATION_SILLA', { dlcId: 'genghis-khan' }),
+  AntiquityCiv('CIVILIZATION_TONGA', { dlcId: 'edward-teach' }),
   // Exploration Age
   ExplorationCiv('CIVILIZATION_ABBASID'),
-  ExplorationCiv('CIVILIZATION_BULGARIA'),
+  ExplorationCiv('CIVILIZATION_BULGARIA', {
+    dlcId: 'ada-lovelace'
+  }),
   ExplorationCiv('CIVILIZATION_CHOLA'),
   ExplorationCiv('CIVILIZATION_HAWAII'),
-  ExplorationCiv('CIVILIZATION_ICELAND'),
+  ExplorationCiv('CIVILIZATION_ICELAND', { dlcId: 'edward-teach' }),
   ExplorationCiv('CIVILIZATION_INCA'),
   ExplorationCiv('CIVILIZATION_MAJAPAHIT'),
   ExplorationCiv('CIVILIZATION_MING'),
   ExplorationCiv('CIVILIZATION_MONGOLIA'),
   ExplorationCiv('CIVILIZATION_NORMAN'),
-  ExplorationCiv('CIVILIZATION_PIRATE_REPUBLIC', { civDisplayName: 'Republic of Pirates' }),
-  ExplorationCiv('CIVILIZATION_SHAWNEE'),
+  ExplorationCiv('CIVILIZATION_PIRATE_REPUBLIC', {
+    civDisplayName: 'Republic of Pirates',
+    dlcId: 'edward-teach'
+  }),
+  ExplorationCiv('CIVILIZATION_SHAWNEE', { dlcId: 'napoleon' }),
   ExplorationCiv('CIVILIZATION_SONGHAI'),
   ExplorationCiv('CIVILIZATION_SPAIN'),
-  ExplorationCiv('CIVILIZATION_DAI_VIET', { civDisplayName: 'Đại Việt' }),
+  ExplorationCiv('CIVILIZATION_DAI_VIET', { civDisplayName: 'Đại Việt', dlcId: 'genghis-khan' }),
   // Modern Age
   ModernCiv('CIVILIZATION_AMERICA'),
-  ModernCiv('CIVILIZATION_GREAT_BRITAIN'),
+  ModernCiv('CIVILIZATION_GREAT_BRITAIN', {
+    dlcId: 'ada-lovelace'
+  }),
   ModernCiv('CIVILIZATION_BUGANDA'),
   ModernCiv('CIVILIZATION_FRENCH_EMPIRE'),
   ModernCiv('CIVILIZATION_MEIJI', { civDisplayName: 'Meiji Japanese' }),
   ModernCiv('CIVILIZATION_MEXICO'),
   ModernCiv('CIVILIZATION_MUGHAL'),
-  ModernCiv('CIVILIZATION_NEPAL'),
-  ModernCiv('CIVILIZATION_OTTOMANS'),
+  ModernCiv('CIVILIZATION_NEPAL', {
+    dlcId: 'ada-lovelace'
+  }),
+  ModernCiv('CIVILIZATION_OTTOMANS', { dlcId: 'edward-teach' }),
   ModernCiv('CIVILIZATION_PRUSSIA'),
-  ModernCiv('CIVILIZATION_QAJAR'),
+  ModernCiv('CIVILIZATION_QAJAR', { dlcId: 'genghis-khan' }),
   ModernCiv('CIVILIZATION_QING'),
   ModernCiv('CIVILIZATION_RUSSIA'),
   ModernCiv('CIVILIZATION_SIAM')
