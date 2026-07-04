@@ -10,6 +10,7 @@ import {
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/userRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
+import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game, PrivateUserData, User } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
@@ -119,6 +120,8 @@ export class GameController_Create {
       throw new HttpResponseError(400, 'Hey, you made the rules, you must choose a leader!');
     }
 
+    const civGame = PYDT_METADATA.civGames.find(x => x.id === body.gameType);
+
     const newGame: Game = {
       gameId: uuid(),
       completed: false,
@@ -129,7 +132,8 @@ export class GameController_Create {
       players: [
         {
           steamId: user.steamId,
-          civType: body.player1Civ
+          civType: body.player1Civ,
+          ...(civGame?.separateLeaderCiv && { civilization: body.player1Civilization })
         }
       ],
       displayName: body.displayName,

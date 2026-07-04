@@ -25,5 +25,6 @@ export interface CivData {
   playerName: string;
   password: string;
   leaderName: string;
+  civName?: string;
   isCurrentTurn: boolean;
 }

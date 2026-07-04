@@ -146,6 +146,10 @@ export class Civ7CivData implements CivData {
     return this.player.leader.value;
   }
 
+  get civName() {
+    return this.player.civ.value;
+  }
+
   get isCurrentTurn(): boolean {
     // Sourced from the PYDT companion mod's stamped property (see above). If the
     // mod isn't installed / hasn't stamped the save, this is always false.

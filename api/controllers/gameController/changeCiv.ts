@@ -2,6 +2,7 @@ import { Body, Post, Request, Response, Route, Security, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
+import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game } from '../../../lib/models';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { ChangeCivRequestBody } from './_models';
@@ -48,6 +49,21 @@ export class GameController_ChangeCiv {
       throw new HttpResponseError(400, 'You must select a leader, not random!');
     }
 
+    const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
+
+    if (
+      civGame?.separateLeaderCiv &&
+      !game.allowDuplicateLeaders &&
+      body.playerCivilization &&
+      body.playerCivilization !== RANDOM_CIV.civKey &&
+      game.players
+        .filter(p => p.steamId !== steamId)
+        .map(x => x.civilization)
+        .indexOf(body.playerCivilization) >= 0
+    ) {
+      throw new HttpResponseError(400, 'Civilization already in Game');
+    }
+
     const player = game.players.find(p => p.steamId === steamId);
 
     if (!player) {
@@ -55,6 +71,10 @@ export class GameController_ChangeCiv {
     }
 
     player.civType = body.playerCiv;
+
+    if (civGame?.separateLeaderCiv) {
+      player.civilization = body.playerCivilization;
+    }
 
     return this.gameRepository.saveVersioned(game);
   }

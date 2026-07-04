@@ -9,6 +9,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../../lib/dynamoose/
 import { ISesProvider, SES_PROVIDER_SYMBOL } from '../../../lib/email/sesProvider';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
+import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game, GamePlayer } from '../../../lib/models';
 import { GAME_TURN_SERVICE_SYMBOL, IGameTurnService } from '../../../lib/services/gameTurnService';
 import { GameUtil } from '../../../lib/util/gameUtil';
@@ -71,6 +72,18 @@ export class GameController_Join {
       ) {
         throw new HttpResponseError(400, 'Civ already in Game');
       }
+
+      const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
+
+      if (
+        civGame?.separateLeaderCiv &&
+        !game.allowDuplicateLeaders &&
+        body.playerCivilization &&
+        body.playerCivilization !== RANDOM_CIV.civKey &&
+        game.players.map(x => x.civilization).indexOf(body.playerCivilization) >= 0
+      ) {
+        throw new HttpResponseError(400, 'Civilization already in Game');
+      }
     }
 
     const curPlayer = game.players.find(x => x.steamId === request.user);
@@ -99,9 +112,11 @@ export class GameController_Join {
       delete targetPlayer.hasSurrendered;
       delete targetPlayer.surrenderDate;
     } else {
+      const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
       game.players.push({
         steamId: request.user,
-        civType: body.playerCiv
+        civType: body.playerCiv,
+        ...(civGame?.separateLeaderCiv && { civilization: body.playerCivilization })
       });
     }
 

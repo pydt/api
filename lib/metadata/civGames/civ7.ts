@@ -1,13 +1,18 @@
 import { GameStore, Platform } from 'pydt-shared-models';
 import {
   BasePath,
+  CivDef,
   CivDefFactory,
+  CivDefOptions,
   CivGame,
+  CivOnlyDefFactory,
   createProtonPath,
+  defaultDisplayName,
   DlcFactory,
   GameSpeedFactory,
   MapSizeFactory,
-  RANDOM_CIV
+  RANDOM_CIV,
+  RANDOM_ONLY_CIV
 } from '../civGame';
 
 export const CIV7_DLCS = [
@@ -169,14 +174,92 @@ export const CIV7_MAP_SIZES = [
 
 export const CIV7_MAPS = [];
 
+function AntiquityCiv(civKey: string, options: CivDefOptions = {}): CivDef {
+  const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
+
+  return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    civDisplayName: `${civDisplayName} (Antiquity)`
+  });
+}
+
+function ExplorationCiv(civKey: string, options: CivDefOptions = {}): CivDef {
+  const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
+
+  return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    civDisplayName: `${civDisplayName} (Exploration)`
+  });
+}
+
+function ModernCiv(civKey: string, options: CivDefOptions = {}): CivDef {
+  const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
+
+  return CivOnlyDefFactory(civKey, ASSET_PREFIX, {
+    civDisplayName: `${civDisplayName} (Modern)`
+  });
+}
+
+// Civilization keys come from the CIV_NAME field in save files (CIVILIZATION_* strings).
+// This list needs to be verified/expanded against real save data.
+export const CIV7_CIVS = [
+  RANDOM_ONLY_CIV,
+  // Antiquity Age
+  AntiquityCiv('CIVILIZATION_PERSIA', { civDisplayName: 'Achaemenid Persian' }),
+  AntiquityCiv('CIVILIZATION_AKSUM'),
+  AntiquityCiv('CIVILIZATION_ASSYRIA'),
+  AntiquityCiv('CIVILIZATION_CARTHAGE'),
+  AntiquityCiv('CIVILIZATION_EGYPT'),
+  AntiquityCiv('CIVILIZATION_GREECE'),
+  AntiquityCiv('CIVILIZATION_HAN'),
+  AntiquityCiv('CIVILIZATION_KHMER'),
+  AntiquityCiv('CIVILIZATION_MAURYA'),
+  AntiquityCiv('CIVILIZATION_MAYA'),
+  AntiquityCiv('CIVILIZATION_MISSISSIPPIAN'),
+  AntiquityCiv('CIVILIZATION_ROME'),
+  AntiquityCiv('CIVILIZATION_SILLA'),
+  AntiquityCiv('CIVILIZATION_TONGA'),
+  // Exploration Age
+  ExplorationCiv('CIVILIZATION_ABBASID'),
+  ExplorationCiv('CIVILIZATION_BULGARIA'),
+  ExplorationCiv('CIVILIZATION_CHOLA'),
+  ExplorationCiv('CIVILIZATION_HAWAII'),
+  ExplorationCiv('CIVILIZATION_ICELAND'),
+  ExplorationCiv('CIVILIZATION_INCA'),
+  ExplorationCiv('CIVILIZATION_MAJAPAHIT'),
+  ExplorationCiv('CIVILIZATION_MING'),
+  ExplorationCiv('CIVILIZATION_MONGOLIA'),
+  ExplorationCiv('CIVILIZATION_NORMAN'),
+  ExplorationCiv('CIVILIZATION_PIRATE_REPUBLIC', { civDisplayName: 'Republic of Pirates' }),
+  ExplorationCiv('CIVILIZATION_SHAWNEE'),
+  ExplorationCiv('CIVILIZATION_SONGHAI'),
+  ExplorationCiv('CIVILIZATION_SPAIN'),
+  ExplorationCiv('CIVILIZATION_DAI_VIET', { civDisplayName: 'Đại Việt' }),
+  // Modern Age
+  ModernCiv('CIVILIZATION_AMERICA'),
+  ModernCiv('CIVILIZATION_GREAT_BRITAIN'),
+  ModernCiv('CIVILIZATION_BUGANDA'),
+  ModernCiv('CIVILIZATION_FRENCH_EMPIRE'),
+  ModernCiv('CIVILIZATION_MEIJI', { civDisplayName: 'Meiji Japanese' }),
+  ModernCiv('CIVILIZATION_MEXICO'),
+  ModernCiv('CIVILIZATION_MUGHAL'),
+  ModernCiv('CIVILIZATION_NEPAL'),
+  ModernCiv('CIVILIZATION_OTTOMANS'),
+  ModernCiv('CIVILIZATION_PRUSSIA'),
+  ModernCiv('CIVILIZATION_QAJAR'),
+  ModernCiv('CIVILIZATION_QING'),
+  ModernCiv('CIVILIZATION_RUSSIA'),
+  ModernCiv('CIVILIZATION_SIAM')
+];
+
 export const CIV7_GAME: CivGame = {
   id: 'CIV7',
   displayName: 'Civilization 7 (Beta)',
   turnTimerSupported: true,
   assetPrefix: ASSET_PREFIX,
+  separateLeaderCiv: true,
   dlcs: CIV7_DLCS,
   gameSpeeds: CIV7_GAME_SPEEDS,
   leaders: CIV7_LEADERS,
+  civilizations: CIV7_CIVS,
   maps: CIV7_MAPS,
   mapSizes: CIV7_MAP_SIZES,
   saveLocations: {

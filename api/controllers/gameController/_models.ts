@@ -3,6 +3,7 @@ import { BaseGame, Game, GameTurn } from '../../../lib/models';
 export interface ChangeCivRequestBody {
   steamId?: string;
   playerCiv: string;
+  playerCivilization?: string;
 }
 
 export interface LeaveRequestBody {
@@ -36,6 +37,7 @@ export interface CanCreateGameResponseBody {
 
 export interface CreateGameRequestBody extends GameRequestBody {
   player1Civ: string;
+  player1Civilization?: string;
 }
 
 export interface JoinGameRequestBody extends ChangeCivRequestBody {

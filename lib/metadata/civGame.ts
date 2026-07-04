@@ -4,6 +4,10 @@ export interface CivGame {
   turnTimerSupported: boolean;
   assetPrefix: string;
   leaders: CivDef[];
+  // When true, leaders and civilizations are chosen independently (Civ 7).
+  // The civilizations array provides the selectable civ list; leaders provides the leader list.
+  separateLeaderCiv?: boolean;
+  civilizations?: CivDef[];
   dlcs: DLC[];
   gameSpeeds: GameSpeed[];
   mapSizes: MapSize[];
@@ -41,7 +45,7 @@ function removePrefixes(str) {
   return ['CIVILIZATION_', 'LEADER_', 'NATION_'].reduce((acc, cur) => acc.replace(cur, ''), str);
 }
 
-function defaultDisplayName(str: string) {
+export function defaultDisplayName(str: string) {
   str = removePrefixes(str).replace(/_/g, ' ');
 
   return str.replace(/\w\S*/g, txt => {
@@ -79,11 +83,32 @@ export function CivDefFactory(
   };
 }
 
+// Creates a civilization-only CivDef for games with separateLeaderCiv (Civ 7).
+// civKey is the primary identifier; leaderKey is set to civKey as an unused sentinel.
+// Image is named <assetPrefix><civName>.png (no leader suffix).
+export function CivOnlyDefFactory(
+  civKey: string,
+  assetPrefix: string,
+  options: CivDefOptions = {}
+): CivDef {
+  const civDisplayName = options.civDisplayName || defaultDisplayName(civKey);
+  return {
+    civKey,
+    leaderKey: civKey,
+    civDisplayName,
+    leaderDisplayName: civDisplayName,
+    options,
+    imageFileName: options.imageFileName ?? `${assetPrefix}${removePrefixes(civKey)}.png`,
+    fullDisplayName: civDisplayName
+  };
+}
+
 export interface CivDefOptions {
   civDisplayName?: string;
   leaderDisplayName?: string;
   dlcId?: string;
   justShowLeaderName?: boolean;
+  imageFileName?: string;
 }
 
 export interface DLC {
@@ -113,6 +138,11 @@ export function DlcFactory(
 export const RANDOM_CIV = CivDefFactory('CIVILIZATION_RANDOM', 'LEADER_RANDOM', '', {
   leaderDisplayName: 'Random Leader',
   justShowLeaderName: true
+});
+
+export const RANDOM_ONLY_CIV = CivOnlyDefFactory('CIVILIZATION_RANDOM', '', {
+  civDisplayName: 'Random Civilization',
+  imageFileName: 'RANDOM_CIV.svg'
 });
 
 export interface GameSpeed {

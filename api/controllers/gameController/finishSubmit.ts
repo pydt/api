@@ -171,6 +171,25 @@ In save but not enabled: ${notInGame
           );
         }
 
+        // For Civ 7: validate the civilization on turn 1, then always update it so
+        // the UI reflects the current era's civ (Civ 7 civs change at era boundaries).
+        if (civGame?.separateLeaderCiv) {
+          const actualCiv = civ.civName;
+
+          if (gameTurn.turn === 1) {
+            const expectedCiv = game.players[i].civilization;
+
+            if (expectedCiv && expectedCiv !== RANDOM_CIV.civKey && actualCiv !== expectedCiv) {
+              throw new HttpResponseError(
+                400,
+                `Incorrect civilization in save file! (actual: ${actualCiv}, expected: ${expectedCiv})`
+              );
+            }
+          }
+
+          game.players[i].civilization = actualCiv;
+        }
+
         // Keep track of dead civs so we don't have people join a dead civ
         game.players[i].isDead = civ.type === ActorType.DEAD;
 
