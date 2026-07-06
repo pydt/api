@@ -280,7 +280,10 @@ export const CIV7_GAME: CivGame = {
     [Platform.Windows]: { basePath: BasePath.DOCUMENTS, prefix: '/My Games' },
     [Platform.OSX]: {
       basePath: BasePath.APP_DATA,
-      prefix: ''
+      prefix: '',
+      dataPathOverrides: {
+        [GameStore.Steam]: '/Civilization VII'
+      }
     },
     [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' },
     [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('1295660') }
