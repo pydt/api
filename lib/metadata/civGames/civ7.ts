@@ -12,7 +12,7 @@ import {
   GameSpeedFactory,
   MapSizeFactory,
   RANDOM_CIV,
-  RANDOM_ONLY_CIV
+  RANDOM_CIVILIZATION
 } from '../civGame';
 
 export const CIV7_DLCS = [
@@ -204,7 +204,7 @@ function ModernCiv(civKey: string, options: CivDefOptions = {}): CivDef {
 // Civilization keys come from the CIV_NAME field in save files (CIVILIZATION_* strings).
 // This list needs to be verified/expanded against real save data.
 export const CIV7_CIVS = [
-  RANDOM_ONLY_CIV,
+  RANDOM_CIVILIZATION,
   // Antiquity Age
   AntiquityCiv('CIVILIZATION_PERSIA', { civDisplayName: 'Achaemenid Persian' }),
   AntiquityCiv('CIVILIZATION_AKSUM'),

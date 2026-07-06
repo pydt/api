@@ -140,7 +140,7 @@ export const RANDOM_CIV = CivDefFactory('CIVILIZATION_RANDOM', 'LEADER_RANDOM', 
   justShowLeaderName: true
 });
 
-export const RANDOM_ONLY_CIV = CivOnlyDefFactory('CIVILIZATION_RANDOM', '', {
+export const RANDOM_CIVILIZATION = CivOnlyDefFactory('CIVILIZATION_RANDOM', '', {
   civDisplayName: 'Random Civilization',
   imageFileName: 'RANDOM_CIV.png'
 });
