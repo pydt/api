@@ -9,6 +9,11 @@ export interface CivGame {
   separateLeaderCiv?: boolean;
   civilizations?: CivDef[];
   dlcs: DLC[];
+  // Optional groupings of dlcs (e.g. all the content bundled into a single release)
+  // so they can be selected/deselected together in the UI. Membership doesn't change
+  // how individual dlc ids are stored/matched (game.dlc, parsedDlcs) - it's purely
+  // presentational grouping on top of the flat `dlcs` list.
+  dlcGroups?: DlcGroup[];
   gameSpeeds: GameSpeed[];
   mapSizes: MapSize[];
   maps: Map[];
@@ -129,6 +134,36 @@ export function DlcFactory(
   return {
     id,
     displayName,
+    major,
+    extraInfo,
+    community
+  };
+}
+
+// Groups multiple dlc ids (e.g. all the content bundled into a single release) so
+// they can be selected/deselected as one unit in the UI. Referenced dlc ids should
+// still exist in the owning CivGame's `dlcs` array - the group is just an overlay.
+export interface DlcGroup {
+  id: string;
+  displayName: string;
+  dlcIds: string[];
+  major: boolean;
+  extraInfo?: string;
+  community: boolean;
+}
+
+export function DlcGroupFactory(
+  id: string,
+  displayName: string,
+  dlcIds: string[],
+  major = false,
+  extraInfo?: string,
+  community = false
+): DlcGroup {
+  return {
+    id,
+    displayName,
+    dlcIds,
     major,
     extraInfo,
     community

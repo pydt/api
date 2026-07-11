@@ -9,6 +9,7 @@ import {
   createProtonPath,
   defaultDisplayName,
   DlcFactory,
+  DlcGroupFactory,
   GameSpeedFactory,
   MapSizeFactory,
   RANDOM_CIV,
@@ -16,11 +17,69 @@ import {
 } from '../civGame';
 
 export const CIV7_DLCS = [
-  // For now, just singling out a single DLC in each of these packs to check for
-  DlcFactory('napoleon', 'Initial Launch DLC'),
-  DlcFactory('ada-lovelace', 'Crossroads of the World'),
-  DlcFactory('genghis-khan', 'Right to Rule'),
-  DlcFactory('edward-teach', 'Tides of Power')
+  DlcFactory('napoleon', 'Napoleon'),
+  DlcFactory('napoleon-alt', 'Persona Pack - Napoleon'),
+  DlcFactory('shawnee-tecumseh', 'Shawnee / Tecumseh'),
+  DlcFactory('friedrich-xerxes-alt', 'Persona Pack - Friedrich and Xerxes'),
+  DlcFactory('ashoka-himiko-alt', 'Persona Pack - Ashoka and Himiko'),
+  DlcFactory('ada-lovelace', 'Ada Lovelace'),
+  DlcFactory('great-britain', 'Great Britain'),
+  DlcFactory('carthage', 'Carthage'),
+  DlcFactory('mountain-natural-wonders', 'Collection 1: Natural Wonder Pack'),
+  DlcFactory('bolivar', 'Simón Bolívar'),
+  DlcFactory('bulgaria', 'Bulgaria'),
+  DlcFactory('nepal', 'Nepal'),
+  DlcFactory('genghis-khan', 'Genghis Khan'),
+  DlcFactory('dai-viet', 'Đại Việt'),
+  DlcFactory('assyria', 'Assyria'),
+  DlcFactory('asia-wonders', 'Collection 2: Asia Wonder Pack'),
+  DlcFactory('lakshmibai', 'Lakshmibai'),
+  DlcFactory('silla', 'Silla'),
+  DlcFactory('qajar', 'Qajar'),
+  DlcFactory('edward-teach', 'Edward Teach'),
+  DlcFactory('pirate-republic', 'Republic of Pirates'),
+  DlcFactory('tonga', 'Tonga'),
+  DlcFactory('water-wonders', 'Collection 3: Water Wonder Pack'),
+  DlcFactory('sayyida-al-hurra', 'Sayyida al Hurra'),
+  DlcFactory('ottomans', 'Ottomans'),
+  DlcFactory('iceland', 'Iceland')
+];
+
+export const CIV7_DLC_GROUPS = [
+  DlcGroupFactory('initial-launch', 'Initial Launch DLC', [
+    'napoleon',
+    'napoleon-alt',
+    'shawnee-tecumseh',
+    'friedrich-xerxes-alt',
+    'ashoka-himiko-alt'
+  ]),
+  DlcGroupFactory('cotw', 'Crossroads of the World', [
+    'ada-lovelace',
+    'great-britain',
+    'carthage',
+    'mountain-natural-wonders',
+    'bolivar',
+    'bulgaria',
+    'nepal'
+  ]),
+  DlcGroupFactory('rtr', 'Right to Rule', [
+    'genghis-khan',
+    'dai-viet',
+    'assyria',
+    'asia-wonders',
+    'lakshmibai',
+    'silla',
+    'qajar'
+  ]),
+  DlcGroupFactory('top', 'Tides of Power', [
+    'edward-teach',
+    'pirate-republic',
+    'tonga',
+    'water-wonders',
+    'sayyida-al-hurra',
+    'ottomans',
+    'iceland'
+  ])
 ];
 
 const ASSET_PREFIX = 'CIV7_';
@@ -44,7 +103,7 @@ export const CIV7_LEADERS = [
   CivDefFactory('LEADER_ASHOKA_ALT', 'LEADER_ASHOKA_ALT', ASSET_PREFIX, {
     justShowLeaderName: true,
     leaderDisplayName: 'Ashoka, World Conqueror',
-    dlcId: 'napoleon'
+    dlcId: 'ashoka-himiko-alt'
   }),
   CivDefFactory('LEADER_AUGUSTUS', 'LEADER_AUGUSTUS', ASSET_PREFIX, {
     justShowLeaderName: true
@@ -54,8 +113,8 @@ export const CIV7_LEADERS = [
   }),
   CivDefFactory('LEADER_BOLIVAR', 'LEADER_BOLIVAR', ASSET_PREFIX, {
     justShowLeaderName: true,
-    leaderDisplayName: 'Simon Bolivar',
-    dlcId: 'ada-lovelace'
+    leaderDisplayName: 'Simón Bolívar',
+    dlcId: 'bolivar'
   }),
   CivDefFactory('LEADER_CATHERINE', 'LEADER_CATHERINE', ASSET_PREFIX, {
     justShowLeaderName: true,
@@ -78,7 +137,7 @@ export const CIV7_LEADERS = [
   CivDefFactory('LEADER_FRIEDRICH_ALT', 'LEADER_FRIEDRICH_ALT', ASSET_PREFIX, {
     justShowLeaderName: true,
     leaderDisplayName: 'Friedrich, Baroque',
-    dlcId: 'napoleon'
+    dlcId: 'friedrich-xerxes-alt'
   }),
   CivDefFactory('LEADER_GENGHIS_KHAN', 'LEADER_GENGHIS_KHAN', ASSET_PREFIX, {
     justShowLeaderName: true,
@@ -100,7 +159,7 @@ export const CIV7_LEADERS = [
   CivDefFactory('LEADER_HIMIKO_ALT', 'LEADER_HIMIKO_ALT', ASSET_PREFIX, {
     justShowLeaderName: true,
     leaderDisplayName: 'Himiko, High Shaman',
-    dlcId: 'napoleon'
+    dlcId: 'ashoka-himiko-alt'
   }),
   CivDefFactory('LEADER_IBN_BATTUTA', 'LEADER_IBN_BATTUTA', ASSET_PREFIX, {
     justShowLeaderName: true
@@ -116,7 +175,7 @@ export const CIV7_LEADERS = [
   }),
   CivDefFactory('LEADER_LAKSHMIBAI', 'LEADER_LAKSHMIBAI', ASSET_PREFIX, {
     justShowLeaderName: true,
-    dlcId: 'genghis-khan'
+    dlcId: 'lakshmibai'
   }),
   CivDefFactory('LEADER_MACHIAVELLI', 'LEADER_MACHIAVELLI', ASSET_PREFIX, {
     justShowLeaderName: true
@@ -129,18 +188,18 @@ export const CIV7_LEADERS = [
   CivDefFactory('LEADER_NAPOLEON_ALT', 'LEADER_NAPOLEON_ALT', ASSET_PREFIX, {
     justShowLeaderName: true,
     leaderDisplayName: 'Napoleon, Revolutionary',
-    dlcId: 'napoleon'
+    dlcId: 'napoleon-alt'
   }),
   CivDefFactory('LEADER_PACHACUTI', 'LEADER_PACHACUTI', ASSET_PREFIX, {
     justShowLeaderName: true
   }),
   CivDefFactory('LEADER_SAYYIDA_AL_HURRA', 'LEADER_SAYYIDA_AL_HURRA', ASSET_PREFIX, {
     justShowLeaderName: true,
-    dlcId: 'edward-teach'
+    dlcId: 'sayyida-al-hurra'
   }),
   CivDefFactory('LEADER_TECUMSEH', 'LEADER_TECUMSEH', ASSET_PREFIX, {
     justShowLeaderName: true,
-    dlcId: 'napoleon'
+    dlcId: 'shawnee-tecumseh'
   }),
   CivDefFactory('LEADER_TRUNG_TRAC', 'LEADER_TRUNG_TRAC', ASSET_PREFIX, {
     justShowLeaderName: true
@@ -152,7 +211,7 @@ export const CIV7_LEADERS = [
   CivDefFactory('LEADER_XERXES_ALT', 'LEADER_XERXES_ALT', ASSET_PREFIX, {
     justShowLeaderName: true,
     leaderDisplayName: 'Xerxes, the Achaemenid',
-    dlcId: 'napoleon'
+    dlcId: 'friedrich-xerxes-alt'
   })
 ];
 
@@ -201,16 +260,14 @@ function ModernCiv(civKey: string, options: CivDefOptions = {}): CivDef {
   });
 }
 
-// Civilization keys come from the CIV_NAME field in save files (CIVILIZATION_* strings).
-// This list needs to be verified/expanded against real save data.
 export const CIV7_CIVS = [
   RANDOM_CIVILIZATION,
   // Antiquity Age
   AntiquityCiv('CIVILIZATION_PERSIA', { civDisplayName: 'Achaemenid Persian' }),
   AntiquityCiv('CIVILIZATION_AKSUM'),
-  AntiquityCiv('CIVILIZATION_ASSYRIA', { dlcId: 'genghis-khan' }),
+  AntiquityCiv('CIVILIZATION_ASSYRIA', { dlcId: 'assyria' }),
   AntiquityCiv('CIVILIZATION_CARTHAGE', {
-    dlcId: 'ada-lovelace'
+    dlcId: 'carthage'
   }),
   AntiquityCiv('CIVILIZATION_EGYPT'),
   AntiquityCiv('CIVILIZATION_GREECE'),
@@ -220,16 +277,16 @@ export const CIV7_CIVS = [
   AntiquityCiv('CIVILIZATION_MAYA'),
   AntiquityCiv('CIVILIZATION_MISSISSIPPIAN'),
   AntiquityCiv('CIVILIZATION_ROME'),
-  AntiquityCiv('CIVILIZATION_SILLA', { dlcId: 'genghis-khan' }),
-  AntiquityCiv('CIVILIZATION_TONGA', { dlcId: 'edward-teach' }),
+  AntiquityCiv('CIVILIZATION_SILLA', { dlcId: 'silla' }),
+  AntiquityCiv('CIVILIZATION_TONGA', { dlcId: 'tonga' }),
   // Exploration Age
   ExplorationCiv('CIVILIZATION_ABBASID'),
   ExplorationCiv('CIVILIZATION_BULGARIA', {
-    dlcId: 'ada-lovelace'
+    dlcId: 'bulgaria'
   }),
   ExplorationCiv('CIVILIZATION_CHOLA'),
   ExplorationCiv('CIVILIZATION_HAWAII'),
-  ExplorationCiv('CIVILIZATION_ICELAND', { dlcId: 'edward-teach' }),
+  ExplorationCiv('CIVILIZATION_ICELAND', { dlcId: 'iceland' }),
   ExplorationCiv('CIVILIZATION_INCA'),
   ExplorationCiv('CIVILIZATION_MAJAPAHIT'),
   ExplorationCiv('CIVILIZATION_MING'),
@@ -237,16 +294,16 @@ export const CIV7_CIVS = [
   ExplorationCiv('CIVILIZATION_NORMAN'),
   ExplorationCiv('CIVILIZATION_PIRATE_REPUBLIC', {
     civDisplayName: 'Republic of Pirates',
-    dlcId: 'edward-teach'
+    dlcId: 'pirate-republic'
   }),
-  ExplorationCiv('CIVILIZATION_SHAWNEE', { dlcId: 'napoleon' }),
+  ExplorationCiv('CIVILIZATION_SHAWNEE', { dlcId: 'shawnee-tecumseh' }),
   ExplorationCiv('CIVILIZATION_SONGHAI'),
   ExplorationCiv('CIVILIZATION_SPAIN'),
-  ExplorationCiv('CIVILIZATION_DAI_VIET', { civDisplayName: 'Đại Việt', dlcId: 'genghis-khan' }),
+  ExplorationCiv('CIVILIZATION_DAI_VIET', { civDisplayName: 'Đại Việt', dlcId: 'dai-viet' }),
   // Modern Age
   ModernCiv('CIVILIZATION_AMERICA'),
   ModernCiv('CIVILIZATION_GREAT_BRITAIN', {
-    dlcId: 'ada-lovelace'
+    dlcId: 'great-britain'
   }),
   ModernCiv('CIVILIZATION_BUGANDA'),
   ModernCiv('CIVILIZATION_FRENCH_EMPIRE'),
@@ -254,11 +311,11 @@ export const CIV7_CIVS = [
   ModernCiv('CIVILIZATION_MEXICO'),
   ModernCiv('CIVILIZATION_MUGHAL'),
   ModernCiv('CIVILIZATION_NEPAL', {
-    dlcId: 'ada-lovelace'
+    dlcId: 'nepal'
   }),
-  ModernCiv('CIVILIZATION_OTTOMANS', { dlcId: 'edward-teach' }),
+  ModernCiv('CIVILIZATION_OTTOMANS', { dlcId: 'ottomans' }),
   ModernCiv('CIVILIZATION_PRUSSIA'),
-  ModernCiv('CIVILIZATION_QAJAR', { dlcId: 'genghis-khan' }),
+  ModernCiv('CIVILIZATION_QAJAR', { dlcId: 'qajar' }),
   ModernCiv('CIVILIZATION_QING'),
   ModernCiv('CIVILIZATION_RUSSIA'),
   ModernCiv('CIVILIZATION_SIAM')
@@ -271,6 +328,7 @@ export const CIV7_GAME: CivGame = {
   assetPrefix: ASSET_PREFIX,
   separateLeaderCiv: true,
   dlcs: CIV7_DLCS,
+  dlcGroups: CIV7_DLC_GROUPS,
   gameSpeeds: CIV7_GAME_SPEEDS,
   leaders: CIV7_LEADERS,
   civilizations: CIV7_CIVS,
