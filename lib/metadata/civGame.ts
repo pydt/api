@@ -170,6 +170,22 @@ export function DlcGroupFactory(
   };
 }
 
+// Upgrades a game's enabled dlc ids for games saved before a group's full membership
+// was enumerated (e.g. old Civ7 games only recorded a single representative id per
+// release). If any id from a group is present, every sibling in that group is added
+// too, since a release's contents are always installed/enabled together in-game.
+export function expandDlcGroups(civGame: CivGame, dlcIds: string[]): string[] {
+  const result = new Set(dlcIds);
+
+  for (const group of civGame.dlcGroups ?? []) {
+    if (group.dlcIds.some(id => result.has(id))) {
+      group.dlcIds.forEach(id => result.add(id));
+    }
+  }
+
+  return [...result];
+}
+
 export const RANDOM_CIV = CivDefFactory('CIVILIZATION_RANDOM', 'LEADER_RANDOM', '', {
   leaderDisplayName: 'Random Leader',
   justShowLeaderName: true

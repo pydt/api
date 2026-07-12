@@ -57,26 +57,11 @@ export class GameController_FinishSubmit {
 
     const buffer = await this.gameTurnService.loadSaveFile(game);
     const saveHandler = this.gameTurnService.parseSaveFile(buffer, game);
-
-    // Temporary code to upgrade Caesar games
-    if (
-      // If the game is in progress...
-      game.gameTurnRangeKey > 1 &&
-      // The game has Great Leaders...
-      (game.dlc || []).includes('7A66DB58-B354-4061-8C80-95B638DD6F6C') &&
-      // The game doesn't have Caesar...
-      !(game.dlc || []).includes('9ED63236-617C-45A6-BB70-8CB6B0BE8ED2') &&
-      // But it's showing up in the file...
-      saveHandler.parsedDlcs.includes('9ED63236-617C-45A6-BB70-8CB6B0BE8ED2')
-    ) {
-      // Add it to the dlc
-      game.dlc = [...(game.dlc || []), '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2'];
-    }
+    const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     const numCivs = saveHandler.civData.length;
     const parsedRound = saveHandler.gameTurn;
     const gameDlc = game.dlc || [];
-    const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     const notInSave = difference(gameDlc, saveHandler.parsedDlcs).filter(x => {
       const dlc = civGame.dlcs.find(d => d.id === x);

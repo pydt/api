@@ -7,11 +7,9 @@ import {
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
 import { loggingHandler } from '../../lib/logging';
+import { expandDlcGroups } from '../../lib/metadata/civGame';
+import { CIV7_GAME } from '../../lib/metadata/civGames/civ7';
 import { Game, TurnData, User } from '../../lib/models';
-import {
-  IMiscDataRepository,
-  MISC_DATA_REPOSITORY_SYMBOL
-} from '../../lib/dynamoose/miscDataRepository';
 import { GameUtil } from '../../lib/util/gameUtil';
 import { StatsUtil } from '../../lib/util/statsUtil';
 
@@ -25,8 +23,7 @@ export class DataMigrations {
   constructor(
     @inject(GAME_REPOSITORY_SYMBOL) private gameRepository: IGameRepository,
     @inject(GAME_TURN_REPOSITORY_SYMBOL) private gameTurnRepository: IGameTurnRepository,
-    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository,
-    @inject(MISC_DATA_REPOSITORY_SYMBOL) private miscDataRepository: IMiscDataRepository
+    @inject(USER_REPOSITORY_SYMBOL) private userRepository: IUserRepository
   ) {}
 
   public async execute(message: string) {
@@ -49,23 +46,25 @@ export class DataMigrations {
       await this.calculateUserPerGameStats(users);
     }
 
-    if (message.startsWith('gamestats')) {
+    if (message.startsWith('civ7dlcgroups')) {
       let games: Game[];
-      const gameId = message.replace('gamestats:', '');
+      const gameId = message.replace('civ7dlcgroups:', '');
 
       if (gameId === 'all') {
-        games = await this.gameRepository.allGames();
+        games = (await this.gameRepository.allGames()).filter(x => x.gameType === CIV7_GAME.id);
       } else if (gameId) {
-        games = [await this.gameRepository.get(gameId)];
+        const game = await this.gameRepository.get(gameId);
 
-        if (!games[0]) {
+        if (!game) {
           throw new Error(`game ${gameId} not found`);
         }
+
+        games = [game];
       } else {
         throw new Error('gameId or all must be provided');
       }
 
-      await this.calculateGameStats(games);
+      await this.upgradeCiv7DlcGroups(games);
     }
   }
 
@@ -133,69 +132,20 @@ export class DataMigrations {
     }
   }
 
-  private async calculateGameStats(games: Game[]) {
+  // One-time upgrade for Civ7 games saved before dlc groups were fully enumerated
+  // (they only recorded a single representative id per release). If any id from a
+  // group is present, every sibling in that group gets added too, since a release's
+  // contents are always installed/enabled together in-game. Applies regardless of
+  // whether the game has started, since the dlc list is set at creation.
+  private async upgradeCiv7DlcGroups(games: Game[]) {
     for (const game of games) {
-      if ((game.dataVersion || 0) < 2) {
-        this.resetStats(game);
-
-        for (const player of game.players) {
-          this.resetStats(player);
-        }
-
-        const turns = await this.gameTurnRepository.getAllTurnsForGame(game.gameId);
-
-        for (const turn of turns) {
-          StatsUtil.updateTurnStatistics(game, turn, {
-            steamId: turn.playerSteamId
-          } as User);
-        }
-
-        game.dataVersion = 2;
-
-        const globalStats = await this.miscDataRepository.getGlobalStats(true);
-
-        for (const curStats of [
-          globalStats.data,
-          StatsUtil.getGameStats(globalStats.data, game.gameType)
-        ]) {
-          if (
-            !curStats.firstTurnEndDate ||
-            (game.firstTurnEndDate && game.firstTurnEndDate < curStats.firstTurnEndDate)
-          ) {
-            curStats.firstTurnEndDate = game.firstTurnEndDate;
-          }
-
-          if (
-            !curStats.lastTurnEndDate ||
-            (game.lastTurnEndDate && game.lastTurnEndDate > curStats.lastTurnEndDate)
-          ) {
-            curStats.lastTurnEndDate = game.lastTurnEndDate;
-          }
-
-          curStats.dayOfWeekQueue = '';
-          curStats.fastTurns = (curStats.fastTurns || 0) + (game.fastTurns || 0);
-          curStats.hourOfDayQueue = '';
-          curStats.slowTurns = (curStats.slowTurns || 0) + (game.slowTurns || 0);
-          curStats.timeTaken = (curStats.timeTaken || 0) + (game.timeTaken || 0);
-          curStats.turnsPlayed = (curStats.turnsPlayed || 0) + (game.turnsPlayed || 0);
-          curStats.turnsSkipped = (curStats.turnsSkipped || 0) + (game.turnsSkipped || 0);
-
-          for (const turnLengthKey of Object.keys(game.turnLengthBuckets || {})) {
-            curStats.turnLengthBuckets[turnLengthKey] =
-              (curStats.turnLengthBuckets[turnLengthKey] || 0) +
-              (game.turnLengthBuckets[turnLengthKey] || 0);
-          }
-
-          for (const yearKey of Object.keys(game.yearBuckets || {})) {
-            curStats.yearBuckets[yearKey] =
-              (curStats.yearBuckets[yearKey] || 0) + (game.yearBuckets[yearKey] || 0);
-          }
-        }
+      if ((game.dataVersion || 0) < 3) {
+        game.dlc = expandDlcGroups(CIV7_GAME, game.dlc || []);
+        game.dataVersion = 3;
 
         await this.gameRepository.saveVersioned(game);
-        await this.miscDataRepository.saveVersioned(globalStats);
 
-        console.log(`Recalculated game ${game.gameId} (${game.displayName})`);
+        console.log(`Upgraded dlc groups for game ${game.gameId} (${game.displayName})`);
       }
     }
   }
