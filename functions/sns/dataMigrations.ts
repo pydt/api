@@ -139,7 +139,7 @@ export class DataMigrations {
   // whether the game has started, since the dlc list is set at creation.
   private async upgradeCiv7DlcGroups(games: Game[]) {
     for (const game of games) {
-      if ((game.dataVersion || 0) < 3) {
+      if ((game.dataVersion || 0) < 3 && game.gameType === CIV7_GAME.id) {
         game.dlc = expandDlcGroups(CIV7_GAME, game.dlc || []);
         game.dataVersion = 3;
 

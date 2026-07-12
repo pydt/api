@@ -17,68 +17,68 @@ import {
 } from '../civGame';
 
 export const CIV7_DLCS = [
-  DlcFactory('napoleon', 'Napoleon'),
-  DlcFactory('napoleon-alt', 'Persona Pack - Napoleon'),
-  DlcFactory('shawnee-tecumseh', 'Shawnee / Tecumseh'),
-  DlcFactory('friedrich-xerxes-alt', 'Persona Pack - Friedrich and Xerxes'),
-  DlcFactory('ashoka-himiko-alt', 'Persona Pack - Ashoka and Himiko'),
   DlcFactory('ada-lovelace', 'Ada Lovelace'),
-  DlcFactory('great-britain', 'Great Britain'),
+  DlcFactory('assyria', 'Assyria'),
+  DlcFactory('bulgaria', 'Bulgaria'),
   DlcFactory('carthage', 'Carthage'),
   DlcFactory('mountain-natural-wonders', 'Collection 1: Natural Wonder Pack'),
-  DlcFactory('bolivar', 'Simón Bolívar'),
-  DlcFactory('bulgaria', 'Bulgaria'),
-  DlcFactory('nepal', 'Nepal'),
-  DlcFactory('genghis-khan', 'Genghis Khan'),
-  DlcFactory('dai-viet', 'Đại Việt'),
-  DlcFactory('assyria', 'Assyria'),
   DlcFactory('asia-wonders', 'Collection 2: Asia Wonder Pack'),
-  DlcFactory('lakshmibai', 'Lakshmibai'),
-  DlcFactory('silla', 'Silla'),
-  DlcFactory('qajar', 'Qajar'),
-  DlcFactory('edward-teach', 'Edward Teach'),
-  DlcFactory('pirate-republic', 'Republic of Pirates'),
-  DlcFactory('tonga', 'Tonga'),
   DlcFactory('water-wonders', 'Collection 3: Water Wonder Pack'),
-  DlcFactory('sayyida-al-hurra', 'Sayyida al Hurra'),
+  DlcFactory('dai-viet', 'Đại Việt'),
+  DlcFactory('edward-teach', 'Edward Teach'),
+  DlcFactory('genghis-khan', 'Genghis Khan'),
+  DlcFactory('great-britain', 'Great Britain'),
+  DlcFactory('iceland', 'Iceland'),
+  DlcFactory('lakshmibai', 'Lakshmibai'),
+  DlcFactory('napoleon', 'Napoleon'),
+  DlcFactory('nepal', 'Nepal'),
   DlcFactory('ottomans', 'Ottomans'),
-  DlcFactory('iceland', 'Iceland')
+  DlcFactory('ashoka-himiko-alt', 'Persona Pack - Ashoka and Himiko'),
+  DlcFactory('friedrich-xerxes-alt', 'Persona Pack - Friedrich and Xerxes'),
+  DlcFactory('napoleon-alt', 'Persona Pack - Napoleon'),
+  DlcFactory('qajar', 'Qajar'),
+  DlcFactory('pirate-republic', 'Republic of Pirates'),
+  DlcFactory('sayyida-al-hurra', 'Sayyida al Hurra'),
+  DlcFactory('shawnee-tecumseh', 'Shawnee / Tecumseh'),
+  DlcFactory('silla', 'Silla'),
+  DlcFactory('bolivar', 'Simón Bolívar'),
+  DlcFactory('tonga', 'Tonga')
 ];
 
 export const CIV7_DLC_GROUPS = [
   DlcGroupFactory('initial-launch', 'Initial Launch DLC', [
     'napoleon',
-    'napoleon-alt',
-    'shawnee-tecumseh',
+    'ashoka-himiko-alt',
     'friedrich-xerxes-alt',
-    'ashoka-himiko-alt'
+    'napoleon-alt',
+    'shawnee-tecumseh'
   ]),
   DlcGroupFactory('cotw', 'Crossroads of the World', [
     'ada-lovelace',
-    'great-britain',
+    'bulgaria',
     'carthage',
     'mountain-natural-wonders',
-    'bolivar',
-    'bulgaria',
-    'nepal'
+    'great-britain',
+    'nepal',
+    'bolivar'
   ]),
   DlcGroupFactory('rtr', 'Right to Rule', [
-    'genghis-khan',
-    'dai-viet',
     'assyria',
     'asia-wonders',
+    'dai-viet',
+    'genghis-khan',
     'lakshmibai',
-    'silla',
-    'qajar'
+    'qajar',
+    'silla'
   ]),
   DlcGroupFactory('top', 'Tides of Power', [
-    'edward-teach',
-    'pirate-republic',
-    'tonga',
     'water-wonders',
-    'sayyida-al-hurra',
+    'edward-teach',
+    'iceland',
     'ottomans',
-    'iceland'
+    'pirate-republic',
+    'sayyida-al-hurra',
+    'tonga'
   ])
 ];
 
