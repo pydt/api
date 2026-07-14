@@ -177,5 +177,6 @@ export const CIV5_GAME: CivGame = {
   saveExtension: 'Civ5Save',
   runUrls: {
     [GameStore.Steam]: 'steam://run/8930/\\dx11'
-  }
+  },
+  awaitWriteFinish: true
 };

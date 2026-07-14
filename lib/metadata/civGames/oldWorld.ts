@@ -85,5 +85,6 @@ export const OLD_WORLD_GAME: CivGame = {
   runUrls: {
     [GameStore.Steam]: 'steam://run/597180',
     [GameStore.Epic]: 'com.epicgames.launcher://apps/Nightjar?action=launch&silent=true'
-  }
+  },
+  awaitWriteFinish: false
 };

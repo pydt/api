@@ -396,5 +396,6 @@ export const CIV6_GAME: CivGame = {
   runUrls: {
     [GameStore.Steam]: 'steam://run/289070/\\dx11',
     [GameStore.Epic]: 'com.epicgames.launcher://apps/Kinglet?action=launch&silent=true'
-  }
+  },
+  awaitWriteFinish: false
 };

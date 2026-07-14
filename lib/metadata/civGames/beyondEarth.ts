@@ -109,5 +109,6 @@ export const BEYOND_EARTH_GAME: CivGame = {
   saveExtension: 'CivBESave',
   runUrls: {
     [GameStore.Steam]: 'steam://run/65980/\\dx11'
-  }
+  },
+  awaitWriteFinish: true
 };

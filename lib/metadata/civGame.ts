@@ -22,6 +22,7 @@ export interface CivGame {
   savePath: string;
   saveExtension: string;
   runUrls: { [gameStore: string]: string };
+  awaitWriteFinish: boolean;
 }
 
 export enum BasePath {
