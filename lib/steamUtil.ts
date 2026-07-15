@@ -12,10 +12,19 @@ export const steamPassport = (request: HttpRequest) => {
   let webUrl = Config.webUrl;
   const referer = request.headers['referer'];
 
-  if (referer?.includes('localhost:8080')) {
-    webUrl = 'http://localhost:8080';
-  } else if (referer?.includes('dev.playyourdamnturn.com')) {
-    webUrl = 'https://dev.playyourdamnturn.com';
+  if (referer) {
+    try {
+      const parsedReferer = new URL(referer);
+      const { hostname, port } = parsedReferer;
+
+      if (hostname === 'localhost' && port === '8080') {
+        webUrl = 'http://localhost:8080';
+      } else if (hostname === 'dev.playyourdamnturn.com') {
+        webUrl = 'https://dev.playyourdamnturn.com';
+      }
+    } catch {
+      // Ignore malformed referer values and keep default Config.webUrl.
+    }
   }
 
   sp.use(
