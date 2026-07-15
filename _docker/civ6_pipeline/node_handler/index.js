@@ -1,5 +1,5 @@
 const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const fs = require('fs/promises');
 const path = require('path');
 const Rollbar = require('rollbar');
@@ -49,17 +49,21 @@ exports.handler = async function (event) {
       await fs.writeFile(inputFile, input);
 
       try {
-        execSync(
-          `/civ6_pipeline/target/native/civ6_save_renderer/parse_header/parse_header -i ${inputFile} -o ${outputDir}/header.yaml`
+        execFileSync(
+          '/civ6_pipeline/target/native/civ6_save_renderer/parse_header/parse_header',
+          ['-i', inputFile, '-o', `${outputDir}/header.yaml`]
         );
-        execSync(
-          `/civ6_pipeline/target/native/civ6_save_renderer/parse_map/parse_map -i ${inputFile} -o ${outputDir}/map.tsv`
+        execFileSync(
+          '/civ6_pipeline/target/native/civ6_save_renderer/parse_map/parse_map',
+          ['-i', inputFile, '-o', `${outputDir}/map.tsv`]
         );
-        execSync(
-          `/civ6_pipeline/target/native/civ6_save_renderer/plot_map/plot_map -y ${outputDir}/header.yaml -t ${outputDir}/map.tsv -o ${outputDir}/map.pdf`
+        execFileSync(
+          '/civ6_pipeline/target/native/civ6_save_renderer/plot_map/plot_map',
+          ['-y', `${outputDir}/header.yaml`, '-t', `${outputDir}/map.tsv`, '-o', `${outputDir}/map.pdf`]
         );
-        execSync(
-          `/civ6_pipeline/target/native/civ6_save_renderer/convert_plot/convert_plot -i ${outputDir}/map.pdf -o ${outputDir}/map.png`
+        execFileSync(
+          '/civ6_pipeline/target/native/civ6_save_renderer/convert_plot/convert_plot',
+          ['-i', `${outputDir}/map.pdf`, '-o', `${outputDir}/map.png`]
         );
       } catch (err) {
         throw new Error(`Processing failed!
