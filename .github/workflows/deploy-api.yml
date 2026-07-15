@@ -1,4 +1,6 @@
 name: Deploy PYDT API
+permissions:
+  contents: read
 on:
   push:
     branches:
