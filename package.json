@@ -13,7 +13,7 @@
     "@aws-sdk/client-sqs": "^3.716.0",
     "@aws-sdk/client-sts": "^3.716.0",
     "@aws-sdk/s3-request-presigner": "^3.717.0",
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.6.0",
     "aws-xray-sdk": "^3.10.2",
     "bcryptjs": "2.4.3",
     "civ6-save-parser": "^1.2.3",
