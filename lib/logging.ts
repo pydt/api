@@ -3,11 +3,13 @@ import * as Rollbar from 'rollbar';
 import { Config } from './config';
 import { initContainer, iocContainer } from './ioc';
 
+type LogLevel = 'info' | 'warn' | 'error';
+
 let rollbar: Rollbar;
 
-function log(level: string, message, error?) {
+function log(level: LogLevel, message: Rollbar.LogArgument, error?: Rollbar.LogArgument) {
   console.log(
-    `${message}${error ? ': ' + (error && error.stack ? error.stack : JSON.stringify(error)) : ''}`
+    `${message}${error ? ': ' + (error instanceof Error ? error.stack : JSON.stringify(error)) : ''}`
   );
 
   if (rollbar) {
@@ -27,15 +29,9 @@ function log(level: string, message, error?) {
 }
 
 export const pydtLogger = {
-  info: function (message, error?) {
-    log('info', message, error);
-  },
-  warn: function (message, error?) {
-    log('warn', message, error);
-  },
-  error: function (message, error) {
-    log('error', message, error);
-  }
+  info: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument) => log('info', message, error),
+  warn: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument) => log('warn', message, error),
+  error: (message: Rollbar.LogArgument, error: Rollbar.LogArgument) => log('error', message, error)
 };
 
 if (!Config.runningLocal) {
@@ -57,9 +53,12 @@ if (!Config.runningLocal) {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function loggingHandler(handler: (event, context, iocContainer: Container) => Promise<any>) {
-  return async (event, context) => {
+export function loggingHandler<TResult>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handler: (event: any, context: any, iocContainer: Container) => Promise<TResult>
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return async (event: any, context: any): Promise<TResult> => {
     initContainer();
 
     context.callbackWaitsForEmptyEventLoop = false;
@@ -70,10 +69,9 @@ export function loggingHandler(handler: (event, context, iocContainer: Container
       const exposedError = new Error('Service Unavailable');
 
       if (rollbar) {
-        rollbar.error(err, { event });
-        await new Promise(resolve => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          rollbar.wait(resolve as any);
+        rollbar.error(err as Rollbar.LogArgument, { event });
+        await new Promise<void>(resolve => {
+          rollbar.wait(() => resolve());
         });
       }
 
