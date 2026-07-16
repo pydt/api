@@ -91,6 +91,7 @@ def change_prefix(source_table_name, source_wildcard, destination_wildcard, sepa
             return destination_prefix + re.sub(r"([A-Z])", r" \1", source_table_name).split(' ', 1)[1].replace(" ", "")
     if source_table_name.split(separator, 1)[0] == source_prefix:
         return destination_prefix + separator + source_table_name.split(separator, 1)[1]
+    return None
 
 
 def delete_table(conn, sleep_interval, table_name):
@@ -100,6 +101,8 @@ def delete_table(conn, sleep_interval, table_name):
             table_exist = True
             try:
                 conn.delete_table(table_name)
+                logging.info("Delete requested for " + table_name + " table.")
+                break
             except boto.exception.JSONResponseError as e:
                 if e.body["__type"] == "com.amazonaws.dynamodb.v20120810#ResourceNotFoundException":
                     table_exist = False
@@ -128,7 +131,6 @@ def delete_table(conn, sleep_interval, table_name):
             except boto.exception.JSONResponseError as e:
                 if e.body["__type"] == "com.amazonaws.dynamodb.v20120810#ResourceNotFoundException":
                     logging.info(table_name + " table deleted.")
-                    pass
                 else:
                     logging.exception(e)
                     sys.exit(1)
@@ -255,10 +257,9 @@ def do_backup(conn, table_name, read_capacity):
 
     # get table schema
     logging.info("Dumping table schema for " + table_name)
-    f = open(args.dumpPath + "/" + table_name + "/" + SCHEMA_FILE, "w+")
-    table_desc = conn.describe_table(table_name)
-    f.write(json.dumps(table_desc, indent=JSON_INDENT))
-    f.close()
+    with open(args.dumpPath + "/" + table_name + "/" + SCHEMA_FILE, "w+") as f:
+      table_desc = conn.describe_table(table_name)
+      f.write(json.dumps(table_desc, indent=JSON_INDENT))
 
     if not args.schemaOnly:
         original_read_capacity = table_desc["Table"]["ProvisionedThroughput"]["ReadCapacityUnits"]
@@ -278,9 +279,8 @@ def do_backup(conn, table_name, read_capacity):
         while True:
             scanned_table = conn.scan(table_name, exclusive_start_key=last_evaluated_key)
 
-            f = open(args.dumpPath + "/" + table_name + "/" + DATA_DIR + "/" + str(i).zfill(4) + ".json", "w+")
-            f.write(json.dumps(scanned_table, indent=JSON_INDENT))
-            f.close()
+            with open(args.dumpPath + "/" + table_name + "/" + DATA_DIR + "/" + str(i).zfill(4) + ".json", "w+") as f:
+              f.write(json.dumps(scanned_table, indent=JSON_INDENT))
 
             i += 1
 
@@ -311,7 +311,8 @@ def do_restore(conn, sleep_interval, source_table, destination_table, write_capa
         else:
             logging.info("Cannot find \"%s/%s\" directory containing dump files!" % (CURRENT_WORKING_DIR, source_table))
             sys.exit(1)
-    table_data = json.load(open(dump_data_path + "/" + source_table + "/" + SCHEMA_FILE))
+    with open(dump_data_path + "/" + source_table + "/" + SCHEMA_FILE) as schema_file:
+      table_data = json.load(schema_file)
     table = table_data["Table"]
     table_attribute_definitions = table["AttributeDefinitions"]
     table_table_name = destination_table
@@ -373,7 +374,8 @@ def do_restore(conn, sleep_interval, source_table, destination_table, write_capa
         for data_file in data_file_list:
             logging.info("Processing " + data_file + " of " + destination_table)
             items = []
-            item_data = json.load(open(dump_data_path + "/" + source_table + "/" + DATA_DIR + "/" + data_file))
+            with open(dump_data_path + "/" + source_table + "/" + DATA_DIR + "/" + data_file) as data_fp:
+              item_data = json.load(data_fp)
             items.extend(item_data["Items"])
 
             # batch write data
