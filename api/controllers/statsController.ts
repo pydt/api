@@ -104,7 +104,8 @@ export class StatsController {
 }
 
 export interface UserTurnData
-  extends TurnData,
+  extends
+    TurnData,
     Pick<GameTypeTurnData, 'activeGames' | 'totalGames'>,
     Pick<User, 'steamId' | 'avatarSmall' | 'displayName'> {}
 
