@@ -13,10 +13,12 @@
 
 service: civ-serverless-api
 
-frameworkVersion: "3"
+frameworkVersion: "4"
+
+build:
+  esbuild: false
 
 plugins:
-  - serverless-prune-plugin
   - serverless-domain-manager
   - export-api-url
   - serverless-webpack
@@ -90,6 +92,7 @@ custom:
   DEFAULT_LAMBDA_MEMORY: 3072
   webpack:
     #packExternalModulesMaxBuffer: 512000
+    excludeFiles: '**/*.spec.ts'
     includeModules:
       forceInclude:
         - reflect-metadata

@@ -6,9 +6,6 @@ updates:
       interval: "daily"
     # Disable version updates; only security updates will be created
     open-pull-requests-limit: 0
-    ignore:
-      - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
