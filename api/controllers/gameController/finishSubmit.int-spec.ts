@@ -50,8 +50,8 @@ describe('GameController_FinishSubmit', () => {
       createdBySteamId: USER_1_ID,
       discourseTopicId: 12345,
       players: [
-        { steamId: USER_1_ID, civType: 'one' },
-        { steamId: USER_2_ID, civType: 'two' }
+        { steamId: USER_1_ID, civType: 'LEADER_ALEXANDER' },
+        { steamId: USER_2_ID, civType: 'LEADER_GANDHI' }
       ]
     } as Game);
 
@@ -105,7 +105,7 @@ describe('GameController_FinishSubmit', () => {
     sesMock
       .setup(x =>
         x.sendEmail(
-          'player 1 has been defeated in test!',
+          'player 1 (Alexander - Macedon) has been defeated in test!',
           It.isAny(),
           It.isAny(),
           'user2@email.com'
@@ -115,7 +115,7 @@ describe('GameController_FinishSubmit', () => {
 
     const discourseMock = Mock.ofType<IDiscourseProvider>();
     discourseMock
-      .setup(x => x.postToSmack(12345, 'player 1 was defeated in round 5!'))
+      .setup(x => x.postToSmack(12345, 'player 1 (Alexander - Macedon) was defeated in round 5!'))
       .verifiable(Times.once());
 
     const gameTurnService = new GameTurnService(
@@ -133,8 +133,8 @@ describe('GameController_FinishSubmit', () => {
     gameTurnService.parseSaveFile = () => {
       return {
         civData: [
-          { isCurrentTurn: false, type: ActorType.DEAD, leaderName: 'one' },
-          { isCurrentTurn: true, type: ActorType.HUMAN, leaderName: 'two' }
+          { isCurrentTurn: false, type: ActorType.DEAD, leaderName: 'LEADER_ALEXANDER' },
+          { isCurrentTurn: true, type: ActorType.HUMAN, leaderName: 'LEADER_GANDHI' }
         ],
         getData: () => Buffer.of(1, 2, 3, 4),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

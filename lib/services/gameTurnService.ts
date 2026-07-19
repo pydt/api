@@ -107,14 +107,20 @@ export class GameTurnService implements IGameTurnService {
         return user.steamId === defeatedPlayer.steamId;
       });
 
+      if (!defeatedUser) {
+        continue;
+      }
+
       UserUtil.removeUserFromGame(defeatedUser, game, true);
 
       promises.push(this.userRepository.saveVersioned(defeatedUser));
 
+      const civInfo = GameUtil.getPlayerCivDisplayName(game, defeatedPlayer);
+
       promises.push(
         this.discourse.postToSmack(
           game.discourseTopicId,
-          `${defeatedUser.displayName} was defeated in round ${game.round}!`
+          `${defeatedUser.displayName} (${civInfo}) was defeated in round ${game.round}!`
         )
       );
 
@@ -125,7 +131,9 @@ export class GameTurnService implements IGameTurnService {
 
         if (curPud && curPud.emailAddress) {
           const isDefeatedPlayer = player.steamId === defeatedPlayer.steamId;
-          const desc = isDefeatedPlayer ? 'You have' : `${defeatedUser.displayName} has`;
+          const desc = isDefeatedPlayer
+            ? 'You have'
+            : `${defeatedUser.displayName} (${civInfo}) has`;
 
           if (GameUtil.playerIsHuman(player) || isDefeatedPlayer) {
             promises.push(

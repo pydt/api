@@ -1,6 +1,38 @@
+import { PYDT_METADATA } from '../metadata/metadata';
 import { Game, GamePlayer, GameTurn } from '../models';
 
 export class GameUtil {
+  public static getPlayerCivDisplayName(game: Game, player: GamePlayer) {
+    const civGame = PYDT_METADATA.civGames.find(cg => cg.id === game.gameType);
+
+    if (!civGame) {
+      return player.civType;
+    }
+
+    const leaderDef = civGame.leaders.find(l => l.leaderKey === player.civType);
+
+    if (!leaderDef) {
+      return player.civType;
+    }
+
+    let civDisplayName: string;
+
+    if (civGame.separateLeaderCiv) {
+      if (player.civilization) {
+        const civDef = civGame.civilizations.find(c => c.civKey === player.civilization);
+        civDisplayName = civDef ? civDef.civDisplayName : player.civilization;
+      }
+    } else if (!leaderDef.options.justShowLeaderName) {
+      civDisplayName = leaderDef.civDisplayName;
+    }
+
+    // Use a dash rather than leaderDef.fullDisplayName's parens, since the caller
+    // typically wraps this in its own parens (e.g. "PlayerName (Leader - Civ)").
+    return civDisplayName
+      ? `${leaderDef.leaderDisplayName} - ${civDisplayName}`
+      : leaderDef.leaderDisplayName;
+  }
+
   public static padGameTurn(turn: number) {
     return ('' + turn).padStart(6, '0');
   }
