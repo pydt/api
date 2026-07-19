@@ -46,6 +46,25 @@ export class DataMigrations {
       await this.calculateUserPerGameStats(users);
     }
 
+    if (message.startsWith('useractivegames')) {
+      let users: User[];
+      const userId = message.replace('useractivegames:', '');
+
+      if (userId === 'all') {
+        users = await this.userRepository.allUsers();
+      } else if (userId) {
+        users = [await this.userRepository.get(userId)];
+
+        if (!users[0]) {
+          throw new Error(`user ${userId} not found`);
+        }
+      } else {
+        throw new Error('userId or all must be provided');
+      }
+
+      await this.recalculateActiveGameCounts(users);
+    }
+
     if (message.startsWith('civ7dlcgroups')) {
       let games: Game[];
       const gameId = message.replace('civ7dlcgroups:', '');
@@ -129,6 +148,73 @@ export class DataMigrations {
 
         console.log(`Recalculated all turn stats for user ${user.displayName} (${user.steamId})`);
       }
+    }
+  }
+
+  // Recomputes activeGames/totalGames per game type from the user's current
+  // activeGameIds/inactiveGameIds, without reparsing turn history. Use this to
+  // repair drift in those counters (e.g. from bad increment/decrement logic)
+  // without paying the cost of calculateUserPerGameStats's full turn replay.
+  private async recalculateActiveGameCounts(users: User[]) {
+    const allGames: Record<string, Game> = {};
+
+    for (const user of users) {
+      const userGameIds = [
+        ...new Set([...(user.activeGameIds || []), ...(user.inactiveGameIds || [])])
+      ];
+      const missingGameIds = userGameIds.filter(x => !allGames[x]);
+
+      if (missingGameIds.length) {
+        const missingGames = await this.gameRepository.batchGet(missingGameIds);
+
+        for (const game of missingGames) {
+          allGames[game.gameId] = game;
+        }
+      }
+
+      this.applyActiveGameCounts(user, allGames);
+
+      try {
+        await this.userRepository.saveVersioned(user);
+      } catch (err) {
+        // Save can fail on the version condition if the user was updated elsewhere
+        // (e.g. played a turn) while we were processing this batch - reload and retry.
+        console.log(
+          `Error saving active game counts for user ${user.steamId}, reloading and trying again`,
+          err
+        );
+
+        const reloadedUser = await this.userRepository.get(user.steamId);
+        this.applyActiveGameCounts(reloadedUser, allGames);
+        await this.userRepository.saveVersioned(reloadedUser);
+      }
+
+      console.log(
+        `Recalculated active/total game counts for user ${user.displayName} (${user.steamId})`
+      );
+    }
+  }
+
+  private applyActiveGameCounts(user: User, allGames: Record<string, Game>) {
+    const activeGameIds = user.activeGameIds || [];
+    const userGameIds = [...new Set([...activeGameIds, ...(user.inactiveGameIds || [])])];
+    const gamesByType: Record<string, Game[]> = {};
+
+    for (const gameId of userGameIds) {
+      const game = allGames[gameId];
+
+      if (game) {
+        gamesByType[game.gameType] = gamesByType[game.gameType] || [];
+        gamesByType[game.gameType].push(game);
+      }
+    }
+
+    for (const gameType of Object.keys(gamesByType)) {
+      const gameStats = StatsUtil.getGameStats(user, gameType);
+      const typeGames = gamesByType[gameType];
+
+      gameStats.activeGames = typeGames.filter(x => activeGameIds.includes(x.gameId)).length;
+      gameStats.totalGames = typeGames.length;
     }
   }
 

@@ -25,7 +25,7 @@ export class UserUtil {
     }
 
     const gameStats = StatsUtil.getGameStats(user, game.gameType);
-    gameStats.activeGames = user.activeGameIds.length;
+    gameStats.activeGames--;
 
     if (!addToInactiveGames) {
       gameStats.totalGames--;
