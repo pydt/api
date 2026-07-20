@@ -2,6 +2,7 @@ import * as civ7 from 'civ7-save-parser';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
 import { CIV7_DLCS } from '../metadata/civGames/civ7';
 import { orderBy } from 'lodash';
+import { HttpResponseError } from './../../api/framework/httpResponseError';
 
 /**
  * Whose-turn is not readable from a Civ7 save in any stable way (it lives only in
@@ -191,6 +192,13 @@ export class Civ7SaveHandler implements SaveHandler {
   constructor(data: Buffer) {
     this.rawSave = data;
     this.reparse();
+
+    if (!this.pydtTurnData) {
+      throw new HttpResponseError(
+        400,
+        `To play Civilization VII, the PYDT companion mod must be enabled!  You can get it at https://steamcommunity.com/sharedfiles/filedetails/?id=3751833377`
+      );
+    }
   }
 
   reparse() {

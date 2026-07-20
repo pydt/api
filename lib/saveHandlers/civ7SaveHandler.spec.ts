@@ -26,6 +26,20 @@ describe('Civ7SaveHandler', () => {
     ]);
   });
 
+  it('throws if the PYDT companion mod has not stamped the save', () => {
+    const original = fs.readFileSync(SAVE);
+    const decompressed = civ7.decompress(original);
+
+    const PYDT_MARKER = Buffer.from([0x92, 0x25, 0xc8, 0x8e]); // hash of GameTutorial key "PYDT"
+    const markerIdx = decompressed.indexOf(PYDT_MARKER);
+    expect(markerIdx).to.be.gte(0);
+    decompressed.fill(0, markerIdx, markerIdx + PYDT_MARKER.length);
+
+    const stripped = civ7.writeCompressedData(original, decompressed);
+
+    expect(() => new Civ7SaveHandler(stripped)).to.throw(/PYDT companion mod must be enabled/);
+  });
+
   it("reads whose turn it is from the PYDT companion mod's stamped property (v1 format)", () => {
     const handler = new Civ7SaveHandler(fs.readFileSync(SAVE));
 
