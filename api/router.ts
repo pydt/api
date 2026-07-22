@@ -71,13 +71,16 @@ function methodHandler(method: string) {
             }
 
             if (logError) {
+              const requestInfo = { url: req.url, params: req.params, query: req.query };
+
               if (err instanceof ValidateError) {
                 pydtLogger.error(
                   `Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`,
-                  err
+                  err,
+                  requestInfo
                 );
               } else {
-                pydtLogger.error(`Unhandled Exception from ${route}`, err);
+                pydtLogger.error(`Unhandled Exception from ${route}`, err, requestInfo);
               }
             }
 

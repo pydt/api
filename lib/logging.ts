@@ -7,31 +7,39 @@ type LogLevel = 'info' | 'warn' | 'error';
 
 let rollbar: Rollbar;
 
-function log(level: LogLevel, message: Rollbar.LogArgument, error?: Rollbar.LogArgument) {
+function log(
+  level: LogLevel,
+  message: Rollbar.LogArgument,
+  error?: Rollbar.LogArgument,
+  custom?: Rollbar.LogArgument
+) {
   console.log(
-    `${message}${error ? ': ' + (error instanceof Error ? error.stack : JSON.stringify(error)) : ''}`
+    `${message}${error ? ': ' + (error instanceof Error ? error.stack : JSON.stringify(error)) : ''}${custom ? ' ' + JSON.stringify(custom) : ''}`
   );
 
   if (rollbar) {
     switch (level) {
       case 'info':
-        rollbar.info(message, error);
+        rollbar.info(message, error, custom);
         break;
 
       case 'warn':
-        rollbar.warn(message, error);
+        rollbar.warn(message, error, custom);
         break;
 
       case 'error':
-        rollbar.error(message, error);
+        rollbar.error(message, error, custom);
     }
   }
 }
 
 export const pydtLogger = {
-  info: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument) => log('info', message, error),
-  warn: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument) => log('warn', message, error),
-  error: (message: Rollbar.LogArgument, error: Rollbar.LogArgument) => log('error', message, error)
+  info: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument, custom?: Rollbar.LogArgument) =>
+    log('info', message, error, custom),
+  warn: (message: Rollbar.LogArgument, error?: Rollbar.LogArgument, custom?: Rollbar.LogArgument) =>
+    log('warn', message, error, custom),
+  error: (message: Rollbar.LogArgument, error: Rollbar.LogArgument, custom?: Rollbar.LogArgument) =>
+    log('error', message, error, custom)
 };
 
 if (!Config.runningLocal) {

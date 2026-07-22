@@ -51,6 +51,10 @@ export class GameController_GetTurn {
 
     const versionInfo = await this.s3.getLatestVersionInfo(fileParams);
 
+    if (!versionInfo) {
+      throw new HttpResponseError(404, 'Save file not found');
+    }
+
     const civGame = PYDT_METADATA.civGames.find(x => x.id === game.gameType);
 
     return {

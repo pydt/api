@@ -27,7 +27,7 @@ export interface IS3Provider {
   headObject(fileParams: FileParams): Promise<void>;
   listObjects(bucket: string, prefix: string): Promise<ListObjectsResult>;
   putObject(fileParams: FileParams, data: string | Buffer, isPublic?: boolean): Promise<void>;
-  getLatestVersionInfo(fileParams: FileParams): Promise<ObjectVersion>;
+  getLatestVersionInfo(fileParams: FileParams): Promise<ObjectVersion | undefined>;
   signedGetUrl(
     fileParams: FileParams,
     downloadAsFilename: string,
@@ -106,7 +106,7 @@ export class S3Provider implements IS3Provider {
       })
     );
 
-    return versions.Versions.find(x => x.IsLatest);
+    return versions.Versions?.find(x => x.IsLatest);
   }
 
   signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiresIn: number) {
