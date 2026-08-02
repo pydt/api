@@ -113,6 +113,13 @@ export class GameUtil {
   }
 
   public static possiblyUpdateAdmin(game: Game) {
+    const currentAdmin = game.players.find(player => player.steamId === game.createdBySteamId);
+
+    if (currentAdmin && GameUtil.playerIsHuman(currentAdmin)) {
+      // Admin is still alive, all good
+      return;
+    }
+
     const firstHuman = game.players.find(GameUtil.playerIsHuman);
 
     if (firstHuman && firstHuman.steamId !== game.createdBySteamId) {
