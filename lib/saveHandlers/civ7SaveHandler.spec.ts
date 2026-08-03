@@ -147,4 +147,34 @@ describe('Civ7SaveHandler', () => {
       expect(handlerV2again.pydtTurnData.names['0']).to.eq('Updated');
     });
   });
+
+  describe('team games', () => {
+    // Team games put two civs on the same team; PLAYER_ID used to be shared across
+    // both teammates (a parser bug fixed in civ7-save-parser 1.0.5 - it now reports
+    // the per-civ slot id, not the team id). These saves capture a real turn handoff
+    // between two human teammates (Ashoka and Edward Teach, both on team 0) and guard
+    // against that regressing: exactly one civ - the correct human - must be flagged
+    // as the current turn, never zero and never both teammates at once.
+    it("resolves Ashoka's turn without matching their AI/human teammate", () => {
+      const handler = new Civ7SaveHandler(
+        fs.readFileSync('testdata/saves/civ7/teams_ashoka.Civ7Save')
+      );
+
+      const current = handler.civData.filter(c => c.isCurrentTurn);
+      expect(current.length).to.eq(1);
+      expect(current[0].leaderName).to.eq('LEADER_ASHOKA');
+      expect(current[0].type).to.eq(ActorType.HUMAN);
+    });
+
+    it("resolves Edward Teach's turn after Ashoka ends theirs", () => {
+      const handler = new Civ7SaveHandler(
+        fs.readFileSync('testdata/saves/civ7/teams_teach.Civ7Save')
+      );
+
+      const current = handler.civData.filter(c => c.isCurrentTurn);
+      expect(current.length).to.eq(1);
+      expect(current[0].leaderName).to.eq('LEADER_EDWARD_TEACH');
+      expect(current[0].type).to.eq(ActorType.HUMAN);
+    });
+  });
 });
