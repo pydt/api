@@ -97,5 +97,10 @@
     "copy-prod-to-dev": "npm run backup-prod && npm run copy-backup-to-dev",
     "encrypt-config": "openssl des3 -pbkdf2 -salt -in config.yml -out config.yml.encrypted",
     "decrypt-config": "openssl des3 -d -pbkdf2 -salt -in config.yml.encrypted -out config.yml"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "serverless@4.40.0": true,
+    "typemoq@2.1.0": true
   }
 }

@@ -343,7 +343,7 @@ export const CIV7_GAME: CivGame = {
         [GameStore.Steam]: '/Civilization VII'
       }
     },
-    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/.local/share/aspyr-media' },
+    [Platform.Linux]: { basePath: BasePath.HOME, prefix: '/My Games' },
     [Platform.LinuxProton]: { basePath: BasePath.HOME, prefix: createProtonPath('1295660') }
   },
   dataPaths: {
