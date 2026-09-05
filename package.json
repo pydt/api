@@ -2,7 +2,7 @@
   "name": "serverless-api",
   "version": "1.0.0",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "description": "",
   "dependencies": {
@@ -15,7 +15,7 @@
     "@aws-sdk/s3-request-presigner": "^3.717.0",
     "adm-zip": "^0.6.0",
     "aws-xray-sdk": "^3.10.2",
-    "bcryptjs": "2.4.3",
+    "bcryptjs": "^3.0.3",
     "civ6-save-parser": "^1.2.3",
     "civ7-save-parser": "^1.0.5",
     "dynamoose": "^4.0.1",
@@ -28,7 +28,6 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.18.1",
     "moment": "^2.30.1",
-    "node-fetch": "^2.7.0",
     "passport": "^0.7.0",
     "passport-steam": "1.0.18",
     "pydt-civ5-save-parser": "1.0.9",
@@ -48,7 +47,6 @@
     "@types/hapi": "^18.0.14",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.2",
-    "@types/node-fetch": "^2.6.12",
     "@types/passport": "^1.0.17",
     "@types/web-push": "^3.6.4",
     "@types/webpack-env": "^1.18.5",

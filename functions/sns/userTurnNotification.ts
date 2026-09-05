@@ -62,9 +62,7 @@ export class UserTurnNotification {
                 {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  // will need to fix this if we move to standard fetch...
-                  // https://stackoverflow.com/questions/54204342/node-fetch-why-is-signal-recommended-over-timeout
-                  timeout: 5000,
+                  signal: AbortSignal.timeout(5000),
                   body: JSON.stringify({
                     gameName: game.displayName,
                     userName: user.displayName,

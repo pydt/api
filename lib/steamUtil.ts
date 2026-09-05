@@ -1,7 +1,6 @@
 import { join } from 'lodash';
 import * as passport from 'passport';
 import * as passportSteam from 'passport-steam';
-import fetch from 'node-fetch';
 import { HttpRequest } from '../api/framework';
 import { Config } from './config';
 import { SteamProfile } from './models';

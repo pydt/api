@@ -1,5 +1,4 @@
 import { provideSingleton } from './ioc';
-import fetch, { RequestInit } from 'node-fetch';
 
 export const HTTP_REQUEST_PROVIDER_SYMBOL = Symbol('IHttpRequestProvider');
 
