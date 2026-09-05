@@ -148,6 +148,19 @@ describe('Civ7SaveHandler', () => {
     });
   });
 
+  it('reports a defeated player as DEAD', () => {
+    const handler = new Civ7SaveHandler(
+      fs.readFileSync('testdata/saves/civ7/dead_valamas.Civ7Save')
+    );
+
+    const ibnBattuta = handler.civData.find(c => c.leaderName === 'LEADER_IBN_BATTUTA');
+    expect(ibnBattuta.type).to.eq(ActorType.DEAD);
+
+    // everyone else is still alive (Human or AI, never DEAD)
+    const others = handler.civData.filter(c => c.leaderName !== 'LEADER_IBN_BATTUTA');
+    expect(others.every(c => c.type !== ActorType.DEAD)).to.eq(true);
+  });
+
   describe('team games', () => {
     // Team games put two civs on the same team; PLAYER_ID used to be shared across
     // both teammates (a parser bug fixed in civ7-save-parser 1.0.5 - it now reports

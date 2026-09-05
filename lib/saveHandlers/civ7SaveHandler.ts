@@ -122,17 +122,25 @@ export class Civ7CivData implements CivData {
   ) {}
 
   get type() {
-    // PLAYER_TYPE: 3 = Human, 1 = AI. DEAD isn't detectable from the uncompressed
-    // data yet (the alive flag lives in the compressed state), so a defeated
-    // player still reads as AI/Human for now.
+    // ALIVE_FLAGS (uncompressed group3 record) takes precedence over PLAYER_TYPE:
+    // a defeated player's PLAYER_TYPE stays Human/AI, but isAlive flips to false.
+    if (this.player.isAlive === false) {
+      return ActorType.DEAD;
+    }
+
+    // PLAYER_TYPE: 3 = Human, 1 = AI.
     const match = ACTOR_TYPE_MAP.find(x => x.intVal === this.player.playerType?.value);
     return match ? match.actorType : ActorType.AI;
   }
 
   set type(value: ActorType) {
+    if (value === ActorType.DEAD) {
+      throw new Error('Setting DEAD not supported');
+    }
+
     // Used for turn-skipping: flipping a player to AI makes the game play their
     // turn. PLAYER_TYPE is an in-place edit of the uncompressed group3 record
-    // (confirmed to work in-game). DEAD can't be written.
+    // (confirmed to work in-game).
     const match = ACTOR_TYPE_MAP.find(x => x.actorType === value);
 
     if (!match) {
