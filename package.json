@@ -59,7 +59,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "export-api-url": "file:local_modules/export-api-url",
     "git-revision-webpack-plugin": "^5.0.0",
-    "mocha": "^10.2.0",
+    "mocha": "^12.0.2",
     "prettier": "^3.4.2",
     "rimraf": "^6.1.3",
     "serverless": "^4.39.0",
