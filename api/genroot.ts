@@ -6,3 +6,4 @@ import './controllers/usersController';
 import './controllers/statsController';
 import './controllers/webhookController';
 import './controllers/metadataController';
+import './controllers/clientController';
