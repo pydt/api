@@ -9,6 +9,7 @@ import { Game, User } from '../../lib/models';
 import { SNS_MESSAGES } from '../../lib/models/sns';
 import { IS3Provider, S3_PROVIDER_SYMBOL } from '../../lib/s3Provider';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../lib/snsProvider';
+import { GameUtil } from '../../lib/util/gameUtil';
 import { UserUtil } from '../../lib/util/userUtil';
 
 export const handler = loggingHandler(async (event, context, iocContainer) => {
@@ -83,7 +84,9 @@ export class UpdateUserGameCache {
         Bucket: Config.resourcePrefix + 'saves',
         Key: UserUtil.createS3GameCacheKey(user.steamId)
       },
-      JSON.stringify(result),
+      // This file is public (anyone who knows a steamId can read it), so always write the
+      // anonymous view: no webhook URLs or password hashes, even for games this user admins.
+      JSON.stringify(result, GameUtil.jsonReplacerForViewer(undefined)),
       true
     );
   }
