@@ -60,4 +60,25 @@ describe('expressAuthentication', () => {
     expect((err as HttpResponseError).statusCode).to.eq(401);
     expect(warnings).to.deep.eq([]);
   });
+
+  describe('with ALLOW_ANONYMOUS', () => {
+    const authenticateAnonymousOk = (authorization?: string) =>
+      expressAuthentication(
+        { headers: authorization ? { authorization } : {} } as unknown as Request,
+        'api_key',
+        ['ALLOW_ANONYMOUS']
+      );
+
+    it('treats a missing token as anonymous', async () => {
+      expect(await authenticateAnonymousOk()).to.eq(undefined);
+    });
+
+    it('treats a bad token as anonymous instead of a 401', async () => {
+      expect(await authenticateAnonymousOk('not-a-jwt')).to.eq(undefined);
+      expect(
+        await authenticateAnonymousOk(jwt.sign({ steamId: '123' }, 'some-other-secret'))
+      ).to.eq(undefined);
+      expect(warnings).to.deep.eq([]);
+    });
+  });
 });
