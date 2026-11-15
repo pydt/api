@@ -48,16 +48,14 @@ if (!Config.runningLocal) {
     autoInstrument: false,
     reportLevel: 'warning',
     itemsPerMinute: 5,
-    payload: {
-      environment: Config.activeStage,
-      client: {
-        javascript: {
-          source_map_enabled: true,
-          code_version: Config.commitHash,
-          guess_uncaught_frames: true
-        }
-      }
-    }
+    environment: Config.activeStage,
+    // Ties each item to the deployed commit (matches the deploy CI reports to
+    // Rollbar), and lets Rollbar map stack frames to files in the repo. Frames
+    // are already source-mapped to .ts at runtime by source-map-support.
+    codeVersion: Config.commitHash,
+    // Read by rollbar's server SDK (server.branch / server.root) but missing
+    // from its Configuration type.
+    ...({ branch: Config.commitBranch, root: Config.sourceRoot } as Rollbar.Configuration)
   });
 }
 

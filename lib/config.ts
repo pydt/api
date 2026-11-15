@@ -25,6 +25,12 @@ class ConfigClass {
   public get commitHash() {
     return process.env.COMMIT_HASH as string;
   }
+  public get commitBranch() {
+    return process.env.COMMIT_BRANCH as string;
+  }
+  public get sourceRoot() {
+    return process.env.SOURCE_ROOT as string;
+  }
   public get runningLocal() {
     return !!process.env.IS_OFFLINE;
   }

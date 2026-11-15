@@ -30,3 +30,15 @@ jobs:
           DISCOURSE_API_KEY: ${{secrets.DISCOURSE_API_KEY}}
           STEAM_API_KEY: ${{secrets.STEAM_API_KEY}}
           VAPID_PRIVATE_KEY: ${{secrets.VAPID_PRIVATE_KEY}}
+      # Mark the deploy in Rollbar so items can be tied to it (revision matches the
+      # codeVersion the API reports). A Rollbar failure doesn't fail the deploy.
+      - name: Report deploy to Rollbar
+        run: |
+          if [ "$GITHUB_REF_NAME" = "master" ]; then ENVIRONMENT=prod; else ENVIRONMENT=dev; fi
+          curl -sS --fail-with-body https://api.rollbar.com/api/1/deploy \
+            -H "X-Rollbar-Access-Token: $ROLLBAR_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"environment\":\"$ENVIRONMENT\",\"revision\":\"$GITHUB_SHA\",\"local_username\":\"$GITHUB_ACTOR\",\"status\":\"succeeded\"}" \
+            || echo "::warning::Could not report the deploy to Rollbar"
+        env:
+          ROLLBAR_API_KEY: ${{secrets.ROLLBAR_API_KEY}}

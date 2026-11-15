@@ -5,6 +5,14 @@ const slsw = require('serverless-webpack');
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 var _ = require('lodash');
 
+function gitBranch() {
+  try {
+    return new GitRevisionPlugin().branch();
+  } catch {
+    return undefined;
+  }
+}
+
 module.exports = {  
   entry: slsw.lib.entries,
   target: 'node',
@@ -31,7 +39,13 @@ module.exports = {
     new webpack.BannerPlugin({ banner: 'require("reflect-metadata");', raw: true, entryOnly: false }),
     new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
     new webpack.DefinePlugin({
-      "process.env.COMMIT_HASH": JSON.stringify(new GitRevisionPlugin().commithash())
+      "process.env.COMMIT_HASH": JSON.stringify(new GitRevisionPlugin().commithash()),
+      // Rollbar: the branch, and the directory the bundle was built from. Stack
+      // frames carry absolute source paths from this build (see
+      // devtoolModuleFilenameTemplate), so Rollbar strips this root to map them
+      // to repo files.
+      "process.env.COMMIT_BRANCH": JSON.stringify(process.env.GITHUB_REF_NAME || gitBranch()),
+      "process.env.SOURCE_ROOT": JSON.stringify(__dirname)
     })
   ]
 };
