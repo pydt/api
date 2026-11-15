@@ -20,7 +20,6 @@ build:
 
 plugins:
   - serverless-domain-manager
-  - export-api-url
   - serverless-webpack
   - serverless-offline
 

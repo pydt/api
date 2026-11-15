@@ -57,7 +57,6 @@
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "export-api-url": "file:local_modules/export-api-url",
     "git-revision-webpack-plugin": "^5.0.0",
     "mocha": "^12.0.3",
     "prettier": "^3.4.2",
