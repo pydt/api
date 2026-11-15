@@ -42,4 +42,7 @@ export interface Game extends Entity, BaseGame, Partial<TurnData> {
   gameVideoUrl?: string;
   dataVersion?: number;
   flags?: GAME_FLAG[];
+  // Game-type-specific state owned by that game's save handler. Opaque to
+  // everything else (e.g. Civ 7 uses it to map per-age turn numbers to rounds).
+  saveHandlerData?: Record<string, unknown>;
 }

@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { describe, it } from 'mocha';
 import { Civ7SaveHandler, setPydtPlayerNames } from './civ7SaveHandler';
 import { ActorType } from './saveHandler';
+import { Game } from '../models';
 
 const SAVE = 'testdata/saves/civ7/MachiavelliAnt1.Civ7Save';
 
@@ -159,6 +160,139 @@ describe('Civ7SaveHandler', () => {
     // everyone else is still alive (Human or AI, never DEAD)
     const others = handler.civData.filter(c => c.leaderName !== 'LEADER_IBN_BATTUTA');
     expect(others.every(c => c.type !== ActorType.DEAD)).to.eq(true);
+  });
+
+  describe('age transitions (gameTurn across ages)', () => {
+    const PYDT_MARKER = Buffer.from([0x92, 0x25, 0xc8, 0x8e]); // hash of GameTutorial key "PYDT"
+    const TURN_52_SAVE = 'testdata/saves/civ7/dead_valamas.Civ7Save'; // AGE_ANTIQUITY, turn 52
+
+    // Replace the PYDT property's value, the same way setPydtPlayerNames does.
+    function withPydtValue(save: Buffer, value: string) {
+      const dec = civ7.decompress(save);
+      const start = dec.indexOf(PYDT_MARKER) + 20;
+      const end = dec.indexOf(0, start);
+      const newValue = Buffer.from(value, 'utf8');
+      const result = Buffer.concat([
+        dec.subarray(0, start),
+        newValue,
+        Buffer.from([0]),
+        dec.subarray(end + 1)
+      ]);
+      result.writeUInt16LE(newValue.length + 1, start - 8);
+      return civ7.writeCompressedData(save, result);
+    }
+
+    // The test saves are all Antiquity; pretend a save is from another age.
+    function handlerInAge(file: string | Buffer, game: Game, age?: string) {
+      const handler = new Civ7SaveHandler(
+        Buffer.isBuffer(file) ? file : fs.readFileSync(file),
+        game
+      );
+
+      if (age) {
+        handler.parsed.age = { ...handler.parsed.age, value: age };
+      }
+
+      return handler;
+    }
+
+    function makeGame(round: number, saveHandlerData?: Record<string, unknown>) {
+      return { round, saveHandlerData } as Game;
+    }
+
+    it("reports the save's own turn when there is no game", () => {
+      expect(new Civ7SaveHandler(fs.readFileSync(TURN_52_SAVE)).gameTurn).to.eq(52);
+    });
+
+    // MachiavelliAnt1 (turn 1) as saved by the mod on the first curtain of a new age.
+    function flaggedTurn1Save() {
+      return withPydtValue(
+        fs.readFileSync(SAVE),
+        JSON.stringify({ player: 1, turn: 1, ageTransition: true })
+      );
+    }
+
+    it('gives an unrecorded, unflagged age no offset and records nothing', () => {
+      const game = makeGame(52);
+
+      expect(handlerInAge(TURN_52_SAVE, game).gameTurn).to.eq(52);
+      expect(game.saveHandlerData).to.eq(undefined);
+    });
+
+    it('maps the flagged first save of a new age to the round after the current one', () => {
+      const game = makeGame(71);
+      const handler = handlerInAge(flaggedTurn1Save(), game, 'AGE_EXPLORATION');
+
+      expect(handler.pydtTurnData.ageTransition).to.eq(true);
+      expect(handler.gameTurn).to.eq(72);
+      expect(game.saveHandlerData).to.deep.eq({
+        v: 1,
+        ageStartRounds: { AGE_EXPLORATION: 72 }
+      });
+    });
+
+    it('keeps earlier ages when a later one starts', () => {
+      const game = makeGame(140, { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } });
+
+      expect(handlerInAge(flaggedTurn1Save(), game, 'AGE_MODERN').gameTurn).to.eq(141);
+      expect(game.saveHandlerData).to.deep.eq({
+        v: 1,
+        ageStartRounds: { AGE_EXPLORATION: 72, AGE_MODERN: 141 }
+      });
+    });
+
+    it('offsets later turns of the new age by its start round', () => {
+      const data = { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } };
+      const game = makeGame(122, data);
+
+      expect(handlerInAge(TURN_52_SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(123);
+      // nothing new to record
+      expect(game.saveHandlerData).to.eq(data);
+    });
+
+    it('ignores the flag once the age is recorded', () => {
+      const data = { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } };
+      const game = makeGame(90, data);
+
+      expect(handlerInAge(flaggedTurn1Save(), game, 'AGE_EXPLORATION').gameTurn).to.eq(72);
+      expect(game.saveHandlerData).to.eq(data);
+    });
+
+    it('gives a save from the starting age no offset after a transition (revert)', () => {
+      const game = makeGame(71, { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } });
+
+      expect(handlerInAge(TURN_52_SAVE, game).gameTurn).to.eq(52);
+    });
+
+    it('maps a real first save of the Exploration Age to the next round', () => {
+      // Saved by the mod on the first curtain after the Antiquity Age ended at the
+      // end of round 70 (player 4 ended the last turn and finished the age).
+      const game = makeGame(70);
+      const handler = new Civ7SaveHandler(
+        fs.readFileSync('testdata/saves/civ7/KingsExp1.Civ7Save'),
+        game
+      );
+
+      expect(handler.age).to.eq('AGE_EXPLORATION');
+      expect(handler.pydtTurnData.ageTransition).to.eq(true);
+      expect(handler.gameTurn).to.eq(71);
+      expect(game.saveHandlerData).to.deep.eq({
+        v: 1,
+        ageStartRounds: { AGE_EXPLORATION: 71 }
+      });
+
+      const current = handler.civData.filter(c => c.isCurrentTurn);
+      expect(current.map(c => c.leaderName)).to.deep.eq(['LEADER_XERXES']);
+      expect(current[0].civName).to.eq('CIVILIZATION_ABBASID');
+    });
+
+    it('does not read ageTransition from saves without the flag', () => {
+      const handler = new Civ7SaveHandler(
+        withPydtValue(fs.readFileSync(SAVE), JSON.stringify({ player: 1, turn: 1 }))
+      );
+
+      expect(handler.pydtTurnData.ageTransition).to.eq(false);
+    });
   });
 
   describe('team games', () => {

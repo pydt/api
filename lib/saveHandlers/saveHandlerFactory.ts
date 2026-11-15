@@ -14,7 +14,7 @@ export abstract class SaveHandlerFactory {
   public static getHandler(data: Buffer, game: Game): SaveHandler {
     switch (game.gameType) {
       case CIV7_GAME.id:
-        return new Civ7SaveHandler(data);
+        return new Civ7SaveHandler(data, game);
 
       case CIV6_GAME.id:
         return new Civ6SaveHandler(data);

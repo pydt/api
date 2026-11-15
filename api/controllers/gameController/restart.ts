@@ -51,6 +51,7 @@ export class GameController_Restart {
     // Reset state
     game.round = 1;
     game.gameTurnRangeKey = 1;
+    game.saveHandlerData = undefined;
     game.currentPlayerSteamId = game.createdBySteamId;
     game.lastTurnEndDate = undefined;
     game.players = game.players

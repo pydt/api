@@ -51,6 +51,7 @@ export class GameController_Clone {
       completed: false,
       round: undefined,
       gameTurnRangeKey: undefined,
+      saveHandlerData: undefined,
       currentPlayerSteamId: game.createdBySteamId,
       lastTurnEndDate: undefined,
       players: game.players

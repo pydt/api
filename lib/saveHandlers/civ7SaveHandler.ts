@@ -1,5 +1,6 @@
 import * as civ7 from 'civ7-save-parser';
 import { ActorType, CivData, SaveHandler } from './saveHandler';
+import { Game } from '../models';
 import { CIV7_DLCS } from '../metadata/civGames/civ7';
 import { orderBy } from 'lodash';
 import { HttpResponseError } from './../../api/framework/httpResponseError';
@@ -27,6 +28,7 @@ interface PydtTurnData {
   currentPlayer?: number;
   turn?: number;
   names?: Record<string, string>;
+  ageTransition?: boolean;
 }
 
 // On-disk JSON shape (key names match what the companion mod writes)
@@ -34,6 +36,22 @@ interface PydtPayload {
   player?: number;
   turn?: number;
   names?: Record<string, string>;
+  // Set by the mod on the first save of a new age it just transitioned to.
+  ageTransition?: boolean;
+}
+
+/**
+ * What the Civ 7 handler keeps in game.saveHandlerData.
+ *
+ * Civ 7 restarts its turn counter at 1 in every age, but PYDT's round must keep
+ * counting up (images, restart limits, revert and notifications all key off it).
+ * So gameTurn reports `turn in age + ageStartRounds[age] - 1`. An age that
+ * isn't recorded (the age the game started in) has no offset.
+ */
+export interface Civ7SaveHandlerData {
+  v: 1;
+  // PYDT round on which each later age began, keyed by age type (AGE_EXPLORATION...)
+  ageStartRounds?: Record<string, number>;
 }
 
 // Locate the PYDT property value chunk by its stable marker. Returns the value
@@ -52,7 +70,12 @@ function parsePydtValue(value: string): PydtTurnData {
   if (value.startsWith('{')) {
     try {
       const payload = JSON.parse(value) as PydtPayload;
-      return { currentPlayer: payload.player, turn: payload.turn, names: payload.names };
+      return {
+        currentPlayer: payload.player,
+        turn: payload.turn,
+        names: payload.names,
+        ageTransition: payload.ageTransition === true
+      };
     } catch {
       return {};
     }
@@ -197,7 +220,12 @@ export class Civ7SaveHandler implements SaveHandler {
   // Player names (by id) set via civData[].playerName, flushed in cleanupSave().
   pendingNames: Record<number, string> = {};
 
-  constructor(data: Buffer) {
+  // The game is optional so the handler can be used standalone (e.g. in specs);
+  // without it, gameTurn is just the save's own turn number.
+  constructor(
+    data: Buffer,
+    private game?: Game
+  ) {
     this.rawSave = data;
     this.reparse();
 
@@ -217,8 +245,57 @@ export class Civ7SaveHandler implements SaveHandler {
     );
   }
 
+  get age(): string | undefined {
+    return this.parsed.age?.value;
+  }
+
+  // The PYDT round for this save: the turn within its age, shifted by the round
+  // that age began on (see Civ7SaveHandlerData).
   get gameTurn() {
-    return this.parsed.turn?.value;
+    const turn = this.parsed.turn?.value;
+
+    if (turn === undefined || !this.game) {
+      return turn;
+    }
+
+    return turn + this.getAgeStartRound() - 1;
+  }
+
+  /**
+   * The PYDT round the save's age began on (1 for an age that isn't recorded,
+   * i.e. the age the game started in).
+   *
+   * The mod flags the first save of a new age (ageTransition). That age is then
+   * recorded on game.saveHandlerData as starting on the round after the current
+   * one, since the save is uploaded at the end of the old age's final round. Once
+   * an age is recorded the flag is ignored. This only changes the game in memory;
+   * it is persisted when the caller saves the game (finishSubmit does that only
+   * after all of its checks pass).
+   */
+  private getAgeStartRound(): number {
+    const age = this.age;
+    const existing = this.game.saveHandlerData as Partial<Civ7SaveHandlerData> | undefined;
+    const ageStartRounds = existing?.ageStartRounds || {};
+
+    if (!age) {
+      return 1;
+    }
+
+    if (ageStartRounds[age] !== undefined) {
+      return ageStartRounds[age];
+    }
+
+    if (!this.pydtTurnData?.ageTransition) {
+      return 1;
+    }
+
+    const startRound = (this.game.round || 0) + 1;
+    const data: Civ7SaveHandlerData = {
+      v: 1,
+      ageStartRounds: { ...ageStartRounds, [age]: startRound }
+    };
+    this.game.saveHandlerData = { ...data };
+    return startRound;
   }
 
   get gameSpeed() {

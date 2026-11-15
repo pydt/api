@@ -182,6 +182,11 @@ export class GameRepository
       flags: {
         type: Array,
         schema: [String]
+      },
+      saveHandlerData: {
+        type: String,
+        get: (value: string) => (value ? JSON.parse(value) : undefined),
+        pydtSet: (value: Record<string, unknown>) => (value ? JSON.stringify(value) : undefined)
       }
     });
   }
