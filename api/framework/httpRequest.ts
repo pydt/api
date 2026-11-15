@@ -15,13 +15,21 @@ export class HttpRequest extends EventEmitter {
   public url: string;
   public subSegment: Subsegment;
   public sourceIp: string;
+  // Set when the body isn't valid JSON (in practice, scanner bots); the router
+  // answers 400 without logging.
+  public invalidJsonBody = false;
 
   constructor(event: LambdaProxyEvent) {
     super();
 
     if (event.body) {
       this.rawBody = event.body;
-      this.body = JSON.parse(event.body);
+
+      try {
+        this.body = JSON.parse(event.body);
+      } catch {
+        this.invalidJsonBody = true;
+      }
     }
 
     this.headers = reduce(

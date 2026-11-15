@@ -91,7 +91,16 @@ export class UserTurnNotification {
           try {
             await this.wp.sendNotification(wps, game);
           } catch (err) {
-            pydtLogger.error('webpush failed', err);
+            // 404/410 mean the browser dropped the subscription: expected, just
+            // remove it. Anything else is worth hearing about.
+            const statusCode = (err as { statusCode?: number })?.statusCode;
+
+            if (statusCode === 404 || statusCode === 410) {
+              pydtLogger.info(`webpush subscription expired (${statusCode}), removing it`);
+            } else {
+              pydtLogger.error('webpush failed', err);
+            }
+
             pud.webPushSubscriptions = pud.webPushSubscriptions.filter(x => x !== wps);
             updatePud = true;
           }

@@ -5,6 +5,7 @@ import { iocContainer } from '../ioc';
 import { pydtLogger } from '../logging';
 import { JwtData, JwtUtil } from './jwtUtil';
 import { Request } from 'express';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 const cachedMinNonces: Record<string, number> = {};
 
@@ -25,7 +26,8 @@ export async function validateNonce(data: JwtData) {
   }
 
   if (pudNonce !== tokenNonce) {
-    pydtLogger.warn(`Nonce mismatch: ${pudNonce} vs ${tokenNonce}, user ${data.steamId}`);
+    // Expected: a token issued before the user logged out somewhere else.
+    pydtLogger.info(`Nonce mismatch: ${pudNonce} vs ${tokenNonce}, user ${data.steamId}`);
     throw HttpResponseError.createUnauthorized();
   }
 }
@@ -51,7 +53,13 @@ export async function expressAuthentication(
       }
     } catch (e) {
       if (!(e instanceof HttpResponseError)) {
-        pydtLogger.warn('Error parsing JWT token', e);
+        // A malformed, expired or wrongly signed token is just a 401 (this also
+        // covers TokenExpiredError and NotBeforeError, which extend it). Anything
+        // else, like a failed database lookup, is worth hearing about.
+        if (!(e instanceof JsonWebTokenError)) {
+          pydtLogger.warn('Error validating JWT token', e);
+        }
+
         throw HttpResponseError.createUnauthorized();
       }
 

@@ -77,10 +77,12 @@ export class GameController_Restart {
     // Delete ALL saves
     const resp = await this.s3.listObjects(Config.resourcePrefix + 'saves', `${gameId}/`);
 
-    await this.s3.deleteObjects(
-      Config.resourcePrefix + 'saves',
-      resp.Contents.map(obj => obj.Key)
-    );
+    if (resp.Contents.length) {
+      await this.s3.deleteObjects(
+        Config.resourcePrefix + 'saves',
+        resp.Contents.map(obj => obj.Key)
+      );
+    }
 
     // Post reset notification to smack
     await this.discourse.postToSmack(

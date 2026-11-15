@@ -55,6 +55,7 @@ function methodHandler(method: string) {
             let status = 500;
             let message = 'There was an error processing your request.';
             let logError = true;
+            let isDlcMismatch = false;
 
             if (err.constructor.name === 'InvalidRequestException') {
               // TODO: These probably shouldn't go to an end user, they come from TSOA and look like:
@@ -67,13 +68,18 @@ function methodHandler(method: string) {
             if (err instanceof HttpResponseError) {
               status = err.statusCode;
               message = err.message;
-              logError = message.startsWith('DLC');
+              // DLC mismatches are kept to track DLC detection problems, but as
+              // their own warning so they don't look like crashes in that route.
+              isDlcMismatch = message.startsWith('DLC');
+              logError = isDlcMismatch;
             }
 
             if (logError) {
               const requestInfo = { url: req.url, params: req.params, query: req.query };
 
-              if (err instanceof ValidateError) {
+              if (isDlcMismatch) {
+                pydtLogger.warn(`DLC mismatch on ${route}`, err, requestInfo);
+              } else if (err instanceof ValidateError) {
                 pydtLogger.error(
                   `Validation Error on ${route}: ${JSON.stringify(err.fields, null, 2)}`,
                   err,
@@ -119,6 +125,12 @@ export const handler = loggingHandler((event: LambdaProxyEvent) => {
 
     const req = new HttpRequest(event);
     const resp = new HttpResponse(callback, req);
+
+    if (req.invalidJsonBody) {
+      pydtLogger.info(`400 for non-JSON body on ${http.method} ${http.path}`);
+      resp.status(400).json(new ErrorResponse('Request body must be JSON'));
+      return;
+    }
 
     (router as any).handle(req, resp, () => {
       pydtLogger.info(`404 for ${http.method} ${http.path}`);

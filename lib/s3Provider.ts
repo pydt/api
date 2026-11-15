@@ -79,11 +79,13 @@ export class S3Provider implements IS3Provider {
       })
     );
 
-    if (!resp || !resp.Contents) {
+    if (!resp) {
       throw new Error(`No data returned for listObjectsV2, prefix: ${prefix}`);
     }
 
-    return resp;
+    // S3 leaves Contents out when nothing matches the prefix (e.g. a finished
+    // game with no map images); treat that as an empty list.
+    return { ...resp, Contents: resp.Contents || [] };
   }
 
   async getObject(fileParams: FileParams) {

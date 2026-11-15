@@ -293,7 +293,8 @@ export class GameTurnService implements IGameTurnService {
     }
 
     if (humanCount < 3) {
-      pydtLogger.warn(`Need at least 3 human players to skip!`);
+      // Expected: the turn timer doesn't skip in games with fewer than 3 humans.
+      pydtLogger.info(`Need at least 3 human players to skip!`);
       return;
     }
 
