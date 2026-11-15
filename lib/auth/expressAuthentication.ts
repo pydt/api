@@ -52,20 +52,18 @@ export async function expressAuthentication(
         return data.steamId;
       }
     } catch (e) {
-      // A malformed, expired or wrongly signed token is just a 401 (this also
-      // covers TokenExpiredError and NotBeforeError, which extend it). Anything
-      // else, like a failed database lookup, is worth hearing about.
-      if (!(e instanceof HttpResponseError) && !(e instanceof JsonWebTokenError)) {
-        pydtLogger.warn('Error validating JWT token', e);
+      if (!(e instanceof HttpResponseError)) {
+        // A malformed, expired or wrongly signed token is just a 401 (this also
+        // covers TokenExpiredError and NotBeforeError, which extend it). Anything
+        // else, like a failed database lookup, is worth hearing about.
+        if (!(e instanceof JsonWebTokenError)) {
+          pydtLogger.warn('Error validating JWT token', e);
+        }
+
+        throw HttpResponseError.createUnauthorized();
       }
 
-      if (allowAnonymous) {
-        // Public endpoint: a bad or stale token (e.g. logged out elsewhere) just means
-        // "not logged in", so the caller gets the anonymous view instead of an error.
-        return undefined;
-      }
-
-      throw e instanceof HttpResponseError ? e : HttpResponseError.createUnauthorized();
+      throw e;
     }
 
     if (!allowAnonymous) {

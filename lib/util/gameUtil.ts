@@ -1,48 +1,7 @@
 import { PYDT_METADATA } from '../metadata/metadata';
 import { Game, GamePlayer, GameTurn } from '../models';
 
-// Stands in for a game's real password hash for anyone but the game's admin. The web UI only
-// checks whether hashedPassword is truthy ("this game has a password"), so a fixed placeholder
-// keeps that working without handing out the bcrypt hash for offline guessing.
-export const HASHED_PASSWORD_PLACEHOLDER = '********';
-
 export class GameUtil {
-  // Copy of the game that's safe to show the given viewer (a steamId, or undefined when anonymous).
-  // Only the game's admin sees the webhook URL (anyone with it can post to that Discord channel)
-  // and the real password hash (the edit form round-trips it). See forum #9628.
-  public static sanitizeForViewer<T extends Partial<Game>>(game: T, viewerSteamId?: string): T {
-    if (viewerSteamId && viewerSteamId === game.createdBySteamId) {
-      return game;
-    }
-
-    const { webhookUrl, ...rest } = game; // eslint-disable-line @typescript-eslint/no-unused-vars
-    const result = rest as T;
-
-    if (game.hashedPassword) {
-      result.hashedPassword = HASHED_PASSWORD_PLACEHOLDER;
-    }
-
-    return result;
-  }
-
-  // A JSON.stringify replacer that sanitizes every game in a payload, however deeply nested
-  // (single games, game lists, { data: Game[] } responses, ...). toJSON() has already run by the
-  // time the replacer sees a value, so dynamoose items show up here as plain objects.
-  public static jsonReplacerForViewer(viewerSteamId?: string) {
-    return (_key: string, value: unknown) =>
-      GameUtil.looksLikeGame(value) ? GameUtil.sanitizeForViewer(value, viewerSteamId) : value;
-  }
-
-  private static looksLikeGame(value: unknown): value is Game {
-    return (
-      !!value &&
-      typeof value === 'object' &&
-      typeof (value as Game).gameId === 'string' &&
-      typeof (value as Game).createdBySteamId === 'string' &&
-      Array.isArray((value as Game).players)
-    );
-  }
-
   public static getPlayerCivDisplayName(game: Game, player: GamePlayer) {
     const civGame = PYDT_METADATA.civGames.find(cg => cg.id === game.gameType);
 

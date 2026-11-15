@@ -5,7 +5,7 @@ import { inject, provideSingleton } from '../../../lib/ioc';
 import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { Game } from '../../../lib/models';
 import { ISnsProvider, SNS_PROVIDER_SYMBOL } from '../../../lib/snsProvider';
-import { GameUtil, HASHED_PASSWORD_PLACEHOLDER } from '../../../lib/util/gameUtil';
+import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import { GameRequestBody } from './_models';
 
@@ -67,19 +67,12 @@ export class GameController_Edit {
     game.description = body.description;
     game.humans = body.humans;
     game.allowJoinAfterStart = body.allowJoinAfterStart;
+    game.webhookUrl = body.webhookUrl;
     game.turnTimerMinutes = body.turnTimerMinutes;
     game.turnTimerVacationHandling = body.turnTimerVacationHandling;
 
-    // If the editor was shown the sanitized game (no webhook URL, placeholder password), the form
-    // sends those back. Don't let that wipe the webhook or set the password to the placeholder:
-    // a missing webhookUrl means "unchanged" (an empty string still clears it), and so does the
-    // placeholder password.
-    if (body.webhookUrl !== undefined) {
-      game.webhookUrl = body.webhookUrl;
-    }
-
     if (body.password) {
-      if (body.password !== game.hashedPassword && body.password !== HASHED_PASSWORD_PLACEHOLDER) {
+      if (body.password !== game.hashedPassword) {
         const salt = await bcrypt.genSalt(10);
         game.hashedPassword = await bcrypt.hash(body.password, salt);
       }

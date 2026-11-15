@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from 'events';
 import { PYDT_METADATA_HASH } from '../../lib/metadata/metadata';
-import { GameUtil } from '../../lib/util/gameUtil';
 import { HttpRequest } from './httpRequest';
 import { LambdaProxyCallback } from './lambdaProxyCallback';
 import * as zlib from 'zlib';
@@ -38,11 +37,7 @@ export class HttpResponse extends EventEmitter {
     this.emit('finish');
 
     if (this.callback) {
-      // Every API response goes through here, so this is where games get stripped of
-      // admin-only fields (webhook URL, password hash) for anyone who isn't the game's admin.
-      const compressed = this.compress(
-        JSON.stringify(this.data, GameUtil.jsonReplacerForViewer(this.req?.user))
-      );
+      const compressed = this.compress(JSON.stringify(this.data));
 
       this.callback(null, {
         body: compressed.data,
