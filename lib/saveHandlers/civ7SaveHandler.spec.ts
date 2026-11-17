@@ -304,6 +304,42 @@ describe('Civ7SaveHandler', () => {
       });
     });
 
+    describe('which round the new age starts on (turn order)', () => {
+      // Four humans; the game's current player is the one uploading.
+      function gameWithCurrent(round: number, currentIndex: number) {
+        const players = [0, 1, 2, 3].map(i => ({ steamId: `s${i}`, civType: `c${i}` }));
+        return { round, players, currentPlayerSteamId: `s${currentIndex}` } as Game;
+      }
+
+      it('starts on the next round when the last player finished the age', () => {
+        const game = gameWithCurrent(67, 3);
+
+        expect(handlerInAge(SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(68);
+        expect(game.saveHandlerData).to.deep.eq({
+          v: 1,
+          ageStartRounds: { AGE_EXPLORATION: 68 }
+        });
+      });
+
+      it('starts on the current round when the first player finished the age and played turn 1', () => {
+        // 000282: the previous upload was Antiquity's last turn with player 0 up
+        // (round 71). Player 0 finished the age, played Exploration turn 1 and
+        // saved with player 1 up, which PYDT expects as round 71.
+        const game = gameWithCurrent(71, 0);
+        const handler = new Civ7SaveHandler(
+          fs.readFileSync('testdata/saves/civ7/000282.Civ7Save'),
+          game
+        );
+
+        expect(handler.age).to.eq('AGE_EXPLORATION');
+        expect(handler.gameTurn).to.eq(71);
+        expect(game.saveHandlerData).to.deep.eq({
+          v: 1,
+          ageStartRounds: { AGE_EXPLORATION: 71 }
+        });
+      });
+    });
+
     it('treats an unflagged turn 1 in a later age as a new age', () => {
       const game = makeGame(140, { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } });
       const handler = handlerInAge(SAVE, game, 'AGE_MODERN');

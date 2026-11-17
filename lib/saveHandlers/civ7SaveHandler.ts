@@ -4,6 +4,7 @@ import { Game } from '../models';
 import { CIV7_DLCS } from '../metadata/civGames/civ7';
 import { orderBy } from 'lodash';
 import { HttpResponseError } from './../../api/framework/httpResponseError';
+import { GameUtil } from '../util/gameUtil';
 
 /**
  * Whose-turn is not readable from a Civ7 save in any stable way (it lives only in
@@ -266,10 +267,9 @@ export class Civ7SaveHandler implements SaveHandler {
    * i.e. the age the game started in).
    *
    * The first save of a new age is the mod's flagged save (ageTransition), or
-   * failing that one that looksLikeNewAge(). That age is then
-   * recorded on game.saveHandlerData as starting on the round after the current
-   * one, since the save is uploaded at the end of the old age's final round. Once
-   * an age is recorded the flag is ignored. This only changes the game in memory;
+   * failing that one that looksLikeNewAge(). That age is then recorded on
+   * game.saveHandlerData as starting on the round this upload lands on (see
+   * newAgeStartRound). Once an age is recorded the flag is ignored. This only changes the game in memory;
    * it is persisted when the caller saves the game (finishSubmit does that only
    * after all of its checks pass).
    */
@@ -294,7 +294,7 @@ export class Civ7SaveHandler implements SaveHandler {
       return 1;
     }
 
-    const startRound = (this.game.round || 0) + 1;
+    const startRound = this.newAgeStartRound();
     this.setAgeStartRounds({ ...ageStartRounds, [age]: startRound });
     return startRound;
   }
@@ -302,7 +302,7 @@ export class Civ7SaveHandler implements SaveHandler {
   /**
    * "Reset game state on next upload" takes whatever round the save reports, so
    * the save rewrites the record instead of being checked against it. A
-   * first-turn save of a later age (re)starts that age on the next round, and
+   * first-turn save of a later age (re)starts that age on this upload's round, and
    * ages recorded as starting after the save's round are dropped. That way a
    * game reset to an earlier point records its next transition afresh,
    * whichever round it lands on.
@@ -310,7 +310,7 @@ export class Civ7SaveHandler implements SaveHandler {
   private getAgeStartRoundForReset(age: string): number {
     const ageStartRounds = { ...this.getAgeStartRounds() };
     if (this.looksLikeNewAge()) {
-      ageStartRounds[age] = (this.game.round || 0) + 1;
+      ageStartRounds[age] = this.newAgeStartRound();
     }
 
     const startRound = ageStartRounds[age] ?? 1;
@@ -324,6 +324,25 @@ export class Civ7SaveHandler implements SaveHandler {
 
     this.setAgeStartRounds(ageStartRounds);
     return startRound;
+  }
+
+  /**
+   * The round PYDT puts this upload on, which is where the new age's turn 1
+   * lands: the next round if turn order wraps (the round's last player finished
+   * the age, the usual case), otherwise the current one (e.g. the previous
+   * upload was the old age's last turn with the first player up, and that player
+   * finished the age and played turn 1). Matches finishSubmit's expected round.
+   */
+  private newAgeStartRound(): number {
+    const round = this.game.round || 0;
+
+    if (!this.game.players?.length || !this.game.currentPlayerSteamId) {
+      return round + 1;
+    }
+
+    const wraps =
+      GameUtil.getNextPlayerIndex(this.game) <= GameUtil.getCurrentPlayerIndex(this.game);
+    return wraps ? round + 1 : round;
   }
 
   private getAgeStartRounds(): Record<string, number> {
