@@ -12,7 +12,8 @@ RUN dnf install -y \
 # Only what plot_map needs (see src/civ6_save_renderer/plot_map/config.vsh.yaml in civ6_pipeline)
 RUN Rscript -e 'options(Ncpus = parallel::detectCores()); install.packages(c("ggforce", "yaml", "bit64", "ggnewscale", "cowplot", "readr", "purrr", "dplyr", "ggplot2", "tibble", "processx", "stringr", "remotes"), repos = "https://cloud.r-project.org")' \
     && Rscript -e 'for (p in c("ggforce", "yaml", "bit64", "ggnewscale", "cowplot", "readr", "purrr", "dplyr", "ggplot2", "tibble", "processx", "stringr")) if (!requireNamespace(p, quietly = TRUE)) stop("missing R package: ", p)'
-RUN Rscript -e 'remotes::install_github("rcannood/civ6saves", upgrade = "never")' \
+# Pinned so a change upstream can't silently change rendering; bump deliberately
+RUN Rscript -e 'remotes::install_github("rcannood/civ6saves@734365da57ddc6e3ad014bda6dae10bcebd6272a", upgrade = "never")' \
     && Rscript -e 'library(civ6saves)'
 
 WORKDIR /
@@ -21,7 +22,8 @@ RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git c
 # install node modules
 RUN mkdir -p /home/node
 WORKDIR /home/node
-RUN npm install civ6-save-parser
+# Pinned to match api's civ6-save-parser; bump both together
+RUN npm install civ6-save-parser@1.2.4
 
 # viash needs java; pin to the version in civ6_pipeline's _viash.yaml
 RUN curl -fsSL https://dl.viash.io | bash -s -- --tag 0.7.3 && mv viash /usr/local/bin

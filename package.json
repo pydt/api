@@ -16,7 +16,7 @@
     "adm-zip": "^0.6.0",
     "aws-xray-sdk": "^3.10.2",
     "bcryptjs": "^3.0.3",
-    "civ6-save-parser": "^1.2.3",
+    "civ6-save-parser": "^1.2.4",
     "civ7-save-parser": "^1.0.8",
     "dynamoose": "^4.0.1",
     "express": "^4.21.2",

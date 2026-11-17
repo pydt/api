@@ -58,4 +58,16 @@ describe('Civ6SaveHandler', () => {
     const handler = new Civ6SaveHandler(buffer);
     expect(handler.parsedDlcs).to.include('2A0AA96A-A31C-4CE2-87EC-09152F6F3E00');
   });
+
+  it('should reject a truncated save instead of hanging', function () {
+    // Cut off inside a compressed block; civ6-save-parser before 1.2.4 looped
+    // forever on this.
+    this.timeout(5000);
+
+    const buffer = fs
+      .readFileSync('testdata/saves/civ6/VERCINGETORIX 1 4000 BC.Civ6Save')
+      .subarray(0, 2500);
+
+    expect(() => new Civ6SaveHandler(buffer)).to.throw('Unexpected end of save file');
+  });
 });
