@@ -286,6 +286,107 @@ describe('Civ7SaveHandler', () => {
       expect(current[0].civName).to.eq('CIVILIZATION_ABBASID');
     });
 
+    it('maps an unflagged first save of the Exploration Age to the next round', () => {
+      // 000403: the Antiquity Age ended at the end of round 67, but the save lost
+      // the mod's ageTransition flag.
+      const game = makeGame(67);
+      const handler = new Civ7SaveHandler(
+        fs.readFileSync('testdata/saves/civ7/000403.Civ7Save'),
+        game
+      );
+
+      expect(handler.age).to.eq('AGE_EXPLORATION');
+      expect(handler.pydtTurnData.ageTransition).to.eq(false);
+      expect(handler.gameTurn).to.eq(68);
+      expect(game.saveHandlerData).to.deep.eq({
+        v: 1,
+        ageStartRounds: { AGE_EXPLORATION: 68 }
+      });
+    });
+
+    it('treats an unflagged turn 1 in a later age as a new age', () => {
+      const game = makeGame(140, { v: 1, ageStartRounds: { AGE_EXPLORATION: 72 } });
+      const handler = handlerInAge(SAVE, game, 'AGE_MODERN');
+
+      expect(handler.gameTurn).to.eq(141);
+      expect(game.saveHandlerData).to.deep.eq({
+        v: 1,
+        ageStartRounds: { AGE_EXPLORATION: 72, AGE_MODERN: 141 }
+      });
+    });
+
+    it('does not offset the starting age of a game begun in a later age', () => {
+      // Round 1: every save is turn 1 of the age the game started in.
+      const game = makeGame(1);
+
+      expect(handlerInAge(SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(1);
+      expect(game.saveHandlerData).to.eq(undefined);
+    });
+
+    it('does not treat an unflagged Antiquity turn 1 as a new age', () => {
+      const game = makeGame(30);
+
+      expect(handlerInAge(SAVE, game).gameTurn).to.eq(1);
+      expect(game.saveHandlerData).to.eq(undefined);
+    });
+
+    it('does not treat a later turn of an unrecorded age as a new age', () => {
+      const game = makeGame(52);
+
+      expect(handlerInAge(TURN_52_SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(52);
+      expect(game.saveHandlerData).to.eq(undefined);
+    });
+
+    describe('reset game state on next upload', () => {
+      function makeResetGame(round: number, saveHandlerData?: Record<string, unknown>) {
+        return { round, saveHandlerData, resetGameStateOnNextUpload: true } as Game;
+      }
+
+      it('re-records a new age on the next round, replacing the old record', () => {
+        // Reset to an Antiquity save, then the age ended on round 70 this time.
+        const game = makeResetGame(70, { v: 1, ageStartRounds: { AGE_EXPLORATION: 68 } });
+
+        expect(handlerInAge(SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(71);
+        expect(game.saveHandlerData).to.deep.eq({
+          v: 1,
+          ageStartRounds: { AGE_EXPLORATION: 71 }
+        });
+      });
+
+      it('drops ages recorded after an earlier save, so the next transition records afresh', () => {
+        const game = makeResetGame(90, { v: 1, ageStartRounds: { AGE_EXPLORATION: 68 } });
+
+        expect(handlerInAge(TURN_52_SAVE, game).gameTurn).to.eq(52);
+        expect(game.saveHandlerData).to.deep.eq({ v: 1, ageStartRounds: {} });
+
+        // Back to a normal upload: the replayed transition at round 70 is recorded.
+        const next = makeGame(70, game.saveHandlerData);
+        expect(handlerInAge(SAVE, next, 'AGE_EXPLORATION').gameTurn).to.eq(71);
+      });
+
+      it('keeps the record for a mid-age save and drops later ages', () => {
+        const game = makeResetGame(150, {
+          v: 1,
+          ageStartRounds: { AGE_EXPLORATION: 68, AGE_MODERN: 140 }
+        });
+
+        // Exploration turn 52 is round 119, before Modern began.
+        expect(handlerInAge(TURN_52_SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(119);
+        expect(game.saveHandlerData).to.deep.eq({
+          v: 1,
+          ageStartRounds: { AGE_EXPLORATION: 68 }
+        });
+      });
+
+      it('keeps earlier ages when the save is after them', () => {
+        const data = { v: 1, ageStartRounds: { AGE_EXPLORATION: 68 } };
+        const game = makeResetGame(90, data);
+
+        expect(handlerInAge(TURN_52_SAVE, game, 'AGE_EXPLORATION').gameTurn).to.eq(119);
+        expect(game.saveHandlerData).to.deep.eq(data);
+      });
+    });
+
     it('does not read ageTransition from saves without the flag', () => {
       const handler = new Civ7SaveHandler(
         withPydtValue(fs.readFileSync(SAVE), JSON.stringify({ player: 1, turn: 1 }))

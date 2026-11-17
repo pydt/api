@@ -265,7 +265,8 @@ export class Civ7SaveHandler implements SaveHandler {
    * The PYDT round the save's age began on (1 for an age that isn't recorded,
    * i.e. the age the game started in).
    *
-   * The mod flags the first save of a new age (ageTransition). That age is then
+   * The first save of a new age is the mod's flagged save (ageTransition), or
+   * failing that one that looksLikeNewAge(). That age is then
    * recorded on game.saveHandlerData as starting on the round after the current
    * one, since the save is uploaded at the end of the old age's final round. Once
    * an age is recorded the flag is ignored. This only changes the game in memory;
@@ -274,28 +275,78 @@ export class Civ7SaveHandler implements SaveHandler {
    */
   private getAgeStartRound(): number {
     const age = this.age;
-    const existing = this.game.saveHandlerData as Partial<Civ7SaveHandlerData> | undefined;
-    const ageStartRounds = existing?.ageStartRounds || {};
 
     if (!age) {
       return 1;
     }
 
+    if (this.game.resetGameStateOnNextUpload) {
+      return this.getAgeStartRoundForReset(age);
+    }
+
+    const ageStartRounds = this.getAgeStartRounds();
+
     if (ageStartRounds[age] !== undefined) {
       return ageStartRounds[age];
     }
 
-    if (!this.pydtTurnData?.ageTransition) {
+    if (!this.pydtTurnData?.ageTransition && !this.looksLikeNewAge()) {
       return 1;
     }
 
     const startRound = (this.game.round || 0) + 1;
-    const data: Civ7SaveHandlerData = {
-      v: 1,
-      ageStartRounds: { ...ageStartRounds, [age]: startRound }
-    };
-    this.game.saveHandlerData = { ...data };
+    this.setAgeStartRounds({ ...ageStartRounds, [age]: startRound });
     return startRound;
+  }
+
+  /**
+   * "Reset game state on next upload" takes whatever round the save reports, so
+   * the save rewrites the record instead of being checked against it. A
+   * first-turn save of a later age (re)starts that age on the next round, and
+   * ages recorded as starting after the save's round are dropped. That way a
+   * game reset to an earlier point records its next transition afresh,
+   * whichever round it lands on.
+   */
+  private getAgeStartRoundForReset(age: string): number {
+    const ageStartRounds = { ...this.getAgeStartRounds() };
+    if (this.looksLikeNewAge()) {
+      ageStartRounds[age] = (this.game.round || 0) + 1;
+    }
+
+    const startRound = ageStartRounds[age] ?? 1;
+    const saveRound = (this.parsed.turn?.value ?? 1) + startRound - 1;
+
+    for (const [otherAge, otherStart] of Object.entries(ageStartRounds)) {
+      if (otherAge !== age && otherStart > saveRound) {
+        delete ageStartRounds[otherAge];
+      }
+    }
+
+    this.setAgeStartRounds(ageStartRounds);
+    return startRound;
+  }
+
+  private getAgeStartRounds(): Record<string, number> {
+    const existing = this.game.saveHandlerData as Partial<Civ7SaveHandlerData> | undefined;
+    return existing?.ageStartRounds || {};
+  }
+
+  private setAgeStartRounds(ageStartRounds: Record<string, number>) {
+    const data: Civ7SaveHandlerData = { v: 1, ageStartRounds };
+    this.game.saveHandlerData = { ...data };
+  }
+
+  /**
+   * A new age without the mod's flag (the flag can be lost, e.g. if the save is
+   * reloaded and saved again before uploading): turn 1 of an unrecorded age that
+   * isn't Antiquity, after the game's first round. Antiquity is always the age a
+   * game starts in when it has one, and a game started in a later age is still in
+   * round 1 while its saves are on turn 1, so neither gets a bogus offset.
+   */
+  private looksLikeNewAge(): boolean {
+    return (
+      this.parsed.turn?.value === 1 && (this.game.round || 0) > 1 && this.age !== 'AGE_ANTIQUITY'
+    );
   }
 
   get gameSpeed() {
