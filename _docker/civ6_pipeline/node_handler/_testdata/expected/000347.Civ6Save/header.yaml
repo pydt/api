@@ -1,0 +1,2668 @@
+{
+  ACTORS: [
+    {
+      START_ACTOR: 4159575459,
+      ACTOR_NAME: 'CIVILIZATION_FREE_CITIES',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FREE_CITIES',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_FREE_CITIES'
+    },
+    {
+      SLOT_HEADER: 29,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_BIRNIRK',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_BIRNIRK'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_SERPENTMOUND',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_SERPENTMOUND'
+    },
+    {
+      START_ACTOR: 382530201,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_COCHASQUI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_COCHASQUI'
+    },
+    {
+      START_ACTOR: 4159575459,
+      ACTOR_NAME: 'CIVILIZATION_PALENQUE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_PALENQUE'
+    },
+    {
+      START_ACTOR: 4035209846,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_MESAVERDE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_MESAVERDE'
+    },
+    {
+      START_ACTOR: 74234193,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_SECHIN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_SECHIN'
+    },
+    {
+      SLOT_HEADER: 29,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_IPIUTAK',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_IPIUTAK'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_HUNZA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_HUNZA'
+    },
+    {
+      START_ACTOR: 2536204835,
+      ACTOR_NAME: 'CIVILIZATION_BARBARIAN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_TRIBE',
+      ACTOR_AI_HUMAN: 1
+    },
+    {
+      START_ACTOR: 2393759546,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_WARI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_WARI'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_CAHOKIA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CAHOKIA'
+    },
+    {
+      START_ACTOR: 3889221673,
+      ACTOR_NAME: 'CIVILIZATION_NAZCA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_NAZCA'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_RAPA_NUI',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_RAPA_NUI'
+    },
+    {
+      START_ACTOR: 3609751281,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_TIWANAKU',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_TIWANAKU'
+    },
+    {
+      START_ACTOR: 560038866,
+      ACTOR_NAME: 'CIVILIZATION_CAGUANA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_CAGUANA'
+    },
+    {
+      START_ACTOR: 3430832295,
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_CHILLICOTHE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_CHILLICOTHE'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_GUAYABO',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_GUAYABO'
+    },
+    {
+      START_ACTOR: 2700425908,
+      ACTOR_NAME: 'CIVILIZATION_LA_VENTA',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'LEADER_MINOR_CIV_LA_VENTA'
+    },
+    {
+      SLOT_HEADER: 28,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'GEDEMO_CIVILIZATION_CHAVIN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_CITY_STATE',
+      ACTOR_AI_HUMAN: 1,
+      LEADER_NAME: 'GEDEMO_LEADER_MINOR_CIV_CHAVIN'
+    },
+    {
+      SLOT_HEADER: 23,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_ENGLAND',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'Player 2',
+      LEADER_NAME: 'LEADER_ELIZABETH'
+    },
+    {
+      SLOT_HEADER: 25,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_SPAIN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 2,
+      PLAYER_NAME: 'Player 1',
+      LEADER_NAME: "Don't know what this kind of string is..."
+    },
+    {
+      SLOT_HEADER: 23,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_PORTUGAL',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'Player 3',
+      LEADER_NAME: 'LEADER_JOAO_III'
+    },
+    {
+      SLOT_HEADER: 23,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: "Don't know what this kind of string is...",
+      ACTOR_NAME: 'CIVILIZATION_FRANCE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'Player 4',
+      LEADER_NAME: 'LEADER_CATHERINE_DE_MEDICI'
+    }
+  ],
+  CIVS: [
+    {
+      SLOT_HEADER: 38,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: 'lGsYIHRnbt',
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_SPAIN',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'adi 4k',
+      LEADER_NAME: 'LEADER_PHILIP_II'
+    },
+    {
+      SLOT_HEADER: 34,
+      PLAYER_ALIVE: true,
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_ENGLAND',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'kapshul',
+      LEADER_NAME: 'LEADER_ELIZABETH',
+      PLAYER_PASSWORD: 'nnlBJHjyKb'
+    },
+    {
+      SLOT_HEADER: 34,
+      PLAYER_ALIVE: true,
+      IS_CURRENT_TURN: true,
+      ACTOR_NAME: 'CIVILIZATION_PORTUGAL',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'Ant',
+      LEADER_NAME: 'LEADER_JOAO_III'
+    },
+    {
+      SLOT_HEADER: 32,
+      PLAYER_ALIVE: true,
+      PLAYER_PASSWORD: 'kQKerfqgBd',
+      IS_CURRENT_TURN: false,
+      ACTOR_NAME: 'CIVILIZATION_FRANCE',
+      ACTOR_TYPE: 'CIVILIZATION_LEVEL_FULL_CIV',
+      ACTOR_AI_HUMAN: 3,
+      PLAYER_NAME: 'Gubisoul',
+      LEADER_NAME: 'LEADER_CATHERINE_DE_MEDICI'
+    }
+  ],
+  GAME_SPEED: 'GAMESPEED_ONLINE',
+  MAP_SIZE: 'MAPSIZE_HUGE',
+  MOD_BLOCK_1: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.6"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.6"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.6"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.6"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.6"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.6"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.6"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.6"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '982f7c98-cb2a-4b34-ad65-fd2045f42ee7',
+      MOD_TITLE: '{"Mutually Exclusive Removal for Neighborhoods":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '9c88532e-b20b-42ed-9463-f90c2f42c5ba',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Deforestation: More Gradual and Severe":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    ... 55 more items
+  ],
+  MOD_BLOCK_4: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '11B9FBBE-25BD-7E24-3909-67A060B2456C',
+      MOD_TITLE: '{"Real Era Tracker":[]}'
+    },
+    {
+      MOD_ID: '1401d09e-64d8-11ec-90d6-0242ac120003',
+      MOD_TITLE: '{"Game and mods - [ICON_WHISPER] Russian translations":[]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '1745e7c5-caca-4aaa-bd3f-82e691b80e3a',
+      MOD_TITLE: `{"[COLOR:ConnectionStatus_Connecting]Sailor Cat's[ENDCOLOR] Configurable Goody Huts":[]}`
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1d44b5e7-753e-405b-af24-5ee634ec8a01',
+      MOD_TITLE: '{"Community Quick User Interface (CQUI)":[]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '382a187f-c8ba-4094-a6a7-0d5315661f33',
+      MOD_TITLE: '{"Extended Policy Cards":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '4ecfcc62-5471-4435-b295-590df213e8d8',
+      MOD_TITLE: '{"Detailed Map Tacks":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5aceed03-8639-4a81-8cbf-03f54d543502',
+      MOD_TITLE: '{"Quick Deals":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.9"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.9"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.9"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.9"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.9"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.9"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.9"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.9"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6a18ae19-df93-4322-a3d5-33c5a5087b36',
+      MOD_TITLE: '{"Real Great People":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f2888d4-79dc-415f-a8ff-f9d81d7afb53',
+      MOD_TITLE: '{"Better Report Screen (UI)":[]}'
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    ... 67 more items
+  ],
+  GAME_TURN: 85,
+  MAP_FILE: 'Terra.lua',
+  MOD_BLOCK_2: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '11B9FBBE-25BD-7E24-3909-67A060B2456C',
+      MOD_TITLE: '{"Real Era Tracker":[]}'
+    },
+    {
+      MOD_ID: '1401d09e-64d8-11ec-90d6-0242ac120003',
+      MOD_TITLE: '{"Game and mods - [ICON_WHISPER] Russian translations":[]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '1745e7c5-caca-4aaa-bd3f-82e691b80e3a',
+      MOD_TITLE: `{"[COLOR:ConnectionStatus_Connecting]Sailor Cat's[ENDCOLOR] Configurable Goody Huts":[]}`
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1d44b5e7-753e-405b-af24-5ee634ec8a01',
+      MOD_TITLE: '{"Community Quick User Interface (CQUI)":[]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '382a187f-c8ba-4094-a6a7-0d5315661f33',
+      MOD_TITLE: '{"Extended Policy Cards":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '4ecfcc62-5471-4435-b295-590df213e8d8',
+      MOD_TITLE: '{"Detailed Map Tacks":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5aceed03-8639-4a81-8cbf-03f54d543502',
+      MOD_TITLE: '{"Quick Deals":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.9"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.9"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.9"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.9"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.9"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.9"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.9"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.9"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6a18ae19-df93-4322-a3d5-33c5a5087b36',
+      MOD_TITLE: '{"Real Great People":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f2888d4-79dc-415f-a8ff-f9d81d7afb53',
+      MOD_TITLE: '{"Better Report Screen (UI)":[]}'
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    ... 67 more items
+  ],
+  MOD_BLOCK_3: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.6"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.6"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.6"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.6"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.6"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.6"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.6"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.6"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '982f7c98-cb2a-4b34-ad65-fd2045f42ee7',
+      MOD_TITLE: '{"Mutually Exclusive Removal for Neighborhoods":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '9c88532e-b20b-42ed-9463-f90c2f42c5ba',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Deforestation: More Gradual and Severe":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    ... 55 more items
+  ],
+  MAP_FILE_2: 'Terra.lua',
+  MOD_BLOCK_2_2: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0c0c1169-cc34-44a6-9db9-52ca4499a2cf',
+      MOD_TITLE: '{"LOC_MOD_SCOUT_CAT_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.6"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.6"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.6"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.6"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.6"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.6"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.6"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.6"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6a18ae19-df93-4322-a3d5-33c5a5087b36',
+      MOD_TITLE: '{"Real Great People":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '982f7c98-cb2a-4b34-ad65-fd2045f42ee7',
+      MOD_TITLE: '{"Mutually Exclusive Removal for Neighborhoods":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '9c88532e-b20b-42ed-9463-f90c2f42c5ba',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Deforestation: More Gradual and Severe":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    ... 58 more items
+  ],
+  MOD_BLOCK_3_2: [
+    {
+      MOD_ID: '003eb84d-0c16-492e-9aab-a478f458c2de',
+      MOD_TITLE: '{"Diplomatic Favor with Tourism":[]}'
+    },
+    {
+      MOD_ID: '01233ee7-cfdb-46f9-a7eb-c71b5ca9fa9f',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Wildlife++ (Game Mode)":[]}`
+    },
+    {
+      MOD_ID: '02A8BDDE-67EA-4D38-9540-26E685E3156E',
+      MOD_TITLE: '{"LOC_AZTEC_MONTEZUMA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '0348e768-16b7-4e40-b049-1ef93ee75bda',
+      MOD_TITLE: '{"LOC_AP_RULE_BY_RELIGION_NAME":[{"locale":"en_US", "text":"Gain Greatperson points by Being Major Religion."}, {"locale":"zh_Hans_CN", "text":"通过成为主流宗教获得其他文明的伟人点数"}]}'
+    },
+    {
+      MOD_ID: '07047855-384c-4f9c-b1a5-b2efca9b8248',
+      MOD_TITLE: '{"S.E.T.I. (World Wonder)":[]}'
+    },
+    {
+      MOD_ID: '078ff062-c17d-4b11-a63a-805992bdaeac',
+      MOD_TITLE: '{"SpatialX Space Race":[]}'
+    },
+    {
+      MOD_ID: '084b0aee-a491-40b2-9370-6479b0cf03d5',
+      MOD_TITLE: '{"LOC_AP_MORALE_SYSTEM_NAME":[{"locale":"en_US", "text":"Morale and Siege"}, {"locale":"es_ES", "text":"Moral y Asedio"}, {"locale":"zh_Hans_CN", "text":"士气与围城"}, {"locale":"zh_Hant_HK", "text":"士氣與圍城"}]}'
+    },
+    {
+      MOD_ID: '094cf7a3-e5f3-429a-a5a7-d7417af44cde',
+      MOD_TITLE: '{"Z City Center Yields":[]}'
+    },
+    {
+      MOD_ID: '0dd7effb-7222-4c96-9558-44af1850766a',
+      MOD_TITLE: '{"LOC_FIX_OVERFLOW_SCIENCE_AND_CULTURE_NAME":[{"locale":"en_US", "text":"Fix Overflow Science and Culture"}, {"locale":"zh_Hans_CN", "text":"溢出瓶琴修复"}]}'
+    },
+    {
+      MOD_ID: '113D9459-0A3B-4FCB-A49C-483F40303575',
+      MOD_TITLE: '{"LOC_TEDDY_ROOSEVELT_MOD_TITLE":[{"locale":"de_DE", "text":"Teddy Roosevelt-Paket"}, {"locale":"en_US", "text":"Teddy Roosevelt Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Teddy Roosevelt"}, {"locale":"fr_FR", "text":"Pack de personnalités Theodore Roosevelt"}, {"locale":"it_IT", "text":"Pacchetto personaggio Teddy Roosevelt"}, {"locale":"ja_JP", "text":"セオドア“テディ”・ルーズベルト パーソナリティ・パック"}, {"locale":"ko_KR", "text":"테오도어 루즈벨트 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Teddy’ego Roosevelta"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Teddy Roosevelt"}, {"locale":"ru_RU", "text":"Набор «Теодор Рузвельт: личности»"}, {"locale":"zh_Hans_CN", "text":"泰迪·罗斯福领袖包"}, {"locale":"zh_Hant_HK", "text":"西奧多‧羅斯福造型包"}]}'
+    },
+    {
+      MOD_ID: '1492205f-d9db-449a-84d1-e48119f88ecb',
+      MOD_TITLE: '{"Guildhall and Labor Market":[]}'
+    },
+    {
+      MOD_ID: '15b1f5df-90f6-40cb-810e-d0b1ac2d0875',
+      MOD_TITLE: '{"The Concrete Wall":[]}'
+    },
+    {
+      MOD_ID: '161a30cc-36bd-4076-a950-7910a2496fd9',
+      MOD_TITLE: '{"District Pleasure Boat":[]}'
+    },
+    {
+      MOD_ID: '19ED1A36-D744-4A58-8F8B-0376C2BA86E5',
+      MOD_TITLE: '{"LOC_BARBARIAN_CLANS_MODE_TITLE":[{"locale":"de_DE", "text":"Barbarenclans-Spielmodus"}, {"locale":"en_US", "text":"Barbarian Clans Game Mode"}, {"locale":"es_ES", "text":"Modo de juego Clanes bárbaros"}, {"locale":"fr_FR", "text":"Mode de jeu Clans barbares"}, {"locale":"it_IT", "text":"Modalità di gioco Clan di Barbari"}, {"locale":"ja_JP", "text":"「蛮族の部族」ゲームモード"}, {"locale":"ko_KR", "text":"야만인 부족 게임 모드"}, {"locale":"pl_PL", "text":"Tryb barbarzyńskich klanów|Trybu barbarzyńskich klanów|Trybowi barbarzyńskich klanów|Tryb barbarzyńskich klanów|Trybem barbarzyńskich klanów|Trybie barbarzyńskich klanów|tryb barbarzyńskich klanów|trybu barbarzyńskich klanów|trybowi barbarzyńskich klanów|tryb barbarzyńskich klanów|trybem barbarzyńskich klanów|trybie barbarzyńskich klanów"}, {"locale":"pt_BR", "text":"Modo de jogo Clãs Bárbaros"}, {"locale":"ru_RU", "text":"Игровой режим варварских кланов"}, {"locale":"zh_Hans_CN", "text":"蛮族氏族游戏模式"}, {"locale":"zh_Hant_HK", "text":"蠻族部族遊戲模式"}]}'
+    },
+    {
+      MOD_ID: '19b05cb3-7dc0-4372-99ff-21deb91cd7ab',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Icebreaker[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '1B28771A-C749-434B-9053-D1380C553DE9',
+      MOD_TITLE: '{"LOC_EXPANSION1_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1B394FE9-23DC-4868-8F0A-5220CB8FB427',
+      MOD_TITLE: '{"LOC_ETHIOPIA_MOD_TITLE":[{"locale":"de_DE", "text":"Äthiopien-Paket"}, {"locale":"en_US", "text":"Ethiopia Pack"}, {"locale":"es_ES", "text":"Pack de Etiopía"}, {"locale":"fr_FR", "text":"Pack Éthiopie"}, {"locale":"it_IT", "text":"Pacchetto Etiopia"}, {"locale":"ja_JP", "text":"エチオピアパック"}, {"locale":"ko_KR", "text":"에티오피아 팩"}, {"locale":"pl_PL", "text":"Pakiet Etiopii"}, {"locale":"pt_BR", "text":"Pacote Etiópia"}, {"locale":"ru_RU", "text":"Набор «Эфиопия»"}, {"locale":"zh_Hans_CN", "text":"埃塞俄比亚包"}, {"locale":"zh_Hant_HK", "text":"衣索比亞包"}]}'
+    },
+    {
+      MOD_ID: '1F367231-A040-4793-BDBB-088816853683',
+      MOD_TITLE: '{"LOC_INDONESIA_KHMER_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '1bd6e042-25c3-4584-9bc3-66f1ce3bd249',
+      MOD_TITLE: `{"Leugi's [COLOR_Civ6Green]Greenery:[ENDCOLOR] Garden District":[]}`
+    },
+    {
+      MOD_ID: '1c3e8a8f-c20b-41a5-b002-a03c337fa580',
+      MOD_TITLE: `{"MOD_OPHIDY_ACS_REMASTERED_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Annex City-States (Remastered)[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]兼并城邦（重置版）[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]兼併城邦（重置版）[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '1d396ebb-6554-4f17-ad44-c95f600b2185',
+      MOD_TITLE: '{"LOC_MEDIEVAL_PIRATE_NAME":[{"locale":"en_US", "text":"Medieval Pirate Unit"}, {"locale":"zh_Hans_CN", "text":"中世纪海盗单位"}]}'
+    },
+    {
+      MOD_ID: '1ec10c1f-677c-4af8-be22-e7df2f4de858',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Savannah":[]}'
+    },
+    {
+      MOD_ID: '22e526ea-c015-4c88-b243-d6476be0cbf0',
+      MOD_TITLE: '{"Area 51":[]}'
+    },
+    {
+      MOD_ID: '249D9276-0832-48E4-B370-14531FA4E33C',
+      MOD_TITLE: '{"LOC_GREAT_BUILDERS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '258EF3CA-890B-4863-8A52-982822EFF7BD',
+      MOD_TITLE: '{"LOC_RULERS_OF_ENGLAND_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '25b096b6-3f4f-432a-be25-5680ae03b193',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Great Explorers (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '29eabbb3-c45b-45ed-971e-e35f0c27963b',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - More Coastal Flooding - 100%":[]}'
+    },
+    {
+      MOD_ID: '2F6E858A-28EF-46B3-BEAC-B985E52E9BC1',
+      MOD_TITLE: '{"LOC_MOD_VIKINGSLANDMARKS_TITLE":[]}'
+    },
+    {
+      MOD_ID: '2a18a36b-1f0f-4982-9090-8db6495e25b6',
+      MOD_TITLE: '{"Diplomatic Quarter Adjacency Bonuses":[]}'
+    },
+    {
+      MOD_ID: '2d274bd9-698c-4054-b1d8-dd5e33b59830',
+      MOD_TITLE: '{"Great Musicians Rework":[]}'
+    },
+    {
+      MOD_ID: '2de0428a-483f-4221-81ca-999010ebab08',
+      MOD_TITLE: '{"Trader Mercenaries":[]}'
+    },
+    {
+      MOD_ID: '32ffc9fe-c52c-41a7-bd41-25f09ae07264',
+      MOD_TITLE: '{"Prehistoric Wildlife":[]}'
+    },
+    {
+      MOD_ID: '35c3a18f-5fbd-40cd-98e5-612aa023fbca',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Modern Infantry - Cooks":[]}'
+    },
+    {
+      MOD_ID: '3809975F-263F-40A2-A747-8BFB171D821A',
+      MOD_TITLE: '{"LOC_POLAND_JADWIGA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '3b3cfa82-561e-4967-b8b3-060dcf664253',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Birnirk City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '3b857081-842a-484a-86d8-10acf5e62b61',
+      MOD_TITLE: `{"[COLOR_FLOAT_GOLD]Cyp[ENDCOLOR]Ryan's Workable Outer Rings | 开发城市外环":[]}`
+    },
+    {
+      MOD_ID: '3fd31467-17a1-49d4-b616-3eabaa5c0da7',
+      MOD_TITLE: '{"LOC_FightADMandGEN_NAME":[{"locale":"de_DE", "text":"Kampf um Generäle und Admiräle"}, {"locale":"en_US", "text":"Fight for Admirals and Generals"}]}'
+    },
+    {
+      MOD_ID: '4099b4a6-96a8-4cfc-896c-1d039cbd6791',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chavin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '41db6cfd-6d70-49ff-b33b-9428d5ec58ac',
+      MOD_TITLE: '{"Beyond the Sword Great Spy":[]}'
+    },
+    {
+      MOD_ID: '4209ca4f-29d9-46b5-ac97-bef6c1448fe3',
+      MOD_TITLE: '{"District police":[]}'
+    },
+    {
+      MOD_ID: '435273fa-4c85-4988-ad69-4bc8e31cfe78',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_WORLD_WONDER_PLANETARY_ENGINE":[{"locale":"en_US", "text":"Planetary Engine (World Wonder)"}, {"locale":"zh_Hans_CN", "text":"行星发动机（世界奇观）"}, {"locale":"zh_Hant_HK", "text":"行星发动机（世界奇观）"}]}'
+    },
+    {
+      MOD_ID: '44232551-2ee6-4450-9fb7-8483f22926e8',
+      MOD_TITLE: '{"All Vikings Scenario Units expansion":[]}'
+    },
+    {
+      MOD_ID: '460a2eea-44eb-4c93-a231-3e3f3eaa69cd',
+      MOD_TITLE: '{"SpatialX Civilian Helicopter":[]}'
+    },
+    {
+      MOD_ID: '4873eb62-8ccc-4574-b784-dda455e74e68',
+      MOD_TITLE: '{"LOC_EXPANSION2_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '490bb4de-9e7a-4746-bdac-acb0776b39dc',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Mesa Verde City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '4928cdff-5202-4242-8c56-f10396f67868',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Unit Expansion: Future":[]}'
+    },
+    {
+      MOD_ID: '4a90ad9b-c4f1-42bd-8201-95f7400fe0c3',
+      MOD_TITLE: '{"Horses for Archaeologists and Naturalists":[]}'
+    },
+    {
+      MOD_ID: '4d1a9389-6632-48f2-8b45-449c092c9c1c',
+      MOD_TITLE: '{"Modern Building Expansion":[]}'
+    },
+    {
+      MOD_ID: '50d84677-2ee1-4f43-833e-0ced8beb2079',
+      MOD_TITLE: '{"Mistake_Era_Wonder_STELLAR_CODEX":[]}'
+    },
+    {
+      MOD_ID: '5184ce7b-69ce-49b3-a25b-ae1cf422bc65',
+      MOD_TITLE: '{"Early Strategic Resources Buildings":[]}'
+    },
+    {
+      MOD_ID: '51ad7368-1d8c-44f0-9151-08066ed34def',
+      MOD_TITLE: '{"LOC_MOD_FLAC_GREAT_FAMINE_NAME":[{"locale":"en_US", "text":"[COLOR:ResMilitaryLabelCS]Great Famine Mode[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR:ResMilitaryLabelCS]大饥荒模式[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '5235c323-949a-4992-82a0-b1b740842237',
+      MOD_TITLE: `{"MOD_OPHIDY_FUNGAL_FOREST_NAME":[{"locale":"en_US", "text":"Ophidy's [COLOR:Civ6Yellow]Fungalfield Biome[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}, {"locale":"zh_Hant_HK", "text":"Ophidy's [COLOR:Civ6Yellow]蕈林群系[ENDCOLOR]"}]}`
+    },
+    {
+      MOD_ID: '55e17e7f-a1b2-4629-3926-9942f6ab06fc',
+      MOD_TITLE: '{"GDR Tech change[COLOR:Green] by TS[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '57d60956-974e-46cd-ab76-4ef3bfc28c85',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Flood Barriers: Cost Scaling Adjustment":[]}'
+    },
+    {
+      MOD_ID: '5b274275-98e3-481b-a732-d8707049e9b7',
+      MOD_TITLE: '{"Space Giant Death Robot":[]}'
+    },
+    {
+      MOD_ID: '5d8cfe2e-7635-434a-88d9-f709a55b7544',
+      MOD_TITLE: '{"Real Great Musicians":[]}'
+    },
+    {
+      MOD_ID: '5deef872-42d8-41a3-b3a8-ba80af2f99f7',
+      MOD_TITLE: '{"Niter for Space Projects":[]}'
+    },
+    {
+      MOD_ID: '60a8a4ef-0ac6-4a0a-9f12-c604b5f1862d',
+      MOD_TITLE: '{"[COLOR:184,134,11,255]GrayPockets[ENDCOLOR] - Revenge of the Barbarians - Cooks":[]}'
+    },
+    {
+      MOD_ID: '619ac86e-d99d-4bf3-b8f0-8c5b8c402567',
+      MOD_TITLE: '{"LOC_MPH_TITLE":[{"locale":"de_DE", "text":"Multiplayer Helper 1.7.6"}, {"locale":"en_US", "text":"Multiplayer Helper 1.7.6"}, {"locale":"fr_FR", "text":"Assistant multijoueur 1.7.6"}, {"locale":"ja_JP", "text":"マルチプレイヤー ヘルパー 1.7.6"}, {"locale":"ko_KR", "text":"멀티플레이어 도우미 1.7.6"}, {"locale":"pt_BR", "text":"Auxiliar Multiplayer 1.7.6"}, {"locale":"ru_RU", "text":"Мультиплеерный помощник 1.7.6"}, {"locale":"zh_Hans_CN", "text":"MPH 多人游戏助手 1.7.6"}]}'
+    },
+    {
+      MOD_ID: '632a4fa1-e907-4426-815b-8424aeb81bb0',
+      MOD_TITLE: '{"LOC_DIVERSE_CITY_CENTER_BUILDINGS_NAME":[{"locale":"en_US", "text":"Diversity City Center Buildings"}, {"locale":"zh_Hans_CN", "text":"市中心建筑扩展"}]}'
+    },
+    {
+      MOD_ID: '643EA320-8E1A-4CF1-A01C-00D88DDD131A',
+      MOD_TITLE: '{"LOC_NUBIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '6626fa16-9bcf-460b-b168-8651eb2e5e97',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Chillicothe City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '669ac0f9-70b5-4f3c-b7fa-d2f36297c00a',
+      MOD_TITLE: '{"Wildlife - Wild Animals Mod":[]}'
+    },
+    {
+      MOD_ID: '673b271d-b9ce-4265-b6b1-fc89436906f2',
+      MOD_TITLE: '{"[COLOR_FLOAT_SCIENCE]Naval Mine[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '69e75d0a-df2b-4a97-8d95-aba1098bd3b5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Tiwanaku City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '6b4c57eb-d847-443d-94e2-982e579042d4',
+      MOD_TITLE: '{"More District Trade Route Yields":[]}'
+    },
+    {
+      MOD_ID: '6d158509-14a5-4d2e-95e2-805ff546f5b3',
+      MOD_TITLE: `{"JFD's [COLOR_FLOAT_GOLD]RwF[ENDCOLOR]: Great Prophets":[]}`
+    },
+    {
+      MOD_ID: '6f302341-6f22-4449-b54b-5470537b6bb6',
+      MOD_TITLE: '{"LOC_CANABLE_SERFDOM_NAME":[{"locale":"en_US", "text":"Serfdom Adjustment"}, {"locale":"ja_JP", "text":"農奴制の調整"}, {"locale":"zh_Hans_CN", "text":"农奴制的调整"}, {"locale":"zh_Hant_HK", "text":"農奴制的調整"}]}'
+    },
+    {
+      MOD_ID: '6fc6c231-0010-4bb3-9ae6-f5be295dcdcf',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Wari City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '71b1ebd9-2b69-4000-810b-590d9a02be1e',
+      MOD_TITLE: `{"JFD's RwF: Great Theologians [mk]":[]}`
+    },
+    {
+      MOD_ID: '73b1478a-73bf-4907-8914-b1b5acca388b',
+      MOD_TITLE: '{"[COLOR_Green]BD[ENDCOLOR] - Wetlands":[]}'
+    },
+    {
+      MOD_ID: '7462dd45-797d-4942-9abd-55d82e8b7ea3',
+      MOD_TITLE: '{"Supply Logistics":[]}'
+    },
+    {
+      MOD_ID: '75e386c5-4f1c-4439-966e-0b6c15a4cb80',
+      MOD_TITLE: '{"LOC_MOD_FLAC_RCO2_NAME":[{"locale":"en_US", "text":"[COLOR_GREEN]Release CO2 Project[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_GREEN]主动释放二氧化碳项目[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '7973cc19-0ad5-4540-8d63-a3b5791dc25e',
+      MOD_TITLE: `{"Honey's True Future Tech And Civics":[]}`
+    },
+    {
+      MOD_ID: '79b5b13c-895f-4b58-aa57-7f1167ac5e53',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cochasqui City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '7A66DB58-B354-4061-8C80-95B638DD6F6C',
+      MOD_TITLE: '{"LOC_GREAT_NEGOTIATORS_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '7D27831B-BAA6-4A8B-A39C-94243BAD3F47',
+      MOD_TITLE: '{"LOC_RULERS_OF_CHINA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '800544c3-8373-4728-b5dd-a382090a19e5',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Guayabo City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '826d7041-e154-4b94-8226-0bc4db5f1688',
+      MOD_TITLE: '{"[COLOR_Grey]Gedemo[ENDCOLOR] [COLOR_FLOAT_FAITH]Cerro Sechin City-State[ENDCOLOR]":[]}'
+    },
+    {
+      MOD_ID: '82AE6F24-930F-4640-833C-FCDFD4845757',
+      MOD_TITLE: '{"LOC_RULERS_OF_THE_SAHARA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '8424840C-92EF-4426-A9B4-B4E0CB818049',
+      MOD_TITLE: '{"LOC_BABYLON_MOD_TITLE":[{"locale":"de_DE", "text":"Babylon-Paket"}, {"locale":"en_US", "text":"Babylon Pack"}, {"locale":"es_ES", "text":"Pack de Babilonia"}, {"locale":"fr_FR", "text":"Pack Babylone"}, {"locale":"it_IT", "text":"Pacchetto Babilonia"}, {"locale":"ja_JP", "text":"バビロンパック"}, {"locale":"ko_KR", "text":"바빌론 팩"}, {"locale":"pl_PL", "text":"Pakiet Babilonu"}, {"locale":"pt_BR", "text":"Pacote Babilônia"}, {"locale":"ru_RU", "text":"Набор «Вавилон»"}, {"locale":"zh_Hans_CN", "text":"巴比伦包"}, {"locale":"zh_Hant_HK", "text":"巴比倫包"}]}'
+    },
+    {
+      MOD_ID: '854f173f-ddec-4cd4-a343-2facb41623e5',
+      MOD_TITLE: '{"Gene Vault - Future Era Wonder":[]}'
+    },
+    {
+      MOD_ID: '8569de1a-1c7c-48d0-b06d-3cdc3d3d02e8',
+      MOD_TITLE: '{"Late-Game Religion":[]}'
+    },
+    {
+      MOD_ID: '87be989e-0384-4acf-96e0-f0a0e342b20d',
+      MOD_TITLE: '{"XCOM Squad in Civ6":[]}'
+    },
+    {
+      MOD_ID: '88437b31-15d2-48da-b71f-2f13b34e6b42',
+      MOD_TITLE: '{"Modern Infantry":[]}'
+    },
+    {
+      MOD_ID: '88e6bda2-af85-4d6c-b798-9abbdc05e2d9',
+      MOD_TITLE: '{"Expensive Great People":[]}'
+    },
+    {
+      MOD_ID: '892445ff-1ff8-4c6b-9cb5-58f80a31cf24',
+      MOD_TITLE: '{"Hospital District":[]}'
+    },
+    {
+      MOD_ID: '8b1e0073-88e9-43e8-b899-fa9baccc2086',
+      MOD_TITLE: '{"[COLOR:ResFaithLabelCS]6T[ENDCOLOR] - Ancient Paragons (Great People Pack)":[]}'
+    },
+    {
+      MOD_ID: '8e8c99d8-65f7-4553-ad03-1bb2b3517cbf',
+      MOD_TITLE: '{"Chariots Need Horses":[]}'
+    },
+    {
+      MOD_ID: '969d1f6e-ad77-474a-b0d4-71dc99ec83ec',
+      MOD_TITLE: '{"LOC_MY_MOD_NAME_DIFFERENCE_ENGINE":[{"locale":"en_US", "text":"[COLOR_LIGHTBLUE]New building:Difference Engine[ENDCOLOR]"}, {"locale":"zh_Hans_CN", "text":"[COLOR_LIGHTBLUE]新建筑：差分机[ENDCOLOR]"}]}'
+    },
+    {
+      MOD_ID: '982f7c98-cb2a-4b34-ad65-fd2045f42ee7',
+      MOD_TITLE: '{"Mutually Exclusive Removal for Neighborhoods":[]}'
+    },
+    {
+      MOD_ID: '9DE86512-DE1A-400D-8C0A-AB46EBBF76B9',
+      MOD_TITLE: '{"LOC_GRANCOLOMBIA_MAYA_MOD_TITLE":[{"locale":"de_DE", "text":"Maya- und Großkolumbien-Paket"}, {"locale":"en_US", "text":"Maya and Gran Colombia Pack"}, {"locale":"es_ES", "text":"Pack de los mayas y la Gran Colombia"}, {"locale":"fr_FR", "text":"Pack Mayas et Grande Colombie"}, {"locale":"it_IT", "text":"Pacchetto Maya e Grande Colombia"}, {"locale":"ja_JP", "text":"マヤ＆大コロンビアパック"}, {"locale":"ko_KR", "text":"마야 및 그란 콜롬비아 팩"}, {"locale":"pl_PL", "text":"Pakiet Majów i Wielkiej Kolumbii"}, {"locale":"pt_BR", "text":"Pacote Maia e Grande Colômbia"}, {"locale":"ru_RU", "text":"Набор «Майя и Великая Колумбия»"}, {"locale":"zh_Hans_CN", "text":"玛雅和大哥伦比亚包"}, {"locale":"zh_Hant_HK", "text":"馬雅及大哥倫比亞包"}]}'
+    },
+    {
+      MOD_ID: '9ED63236-617C-45A6-BB70-8CB6B0BE8ED2',
+      MOD_TITLE: '{"LOC_JULIUS_CAESAR_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: '9c88532e-b20b-42ed-9463-f90c2f42c5ba',
+      MOD_TITLE: '{"[COLOR:ResScienceLabelCS]CB[ENDCOLOR] - Deforestation: More Gradual and Severe":[]}'
+    },
+    {
+      MOD_ID: 'A1100FC4-70F2-4129-AC27-2A65A685ED08',
+      MOD_TITLE: '{"LOC_BYZANTIUM_GAUL_MOD_TITLE":[{"locale":"de_DE", "text":"Byzanz- und Gallien-Paket"}, {"locale":"en_US", "text":"Byzantium and Gaul Pack"}, {"locale":"es_ES", "text":"Pack de los bizantinos y galos"}, {"locale":"fr_FR", "text":"Pack Gaule et Byzance"}, {"locale":"it_IT", "text":"Pacchetto Bisanzio e Galli"}, {"locale":"ja_JP", "text":"ビザンティン＆ガリアパック"}, {"locale":"ko_KR", "text":"비잔티움 및 골 팩"}, {"locale":"pl_PL", "text":"Pakiet Bizancjum i Galów"}, {"locale":"pt_BR", "text":"Pacote Bizâncio e Gália"}, {"locale":"ru_RU", "text":"Набор «Византия и галлы»"}, {"locale":"zh_Hans_CN", "text":"拜占庭和高卢包"}, {"locale":"zh_Hant_HK", "text":"拜占庭及高盧包"}]}'
+    },
+    {
+      MOD_ID: 'A3F42CD4-6C3E-4F5A-BC81-BE29E0C0B87C',
+      MOD_TITLE: '{"LOC_KUBLAIKHAN_VIETNAM_MOD_TITLE":[{"locale":"de_DE", "text":"Vietnam- und Kublai Khan-Paket"}, {"locale":"en_US", "text":"Vietnam and Kublai Khan Pack"}, {"locale":"es_ES", "text":"Pack de Vietnam y Kublai Kan"}, {"locale":"fr_FR", "text":"Pack Vietnam et Kubilai Khan"}, {"locale":"it_IT", "text":"Pacchetto Vietnam e Kublai Khan"}, {"locale":"ja_JP", "text":"ベトナム＆フビライ・ハンパック"}, {"locale":"ko_KR", "text":"베트남 및 쿠빌라이칸 팩"}, {"locale":"pl_PL", "text":"Pakiet Wietnamu i Kubilaj-chana"}, {"locale":"pt_BR", "text":"Pacote Vietnã e Kublai Khan"}, {"locale":"ru_RU", "text":"Набор «Вьетнам и Хубилай»"}, {"locale":"zh_Hans_CN", "text":"越南和忽必烈包"}, {"locale":"zh_Hant_HK", "text":"越南及忽必烈包"}]}'
+    },
+    {
+      MOD_ID: 'CE5876CD-6900-46D1-9C9C-8DBA1F28872E',
+      MOD_TITLE: `{"LOC_CATHERINE_DE_MEDICI_MOD_TITLE":[{"locale":"de_DE", "text":"Katharina von Medici-Paket"}, {"locale":"en_US", "text":"Catherine de Medici Persona Pack"}, {"locale":"es_ES", "text":"Pack de personalidades de Catalina de Médici"}, {"locale":"fr_FR", "text":"Pack de personnalités Catherine de Médicis"}, {"locale":"it_IT", "text":"Pacchetto personaggio Caterina de' Medici"}, {"locale":"ja_JP", "text":"カトリーヌ・ド・メディシス パーソナリティ・パック"}, {"locale":"ko_KR", "text":"카트린 데메디치 페르소나 팩"}, {"locale":"pl_PL", "text":"Pakiet wariantów Katarzyny Medycejskiej"}, {"locale":"pt_BR", "text":"Pacote da Personalidade Catarina de Médici"}, {"locale":"ru_RU", "text":"Набор «Екатерина Медичи: личности»"}, {"locale":"zh_Hans_CN", "text":"凯瑟琳·德·美第奇领袖包"}, {"locale":"zh_Hant_HK", "text":"凱薩琳‧德‧麥地奇造型包"}]}`
+    },
+    {
+      MOD_ID: 'E2749E9A-8056-45CD-901B-C368C8E83DEB',
+      MOD_TITLE: '{"LOC_MACEDONIA_PERSIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'E3F53C61-371C-440B-96CE-077D318B36C0',
+      MOD_TITLE: '{"LOC_AUSTRALIA_MOD_TITLE":[]}'
+    },
+    {
+      MOD_ID: 'F48213B4-56F5-45DD-92F7-AC78E49BDA49',
+      MOD_TITLE: '{"LOC_GREAT_WARLORDS_MOD_TITLE":[]}'
+    },
+    ... 55 more items
+  ]
+}

@@ -1,36 +1,30 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM public.ecr.aws/lambda/nodejs:22
 
-RUN yum install -y ImageMagick amazon-linux-extras git make cmake3 tar && yum clean all && rm -rf /var/cache/yum
+# Amazon Linux 2023: dnf here is microdnf. R comes from the regular repos.
+RUN dnf install -y \
+      ImageMagick git make tar gzip findutils gcc gcc-c++ gcc-gfortran \
+      java-17-amazon-corretto-headless \
+      R-core R-core-devel \
+      openssl-devel libcurl-devel libxml2-devel harfbuzz-devel fribidi-devel \
+      freetype-devel libpng-devel libtiff-devel libjpeg-turbo-devel fontconfig-devel \
+    && dnf clean all && rm -rf /var/cache/dnf
 
-RUN amazon-linux-extras install -y R4 && yum clean all && rm -rf /var/cache/yum
-
-# R/tidyverse deps
-RUN yum install -y openssl-devel libssh2-devel libxml2-devel libcurl-devel harfbuzz-devel fribidi-devel freetype-devel libpng-devel libtiff-devel libjpeg-turbo-devel && yum clean all && rm -rf /var/cache/yum
-
-RUN git clone --depth=1 -b v1.0.0 https://github.com/libgit2/libgit2.git ~/libgit2_src \
-    && cd ~/libgit2_src \
-    && cmake3 . -DBUILD_CLAR=OFF -DCMAKE_BUILD_TYPE=Release -DEMBED_SSH_PATH=~/libssh2_src -DCMAKE_INSTALL_PREFIX=~/libgit2 \
-    && cmake3 --build . --target install \
-    && cp -r ~/libgit2/* /usr/bin \
-    && cp -r ~/libgit2/* /usr/local \
-    && cp -r /usr/local/lib64/* /lib64 \
-    && cd && rm -rf libgit*
-
-RUN Rscript -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
-RUN Rscript -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
-RUN Rscript -e 'install.packages("cowplot", repos = "http://cran.us.r-project.org")'
-RUN Rscript -e 'install.packages("ggnewscale", repos = "http://cran.us.r-project.org")'
-RUN Rscript -e 'library(devtools);install_github("rcannood/civ6saves")'
+# Only what plot_map needs (see src/civ6_save_renderer/plot_map/config.vsh.yaml in civ6_pipeline)
+RUN Rscript -e 'options(Ncpus = parallel::detectCores()); install.packages(c("ggforce", "yaml", "bit64", "ggnewscale", "cowplot", "readr", "purrr", "dplyr", "ggplot2", "tibble", "processx", "stringr", "remotes"), repos = "https://cloud.r-project.org")' \
+    && Rscript -e 'for (p in c("ggforce", "yaml", "bit64", "ggnewscale", "cowplot", "readr", "purrr", "dplyr", "ggplot2", "tibble", "processx", "stringr")) if (!requireNamespace(p, quietly = TRUE)) stop("missing R package: ", p)'
+RUN Rscript -e 'remotes::install_github("rcannood/civ6saves", upgrade = "never")' \
+    && Rscript -e 'library(civ6saves)'
 
 WORKDIR /
-RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout aef2c5045da392924b8f52f80b2f5826d6a96a6b
+RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout 3b0514ae101a6654ad4d22b460e513ca214e5d55
 
 # install node modules
 RUN mkdir -p /home/node
 WORKDIR /home/node
 RUN npm install civ6-save-parser
 
-RUN curl -fsSL http://dl.viash.io | bash; mv viash /usr/local/bin
+# viash needs java; pin to the version in civ6_pipeline's _viash.yaml
+RUN curl -fsSL https://dl.viash.io | bash -s -- --tag 0.7.3 && mv viash /usr/local/bin
 
 WORKDIR /civ6_pipeline
 RUN viash ns build --parallel -p native
