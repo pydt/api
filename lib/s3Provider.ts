@@ -149,6 +149,8 @@ export interface ListObjectsResult {
   Contents?: Array<{
     Key?: string;
   }>;
+  // true when S3 stopped at its page limit (1000 keys) and more match the prefix
+  IsTruncated?: boolean;
 }
 
 export interface FileParams {

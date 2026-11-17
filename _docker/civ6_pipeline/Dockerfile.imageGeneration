@@ -16,7 +16,7 @@ RUN Rscript -e 'remotes::install_github("rcannood/civ6saves", upgrade = "never")
     && Rscript -e 'library(civ6saves)'
 
 WORKDIR /
-RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout 3b0514ae101a6654ad4d22b460e513ca214e5d55
+RUN git clone https://github.com/pydt/civ6_pipeline && cd civ6_pipeline && git checkout f05eeb01db03b800afb42b2364cb5d7bf0231891
 
 # install node modules
 RUN mkdir -p /home/node
