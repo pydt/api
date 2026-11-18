@@ -18,6 +18,8 @@ export interface BaseGame {
   allowJoinAfterStart?: boolean;
   turnTimerMinutes?: number;
   turnTimerVacationHandling?: 'PAUSE' | 'SKIP_AFTER_TIMER' | 'SKIP_IMMEDIATELY';
+  // Players can only join if their average over their last 100 turns is at most this. Unset = no limit.
+  maxRecentTurnAverageMinutes?: number;
 }
 
 export type GAME_FLAG = 'CIV6_CONGRESS_TURN';

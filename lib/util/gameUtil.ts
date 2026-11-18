@@ -1,5 +1,15 @@
+import { HttpResponseError } from '../../api/framework';
 import { PYDT_METADATA } from '../metadata/metadata';
-import { Game, GamePlayer, GameTurn } from '../models';
+import { Game, GamePlayer, GameTurn, User } from '../models';
+import { RECENT_TURN_COUNT } from './statsUtil';
+
+// Limits for a game's max recent turn average (forum #9293): anything under 6h shuts out most
+// players, and over 24h isn't much of a gate.
+export const MIN_RECENT_TURN_AVERAGE_LIMIT_MINUTES = 6 * 60;
+export const MAX_RECENT_TURN_AVERAGE_LIMIT_MINUTES = 24 * 60;
+// Players with fewer recent turns than this don't have a meaningful average yet, so the limit
+// doesn't apply to them (otherwise new players couldn't join gated games at all).
+export const RECENT_TURN_AVERAGE_LIMIT_MIN_TURNS = 10;
 
 // Stands in for a game's real password hash for anyone but the game's admin. The web UI only
 // checks whether hashedPassword is truthy ("this game has a password"), so a fixed placeholder
@@ -43,6 +53,59 @@ export class GameUtil {
       typeof (value as Game).createdBySteamId === 'string' &&
       Array.isArray((value as Game).players)
     );
+  }
+
+  // Normalizes the max recent turn average from a create/edit request: empty means no limit.
+  public static validateMaxRecentTurnAverage(minutes?: number): number | undefined {
+    if (!minutes) {
+      return undefined;
+    }
+
+    if (
+      !Number.isInteger(minutes) ||
+      minutes < MIN_RECENT_TURN_AVERAGE_LIMIT_MINUTES ||
+      minutes > MAX_RECENT_TURN_AVERAGE_LIMIT_MINUTES
+    ) {
+      throw new HttpResponseError(
+        400,
+        'The maximum average turn time must be between 6 and 24 hours.'
+      );
+    }
+
+    return minutes;
+  }
+
+  // Why this user can't join the game because of its max recent turn average, or null if they can.
+  public static recentTurnAverageJoinError(
+    game: Game,
+    user: Pick<User, 'recentTurnAverage' | 'recentTurnCount'>
+  ): string | null {
+    const limitMinutes = game.maxRecentTurnAverageMinutes;
+
+    if (
+      !limitMinutes ||
+      (user.recentTurnCount || 0) < RECENT_TURN_AVERAGE_LIMIT_MIN_TURNS ||
+      user.recentTurnAverage <= limitMinutes * 60 * 1000
+    ) {
+      return null;
+    }
+
+    return (
+      `This game only allows players whose average turn time over their last ` +
+      `${RECENT_TURN_COUNT} turns is ${GameUtil.formatDuration(limitMinutes * 60 * 1000)} or ` +
+      `less. Yours is ${GameUtil.formatDuration(user.recentTurnAverage)}.`
+    );
+  }
+
+  // 14h 20m / 3h / 45m
+  public static formatDuration(ms: number) {
+    const totalMinutes = Math.round(ms / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return [hours ? `${hours}h` : '', minutes || !hours ? `${minutes}m` : '']
+      .filter(Boolean)
+      .join(' ');
   }
 
   public static getPlayerCivDisplayName(game: Game, player: GamePlayer) {

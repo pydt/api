@@ -105,6 +105,7 @@ export class GameRepository
         required: true
       },
       turnTimerMinutes: Number,
+      maxRecentTurnAverageMinutes: Number,
       round: {
         type: Number,
         required: true,

@@ -139,6 +139,15 @@ export class GameController_Join {
       );
     }
 
+    // The host can always take a slot in their own game (and replacePlayer skips this check), so the
+    // admin can still make exceptions.
+    const turnAverageError =
+      user.steamId !== game.createdBySteamId && GameUtil.recentTurnAverageJoinError(game, user);
+
+    if (turnAverageError) {
+      throw new HttpResponseError(400, turnAverageError);
+    }
+
     UserUtil.addUserToGame(user, game);
 
     await Promise.all([

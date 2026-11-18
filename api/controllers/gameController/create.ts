@@ -13,6 +13,7 @@ import { RANDOM_CIV } from '../../../lib/metadata/civGame';
 import { PYDT_METADATA } from '../../../lib/metadata/metadata';
 import { Game, PrivateUserData, User } from '../../../lib/models';
 import { UserUtil } from '../../../lib/util/userUtil';
+import { GameUtil } from '../../../lib/util/gameUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../../framework';
 import {
   CanCreateGameRequestBody,
@@ -149,7 +150,10 @@ export class GameController_Create {
       allowDuplicateLeaders: body.allowDuplicateLeaders,
       allowJoinAfterStart: body.allowJoinAfterStart,
       turnTimerMinutes: body.turnTimerMinutes,
-      turnTimerVacationHandling: body.turnTimerVacationHandling
+      turnTimerVacationHandling: body.turnTimerVacationHandling,
+      maxRecentTurnAverageMinutes: GameUtil.validateMaxRecentTurnAverage(
+        body.maxRecentTurnAverageMinutes
+      )
     };
 
     const firstTimeHosting =

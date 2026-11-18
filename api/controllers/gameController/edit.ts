@@ -69,6 +69,9 @@ export class GameController_Edit {
     game.allowJoinAfterStart = body.allowJoinAfterStart;
     game.turnTimerMinutes = body.turnTimerMinutes;
     game.turnTimerVacationHandling = body.turnTimerVacationHandling;
+    game.maxRecentTurnAverageMinutes = GameUtil.validateMaxRecentTurnAverage(
+      body.maxRecentTurnAverageMinutes
+    );
 
     // If the editor was shown the sanitized game (no webhook URL, placeholder password), the form
     // sends those back. Don't let that wipe the webhook or set the password to the placeholder:
