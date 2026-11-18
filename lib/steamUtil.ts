@@ -5,6 +5,7 @@ import { HttpRequest, HttpResponseError } from '../api/framework';
 import { Config } from './config';
 import { pydtLogger } from './logging';
 import { SteamProfile } from './models';
+import { tracedFetch } from './xray';
 
 export const steamPassport = (request: HttpRequest) => {
   const sp = new passport.Passport();
@@ -66,7 +67,7 @@ export const steamLoginError = (err: unknown, route: string): unknown => {
 };
 
 export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfile[]> {
-  const resp = await fetch(
+  const resp = await tracedFetch(
     `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${
       Config.steamApiKey
     }&steamids=${join(steamIds)}`

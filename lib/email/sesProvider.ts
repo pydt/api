@@ -3,10 +3,13 @@ import { provideSingleton } from '../ioc';
 import { pydtLogger } from '../logging';
 import templateHtml from './email.html';
 import { Config } from '../config';
+import { traceAwsClient } from '../xray';
 
-const ses = new SESClient({
-  region: Config.region
-});
+const ses = traceAwsClient(
+  new SESClient({
+    region: Config.region
+  })
+);
 
 export const SES_PROVIDER_SYMBOL = Symbol('ISesProvider');
 

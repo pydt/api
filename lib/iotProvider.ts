@@ -5,6 +5,7 @@ import {
 } from '@aws-sdk/client-iot-data-plane';
 import { provideSingleton } from './ioc';
 import { HasSteamId } from './models';
+import { traceAwsClient } from './xray';
 
 export const IOT_PROVIDER_SYMBOL = Symbol('IIotProvider');
 
@@ -17,9 +18,11 @@ export class IotProvider implements IIotProvider {
   private iotData: IoTDataPlaneClient;
 
   constructor() {
-    this.iotData = new IoTDataPlaneClient({
-      endpoint: 'https://a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com'
-    });
+    this.iotData = traceAwsClient(
+      new IoTDataPlaneClient({
+        endpoint: 'https://a21s639tnrshxf-ats.iot.us-east-1.amazonaws.com'
+      })
+    );
   }
 
   public async notifyUserClient(user: HasSteamId) {

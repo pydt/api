@@ -7,11 +7,14 @@ import { ModelType } from 'dynamoose/dist/General';
 import { AnyItem } from 'dynamoose/dist/Item';
 import { Query, Scan } from 'dynamoose/dist/ItemRetriever';
 import { Config } from '../config';
+import { traceAwsClient } from '../xray';
 
 dynamooseAws.ddb.set(
-  new dynamooseAws.ddb.DynamoDB({
-    region: Config.region
-  })
+  traceAwsClient(
+    new dynamooseAws.ddb.DynamoDB({
+      region: Config.region
+    })
+  )
 );
 
 Table.defaults.set({

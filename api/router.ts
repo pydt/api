@@ -27,24 +27,36 @@ type middlewareExec = (request: HttpRequest, response: HttpResponse, next: any) 
 function methodHandler(method: string) {
   return function (route: string, ...routeExecs: middlewareExec[]) {
     router[method](route, (req: HttpRequest, res: HttpResponse) => {
-      if (!Config.runningLocal) {
-        const mainSegment = AWSXRay.getSegment(); //returns the facade segment
-        req.subSegment = mainSegment.addNewSubsegment(`${method} ${route}`);
-        const ird = new AWSXRay.middleware.IncomingRequestData(req as any);
-        ird.request.url = req.url;
-        (req.subSegment as any).http = ird;
-
-        const ns = AWSXRay.getNamespace();
-        ns.run(function () {
-          AWSXRay.setSegment(req.subSegment);
-        });
-
-        res.on('finish', () => {
-          (req.subSegment as any).http.close(this);
-          req.subSegment.close();
-        });
+      if (Config.runningLocal) {
+        handleRoute(req, res);
+        return;
       }
 
+      const mainSegment = AWSXRay.getSegment(); //returns the facade segment
+      req.subSegment = mainSegment.addNewSubsegment(`${method} ${route}`);
+      const ird = new AWSXRay.middleware.IncomingRequestData(req as any);
+      ird.request.url = req.url;
+      (req.subSegment as any).http = ird;
+
+      if (req.params?.gameId) {
+        // Lets you find a game's requests in the X-Ray console: annotation.gameId = "..."
+        req.subSegment.addAnnotation('gameId', req.params.gameId);
+      }
+
+      res.on('finish', () => {
+        (req.subSegment as any).http.close(this);
+        req.subSegment.close();
+      });
+
+      // Run the whole route inside the subsegment's context, so the DynamoDB/S3/SNS/fetch calls it
+      // makes (see lib/xray.ts) are recorded under this route instead of loose on the invocation.
+      AWSXRay.getNamespace().run(() => {
+        AWSXRay.setSegment(req.subSegment);
+        handleRoute(req, res);
+      });
+    });
+
+    function handleRoute(req: HttpRequest, res: HttpResponse) {
       pydtLogger.info(`Found route ${route}`);
 
       const runNext = (runExecs: middlewareExec[]) => {
@@ -98,7 +110,7 @@ function methodHandler(method: string) {
       };
 
       runNext(routeExecs);
-    });
+    }
   };
 }
 

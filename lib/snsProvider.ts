@@ -2,16 +2,29 @@ import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { provideSingleton } from './ioc';
 import { Config } from './config';
+import { traceAwsClient } from './xray';
 import { Game } from './models';
 import { GAME_STATE_IMAGE_MESSAGES, SNS_MESSAGES, UserGameCacheUpdatedPayload } from './models/sns';
 import { GameUtil } from './util/gameUtil';
 
-const sns = new SNSClient({
-  region: Config.region
-});
-const sts = new STSClient({
-  region: Config.region
-});
+const sns = traceAwsClient(
+  new SNSClient({
+    region: Config.region
+  })
+);
+const sts = traceAwsClient(
+  new STSClient({
+    region: Config.region
+  })
+);
+
+// The account id never changes, so look it up once per container instead of before every publish
+let accountId: Promise<string>;
+const getAccountId = () =>
+  (accountId ??= sts.send(new GetCallerIdentityCommand({})).then(x => x.Account)).catch(e => {
+    accountId = undefined;
+    throw e;
+  });
 
 export const SNS_PROVIDER_SYMBOL = Symbol('ISnsProvider');
 
@@ -75,13 +88,13 @@ export class SnsProvider implements ISnsProvider {
   }
 
   private async sendMessage(topic: string, subject: string, message: string) {
-    const identity = await sts.send(new GetCallerIdentityCommand({}));
+    const account = await getAccountId();
 
     return sns.send(
       new PublishCommand({
         Message: message,
         Subject: subject,
-        TopicArn: 'arn:aws:sns:us-east-1:' + identity.Account + ':' + topic
+        TopicArn: 'arn:aws:sns:us-east-1:' + account + ':' + topic
       })
     );
   }

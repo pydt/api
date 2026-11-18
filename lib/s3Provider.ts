@@ -13,11 +13,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { merge } from 'lodash';
 import { provideSingleton } from './ioc';
 import { Config } from './config';
+import { traceAwsClient } from './xray';
 
-const s3 = new S3Client({
-  region: Config.region,
-  useAccelerateEndpoint: true
-});
+const s3 = traceAwsClient(
+  new S3Client({
+    region: Config.region,
+    useAccelerateEndpoint: true
+  })
+);
 
 export const S3_PROVIDER_SYMBOL = Symbol('IS3Provider');
 

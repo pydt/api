@@ -2,10 +2,13 @@ import { GetQueueUrlCommand, SQSClient, SendMessageCommand } from '@aws-sdk/clie
 import { provideSingleton } from './ioc';
 import { Config } from './config';
 import { GameTurn } from './models';
+import { traceAwsClient } from './xray';
 
-const sqs = new SQSClient({
-  region: Config.region
-});
+const sqs = traceAwsClient(
+  new SQSClient({
+    region: Config.region
+  })
+);
 
 export interface GlobalStatsUpdateMessage {
   turn: GameTurn;

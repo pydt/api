@@ -1,4 +1,5 @@
 import { provideSingleton } from './ioc';
+import { tracedFetch } from './xray';
 
 export const HTTP_REQUEST_PROVIDER_SYMBOL = Symbol('IHttpRequestProvider');
 
@@ -9,7 +10,7 @@ export interface IHttpRequestProvider {
 @provideSingleton(HTTP_REQUEST_PROVIDER_SYMBOL)
 export class HttpRequestProvider implements IHttpRequestProvider {
   async fetch<T>(url: string, options: RequestInit, noResponse?: boolean) {
-    const resp = await fetch(url, options);
+    const resp = await tracedFetch(url, options);
 
     if (noResponse) {
       return null;
