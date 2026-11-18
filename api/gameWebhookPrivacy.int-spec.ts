@@ -14,7 +14,8 @@ import { LambdaProxyEvent } from './framework';
 import { handler } from './router';
 
 // End to end through the real Lambda handler (tsoa routes, auth, HttpResponse) against local
-// DynamoDB: a game's webhook URL and password hash only go to the game's admin. Forum #9628.
+// DynamoDB: a game's webhook URL only goes to players in the game, and its password hash only to the
+// game's admin. Forum #9628.
 
 dynamooseAws.ddb.set(
   new dynamooseAws.ddb.DynamoDB({ endpoint: 'http://localhost:8000', region: Config.region })
@@ -46,8 +47,10 @@ describe('Game webhook/password privacy (real handler + DynamoDB)', () => {
   const GAME_ID = uuid();
   const ADMIN = uuid();
   const PLAYER = uuid();
+  const OUTSIDER = uuid();
   let adminToken: string;
   let playerToken: string;
+  let outsiderToken: string;
 
   before(async () => {
     process.env.JWT_SECRET = process.env.JWT_SECRET || 'integration-secret';
@@ -70,9 +73,11 @@ describe('Game webhook/password privacy (real handler + DynamoDB)', () => {
     const pudRepo = new PrivateUserDataRepository();
     await pudRepo.saveVersioned({ steamId: ADMIN } as PrivateUserData);
     await pudRepo.saveVersioned({ steamId: PLAYER } as PrivateUserData);
+    await pudRepo.saveVersioned({ steamId: OUTSIDER } as PrivateUserData);
 
     adminToken = JwtUtil.createToken({ steamId: ADMIN });
     playerToken = JwtUtil.createToken({ steamId: PLAYER });
+    outsiderToken = JwtUtil.createToken({ steamId: OUTSIDER });
   });
 
   it('hides them from anonymous viewers', async () => {
@@ -84,10 +89,17 @@ describe('Game webhook/password privacy (real handler + DynamoDB)', () => {
     expect(body.displayName).to.eq('privacy test');
   });
 
-  it('hides them from other logged-in players', async () => {
-    const { body } = await get(`/game/${GAME_ID}`, playerToken);
+  it('hides them from logged-in users not in the game', async () => {
+    const { body } = await get(`/game/${GAME_ID}`, outsiderToken);
 
     expect(body).to.not.have.property('webhookUrl');
+    expect(body.hashedPassword).to.eq(HASHED_PASSWORD_PLACEHOLDER);
+  });
+
+  it('shows other players in the game the webhook, but not the password hash', async () => {
+    const { body } = await get(`/game/${GAME_ID}`, playerToken);
+
+    expect(body.webhookUrl).to.eq(WEBHOOK);
     expect(body.hashedPassword).to.eq(HASHED_PASSWORD_PLACEHOLDER);
   });
 

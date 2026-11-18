@@ -40,7 +40,7 @@ const send = (data: unknown, user?: string): Promise<Record<string, unknown>> =>
   });
 
 describe('HttpResponse', () => {
-  it('strips admin-only game fields for anonymous requests', async () => {
+  it('strips private game fields for anonymous requests', async () => {
     const body = await send(game);
 
     expect(body).to.not.have.property('webhookUrl');

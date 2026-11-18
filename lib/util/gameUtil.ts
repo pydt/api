@@ -8,15 +8,17 @@ export const HASHED_PASSWORD_PLACEHOLDER = '********';
 
 export class GameUtil {
   // Copy of the game that's safe to show the given viewer (a steamId, or undefined when anonymous).
-  // Only the game's admin sees the webhook URL (anyone with it can post to that Discord channel)
-  // and the real password hash (the edit form round-trips it). See forum #9628.
+  // The webhook URL lets anyone post to that Discord channel, so only players in the game see it
+  // (they're the ones it notifies anyway). The real password hash is only for the game's admin
+  // (the edit form round-trips it). See forum #9628.
   public static sanitizeForViewer<T extends Partial<Game>>(game: T, viewerSteamId?: string): T {
     if (viewerSteamId && viewerSteamId === game.createdBySteamId) {
       return game;
     }
 
-    const { webhookUrl, ...rest } = game; // eslint-disable-line @typescript-eslint/no-unused-vars
-    const result = rest as T;
+    const inGame = !!viewerSteamId && (game.players || []).some(p => p.steamId === viewerSteamId);
+    const { webhookUrl, ...rest } = game;
+    const result = (inGame ? { ...rest, webhookUrl } : rest) as T;
 
     if (game.hashedPassword) {
       result.hashedPassword = HASHED_PASSWORD_PLACEHOLDER;

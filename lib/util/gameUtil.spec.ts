@@ -6,6 +6,7 @@ import { GameUtil, HASHED_PASSWORD_PLACEHOLDER } from './gameUtil';
 
 const ADMIN = '76561190000000001';
 const PLAYER = '76561190000000002';
+const OUTSIDER = '76561190000000003';
 
 const game = (overrides: Partial<Game> = {}): Game =>
   ({
@@ -30,8 +31,15 @@ describe('GameUtil.sanitizeForViewer', () => {
     expect(result.hashedPassword).to.eq(g.hashedPassword);
   });
 
-  it('hides the webhook URL and password hash from other players', () => {
+  it('shows other players in the game the webhook URL, but not the password hash', () => {
     const result = GameUtil.sanitizeForViewer(game(), PLAYER);
+
+    expect(result.webhookUrl).to.eq('https://discord.com/api/webhooks/123/secret');
+    expect(result.hashedPassword).to.eq(HASHED_PASSWORD_PLACEHOLDER);
+  });
+
+  it('hides the webhook URL and password hash from users not in the game', () => {
+    const result = GameUtil.sanitizeForViewer(game(), OUTSIDER);
 
     expect(result).to.not.have.property('webhookUrl');
     expect(result.hashedPassword).to.eq(HASHED_PASSWORD_PLACEHOLDER);
@@ -57,7 +65,7 @@ describe('GameUtil.sanitizeForViewer', () => {
 
   it("doesn't modify the original game", () => {
     const g = game();
-    GameUtil.sanitizeForViewer(g, PLAYER);
+    GameUtil.sanitizeForViewer(g, OUTSIDER);
 
     expect(g.webhookUrl).to.eq('https://discord.com/api/webhooks/123/secret');
     expect(g.hashedPassword).to.eq('$2a$10$abcdefghijklmnopqrstuv');
@@ -66,7 +74,7 @@ describe('GameUtil.sanitizeForViewer', () => {
 
 describe('GameUtil.jsonReplacerForViewer', () => {
   it('sanitizes a single game', () => {
-    const result = roundTrip(game(), PLAYER);
+    const result = roundTrip(game(), OUTSIDER);
 
     expect(result).to.not.have.property('webhookUrl');
     expect(result.hashedPassword).to.eq(HASHED_PASSWORD_PLACEHOLDER);
@@ -76,7 +84,7 @@ describe('GameUtil.jsonReplacerForViewer', () => {
     // Shapes like OpenGamesResponse / GamesByUserResponse
     const result = roundTrip(
       { notStarted: [game({ gameId: 'a' })], openSlots: [game({ gameId: 'b' })] },
-      PLAYER
+      OUTSIDER
     );
 
     for (const g of [...result.notStarted, ...result.openSlots]) {
@@ -85,10 +93,17 @@ describe('GameUtil.jsonReplacerForViewer', () => {
     }
   });
 
-  it('only reveals admin fields on the games the viewer admins', () => {
+  it('only reveals the webhook on the games the viewer is in', () => {
     const result = roundTrip(
-      [game({ gameId: 'mine' }), game({ gameId: 'theirs', createdBySteamId: PLAYER })],
-      ADMIN
+      [
+        game({ gameId: 'mine' }),
+        game({
+          gameId: 'theirs',
+          createdBySteamId: OUTSIDER,
+          players: [{ steamId: OUTSIDER }] as Game['players']
+        })
+      ],
+      PLAYER
     );
 
     expect(result[0].webhookUrl).to.eq('https://discord.com/api/webhooks/123/secret');
@@ -98,7 +113,7 @@ describe('GameUtil.jsonReplacerForViewer', () => {
   it('uses toJSON output, the way dynamoose items serialize', () => {
     const item = { toJSON: () => game() };
 
-    expect(roundTrip(item, PLAYER)).to.not.have.property('webhookUrl');
+    expect(roundTrip(item, OUTSIDER)).to.not.have.property('webhookUrl');
   });
 
   it('leaves things that are not games alone', () => {
