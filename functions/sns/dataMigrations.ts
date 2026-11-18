@@ -108,23 +108,39 @@ export class DataMigrations {
     }
   }
 
-  // Backfill for User.recentTurnAverage: one ~2.5 RCU query per user, 10 users at a time
+  // Backfill for User.recentTurnAverage: one ~2.5 RCU query per user, 10 users at a time. The run takes
+  // minutes and players keep taking turns, so each user is re-read just before saving (the list from the
+  // start is stale by then, and a stale version fails saveVersioned). A conflict that still happens skips
+  // that user instead of aborting the run; their next turn recomputes it anyway.
   private async calculateRecentTurnStats(users: User[]) {
+    let updated = 0;
+    const skipped: string[] = [];
+
     for (const batch of chunk(users, 10)) {
       await Promise.all(
-        batch.map(async user => {
-          const turns = await this.gameTurnRepository.getRecentTurnsForUser(
-            user.steamId,
-            StatsUtil.recentTurnQueryLimit(user)
-          );
+        batch.map(async ({ steamId }) => {
+          try {
+            const user = await this.userRepository.get(steamId, true);
+            const turns = await this.gameTurnRepository.getRecentTurnsForUser(
+              steamId,
+              StatsUtil.recentTurnQueryLimit(user)
+            );
 
-          Object.assign(user, StatsUtil.recentTurnStats(turns));
-          await this.userRepository.saveVersioned(user);
+            Object.assign(user, StatsUtil.recentTurnStats(turns));
+            await this.userRepository.saveVersioned(user);
+            updated++;
+          } catch (e) {
+            pydtLogger.warn(`Couldn't backfill recent turn stats for ${steamId}`, e as Error);
+            skipped.push(steamId);
+          }
         })
       );
     }
 
-    pydtLogger.info(`Updated recent turn stats for ${users.length} users`);
+    pydtLogger.info(
+      `Updated recent turn stats for ${updated} users` +
+        (skipped.length ? `, skipped ${skipped.length}: ${skipped.join(', ')}` : '')
+    );
   }
 
   private resetStats(stats: Partial<TurnData>) {
