@@ -320,11 +320,26 @@ resources:
             AttributeType: S
           - AttributeName: turn
             AttributeType: N
+          - AttributeName: playerSteamId
+            AttributeType: S
+          - AttributeName: updatedAt
+            AttributeType: N
         KeySchema:
           - AttributeName: gameId
             KeyType: HASH
           - AttributeName: turn
             KeyType: RANGE
+        # A player's turns, newest first: recent turn averages and the user stats migrations.
+        # Name must match the index in lib/dynamoose/gameTurnRepository.ts.
+        GlobalSecondaryIndexes:
+          - IndexName: playerSteamId-updatedAt-index
+            KeySchema:
+              - AttributeName: playerSteamId
+                KeyType: HASH
+              - AttributeName: updatedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.resourcePrefix}game-turn
     ScheduledJobTable:
