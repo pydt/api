@@ -15,7 +15,12 @@ dynamooseAws.ddb.set(
 );
 
 Table.defaults.set({
-  create: false
+  create: false,
+  // By default dynamoose makes every new Lambda container wait (up to 180s) until the table and all of
+  // its indexes are ACTIVE before running anything on it. While a GSI was being built on game-turn
+  // (2026-11-18, ~02:13-02:36 UTC) that hung every turn submit until the 20s Lambda timeout. The tables
+  // already exist, so skip the check; a query on an index that's still building fails fast instead.
+  waitForActive: false
 });
 
 export interface IRepository<TKey, TEntity> {
