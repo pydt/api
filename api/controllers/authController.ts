@@ -6,7 +6,7 @@ import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/use
 import { inject, provideSingleton } from '../../lib/ioc';
 import { pydtLogger } from '../../lib/logging';
 import { SteamProfile, User } from '../../lib/models';
-import { steamPassport } from '../../lib/steamUtil';
+import { steamLoginError, steamPassport } from '../../lib/steamUtil';
 import { ErrorResponse, HttpRequest, HttpResponseError } from '../framework';
 import {
   IPrivateUserDataRepository,
@@ -48,7 +48,7 @@ export class AuthController {
 
       steamPassport(request).authenticate('steam', (err, user, info) => {
         if (err) {
-          reject(err);
+          reject(steamLoginError(err, '/auth/steam'));
         } else {
           pydtLogger.info(
             `Callback called without error?  user: ${JSON.stringify(user)}, info: ${JSON.stringify(
@@ -98,7 +98,7 @@ export class AuthController {
 
       steamPassport(request).authenticate('steam', (err, user) => {
         if (err) {
-          reject(err);
+          reject(steamLoginError(err, '/auth/steam/validate'));
         } else {
           this.userRepository
             .get(user.profile.id)

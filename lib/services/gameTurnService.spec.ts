@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import * as fs from 'fs';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { afterEach, beforeEach, describe, it } from 'mocha';
+import { HttpResponseError } from '../../api/framework';
+import { pydtLogger } from '../logging';
 import { GameTurnService } from './gameTurnService';
 import { Game, GameTurn, User, PrivateUserData } from '../models';
 import { IS3Provider } from '../s3Provider';
@@ -131,5 +133,53 @@ describe('GameTurnService', () => {
     expect(handler.civData[3].isCurrentTurn).to.be.false;
     expect(handler.civData[3].password).to.not.be.empty;
     expect(handler.civData[3].playerName).to.be.eq(game.players[3].civType);
+  });
+});
+
+describe('GameTurnService.parseSaveFile logging', () => {
+  const original = { info: pydtLogger.info, warn: pydtLogger.warn, error: pydtLogger.error };
+  let logged: { level: string; message: unknown; custom: unknown }[];
+  // parseSaveFile doesn't touch any of the injected dependencies
+  const service = Object.create(GameTurnService.prototype) as GameTurnService;
+
+  beforeEach(() => {
+    logged = [];
+    for (const level of ['info', 'warn', 'error'] as const) {
+      pydtLogger[level] = (message: unknown, _error?: unknown, custom?: unknown) => {
+        logged.push({ level, message, custom });
+      };
+    }
+  });
+
+  afterEach(() => {
+    Object.assign(pydtLogger, original);
+  });
+
+  it('logs a save for a different game as info and returns a 400', () => {
+    const game = { gameId: 'g1', gameType: 'CIV6' } as Game;
+
+    expect(() => service.parseSaveFile(Buffer.from('definitely not a save'), game)).to.throw(
+      HttpResponseError
+    );
+    expect(logged).to.deep.equal([
+      {
+        level: 'info',
+        message: 'Uploaded file is a save for a different game',
+        custom: { gameId: 'g1', gameType: 'CIV6' }
+      }
+    ]);
+  });
+
+  it('logs other parse failures as one grouped warning', () => {
+    const game = { gameId: 'g2', gameType: 'NOT_A_GAME' } as Game;
+
+    expect(() => service.parseSaveFile(Buffer.from(''), game)).to.throw(HttpResponseError);
+    expect(logged).to.deep.equal([
+      {
+        level: 'warn',
+        message: 'Error parsing save file',
+        custom: { gameId: 'g2', gameType: 'NOT_A_GAME' }
+      }
+    ]);
   });
 });

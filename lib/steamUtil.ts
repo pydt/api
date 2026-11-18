@@ -1,8 +1,9 @@
 import { join } from 'lodash';
 import * as passport from 'passport';
 import * as passportSteam from 'passport-steam';
-import { HttpRequest } from '../api/framework';
+import { HttpRequest, HttpResponseError } from '../api/framework';
 import { Config } from './config';
+import { pydtLogger } from './logging';
 import { SteamProfile } from './models';
 
 export const steamPassport = (request: HttpRequest) => {
@@ -43,6 +44,25 @@ export const steamPassport = (request: HttpRequest) => {
   );
 
   return sp;
+};
+
+// Errors from passport's Steam OpenID step are almost never our bug: "Failed to discover OP endpoint URL"
+// means Steam's OpenID server couldn't be reached (outages, maintenance), and "Failed to verify assertion"
+// usually means a stale or reused login return. Tell the user to retry, and log a warning instead of
+// letting it surface as an unhandled 500. Anything else passes through unchanged.
+export const steamLoginError = (err: unknown, route: string): unknown => {
+  if ((err as Error)?.name !== 'InternalOpenIDError') {
+    return err;
+  }
+
+  pydtLogger.warn(`Steam OpenID failure on ${route}`, err as Error);
+
+  return /discover/i.test((err as Error).message)
+    ? new HttpResponseError(
+        503,
+        "Couldn't reach Steam to log in. Please try again in a few minutes."
+      )
+    : new HttpResponseError(400, "Steam login didn't go through. Please try logging in again.");
 };
 
 export async function getPlayerSummaries(steamIds: string[]): Promise<SteamProfile[]> {

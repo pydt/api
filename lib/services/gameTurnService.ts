@@ -244,7 +244,16 @@ export class GameTurnService implements IGameTurnService {
       if (e instanceof HttpResponseError) {
         throw e;
       } else {
-        pydtLogger.error(`Error parsing file from game ${game.gameId}`, e);
+        // One fixed message so Rollbar groups by the parser's error, not by game (the game goes in custom).
+        // A save for a different game (e.g. "Not a Civilization 6 save file") is the uploader's mistake,
+        // so it's info, which doesn't reach Rollbar. Anything else may be a parser bug, so it's a warning.
+        const details = { gameId: game.gameId, gameType: game.gameType };
+
+        if (/^Not a .* save file/i.test((e as Error)?.message || '')) {
+          pydtLogger.info('Uploaded file is a save for a different game', e, details);
+        } else {
+          pydtLogger.warn('Error parsing save file', e, details);
+        }
 
         throw new HttpResponseError(
           400,
