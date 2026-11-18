@@ -6,9 +6,11 @@ export const RECENT_TURN_COUNT = 100;
 
 export class StatsUtil {
   // Turns to fetch for recentTurnStats: the user can have one turn in progress per active game, and
-  // those come back from the index too, so ask for enough to still leave RECENT_TURN_COUNT finished ones
+  // those come back from the index too, so ask for enough to still leave RECENT_TURN_COUNT finished ones.
+  // The extra 10 covers stray unfinished turns from old games that activeGameIds doesn't account for
+  // (on prod, 46 heavy players came up 1-2 short without it).
   public static recentTurnQueryLimit(user: Pick<User, 'activeGameIds'>) {
-    return RECENT_TURN_COUNT + (user.activeGameIds?.length || 0) + 1;
+    return RECENT_TURN_COUNT + (user.activeGameIds?.length || 0) + 10;
   }
 
   /**

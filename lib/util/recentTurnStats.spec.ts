@@ -73,12 +73,12 @@ describe('StatsUtil.recentTurnStats', () => {
 });
 
 describe('StatsUtil.recentTurnQueryLimit', () => {
-  it('leaves room for one turn in progress per active game', () => {
+  it('leaves room for one turn in progress per active game, plus 10 spare', () => {
     expect(StatsUtil.recentTurnQueryLimit({ activeGameIds: ['a', 'b', 'c'] })).to.equal(
-      RECENT_TURN_COUNT + 4
+      RECENT_TURN_COUNT + 13
     );
     expect(StatsUtil.recentTurnQueryLimit({ activeGameIds: undefined })).to.equal(
-      RECENT_TURN_COUNT + 1
+      RECENT_TURN_COUNT + 10
     );
   });
 });
