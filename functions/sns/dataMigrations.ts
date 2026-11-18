@@ -1,3 +1,4 @@
+import { chunk } from 'lodash';
 import { injectable } from 'inversify';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../lib/dynamoose/gameRepository';
 import {
@@ -6,7 +7,7 @@ import {
 } from '../../lib/dynamoose/gameTurnRepository';
 import { IUserRepository, USER_REPOSITORY_SYMBOL } from '../../lib/dynamoose/userRepository';
 import { inject } from '../../lib/ioc';
-import { loggingHandler } from '../../lib/logging';
+import { loggingHandler, pydtLogger } from '../../lib/logging';
 import { expandDlcGroups } from '../../lib/metadata/civGame';
 import { CIV7_GAME } from '../../lib/metadata/civGames/civ7';
 import { Game, TurnData, User } from '../../lib/models';
@@ -65,6 +66,26 @@ export class DataMigrations {
       await this.recalculateActiveGameCounts(users);
     }
 
+    if (message.startsWith('recentturns')) {
+      const userId = message.replace('recentturns:', '');
+      let users: User[];
+
+      if (userId === 'all') {
+        // allUsers, not usersWithTurnsPlayed: that one strips fields, and these get saved back
+        users = (await this.userRepository.allUsers()).filter(x => x.turnsPlayed > 0);
+      } else if (userId) {
+        users = [await this.userRepository.get(userId)];
+
+        if (!users[0]) {
+          throw new Error(`user ${userId} not found`);
+        }
+      } else {
+        throw new Error('userId or all must be provided');
+      }
+
+      await this.calculateRecentTurnStats(users);
+    }
+
     if (message.startsWith('civ7dlcgroups')) {
       let games: Game[];
       const gameId = message.replace('civ7dlcgroups:', '');
@@ -85,6 +106,25 @@ export class DataMigrations {
 
       await this.upgradeCiv7DlcGroups(games);
     }
+  }
+
+  // Backfill for User.recentTurnAverage: one ~2.5 RCU query per user, 10 users at a time
+  private async calculateRecentTurnStats(users: User[]) {
+    for (const batch of chunk(users, 10)) {
+      await Promise.all(
+        batch.map(async user => {
+          const turns = await this.gameTurnRepository.getRecentTurnsForUser(
+            user.steamId,
+            StatsUtil.recentTurnQueryLimit(user)
+          );
+
+          Object.assign(user, StatsUtil.recentTurnStats(turns));
+          await this.userRepository.saveVersioned(user);
+        })
+      );
+    }
+
+    pydtLogger.info(`Updated recent turn stats for ${users.length} users`);
   }
 
   private resetStats(stats: Partial<TurnData>) {

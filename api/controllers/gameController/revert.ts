@@ -69,6 +69,9 @@ export class GameController_Revert {
     delete lastTurn.endDate;
     game.lastTurnEndDate = lastTurn.startDate = new Date();
 
+    // The reopened turn no longer counts toward the player's recent average
+    await this.gameTurnService.updateRecentTurnStats(user, lastTurn);
+
     // Update game record
     const curPlayerIndex = GameUtil.getCurrentPlayerIndex(game);
 

@@ -136,6 +136,8 @@ export class UserRepository
       },
       willSubstituteForGameTypes: legacyStringSet(),
       dataVersion: Number,
+      recentTurnAverage: Number,
+      recentTurnCount: Number,
       banned: legacyBoolean(),
       canCreateMultipleGames: legacyBoolean()
     });

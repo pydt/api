@@ -39,6 +39,10 @@ export interface User extends HasSteamId, TurnData {
   banned?: boolean;
   canCreateMultipleGames?: boolean;
   dataVersion?: number;
+  // Average length in ms of the player's most recent finished turns (up to RECENT_TURN_COUNT, skipped
+  // turns included), and how many turns it covers. Recomputed from the turn table whenever a turn ends.
+  recentTurnAverage?: number;
+  recentTurnCount?: number;
 }
 
 export interface DeprecatedUser extends User {

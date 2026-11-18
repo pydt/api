@@ -31,6 +31,7 @@ export interface IGameTurnService {
   loadSaveFile(game: Game): Promise<Buffer>;
   parseSaveFile(buffer: Buffer, game: Game): SaveHandler;
   moveToNextTurn(game: Game, gameTurn: GameTurn, user: User): Promise<void>;
+  updateRecentTurnStats(user: User, changedTurn?: GameTurn): Promise<void>;
   defeatPlayers(game: Game, users: User[], newDefeatedPlayers: GamePlayer[]): Promise<void>;
   skipTurn(game: Game, turn: GameTurn): Promise<void>;
   storeSave(game: Game, buffer: Buffer): Promise<void>;
@@ -72,7 +73,25 @@ export class GameTurnService implements IGameTurnService {
 
     StatsUtil.updateTurnStatistics(game, gameTurn, user);
 
-    await this.gameTurnRepository.saveVersioned(gameTurn);
+    await Promise.all([
+      this.gameTurnRepository.saveVersioned(gameTurn),
+      this.updateRecentTurnStats(user, gameTurn)
+    ]);
+  }
+
+  // Recomputes User.recentTurnAverage from the turn table. Stats must never block a turn, so failures
+  // only log a warning and leave the old values.
+  public async updateRecentTurnStats(user: User, changedTurn?: GameTurn) {
+    try {
+      const turns = await this.gameTurnRepository.getRecentTurnsForUser(
+        user.steamId,
+        StatsUtil.recentTurnQueryLimit(user)
+      );
+
+      Object.assign(user, StatsUtil.recentTurnStats(turns, changedTurn));
+    } catch (e) {
+      pydtLogger.warn(`Couldn't update recent turn stats for ${user.steamId}`, e as Error);
+    }
   }
 
   private async createNextGameTurn(game: Game) {

@@ -1,7 +1,50 @@
 import { HOUR_OF_DAY_KEY, ONE_HOUR, TURN_BUCKETS } from 'pydt-shared-models';
 import { Game, GamePlayer, GameTurn, GameTypeTurnData, TurnData, User } from '../models';
 
+// How many of a player's latest finished turns go into User.recentTurnAverage
+export const RECENT_TURN_COUNT = 100;
+
 export class StatsUtil {
+  // Turns to fetch for recentTurnStats: the user can have one turn in progress per active game, and
+  // those come back from the index too, so ask for enough to still leave RECENT_TURN_COUNT finished ones
+  public static recentTurnQueryLimit(user: Pick<User, 'activeGameIds'>) {
+    return RECENT_TURN_COUNT + (user.activeGameIds?.length || 0) + 1;
+  }
+
+  /**
+   * Average length of the newest RECENT_TURN_COUNT finished turns in `turns`. `changedTurn` replaces
+   * its stored copy (same gameId + turn): the GSI is eventually consistent, so a turn that was just
+   * closed or reopened may not show its change there yet. Turns without an end date (in progress, or
+   * reopened by a revert) don't count. Skipped turns count at their real length.
+   */
+  public static recentTurnStats(
+    turns: GameTurn[],
+    changedTurn?: GameTurn
+  ): Pick<User, 'recentTurnAverage' | 'recentTurnCount'> {
+    const byKey = new Map<string, GameTurn>();
+
+    for (const t of [...(turns || []), ...(changedTurn ? [changedTurn] : [])]) {
+      byKey.set(`${t.gameId}:${t.turn}`, t);
+    }
+
+    const time = (d: Date | number | string) => new Date(d).getTime();
+    const finished = [...byKey.values()]
+      .filter(t => t.startDate && t.endDate)
+      .sort((a, b) => time(b.endDate) - time(a.endDate))
+      .slice(0, RECENT_TURN_COUNT);
+
+    if (!finished.length) {
+      return { recentTurnAverage: undefined, recentTurnCount: 0 };
+    }
+
+    const total = finished.reduce((sum, t) => sum + (time(t.endDate) - time(t.startDate)), 0);
+
+    return {
+      recentTurnAverage: Math.round(total / finished.length),
+      recentTurnCount: finished.length
+    };
+  }
+
   public static getGameStats(user: { statsByGameType: GameTypeTurnData[] }, gameType: string) {
     user.statsByGameType = user.statsByGameType || [];
     let gameStats = user.statsByGameType.find(x => x.gameType === gameType);

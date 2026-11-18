@@ -88,7 +88,9 @@ export class StatsController {
                 ? (x.activeGameIds?.length || 0) + (x.inactiveGameIds?.length || 0)
                 : gameTypeStats?.totalGames || 0,
             ...pickTurnData(userGameData),
-            ...pick(x, 'steamId', 'avatarSmall', 'displayName')
+            ...pick(x, 'steamId', 'avatarSmall', 'displayName'),
+            // Only tracked across all game types
+            ...(gameType === 'ALL' ? pick(x, 'recentTurnAverage', 'recentTurnCount') : {})
           };
         })
         .filter(Boolean)
@@ -107,7 +109,10 @@ export interface UserTurnData
   extends
     TurnData,
     Pick<GameTypeTurnData, 'activeGames' | 'totalGames'>,
-    Pick<User, 'steamId' | 'avatarSmall' | 'displayName'> {}
+    Pick<
+      User,
+      'steamId' | 'avatarSmall' | 'displayName' | 'recentTurnAverage' | 'recentTurnCount'
+    > {}
 
 export interface UsersByGameTypeResponse {
   global: TurnData;

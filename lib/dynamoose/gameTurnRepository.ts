@@ -11,6 +11,7 @@ export interface IGameTurnRepository extends IRepository<GameTurnKey, GameTurn> 
   getAllTurnsForGame(userId: string): Promise<GameTurn[]>;
   getAllTurnsForUser(userId: string): Promise<GameTurn[]>;
   getPlayerTurnsForGame(gameId: string, steamId: string): Promise<GameTurn[]>;
+  getRecentTurnsForUser(steamId: string, limit: number): Promise<GameTurn[]>;
 }
 
 @provideSingleton(GAME_TURN_REPOSITORY_SYMBOL)
@@ -63,6 +64,18 @@ export class GameTurnRepository
 
   getAllTurnsForUser(userId: string) {
     return this.getAllPaged(this.query('playerSteamId').eq(userId));
+  }
+
+  // Newest first by updatedAt, from the GSI (which projects every attribute). One page, ~2.5 RCU for 100.
+  async getRecentTurnsForUser(steamId: string, limit: number) {
+    return [
+      ...(await this.query('playerSteamId')
+        .eq(steamId)
+        .using('playerSteamId-updatedAt-index')
+        .sort('descending')
+        .limit(limit)
+        .exec())
+    ];
   }
 
   getPlayerTurnsForGame(gameId: string, steamId: string) {
