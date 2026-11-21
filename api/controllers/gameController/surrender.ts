@@ -85,8 +85,7 @@ export class GameController_Surrender {
       throw new HttpResponseError(404, `You can't surrender yet!  Create the game!`);
     }
 
-    player.hasSurrendered = true;
-    player.surrenderDate = new Date();
+    GameUtil.markPlayerSurrendered(player);
 
     game.completed = GameUtil.calculateIsCompleted(game);
     const sendFinalizedMessage = game.completed && !game.finalized;

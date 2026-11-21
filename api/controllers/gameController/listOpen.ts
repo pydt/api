@@ -3,6 +3,7 @@ import { Get, Route, Tags } from 'tsoa';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
 import { inject, provideSingleton } from '../../../lib/ioc';
 import { Game } from '../../../lib/models';
+import { GameUtil } from '../../../lib/util/gameUtil';
 import { OpenGamesResponse, OpenSlotsGame } from './_models';
 
 @Route('game')
@@ -61,7 +62,7 @@ export class GameController_ListOpen {
           game.allowJoinAfterStart &&
           activeOrDeadHumans < game.players.length &&
           activeOrDeadHumans < game.humans;
-        const substitutionRequested = game.players.some(x => x.substitutionRequested);
+        const substitutionRequested = GameUtil.needsSubstitution(game);
 
         return {
           ...game,

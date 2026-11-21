@@ -181,8 +181,7 @@ In save but not enabled: ${notInGame
         if (GameUtil.playerIsHuman(game.players[i])) {
           if (civ.type === ActorType.DEAD) {
             // Player has been defeated!
-            game.players[i].hasSurrendered = true;
-            game.players[i].surrenderDate = new Date();
+            GameUtil.markPlayerSurrendered(game.players[i]);
             newDefeatedPlayers.push(game.players[i]);
           } else if (civ.type === ActorType.AI) {
             // This is OK, type will be reset in updateSaveFileForGameState, and may be wrong

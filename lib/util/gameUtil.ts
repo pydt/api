@@ -218,6 +218,22 @@ export class GameUtil {
     return player.steamId && !player.hasSurrendered;
   }
 
+  // Takes a player out of the game (surrender, kick or defeat). A substitution request no longer
+  // makes sense once they're out, so it goes too (forum #11118).
+  public static markPlayerSurrendered(player: GamePlayer) {
+    player.hasSurrendered = true;
+    player.surrenderDate = new Date();
+    player.substitutionRequested = false;
+  }
+
+  // Whether any player still in the game wants a substitute. Flags left on surrendered or dead
+  // players (from before markPlayerSurrendered cleared them) don't count.
+  public static needsSubstitution(game: Pick<Game, 'players'>) {
+    return game.players.some(
+      p => p.substitutionRequested && GameUtil.playerIsHuman(p) && !p.isDead
+    );
+  }
+
   public static possiblyUpdateAdmin(game: Game) {
     const currentAdmin = game.players.find(player => player.steamId === game.createdBySteamId);
 
