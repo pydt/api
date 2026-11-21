@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Why is this flagging Query?
 import { Get, Query, Request, Response, Route, Security, Tags } from 'tsoa';
 import { Config } from '../../../lib/config';
 import { GAME_REPOSITORY_SYMBOL, IGameRepository } from '../../../lib/dynamoose/gameRepository';
