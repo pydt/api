@@ -28,15 +28,16 @@ export class GameController_StartSubmit {
       throw new HttpResponseError(400, "It's not your turn!");
     }
 
+    const file = {
+      Bucket: Config.resourcePrefix + 'saves',
+      Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
+    };
+
     return {
-      putUrl: await this.s3.signedPutUrl(
-        {
-          Bucket: Config.resourcePrefix + 'saves',
-          Key: GameUtil.createS3SaveKey(gameId, game.gameTurnRangeKey + 1)
-        },
-        'application/octet-stream',
-        300
-      )
+      putUrl: await this.s3.signedPutUrl(file, 'application/octet-stream', 300),
+      fallbackPutUrl: await this.s3.signedPutUrl(file, 'application/octet-stream', 300, {
+        accelerate: false
+      })
     };
   }
 }

@@ -64,7 +64,11 @@ export interface GameTurnResponse {
 }
 
 export interface StartTurnSubmitResponse {
+  // Upload through S3 Transfer Acceleration
   putUrl: string;
+  // Same upload through the regular S3 endpoint, to retry with if putUrl fails with a network error
+  // or a 5xx (Acceleration has had 504 outages, forum #14499)
+  fallbackPutUrl?: string;
 }
 
 export interface GameTurnListItem extends GameTurn {

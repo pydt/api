@@ -15,12 +15,26 @@ import { provideSingleton } from './ioc';
 import { Config } from './config';
 import { traceAwsClient } from './xray';
 
+// The api's own S3 calls run in the bucket's region, so they use the regular endpoint: Transfer
+// Acceleration only helps far-away clients, costs extra per GB, and its outages (504s, see forum
+// #14499) shouldn't take server-side reads and writes down with them.
 const s3 = traceAwsClient(
   new S3Client({
-    region: Config.region,
-    useAccelerateEndpoint: true
+    region: Config.region
   })
 );
+
+// Only for signing URLs handed to players (uploads and downloads from wherever they are).
+// Signing is local, so this client never makes requests itself.
+const s3Accelerated = new S3Client({
+  region: Config.region,
+  useAccelerateEndpoint: true
+});
+
+export interface SignedUrlOptions {
+  // Sign for the regular endpoint instead of Transfer Acceleration (a fallback when it's down)
+  accelerate?: boolean;
+}
 
 export const S3_PROVIDER_SYMBOL = Symbol('IS3Provider');
 
@@ -36,7 +50,12 @@ export interface IS3Provider {
     downloadAsFilename: string,
     expiration: number
   ): Promise<string>;
-  signedPutUrl(fileParams: FileParams, contentType: string, expiration: number): Promise<string>;
+  signedPutUrl(
+    fileParams: FileParams,
+    contentType: string,
+    expiration: number,
+    options?: SignedUrlOptions
+  ): Promise<string>;
 }
 
 @provideSingleton(S3_PROVIDER_SYMBOL)
@@ -116,7 +135,7 @@ export class S3Provider implements IS3Provider {
 
   signedGetUrl(fileParams: FileParams, downloadAsFilename: string, expiresIn: number) {
     return getSignedUrl(
-      s3,
+      s3Accelerated,
       new GetObjectCommand(
         merge(fileParams, {
           ResponseContentDisposition: `attachment; filename=${downloadAsFilename}`
@@ -128,9 +147,14 @@ export class S3Provider implements IS3Provider {
     );
   }
 
-  signedPutUrl(fileParams: FileParams, contentType: string, expiresIn: number) {
+  signedPutUrl(
+    fileParams: FileParams,
+    contentType: string,
+    expiresIn: number,
+    options: SignedUrlOptions = {}
+  ) {
     return getSignedUrl(
-      s3,
+      options.accelerate === false ? s3 : s3Accelerated,
       new PutObjectCommand(
         merge(fileParams, {
           ContentType: contentType,
