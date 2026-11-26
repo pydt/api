@@ -36,7 +36,8 @@ export class GameController_Edit {
       game.displayName = body.displayName;
     }
 
-    if (game.gameTurnRangeKey || 0 <= 1) {
+    // Setup fields can only change until the first turn is played (same check as the web form)
+    if ((game.gameTurnRangeKey || 0) <= 1) {
       if (body.slots < game.players.length) {
         throw new HttpResponseError(
           400,

@@ -15,12 +15,14 @@ const HASH = '$2a$10$abcdefghijklmnopqrstuv';
 const WEBHOOK = 'https://discord.com/api/webhooks/123/secret';
 
 // Run an edit as the admin and return the game that got saved
-const runEdit = async (body: Partial<GameRequestBody>): Promise<Game> => {
+const runEdit = async (body: Partial<GameRequestBody>, gameTurnRangeKey = 10): Promise<Game> => {
   const stored = {
     gameId: 'g1',
     createdBySteamId: ADMIN,
     inProgress: true,
-    gameTurnRangeKey: 10,
+    gameTurnRangeKey,
+    mapSize: 'SMALL',
+    randomOnly: 'EITHER',
     slots: 2,
     humans: 2,
     players: [{ steamId: ADMIN }, { steamId: 'other' }],
@@ -77,5 +79,29 @@ describe('GameController_Edit', () => {
     expect(changed.hashedPassword).to.not.eq(HASH);
     expect(changed.hashedPassword).to.match(/^\$2[aby]\$/);
     expect((await runEdit({ password: '' })).hashedPassword).to.eq('');
+  });
+
+  it('ignores setup fields once the game is past its first turn', async () => {
+    const saved = await runEdit({
+      password: HASH,
+      slots: 6,
+      mapSize: 'HUGE',
+      randomOnly: 'FORCE_RANDOM'
+    } as Partial<GameRequestBody>);
+
+    expect(saved.slots).to.eq(2);
+    expect(saved.mapSize).to.eq('SMALL');
+    expect(saved.randomOnly).to.eq('EITHER');
+    expect(saved.players.map(p => p.civType)).to.deep.eq([undefined, undefined]);
+  });
+
+  it('still lets setup fields change before the first turn is played', async () => {
+    const saved = await runEdit(
+      { password: HASH, slots: 6, mapSize: 'HUGE' } as Partial<GameRequestBody>,
+      1
+    );
+
+    expect(saved.slots).to.eq(6);
+    expect(saved.mapSize).to.eq('HUGE');
   });
 });
