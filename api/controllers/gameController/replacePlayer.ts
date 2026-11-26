@@ -142,8 +142,8 @@ export class GameController_ReplacePlayer {
 
       turn = await this.gameTurnRepository.get({ gameId, turn: game.gameTurnRangeKey });
 
-      // Reset turn stats
-      turn.startDate = new Date();
+      // Reset turn stats, and the web countdown, which runs from game.lastTurnEndDate (#10612)
+      game.lastTurnEndDate = turn.startDate = new Date();
       turn.playerSteamId = newUser.steamId;
     }
 

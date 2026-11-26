@@ -116,7 +116,8 @@ export class GameController_Surrender {
           }
         }
 
-        gameTurn.startDate = new Date();
+        // The web countdown runs from game.lastTurnEndDate, so reset it with the turn start (#10612)
+        game.lastTurnEndDate = gameTurn.startDate = new Date();
       }
 
       savePromises.push(

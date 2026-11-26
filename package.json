@@ -74,13 +74,13 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register {api,functions,lib}/**/*.spec.ts",
+    "test": "mocha -r ts-node/register '{api,functions,lib}/**/*.spec.ts'",
     "start-dynamo-docker": "docker compose -f testdata/docker-compose.yml up -d",
-    "integration-test": "npm run routes-gen && bash -c \"IS_OFFLINE=true RESOURCE_PREFIX=civx-integration- mocha -r ts-node/register {api,functions,lib}/**/*.int-spec.ts --timeout 20000\"",
+    "integration-test": "npm run routes-gen && bash -c \"IS_OFFLINE=true RESOURCE_PREFIX=civx-integration- AWS_ACCESS_KEY_ID=local AWS_SECRET_ACCESS_KEY=local mocha -r ts-node/register '{api,functions,lib}/**/*.int-spec.ts' --timeout 20000\"",
     "clean": "rimraf api/_gen .webpack",
     "swagger-gen": "tsoa spec",
     "routes-gen": "bash -c 'mkdir -p api/_gen/routes' && tsoa routes",
-    "lint": "eslint {api,functions,lib}/**/*.ts",
+    "lint": "eslint '{api,functions,lib}/**/*.ts'",
     "lint-fix": "eslint {api,functions,lib}/**/*.ts --fix",
     "build": "npm run clean && npm run routes-gen && npm run lint && npm run swagger-gen",
     "start": "npm run build && bash -c \"npx serverless offline --host 0.0.0.0\"",
